@@ -1,0 +1,144 @@
+.explorer {
+  --diagram-strong: light-dark(#076653, #55c5ac);
+  --diagram-local: light-dark(#a96015, #e3a44d);
+  --diagram-fill: color-mix(in srgb, var(--diagram-strong) 12%, var(--color-surface));
+  --diagram-edge: color-mix(in srgb, var(--color-fg) 47%, var(--color-surface));
+  margin-block: 2rem;
+  padding: clamp(0.9rem, 3vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: 0.85rem;
+  background: var(--color-surface);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.explorer h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3vw, 1.7rem);
+  font-weight: 650;
+  margin: 0 0 0.8rem;
+}
+
+.tabList, .stageList, .choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tabList {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+}
+
+.tab, .stageTab, .choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--diagram-edge);
+  border-radius: 0.45rem;
+  font-size: 0.86rem;
+  font-weight: 620;
+  color: var(--color-fg);
+  background: transparent;
+  cursor: pointer;
+}
+
+.tab[data-selected], .stageTab[data-selected], .choice[data-checked] {
+  border-color: var(--diagram-strong);
+  background: var(--diagram-fill);
+  box-shadow: inset 0 -2px 0 var(--diagram-strong);
+}
+
+.explorer :is(button:focus-visible, [role='radio']:focus-visible) {
+  outline: 2px solid var(--diagram-strong);
+  outline-offset: 2px;
+}
+
+.tokenGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.65rem;
+}
+
+.stack {
+  width: 100%;
+  max-width: 21rem;
+  min-width: 0;
+  background: radial-gradient(ellipse, var(--diagram-fill), transparent 73%);
+}
+
+.stack text {
+  fill: var(--color-fg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.faceTop, .faceSide, .traceLine, .returnPath {
+  stroke: var(--diagram-edge);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.faceTop { fill: var(--color-surface); }
+.faceSide { fill: color-mix(in srgb, var(--color-surface) 89%, var(--color-fg)); }
+.traceLine, .returnPath { fill: none; }
+.returnPath { stroke-dasharray: 2 3; }
+.stack [data-active='true'] path { stroke: var(--diagram-strong); stroke-width: 1.6; }
+.stack [data-active='true'] .faceTop { fill: var(--diagram-fill); }
+.stack [data-active='true'] .faceSide { fill: color-mix(in srgb, var(--diagram-strong) 22%, var(--color-surface)); }
+.stack [data-active='true'] text { font-weight: 700; }
+
+.stageReadout { border-inline-start: 2px solid var(--diagram-strong); padding-inline-start: 0.85rem; }
+.stageReadout p { margin: 0.45rem 0 0; }
+.measure, .controlLabel, .sliderHeading, .expert dd, .cacheReadout dd {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.measure { font-weight: 700; }
+.intro { margin: 0 0 0.95rem; }
+.slider { --ui-slider-indicator-color: var(--diagram-strong); }
+.sliderHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; font-size: 0.85rem; }
+.slider :global([data-slot='slider-control']) { min-height: 2.75rem; }
+.slider :global([data-slot='slider-track']) { background: var(--diagram-edge); }
+.slider :global([data-slot='slider-indicator']) { background: var(--diagram-strong); }
+.slider :global([data-slot='slider-thumb']) { border-color: var(--diagram-strong); }
+.slider :global([data-slot='slider-thumb']):has(:focus-visible) { outline: 2px solid var(--diagram-strong); outline-offset: 3px; }
+
+.experts, .cacheReadout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.expert, .cacheReadout > div { border: 1px solid var(--color-border); border-radius: 0.5rem; padding: clamp(0.45rem, 1.5vw, 0.8rem); }
+.expert[data-selected='true'] { border-color: var(--diagram-strong); background: var(--diagram-fill); }
+.expertHeading { display: flex; justify-content: space-between; align-items: baseline; gap: 0.3rem; }
+.expertHeading strong { font-family: var(--font-mono); font-size: 1.12rem; }
+.expertHeading span, .expert dt, .cacheReadout dt, .note { font-size: 0.77rem; }
+.expert dl { margin: 0.45rem 0 0; display: grid; gap: 0.4rem; }
+.expert dd, .cacheReadout dd { margin: 0; font-size: clamp(0.8rem, 2vw, 1.04rem); font-weight: 650; }
+.result { display: grid; gap: 0.2rem; margin: 0.75rem 0 0; }
+.note { margin: 0.6rem 0 0; }
+.cacheControls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.7rem 1.25rem; }
+.choices { flex-direction: row; }
+.choice { width: auto; height: auto; }
+.controlLabel { margin-bottom: 0.3rem; font-size: 0.77rem; }
+.chart { min-height: 130px; margin-block: 0.4rem; }
+.chart > div { height: 130px; }
+.cacheReadout { margin-top: 0.5rem; }
+
+@media (max-width: 37rem) {
+  .tokenGrid { grid-template-columns: 1fr; gap: 0.6rem; }
+  .stack { margin-inline: auto; max-width: 15rem; }
+  .stageReadout { min-height: 6rem; }
+}

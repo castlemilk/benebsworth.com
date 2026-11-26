@@ -1,4 +1,5 @@
 import { getPublishedPosts } from '@/lib/content'
+import { getAllChapterParams, getChapter } from '@/lib/study/load'
 import { LAB_CONCEPT_GUIDES, LAB_DEMO_EFFECTS, CATEGORIES } from '@/lib/lab/registry'
 import { topicFor } from '@/lib/topics'
 import { hikes } from '@/content/hiking'
@@ -91,6 +92,25 @@ export function GET() {
     lines.push('')
     for (const e of LAB_CONCEPT_GUIDES) {
       lines.push(`- [${e.title}](${base}/lab/${e.slug}/): ${e.blurb}`)
+    }
+    lines.push('')
+  }
+  // Study packets: one flattened-markdown sibling per chapter — packet
+  // markers resolved, charts as data tables, quiz + glossary inline.
+  const study = getAllChapterParams()
+    .map((p) => getChapter(p.volume, p.chapter))
+    .filter((l): l is NonNullable<typeof l> => Boolean(l?.packetBody))
+  if (study.length) {
+    lines.push('## Study — Machine Learning Systems (mlsysbook.ai)')
+    lines.push('')
+    lines.push(
+      'Chapter-by-chapter study packets for the Harvard CS249r book: guided notes, original figures, equations, quizzes and a generated audio overview. ' +
+        'Each packet also ships as a flattened plain-Markdown sibling at `/study/<volume>/<chapter>/index.md`.',
+    )
+    lines.push('')
+    for (const l of study) {
+      const href = `${base}/study/${l.volume.id}/${l.chapter.slug}/`
+      lines.push(`- [${l.chapter.title}](${href}): ${l.volume.title} — [Markdown](${href}index.md)`)
     }
     lines.push('')
   }

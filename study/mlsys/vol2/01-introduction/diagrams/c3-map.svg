@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="c3-map" class="study-fig-fit" viewBox="0 0 380 288" role="img" aria-labelledby="c3-title c3-desc">
+  <title id="c3-title">D·A·M names it, C³ spends it</title>
+  <desc id="c3-desc">A projection from the nouns of the workload — Data, Algorithm, Machine — onto the verbs the fleet spends each step on — Compute, Communication, Coordination. Under each verb sits the lever that relieves it: faster accelerator, better collective, checkpointing.</desc>
+  <style>
+    .dark #c3-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#c3-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="288" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">Nouns on the left, verbs on the right</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">Every optimization relieves exactly one C</text>
+
+    <text x="62" y="80" font-size="11" fill="var(--fig-rule, #6e6a5b)" text-anchor="middle">D·A·M — the workload</text>
+    <g font-size="11.5">
+      <rect x="20" y="92" width="84" height="24" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="62" y="108" text-anchor="middle">Data</text>
+      <rect x="20" y="124" width="84" height="24" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="62" y="140" text-anchor="middle">Algorithm</text>
+      <rect x="20" y="156" width="84" height="24" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="62" y="172" text-anchor="middle">Machine</text>
+    </g>
+
+    <g stroke="var(--fig-rule, #6e6a5b)" stroke-width="1" fill="none">
+      <path d="M 104 104 C 130 104, 130 92, 152 92"/>
+      <path d="M 104 136 C 130 136, 130 130, 152 130"/>
+      <path d="M 104 168 C 130 168, 130 168, 152 168"/>
+      <path d="M 104 104 C 140 100, 140 168, 152 168"/>
+      <path d="M 104 136 C 130 136, 130 92, 152 92"/>
+    </g>
+
+    <text x="266" y="80" font-size="11" fill="var(--fig-rule, #6e6a5b)" text-anchor="middle">C³ — what the step spends</text>
+    <g font-size="11.5">
+      <rect x="152" y="84" width="228" height="24" rx="5" fill="var(--fig-mark, #b45a2d)"/>
+      <text x="266" y="100" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">Compute — local arithmetic</text>
+      <rect x="152" y="118" width="228" height="24" rx="5" fill="var(--fig-outline, #364c50)"/>
+      <text x="266" y="134" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">Communication — bytes exchanged</text>
+      <rect x="152" y="152" width="228" height="24" rx="5" fill="var(--fig-rule, #6e6a5b)"/>
+      <text x="266" y="168" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">Coordination — barrier, bubble, schedule</text>
+    </g>
+
+    <text x="20" y="206" font-size="12" font-weight="650">The lever is named by the C it relieves</text>
+    <g font-size="11">
+      <text x="20" y="226" fill="var(--fig-mark, #b45a2d)" font-weight="650">Compute</text>
+      <text x="86" y="226">→ faster accelerator, better kernel</text>
+      <text x="20" y="246" fill="var(--fig-outline, #364c50)" font-weight="650">Communication</text>
+      <text x="124" y="246">→ collective algorithm, more fabric</text>
+      <text x="20" y="266" fill="var(--fig-rule, #6e6a5b)" font-weight="650">Coordination</text>
+      <text x="106" y="266">→ checkpointing, elastic scheduling</text>
+    </g>
+    <text x="20" y="283" font-size="10" fill="var(--fig-rule, #6e6a5b)">A faster chip relieves only the top row.</text>
+  </g>
+</svg>

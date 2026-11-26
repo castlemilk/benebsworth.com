@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="runtime-loss-split" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="rl-title rl-desc">
+  <title id="rl-title">Runtime loss composition at 128 GPUs</title>
+  <desc id="rl-desc">Horizontal bars ranking the five additive runtime loss terms for the 128-GPU example: input waits largest, then preemption tax, then failure recovery, checkpoint waste, and startup negligible over a week.</desc>
+  <style>
+    .dark #runtime-loss-split { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#runtime-loss-split { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Runtime loss, ranked</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">128-GPU example · five additive terms · schematic shares</text>
+
+    <!-- bars: input >> preemption > failure > checkpoint > startup -->
+    <text x="24" y="76" font-size="9.5">input waits</text>
+    <rect x="110" y="66" width="180" height="14" rx="3" fill="var(--fig-mark, #b4571f)"/>
+    <text x="296" y="77" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">largest term</text>
+
+    <text x="24" y="106" font-size="9.5">preemption tax</text>
+    <rect x="110" y="96" width="95" height="14" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.75"/>
+    <text x="211" y="107" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">lost work dominates</text>
+
+    <text x="24" y="136" font-size="9.5">failure recovery</text>
+    <rect x="110" y="126" width="58" height="14" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.55"/>
+    <text x="174" y="137" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">rare at 128 GPUs</text>
+
+    <text x="24" y="166" font-size="9.5">checkpoint waste</text>
+    <rect x="110" y="156" width="40" height="14" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.4"/>
+    <text x="156" y="167" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">write + discard</text>
+
+    <text x="24" y="196" font-size="9.5">startup</text>
+    <rect x="110" y="186" width="8" height="14" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.3"/>
+    <text x="124" y="197" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">under 0.2% of a week, over 5% of an hour</text>
+
+    <line x1="110" y1="60" x2="110" y2="208" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1"/>
+
+    <text x="24" y="238" font-size="9" fill="var(--fig-rule, #6e6a5b)">failures get the war stories, but at this scale the input</text>
+    <text x="24" y="251" font-size="9" fill="var(--fig-rule, #6e6a5b)">lever is worth roughly ten times the failure lever.</text>
+    <text x="24" y="276" font-size="9.5" font-weight="650" fill="var(--fig-mark, #b4571f)">runtime goodput lands near 0.56: just over half of</text>
+    <text x="24" y="289" font-size="9.5" font-weight="650" fill="var(--fig-mark, #b4571f)">allocated time becomes checkpoint-retained steps</text>
+  </g>
+</svg>

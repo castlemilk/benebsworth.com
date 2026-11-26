@@ -1,0 +1,20 @@
+[
+ {
+  "id": "layer-ledger",
+  "file": "layer-ledger.svg",
+  "title": "The layer ledger: cost read off shapes",
+  "caption": "The running 784-128-64-10 network with the bill each shape fixes before code runs: 109,386 parameters and 109,184 MACs, of which the input layer alone holds 91.9%. Width enters quadratically because every weight sits in a matrix product; depth adds sequential steps and saved activations."
+ },
+ {
+  "id": "four-states",
+  "file": "four-states.svg",
+  "title": "Four kinds of state vs one",
+  "caption": "The training step holds weights, gradients, optimizer state, and saved activations (~1.3 MB at batch 32); inference keeps the weights plus a rolling pair of activation buffers (~462 KB). The ~3x delta is state that exists only because the backward pass must retrace the forward one."
+ },
+ {
+  "id": "reject-gate",
+  "file": "reject-gate.svg",
+  "title": "The reject gate turns scores into decisions",
+  "caption": "The six-stage USPS/check-reader composite: acquisition and preprocessing feed the neural scorer, a confidence threshold splits accepted items from review traffic, and the expected-cost rule prices the split. The 1989 system's 1% error bought its number by rejecting 12.1% of digits."
+ }
+]

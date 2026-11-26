@@ -1,0 +1,6 @@
+[
+ {"id":"fairness-impossibility-triangle","file":"fairness-impossibility-triangle.svg","title":"Three criteria, two chairs","caption":"Groupwise calibration, balance in the positive class, and balance in the negative class: with unequal base rates and imperfect prediction, at most two of the three can hold. The worked-example numbers annotate each edge."},
+ {"id":"conservation-of-overhead","file":"conservation-of-overhead.svg","title":"Deferred work relocates","caption":"Explanation work deferred after deployment does not vanish; it moves onto the serial request path, the memory budget, or a human review queue. Capacity multiples preserve throughput, never serial latency."},
+ {"id":"bias-amplification-loop","file":"bias-amplification-loop.svg","title":"The retraining feedback loop","caption":"Biased outputs shape behavior and future data collection; retraining on that data deepens the bias. Positive loop gain makes the unconstrained pipeline a divergent amplifier."},
+ {"id":"assurance-chain","file":"assurance-chain.svg","title":"The assurance chain","caption":"Claim, argument, evidence, owner, action. A dashboard feeds the evidence link only; without the owner and the action path it is a log entry, not a control."}
+]

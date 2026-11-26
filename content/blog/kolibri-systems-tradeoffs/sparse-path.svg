@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 348" role="img" aria-labelledby="title desc">
+<title id="title">Six routed experts and one shared expert</title>
+<desc id="desc">A router selects six experts from the pool of 384. Green slots represent the selected experts. One shared expert runs for every token.</desc>
+<style>
+text{font:22px system-ui,sans-serif;fill:#202d2c}.title{font-size:25px;font-weight:700}.small{font-size:19px;fill:#495a57}.idle{fill:#e7eeeb;stroke:#8a9c98}.active{fill:#bce5d8;stroke:#257660;stroke-width:2}
+</style>
+<rect width="600" height="348" rx="12" fill="#f8faf9"/>
+<text x="26" y="41" class="title">Seven experts process this token</text>
+<text x="26" y="78" class="small">The router scores the routed pool for each token.</text>
+<text x="26" y="132">384 routed experts</text>
+<text x="408" y="132">1 shared expert</text>
+<rect x="26" y="164" width="31" height="30" rx="4" class="active"/>
+<rect x="66" y="164" width="31" height="30" rx="4" class="idle"/>
+<rect x="106" y="164" width="31" height="30" rx="4" class="active"/>
+<rect x="146" y="164" width="31" height="30" rx="4" class="idle"/>
+<rect x="186" y="164" width="31" height="30" rx="4" class="idle"/>
+<rect x="226" y="164" width="31" height="30" rx="4" class="active"/>
+<rect x="266" y="164" width="31" height="30" rx="4" class="idle"/>
+<rect x="306" y="164" width="31" height="30" rx="4" class="active"/>
+<rect x="346" y="164" width="31" height="30" rx="4" class="idle"/>
+<rect x="26" y="204" width="31" height="30" rx="4" class="idle"/>
+<rect x="66" y="204" width="31" height="30" rx="4" class="idle"/>
+<rect x="106" y="204" width="31" height="30" rx="4" class="active"/>
+<rect x="146" y="204" width="31" height="30" rx="4" class="idle"/>
+<rect x="186" y="204" width="31" height="30" rx="4" class="idle"/>
+<rect x="226" y="204" width="31" height="30" rx="4" class="idle"/>
+<rect x="266" y="204" width="31" height="30" rx="4" class="active"/>
+<rect x="306" y="204" width="31" height="30" rx="4" class="idle"/>
+<rect x="346" y="204" width="31" height="30" rx="4" class="idle"/>
+<rect x="408" y="164" width="165" height="71" rx="8" class="active"/>
+<text x="490" y="207" text-anchor="middle" class="small">Always runs</text>
+<text x="26" y="274" class="small">Six run for this token.</text>
+<text x="26" y="318" class="small">The pool is drawn schematically.</text>
+</svg>

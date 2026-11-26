@@ -1,0 +1,140 @@
+[
+ {
+  "id": "interconnect-climb",
+  "kind": "LINE",
+  "title": "The intra-node budget never stops outrunning the port",
+  "caption": "Per-direction bandwidth by reported product year (log scale). NVLink sums a GPU's links; Ethernet and InfiniBand are per port; PCIe is per x16 link. The shaded spread between NVLink and InfiniBand from 2016 on is the cliff: the external port has never caught the aggregate intra-node budget.",
+  "xLabel": "Reported product year",
+  "yLabel": "GB/s per direction (log)",
+  "xPoints": [
+   "2010-01-01",
+   "2012-01-01",
+   "2014-01-01",
+   "2016-01-01",
+   "2017-01-01",
+   "2018-01-01",
+   "2020-01-01",
+   "2021-01-01",
+   "2022-01-01",
+   "2023-01-01",
+   "2024-01-01",
+   "2025-01-01"
+  ],
+  "series": [
+   {
+    "key": "nvlink",
+    "label": "NVLink (per GPU, summed)",
+    "color": "var(--chart-1)",
+    "values": [
+     null,
+     null,
+     null,
+     80,
+     150,
+     150,
+     300,
+     300,
+     450,
+     450,
+     900,
+     900
+    ]
+   },
+   {
+    "key": "infiniband",
+    "label": "InfiniBand (per port)",
+    "color": "var(--chart-2)",
+    "values": [
+     null,
+     null,
+     7,
+     12.5,
+     12.5,
+     25,
+     25,
+     50,
+     50,
+     50,
+     50,
+     100
+    ]
+   },
+   {
+    "key": "ethernet",
+    "label": "Ethernet (per port)",
+    "color": "var(--chart-3)",
+    "values": [
+     5,
+     5,
+     12.5,
+     12.5,
+     12.5,
+     50,
+     50,
+     50,
+     50,
+     50,
+     100,
+     100
+    ]
+   },
+   {
+    "key": "pcie",
+    "label": "PCIe x16 (per direction)",
+    "color": "var(--chart-4)",
+    "values": [
+     null,
+     15.75,
+     15.75,
+     15.75,
+     31.5,
+     31.5,
+     31.5,
+     63,
+     63,
+     63,
+     63,
+     128
+    ]
+   }
+  ]
+ },
+ {
+  "id": "alpha-share",
+  "kind": "BAR_STACKED",
+  "title": "Who pays for the message \u2014 startup vs transfer on NDR",
+  "caption": "Share of modeled message time spent in startup alpha (1.5 us) versus transfer n/beta at 50 GB/s. At 4 KB the message is 95% startup; at 64 KB the two terms are near parity (~75 KB crossover); at 350 MB startup is a rounding error. Buying bandwidth fixes the right bar and the wrong end of the left ones.",
+  "xLabel": "Message size",
+  "yLabel": "Share of T(n) (%)",
+  "xPoints": [
+   "4 KB control",
+   "64 KB",
+   "1 MB",
+   "350 MB shard"
+  ],
+  "series": [
+   {
+    "key": "startup",
+    "label": "alpha (startup) share",
+    "color": "var(--chart-2)",
+    "values": [
+     94.9,
+     53.4,
+     6.7,
+     0.02
+    ]
+   },
+   {
+    "key": "transfer",
+    "label": "n/beta (transfer) share",
+    "color": "var(--chart-1)",
+    "values": [
+     5.1,
+     46.6,
+     93.3,
+     99.98
+    ]
+   }
+  ]
+ }
+]

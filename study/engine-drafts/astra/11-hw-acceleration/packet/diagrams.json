@@ -1,0 +1,62 @@
+[
+  {
+    "id": "trace-one-weight",
+    "title": "Follow one projection weight",
+    "caption": "A weight fetch can serve several outputs only when the schedule brings the corresponding input rows to the engine while that weight is still available.",
+    "file": "trace-one-weight.svg"
+  },
+  {
+    "id": "inspect-precision-path",
+    "title": "Audit an INT8 projection",
+    "caption": "The trace locates where compact weights survive into execution and where conversion work enters the timed path.",
+    "file": "inspect-precision-path.svg"
+  },
+  {
+    "id": "separate-memory-boundaries",
+    "title": "Three places to count a weight",
+    "caption": "These counts answer different questions. A startup host copy tells little about the device-memory bandwidth needed for each subsequent request.",
+    "file": "separate-memory-boundaries.svg"
+  },
+  {
+    "id": "compare-kernel-time-floors",
+    "title": "Time floors for the hypothetical projection",
+    "caption": "The transfer floor is ten times the compute floor. Even complete overlap cannot bring this kernel below 4 ms under the stated traffic and bandwidth assumptions.",
+    "file": "compare-kernel-time-floors.svg"
+  },
+  {
+    "id": "baseline-tile-storage",
+    "title": "Baseline tile storage",
+    "caption": "The first four bars sum to 116 KiB. Comparing that total with the 96 KiB SRAM limit exposes a 20 KiB shortfall during the planned overlap.",
+    "file": "baseline-tile-storage.svg"
+  },
+  {
+    "id": "evaluate-a-mapping",
+    "title": "Test a candidate schedule",
+    "caption": "A reuse claim becomes testable when the proposed loop order predicts which transfers disappear and which transfers still have to occur.",
+    "file": "evaluate-a-mapping.svg"
+  },
+  {
+    "id": "follow-the-compiled-plan",
+    "title": "From tensor graph to timed execution",
+    "caption": "Comparing the emitted plan with the dispatched variant identifies where a shape, allocation, or synchronization decision changes the observed request.",
+    "file": "follow-the-compiled-plan.svg"
+  },
+  {
+    "id": "trace-a-split-reduction",
+    "title": "A projection split across its reduction dimension",
+    "caption": "The output becomes usable only after the partial results are combined, so the exchange can sit directly on one request's critical path.",
+    "file": "trace-a-split-reduction.svg"
+  },
+  {
+    "id": "trace-mobile-fallback",
+    "title": "Where one unsupported operation costs time",
+    "caption": "Timing the two handoffs separately from the CPU arithmetic reveals whether scoring or moving its inputs and outputs causes the delay.",
+    "file": "trace-mobile-fallback.svg"
+  },
+  {
+    "id": "compare-energy-per-result",
+    "title": "Energy per accepted inspection result",
+    "caption": "Under the assumed 60-second workload, server B draws more power but completes enough additional accepted results to use 3 fewer joules per result.",
+    "file": "compare-energy-per-result.svg"
+  }
+]

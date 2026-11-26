@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Deferred explanation work relocates to request path, memory, or review queue">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .box{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-edge,#999);stroke-width:1.2}
+    .hot{fill:var(--diagram-warn-fill,#f2ddd4);stroke:var(--diagram-warn,#c85a3c);stroke-width:1.4}
+    .bt{font:600 12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .arr{stroke:var(--diagram-ink-soft,#5a5a60);stroke-width:1.6;fill:none;marker-end:url(#ah2)}
+    .wt{font:600 11px var(--font-sans,sans-serif);fill:var(--diagram-warn,#c85a3c)}
+  </style>
+  <defs><marker id="ah2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="var(--diagram-ink-soft,#5a5a60)"/></marker></defs>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="32">Deferred work does not vanish; it moves</text>
+  <text class="sub" x="30" y="51">Conservation of overhead: attribution evidence demands compute, storage, and interfaces somewhere in the architecture.</text>
+  <!-- source -->
+  <rect class="box" x="30" y="170" width="170" height="80" rx="8"/>
+  <text class="bt" x="115" y="200" text-anchor="middle">explanation work</text>
+  <text class="sm" x="115" y="218" text-anchor="middle">deferred at design time</text>
+  <text class="sm" x="115" y="234" text-anchor="middle">("add it later")</text>
+  <!-- destinations -->
+  <line class="arr" x1="200" y1="185" x2="300" y2="112"/>
+  <rect class="hot" x="306" y="76" width="200" height="72" rx="8"/>
+  <text class="bt" x="406" y="100" text-anchor="middle">serial request path</text>
+  <text class="sm" x="406" y="118" text-anchor="middle">+50 to 200 ms per request inline</text>
+  <text class="wt" x="406" y="136" text-anchor="middle">replicas cannot remove it</text>
+  <line class="arr" x1="200" y1="210" x2="300" y2="210"/>
+  <rect class="hot" x="306" y="174" width="200" height="72" rx="8"/>
+  <text class="bt" x="406" y="198" text-anchor="middle">memory budget</text>
+  <text class="sm" x="406" y="216" text-anchor="middle">cached attributions, background</text>
+  <text class="sm" x="406" y="232" text-anchor="middle">distributions, coalition state</text>
+  <line class="arr" x1="200" y1="235" x2="300" y2="308"/>
+  <rect class="hot" x="306" y="272" width="200" height="72" rx="8"/>
+  <text class="bt" x="406" y="296" text-anchor="middle">human review queue</text>
+  <text class="sm" x="406" y="314" text-anchor="middle">unexplained decisions escalated;</text>
+  <text class="sm" x="406" y="330" text-anchor="middle">cost paid in staffing instead</text>
+  <!-- capacity note -->
+  <rect class="box" x="540" y="150" width="190" height="120" rx="8"/>
+  <text class="bt" x="635" y="176" text-anchor="middle">sizing consequence</text>
+  <text class="sm" x="635" y="198" text-anchor="middle">100 ms baseline + 50-200 ms</text>
+  <text class="sm" x="635" y="214" text-anchor="middle">explanation at 10,000 QPS</text>
+  <text class="sm" x="635" y="230" text-anchor="middle">needs 1.5x to 3x capacity</text>
+  <text class="wt" x="635" y="252" text-anchor="middle">latency stays 150-300 ms</text>
+  <text class="sm" x="30" y="400">The design question is never whether to pay for attribution, but where: inline, asynchronous, cached, or in an interpretable model.</text>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="study-fig-fit ds9-synthetic-anchor" viewBox="0 0 336 188" role="img" aria-labelledby="ds9-synthetic-anchor-title ds9-synthetic-anchor-desc">
+  <title id="ds9-synthetic-anchor-title">Which real examples stay out of training?</title>
+  <desc id="ds9-synthetic-anchor-desc">Real training data and synthetic candidates feed the model. Held-out real examples join the trained model only for evaluation.</desc>
+  <style>
+    .ds9-synthetic-anchor { --ink: #253741; --quiet: #435861; --accent: #086653; --wash: #c9e8dd; --line: #858e8a; }
+    .dark .ds9-synthetic-anchor { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; }
+    @media (prefers-color-scheme: dark) { :root.ds9-synthetic-anchor { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; } }
+    .ds9-synthetic-anchor text { font: 16px system-ui, sans-serif; fill: var(--ink); }
+    .ds9-synthetic-anchor .ds-title { font-weight: 650; }
+    .ds9-synthetic-anchor .ds-note { font-size: 14px; fill: var(--quiet); }
+    .ds9-synthetic-anchor .ds-track { fill: none; stroke: var(--line); stroke-width: 1.5; }
+    .ds9-synthetic-anchor .ds-focus { fill: var(--wash); stroke: var(--accent); stroke-width: 1.5; }
+  </style>
+<g text-anchor="middle">
+  <rect class="ds-track" x="4" y="5" width="154" height="42" rx="3"/>
+  <rect class="ds-track" x="177" y="5" width="154" height="42" rx="3"/>
+  <text x="81" y="31">Real training data</text><text x="254" y="31">Synthetic data</text>
+  <path class="ds-track" d="M81 48v12h86m87-12v12h-87v12m-4-5 4 5 4-5"/>
+  <rect class="ds-track" x="87" y="75" width="160" height="37" rx="3"/>
+  <text class="ds-title" x="167" y="99">Train the model</text>
+  <path class="ds-track" d="M167 114v18h82v10m-4-5 4 5 4-5"/>
+  <rect class="ds-focus" x="4" y="145" width="159" height="37" rx="3"/>
+  <text class="ds-title" x="84" y="169">Held-out real data</text>
+  <path class="ds-track" d="M165 163h27m-5-4 5 4-5 4"/>
+  <rect class="ds-track" x="195" y="145" width="136" height="37" rx="3"/>
+  <text x="263" y="169">Evaluate</text>
+</g>
+</svg>

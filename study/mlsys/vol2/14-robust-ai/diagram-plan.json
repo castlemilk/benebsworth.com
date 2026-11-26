@@ -1,0 +1,64 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The thesis frames robustness as a behavioral contract paid in the fleet's three currencies; prose carries the argument."
+    },
+    "Accuracy Is Not Evidence of Correctness": {
+      "proseOnly": "The opening failure cases (Google Photos slice failure, Uber reclassification, Mars Polar Lander, Boeing 248-day bug) are narrative evidence; the worked bit-flip arithmetic stays in prose with its equation."
+    },
+    "Three Pillars, Three Evidence Families": {
+      "figure": "::fig[silent-failure-triangle]",
+      "teaches": "Environmental shifts, input-level attacks and system-level faults each produce a different kind of evidence, so the evaluation matrix needs one row per pillar and a passed row proves nothing about the others.",
+      "source": "Book unified framework and robustness taxonomy; redrawn as an evidence-family table rather than the book's defense-wall figure."
+    },
+    "The Fleet Compounds Rarity": {
+      "proseOnly": "The SDC fleet-probability arithmetic is quantitative but one-dimensional; the chart carries it."
+    },
+    "Name the Shift by What Stays Fixed": {
+      "proseOnly": "Covariate shift, label shift and concept drift are separated by which probability is invariant; the comparison logic is propositional and the shortcut-cow example is narrative."
+    },
+    "A Fired Metric Is Not a Retraining Command": {
+      "figure": "::fig[drift-decision]",
+      "teaches": "Calibrated alerts automate detection only; performance correlation splits investigation into three cases; statistical significance alone never commands a weight update.",
+      "source": "Book fraud worked example and three-level retraining decision framework."
+    },
+    "The Risk-Coverage Curve Is the Serving Contract": {
+      "figure": "::fig[risk-coverage]",
+      "teaches": "Raising the acceptance threshold lowers accepted risk only when the score orders errors well, and the rejected tail prices the fallback path in capacity.",
+      "source": "Book selective prediction section; the curve is distilled from the coverage/risk definitions rather than copied."
+    },
+    "Conformal Is a Marginal Promise": {
+      "proseOnly": "The rank correction, exchangeability requirement and subgroup caveat are definitional; the equation carries them."
+    },
+    "Attacks Are Priced by Access": {
+      "proseOnly": "FGSM arithmetic and the white/black/physical access ladder are worked in prose with the FGSM equation; the transferability point is a claim, not a geometry."
+    },
+    "Defenses Spend the Same Budget": {
+      "proseOnly": "Adversarial training's compute multiplier, randomized smoothing's sampling cost and detection's blind spots are budget arguments carried in prose."
+    },
+    "Poisoning Defenses Are Four Ordered Gates": {
+      "proseOnly": "The ingress, anomaly, robust-objective and post-training layers are a sequence the prose enumerates; spectral signatures and influence functions are mechanism claims."
+    },
+    "Generative Models Change the Question": {
+      "proseOnly": "Hallucination as the generative silent failure, self-consistency decode multiplication and guardrail load arithmetic are prose."
+    },
+    "Three Signals Separate the Masquerade": {
+      "figure": "::fig[fault-masquerade]",
+      "teaches": "Timing against deployment boundaries, reproducibility under fixed-input replay and cross-layer telemetry correlation separate a software fault from drift or attack before choosing the intervention.",
+      "source": "Book system-level faults section and the credit-risk dependency-update scenario."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "The fallacy list is corrective prose by design."
+    },
+    "The physics": {
+      "proseOnly": "Quantity-value-use table is the quick-reference surface for the chapter's numbers."
+    },
+    "Glossary": {
+      "proseOnly": "Searchable term definitions; the concept index consumes them."
+    },
+    "Open questions": {
+      "proseOnly": "Unresolved questions for review."
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "vol1/01_compression_pilot",
+  "title": "Compression and the deployment budget",
+  "question": "When does a smaller weight representation actually fit a device?",
+  "source": {
+    "file": "study/cs249r_book/books/vol1/10_model_compression/10_model_compression.qmd",
+    "url": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd"
+  },
+  "sections": [{
+    "id": "resident-memory-budget",
+    "heading": "Count the entire resident footprint",
+    "sourceHeading": "Fitting the Deployment Budget",
+    "terms": ["deployment budget", "weights and activations", "memory capacity"],
+    "goal": "Calculate whether weight compression brings the entire resident footprint inside a fixed capacity budget, including unchanged activations.",
+    "case": "Hypothetical inference device: a model has 24 MiB of resident weights and 36 MiB of resident activations; all other memory is excluded from this first accounting. The device allocates 48 MiB to these tensors. A compression method reduces the resident weights to 8 MiB without changing the activations. Treat all quantities as simultaneous resident allocations; do not assume any latency or accuracy improvement. For the transfer, an additional 8 MiB runtime buffer must also be resident and the 48 MiB limit is unchanged.",
+    "facts": {
+      "originalWeightsMiB": 24,
+      "activationsMiB": 36,
+      "compressedWeightsMiB": 8,
+      "budgetMiB": 48,
+      "extraBufferMiB": 8,
+      "originalTotalMiB": ["+", "originalWeightsMiB", "activationsMiB"],
+      "compressedTotalMiB": ["+", "compressedWeightsMiB", "activationsMiB"],
+      "changedTotalMiB": ["+", "compressedTotalMiB", "extraBufferMiB"]
+    },
+    "workedFacts": ["originalTotalMiB", "compressedTotalMiB", "budgetMiB"],
+    "visual": {
+      "title": "Resident footprint versus capacity",
+      "caption": "Weights and activations together determine the resident footprint; the compressed case uses {{compressedTotalMiB}} MiB before any extra buffer.",
+      "unit": "MiB",
+      "rows": [
+        {"label": "Original footprint", "fact": "originalTotalMiB"},
+        {"label": "Compressed footprint", "fact": "compressedTotalMiB"},
+        {"label": "Capacity limit", "fact": "budgetMiB"}
+      ]
+    },
+    "transfer": "Now include the additional 8 MiB runtime buffer. Calculate the new resident footprint in MiB and state whether it fits the unchanged 48 MiB budget; explain which allocations you counted.",
+    "answerFact": "changedTotalMiB"
+  }]
+}

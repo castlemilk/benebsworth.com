@@ -8,31 +8,966 @@
       "speaker": "A",
       "text": "Welcome back to the study room, I'm Marcus.",
       "start": 0.0,
-      "end": 3.4
+      "end": 3.4,
+      "words": [
+        {
+          "text": "Welcome",
+          "start": 0.0,
+          "end": 0.62
+        },
+        {
+          "text": "back",
+          "start": 0.62,
+          "end": 1.02
+        },
+        {
+          "text": "to",
+          "start": 1.02,
+          "end": 1.2
+        },
+        {
+          "text": "the",
+          "start": 1.2,
+          "end": 1.3
+        },
+        {
+          "text": "study",
+          "start": 1.3,
+          "end": 1.48
+        },
+        {
+          "text": "room.",
+          "start": 1.48,
+          "end": 1.88
+        },
+        {
+          "text": "I'm",
+          "start": 2.1,
+          "end": 2.3
+        },
+        {
+          "text": "Marcus.",
+          "start": 2.3,
+          "end": 2.62
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/03-ml-lifecycle/diagrams/lifecycle-loop.svg",
+        "title": "The lifecycle is a loop, not a waterfall",
+        "alt": "Six stages, one artifact per edge: targets \u2192 dataset \u2192 reproducible artifact \u2192 manifest \u2192 endpoint \u2192 drift evidence \u2192 back upstream. The shaded bottom half is the operational phase \u2014 deployment starts a phase rather than ending one."
+      }
     },
     {
       "speaker": "B",
       "text": "And I'm Iris. Today is chapter three: the machine learning lifecycle, and the pitch is simple. Deployment is not the end of the pipeline. It is where the loop closes.",
       "start": 3.4,
-      "end": 14.18
+      "end": 14.18,
+      "words": [
+        {
+          "text": "And",
+          "start": 3.56,
+          "end": 3.82
+        },
+        {
+          "text": "I'm",
+          "start": 3.82,
+          "end": 4.02
+        },
+        {
+          "text": "Iris.",
+          "start": 4.02,
+          "end": 4.28
+        },
+        {
+          "text": "Today",
+          "start": 4.9,
+          "end": 5.1
+        },
+        {
+          "text": "is",
+          "start": 5.1,
+          "end": 5.4
+        },
+        {
+          "text": "chapter",
+          "start": 5.4,
+          "end": 5.66
+        },
+        {
+          "text": "3.",
+          "start": 5.66,
+          "end": 6.1
+        },
+        {
+          "text": "The",
+          "start": 6.64,
+          "end": 6.7
+        },
+        {
+          "text": "machine",
+          "start": 6.7,
+          "end": 7.0
+        },
+        {
+          "text": "learning",
+          "start": 7.0,
+          "end": 7.34
+        },
+        {
+          "text": "life",
+          "start": 7.34,
+          "end": 7.62
+        },
+        {
+          "text": "cycle",
+          "start": 7.62,
+          "end": 8.0
+        },
+        {
+          "text": "and",
+          "start": 8.0,
+          "end": 8.34
+        },
+        {
+          "text": "the",
+          "start": 8.34,
+          "end": 8.46
+        },
+        {
+          "text": "pitch",
+          "start": 8.46,
+          "end": 8.72
+        },
+        {
+          "text": "is",
+          "start": 8.72,
+          "end": 8.94
+        },
+        {
+          "text": "simple.",
+          "start": 8.94,
+          "end": 9.24
+        },
+        {
+          "text": "Deployment",
+          "start": 9.8,
+          "end": 10.3
+        },
+        {
+          "text": "is",
+          "start": 10.3,
+          "end": 10.54
+        },
+        {
+          "text": "not",
+          "start": 10.54,
+          "end": 10.76
+        },
+        {
+          "text": "the",
+          "start": 10.76,
+          "end": 10.94
+        },
+        {
+          "text": "end",
+          "start": 10.94,
+          "end": 11.16
+        },
+        {
+          "text": "of",
+          "start": 11.16,
+          "end": 11.28
+        },
+        {
+          "text": "the",
+          "start": 11.28,
+          "end": 11.36
+        },
+        {
+          "text": "pipeline.",
+          "start": 11.36,
+          "end": 11.66
+        },
+        {
+          "text": "It",
+          "start": 12.32,
+          "end": 12.42
+        },
+        {
+          "text": "is",
+          "start": 12.42,
+          "end": 12.54
+        },
+        {
+          "text": "where",
+          "start": 12.54,
+          "end": 12.72
+        },
+        {
+          "text": "the",
+          "start": 12.72,
+          "end": 12.86
+        },
+        {
+          "text": "loop",
+          "start": 12.86,
+          "end": 13.1
+        },
+        {
+          "text": "closes.",
+          "start": 13.1,
+          "end": 13.52
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "Six stages: problem definition, data, model development, evaluation and validation, deployment, monitoring. Each one hands an artifact to the next. A measurable target, a versioned dataset, a reproducible model, a release manifest, a serving endpoint. And monitoring hands drift evidence back upstream, because the world keeps moving while the model stands still.",
       "start": 14.18,
-      "end": 39.58
+      "end": 39.58,
+      "words": [
+        {
+          "text": "Six",
+          "start": 14.44,
+          "end": 14.78
+        },
+        {
+          "text": "stages.",
+          "start": 14.78,
+          "end": 15.28
+        },
+        {
+          "text": "Problem",
+          "start": 15.9,
+          "end": 16.14
+        },
+        {
+          "text": "definition,",
+          "start": 16.14,
+          "end": 16.56
+        },
+        {
+          "text": "data,",
+          "start": 17.0,
+          "end": 17.24
+        },
+        {
+          "text": "model",
+          "start": 17.7,
+          "end": 17.96
+        },
+        {
+          "text": "development,",
+          "start": 17.96,
+          "end": 18.46
+        },
+        {
+          "text": "evaluation",
+          "start": 18.78,
+          "end": 19.14
+        },
+        {
+          "text": "and",
+          "start": 19.14,
+          "end": 19.68
+        },
+        {
+          "text": "validation,",
+          "start": 19.68,
+          "end": 20.08
+        },
+        {
+          "text": "deployment,",
+          "start": 20.44,
+          "end": 20.82
+        },
+        {
+          "text": "monitoring.",
+          "start": 21.12,
+          "end": 21.54
+        },
+        {
+          "text": "Each",
+          "start": 21.54,
+          "end": 22.46
+        },
+        {
+          "text": "one",
+          "start": 22.46,
+          "end": 22.8
+        },
+        {
+          "text": "hands",
+          "start": 22.8,
+          "end": 23.1
+        },
+        {
+          "text": "an",
+          "start": 23.1,
+          "end": 23.28
+        },
+        {
+          "text": "artifact",
+          "start": 23.28,
+          "end": 23.7
+        },
+        {
+          "text": "to",
+          "start": 23.7,
+          "end": 24.0
+        },
+        {
+          "text": "the",
+          "start": 24.0,
+          "end": 24.1
+        },
+        {
+          "text": "next.",
+          "start": 24.1,
+          "end": 24.48
+        },
+        {
+          "text": "A",
+          "start": 25.04,
+          "end": 25.18
+        },
+        {
+          "text": "measurable",
+          "start": 25.18,
+          "end": 25.58
+        },
+        {
+          "text": "target,",
+          "start": 25.58,
+          "end": 26.12
+        },
+        {
+          "text": "a",
+          "start": 26.34,
+          "end": 26.44
+        },
+        {
+          "text": "version",
+          "start": 26.44,
+          "end": 26.74
+        },
+        {
+          "text": "data",
+          "start": 26.74,
+          "end": 27.08
+        },
+        {
+          "text": "set,",
+          "start": 27.08,
+          "end": 27.42
+        },
+        {
+          "text": "a",
+          "start": 27.78,
+          "end": 27.92
+        },
+        {
+          "text": "reproducible",
+          "start": 27.92,
+          "end": 28.58
+        },
+        {
+          "text": "model,",
+          "start": 28.58,
+          "end": 29.04
+        },
+        {
+          "text": "a",
+          "start": 29.44,
+          "end": 29.56
+        },
+        {
+          "text": "release",
+          "start": 29.56,
+          "end": 29.88
+        },
+        {
+          "text": "manifest,",
+          "start": 29.88,
+          "end": 30.42
+        },
+        {
+          "text": "a",
+          "start": 30.86,
+          "end": 31.0
+        },
+        {
+          "text": "serving",
+          "start": 31.0,
+          "end": 31.3
+        },
+        {
+          "text": "endpoint.",
+          "start": 31.3,
+          "end": 31.74
+        },
+        {
+          "text": "And",
+          "start": 32.38,
+          "end": 32.56
+        },
+        {
+          "text": "monitoring",
+          "start": 32.56,
+          "end": 33.02
+        },
+        {
+          "text": "hands",
+          "start": 33.02,
+          "end": 33.48
+        },
+        {
+          "text": "drift",
+          "start": 33.48,
+          "end": 33.76
+        },
+        {
+          "text": "evidence",
+          "start": 33.76,
+          "end": 34.3
+        },
+        {
+          "text": "back",
+          "start": 34.3,
+          "end": 34.58
+        },
+        {
+          "text": "upstream",
+          "start": 34.58,
+          "end": 35.0
+        },
+        {
+          "text": "because",
+          "start": 35.0,
+          "end": 35.9
+        },
+        {
+          "text": "the",
+          "start": 35.9,
+          "end": 36.14
+        },
+        {
+          "text": "world",
+          "start": 36.14,
+          "end": 36.42
+        },
+        {
+          "text": "keeps",
+          "start": 36.42,
+          "end": 36.74
+        },
+        {
+          "text": "moving",
+          "start": 36.74,
+          "end": 37.22
+        },
+        {
+          "text": "while",
+          "start": 37.22,
+          "end": 37.56
+        },
+        {
+          "text": "the",
+          "start": 37.56,
+          "end": 37.7
+        },
+        {
+          "text": "model",
+          "start": 37.7,
+          "end": 38.02
+        },
+        {
+          "text": "stands",
+          "start": 38.02,
+          "end": 38.5
+        },
+        {
+          "text": "still.",
+          "start": 38.5,
+          "end": 38.88
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "Right, that's the thesis of the whole chapter: it is a loop, not a waterfall. And the running case makes it concrete: diabetic retinopathy screening in rural clinics. A camera photographs the back of your eye, the model grades it on the spot, and the whole thing has to work during the visit on a little edge device with intermittent connectivity.",
       "start": 39.58,
-      "end": 60.3
+      "end": 60.3,
+      "words": [
+        {
+          "text": "Right,",
+          "start": 39.6,
+          "end": 40.12
+        },
+        {
+          "text": "that's",
+          "start": 40.34,
+          "end": 40.58
+        },
+        {
+          "text": "the",
+          "start": 40.58,
+          "end": 40.7
+        },
+        {
+          "text": "thesis",
+          "start": 40.7,
+          "end": 41.06
+        },
+        {
+          "text": "of",
+          "start": 41.06,
+          "end": 41.24
+        },
+        {
+          "text": "the",
+          "start": 41.24,
+          "end": 41.34
+        },
+        {
+          "text": "whole",
+          "start": 41.34,
+          "end": 41.52
+        },
+        {
+          "text": "chapter.",
+          "start": 41.52,
+          "end": 41.9
+        },
+        {
+          "text": "It",
+          "start": 42.46,
+          "end": 42.64
+        },
+        {
+          "text": "is",
+          "start": 42.64,
+          "end": 42.78
+        },
+        {
+          "text": "a",
+          "start": 42.78,
+          "end": 42.92
+        },
+        {
+          "text": "loop,",
+          "start": 42.92,
+          "end": 43.16
+        },
+        {
+          "text": "not",
+          "start": 43.46,
+          "end": 43.6
+        },
+        {
+          "text": "a",
+          "start": 43.6,
+          "end": 43.76
+        },
+        {
+          "text": "waterfall.",
+          "start": 43.76,
+          "end": 44.16
+        },
+        {
+          "text": "And",
+          "start": 44.78,
+          "end": 44.96
+        },
+        {
+          "text": "the",
+          "start": 44.96,
+          "end": 45.08
+        },
+        {
+          "text": "running",
+          "start": 45.08,
+          "end": 45.26
+        },
+        {
+          "text": "case",
+          "start": 45.26,
+          "end": 45.58
+        },
+        {
+          "text": "makes",
+          "start": 45.58,
+          "end": 45.9
+        },
+        {
+          "text": "it",
+          "start": 45.9,
+          "end": 46.06
+        },
+        {
+          "text": "concrete,",
+          "start": 46.06,
+          "end": 46.42
+        },
+        {
+          "text": "diabetic",
+          "start": 47.0,
+          "end": 47.4
+        },
+        {
+          "text": "retinopathy",
+          "start": 47.4,
+          "end": 48.24
+        },
+        {
+          "text": "screening",
+          "start": 48.24,
+          "end": 48.76
+        },
+        {
+          "text": "in",
+          "start": 48.76,
+          "end": 49.08
+        },
+        {
+          "text": "rural",
+          "start": 49.08,
+          "end": 49.3
+        },
+        {
+          "text": "clinics.",
+          "start": 49.3,
+          "end": 49.7
+        },
+        {
+          "text": "A",
+          "start": 49.7,
+          "end": 50.58
+        },
+        {
+          "text": "camera",
+          "start": 50.58,
+          "end": 50.94
+        },
+        {
+          "text": "photographs",
+          "start": 50.94,
+          "end": 51.42
+        },
+        {
+          "text": "the",
+          "start": 51.42,
+          "end": 51.82
+        },
+        {
+          "text": "back",
+          "start": 51.82,
+          "end": 52.04
+        },
+        {
+          "text": "of",
+          "start": 52.04,
+          "end": 52.16
+        },
+        {
+          "text": "your",
+          "start": 52.16,
+          "end": 52.26
+        },
+        {
+          "text": "eye,",
+          "start": 52.26,
+          "end": 52.56
+        },
+        {
+          "text": "the",
+          "start": 52.9,
+          "end": 53.02
+        },
+        {
+          "text": "model",
+          "start": 53.02,
+          "end": 53.28
+        },
+        {
+          "text": "grades",
+          "start": 53.28,
+          "end": 53.66
+        },
+        {
+          "text": "it",
+          "start": 53.66,
+          "end": 53.86
+        },
+        {
+          "text": "on",
+          "start": 53.86,
+          "end": 53.96
+        },
+        {
+          "text": "the",
+          "start": 53.96,
+          "end": 54.06
+        },
+        {
+          "text": "spot,",
+          "start": 54.06,
+          "end": 54.38
+        },
+        {
+          "text": "and",
+          "start": 54.74,
+          "end": 54.96
+        },
+        {
+          "text": "the",
+          "start": 54.96,
+          "end": 55.08
+        },
+        {
+          "text": "whole",
+          "start": 55.08,
+          "end": 55.28
+        },
+        {
+          "text": "thing",
+          "start": 55.28,
+          "end": 55.56
+        },
+        {
+          "text": "has",
+          "start": 55.56,
+          "end": 55.8
+        },
+        {
+          "text": "to",
+          "start": 55.8,
+          "end": 55.94
+        },
+        {
+          "text": "work",
+          "start": 55.94,
+          "end": 56.16
+        },
+        {
+          "text": "during",
+          "start": 56.16,
+          "end": 56.4
+        },
+        {
+          "text": "the",
+          "start": 56.4,
+          "end": 56.58
+        },
+        {
+          "text": "visit",
+          "start": 56.58,
+          "end": 56.86
+        },
+        {
+          "text": "on",
+          "start": 56.86,
+          "end": 57.14
+        },
+        {
+          "text": "a",
+          "start": 57.14,
+          "end": 57.28
+        },
+        {
+          "text": "little",
+          "start": 57.28,
+          "end": 57.42
+        },
+        {
+          "text": "edge",
+          "start": 57.42,
+          "end": 57.74
+        },
+        {
+          "text": "device",
+          "start": 57.74,
+          "end": 58.18
+        },
+        {
+          "text": "with",
+          "start": 58.18,
+          "end": 58.48
+        },
+        {
+          "text": "intermittent",
+          "start": 58.48,
+          "end": 58.94
+        },
+        {
+          "text": "connectivity.",
+          "start": 58.94,
+          "end": 59.58
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "The device is the interesting constraint. Four to eight gigabytes of memory shared with the operating system, the camera pipeline, the clinic software. The model itself gets roughly five hundred megabytes.",
       "start": 60.3,
-      "end": 74.68
+      "end": 74.68,
+      "words": [
+        {
+          "text": "The",
+          "start": 60.7,
+          "end": 60.78
+        },
+        {
+          "text": "device",
+          "start": 60.78,
+          "end": 61.14
+        },
+        {
+          "text": "is",
+          "start": 61.14,
+          "end": 61.52
+        },
+        {
+          "text": "the",
+          "start": 61.52,
+          "end": 61.68
+        },
+        {
+          "text": "interesting",
+          "start": 61.68,
+          "end": 62.18
+        },
+        {
+          "text": "constraint.",
+          "start": 62.18,
+          "end": 62.8
+        },
+        {
+          "text": "Four",
+          "start": 63.58,
+          "end": 63.8
+        },
+        {
+          "text": "to",
+          "start": 63.8,
+          "end": 63.98
+        },
+        {
+          "text": "eight",
+          "start": 63.98,
+          "end": 64.24
+        },
+        {
+          "text": "gigabytes",
+          "start": 64.24,
+          "end": 64.56
+        },
+        {
+          "text": "of",
+          "start": 64.56,
+          "end": 64.96
+        },
+        {
+          "text": "memory",
+          "start": 64.96,
+          "end": 65.3
+        },
+        {
+          "text": "shared",
+          "start": 65.3,
+          "end": 65.8
+        },
+        {
+          "text": "with",
+          "start": 65.8,
+          "end": 66.04
+        },
+        {
+          "text": "the",
+          "start": 66.04,
+          "end": 66.18
+        },
+        {
+          "text": "operating",
+          "start": 66.18,
+          "end": 66.66
+        },
+        {
+          "text": "system,",
+          "start": 66.66,
+          "end": 67.2
+        },
+        {
+          "text": "the",
+          "start": 67.64,
+          "end": 67.76
+        },
+        {
+          "text": "camera",
+          "start": 67.76,
+          "end": 68.18
+        },
+        {
+          "text": "pipeline,",
+          "start": 68.18,
+          "end": 68.64
+        },
+        {
+          "text": "the",
+          "start": 69.18,
+          "end": 69.28
+        },
+        {
+          "text": "clinic",
+          "start": 69.28,
+          "end": 69.5
+        },
+        {
+          "text": "software.",
+          "start": 69.5,
+          "end": 70.0
+        },
+        {
+          "text": "The",
+          "start": 70.76,
+          "end": 70.98
+        },
+        {
+          "text": "model",
+          "start": 70.98,
+          "end": 71.3
+        },
+        {
+          "text": "itself",
+          "start": 71.3,
+          "end": 71.78
+        },
+        {
+          "text": "gets",
+          "start": 71.78,
+          "end": 72.22
+        },
+        {
+          "text": "roughly",
+          "start": 72.22,
+          "end": 72.56
+        },
+        {
+          "text": "500",
+          "start": 72.56,
+          "end": 73.26
+        },
+        {
+          "text": "megabytes.",
+          "start": 73.26,
+          "end": 74.06
+        },
+        {
+          "text": "And",
+          "start": 74.06,
+          "end": 75.1
+        }
+      ]
     },
     {
       "speaker": "B",
@@ -43,7 +978,194 @@
         "id": "sensitivity",
         "title": "Sensitivity (recall): the missed-case floor",
         "latex": "\\mathrm{Sens} = \\frac{\\mathrm{TP}}{\\mathrm{TP} + \\mathrm{FN}}"
-      }
+      },
+      "words": [
+        {
+          "text": "the",
+          "start": 75.1,
+          "end": 75.18
+        },
+        {
+          "text": "clinical",
+          "start": 75.18,
+          "end": 75.48
+        },
+        {
+          "text": "bar",
+          "start": 75.48,
+          "end": 75.84
+        },
+        {
+          "text": "is",
+          "start": 75.84,
+          "end": 76.12
+        },
+        {
+          "text": "a",
+          "start": 76.12,
+          "end": 76.24
+        },
+        {
+          "text": "pair",
+          "start": 76.24,
+          "end": 76.44
+        },
+        {
+          "text": "of",
+          "start": 76.44,
+          "end": 76.58
+        },
+        {
+          "text": "floors,",
+          "start": 76.58,
+          "end": 76.92
+        },
+        {
+          "text": "not",
+          "start": 77.38,
+          "end": 77.6
+        },
+        {
+          "text": "one",
+          "start": 77.6,
+          "end": 77.86
+        },
+        {
+          "text": "accuracy",
+          "start": 77.86,
+          "end": 78.28
+        },
+        {
+          "text": "number.",
+          "start": 78.28,
+          "end": 78.7
+        },
+        {
+          "text": "Better",
+          "start": 79.5,
+          "end": 79.74
+        },
+        {
+          "text": "than",
+          "start": 79.74,
+          "end": 80.0
+        },
+        {
+          "text": "90",
+          "start": 80.0,
+          "end": 80.34
+        },
+        {
+          "text": "%",
+          "start": 80.34,
+          "end": 80.68
+        },
+        {
+          "text": "sensitivity,",
+          "start": 80.68,
+          "end": 81.26
+        },
+        {
+          "text": "meaning",
+          "start": 81.76,
+          "end": 82.04
+        },
+        {
+          "text": "catch",
+          "start": 82.04,
+          "end": 82.38
+        },
+        {
+          "text": "almost",
+          "start": 82.38,
+          "end": 82.8
+        },
+        {
+          "text": "every",
+          "start": 82.8,
+          "end": 83.26
+        },
+        {
+          "text": "real",
+          "start": 83.26,
+          "end": 83.56
+        },
+        {
+          "text": "case",
+          "start": 83.56,
+          "end": 83.88
+        },
+        {
+          "text": "and",
+          "start": 83.88,
+          "end": 84.5
+        },
+        {
+          "text": "better",
+          "start": 84.5,
+          "end": 84.8
+        },
+        {
+          "text": "than",
+          "start": 84.8,
+          "end": 85.02
+        },
+        {
+          "text": "80",
+          "start": 85.02,
+          "end": 85.3
+        },
+        {
+          "text": "%",
+          "start": 85.3,
+          "end": 85.7
+        },
+        {
+          "text": "specificity",
+          "start": 85.7,
+          "end": 86.5
+        },
+        {
+          "text": "so",
+          "start": 86.5,
+          "end": 87.02
+        },
+        {
+          "text": "the",
+          "start": 87.02,
+          "end": 87.18
+        },
+        {
+          "text": "specialists",
+          "start": 87.18,
+          "end": 87.56
+        },
+        {
+          "text": "aren't",
+          "start": 87.56,
+          "end": 87.96
+        },
+        {
+          "text": "buried",
+          "start": 87.96,
+          "end": 88.34
+        },
+        {
+          "text": "in",
+          "start": 88.34,
+          "end": 88.6
+        },
+        {
+          "text": "false",
+          "start": 88.6,
+          "end": 88.92
+        },
+        {
+          "text": "referrals.",
+          "start": 88.92,
+          "end": 89.42
+        }
+      ]
     },
     {
       "speaker": "A",
@@ -54,37 +1176,784 @@
         "id": "ungradable-share",
         "title": "Ungradable share: the lab-to-field gap measured",
         "latex": "f_{\\mathrm{reject}} = \\frac{N_{\\mathrm{ungradable}}}{N_{\\mathrm{submitted}}} = \\frac{393}{1838} \\approx 0.21"
-      }
+      },
+      "words": [
+        {
+          "text": "And",
+          "start": 90.18,
+          "end": 90.66
+        },
+        {
+          "text": "here's",
+          "start": 90.66,
+          "end": 91.02
+        },
+        {
+          "text": "the",
+          "start": 91.02,
+          "end": 91.14
+        },
+        {
+          "text": "cautionary",
+          "start": 91.14,
+          "end": 91.84
+        },
+        {
+          "text": "data",
+          "start": 91.84,
+          "end": 92.08
+        },
+        {
+          "text": "point.",
+          "start": 92.08,
+          "end": 92.46
+        },
+        {
+          "text": "This",
+          "start": 93.1,
+          "end": 93.32
+        },
+        {
+          "text": "is",
+          "start": 93.32,
+          "end": 93.48
+        },
+        {
+          "text": "a",
+          "start": 93.48,
+          "end": 93.62
+        },
+        {
+          "text": "real",
+          "start": 93.62,
+          "end": 93.94
+        },
+        {
+          "text": "deployment.",
+          "start": 93.94,
+          "end": 94.44
+        },
+        {
+          "text": "A",
+          "start": 94.44,
+          "end": 95.1
+        },
+        {
+          "text": "team",
+          "start": 95.1,
+          "end": 95.4
+        },
+        {
+          "text": "shipped",
+          "start": 95.4,
+          "end": 95.86
+        },
+        {
+          "text": "a",
+          "start": 95.86,
+          "end": 96.04
+        },
+        {
+          "text": "model",
+          "start": 96.04,
+          "end": 96.36
+        },
+        {
+          "text": "with",
+          "start": 96.36,
+          "end": 96.56
+        },
+        {
+          "text": "specialist",
+          "start": 96.56,
+          "end": 97.02
+        },
+        {
+          "text": "level",
+          "start": 97.02,
+          "end": 97.42
+        },
+        {
+          "text": "lab",
+          "start": 97.42,
+          "end": 97.84
+        },
+        {
+          "text": "accuracy",
+          "start": 97.84,
+          "end": 98.36
+        },
+        {
+          "text": "to",
+          "start": 98.36,
+          "end": 98.6
+        },
+        {
+          "text": "clinics",
+          "start": 98.6,
+          "end": 99.0
+        },
+        {
+          "text": "in",
+          "start": 99.0,
+          "end": 99.22
+        },
+        {
+          "text": "Thailand,",
+          "start": 99.22,
+          "end": 99.74
+        },
+        {
+          "text": "and",
+          "start": 100.28,
+          "end": 100.5
+        },
+        {
+          "text": "about",
+          "start": 100.5,
+          "end": 100.72
+        },
+        {
+          "text": "21",
+          "start": 100.72,
+          "end": 101.26
+        },
+        {
+          "text": "%",
+          "start": 101.26,
+          "end": 101.76
+        },
+        {
+          "text": "of",
+          "start": 101.76,
+          "end": 102.0
+        },
+        {
+          "text": "the",
+          "start": 102.0,
+          "end": 102.1
+        },
+        {
+          "text": "images",
+          "start": 102.1,
+          "end": 102.48
+        },
+        {
+          "text": "that",
+          "start": 102.48,
+          "end": 102.78
+        },
+        {
+          "text": "came",
+          "start": 102.78,
+          "end": 103.04
+        },
+        {
+          "text": "back",
+          "start": 103.04,
+          "end": 103.4
+        },
+        {
+          "text": "were",
+          "start": 103.4,
+          "end": 103.64
+        },
+        {
+          "text": "ungradable.",
+          "start": 103.64,
+          "end": 104.4
+        },
+        {
+          "text": "393",
+          "start": 105.82,
+          "end": 106.46
+        },
+        {
+          "text": "out",
+          "start": 106.46,
+          "end": 106.98
+        },
+        {
+          "text": "of",
+          "start": 106.98,
+          "end": 107.16
+        },
+        {
+          "text": "1838.",
+          "start": 107.16,
+          "end": 108.44
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "Twenty-one percent. So one in five patients effectively unscreened, because of blur, low light, pupil dilation, technicians with two weeks of training. All the stuff a curated dataset never shows you.",
       "start": 109.38,
-      "end": 123.05
+      "end": 123.05,
+      "words": [
+        {
+          "text": "21%.",
+          "start": 109.98,
+          "end": 110.62
+        },
+        {
+          "text": "So",
+          "start": 110.62,
+          "end": 111.26
+        },
+        {
+          "text": "one",
+          "start": 111.26,
+          "end": 111.54
+        },
+        {
+          "text": "in",
+          "start": 111.54,
+          "end": 111.7
+        },
+        {
+          "text": "five",
+          "start": 111.7,
+          "end": 111.98
+        },
+        {
+          "text": "patients",
+          "start": 111.98,
+          "end": 112.48
+        },
+        {
+          "text": "effectively",
+          "start": 112.48,
+          "end": 112.96
+        },
+        {
+          "text": "unscreened",
+          "start": 112.96,
+          "end": 114.16
+        },
+        {
+          "text": "because",
+          "start": 114.16,
+          "end": 114.42
+        },
+        {
+          "text": "of",
+          "start": 114.42,
+          "end": 114.64
+        },
+        {
+          "text": "blur,",
+          "start": 114.64,
+          "end": 114.9
+        },
+        {
+          "text": "low",
+          "start": 115.24,
+          "end": 115.52
+        },
+        {
+          "text": "light,",
+          "start": 115.52,
+          "end": 115.78
+        },
+        {
+          "text": "pupil",
+          "start": 116.12,
+          "end": 116.3
+        },
+        {
+          "text": "dilation,",
+          "start": 116.3,
+          "end": 116.86
+        },
+        {
+          "text": "technicians",
+          "start": 117.38,
+          "end": 117.68
+        },
+        {
+          "text": "with",
+          "start": 117.68,
+          "end": 118.16
+        },
+        {
+          "text": "two",
+          "start": 118.16,
+          "end": 118.4
+        },
+        {
+          "text": "weeks",
+          "start": 118.4,
+          "end": 118.62
+        },
+        {
+          "text": "of",
+          "start": 118.62,
+          "end": 118.76
+        },
+        {
+          "text": "training.",
+          "start": 118.76,
+          "end": 119.06
+        },
+        {
+          "text": "All",
+          "start": 119.74,
+          "end": 119.96
+        },
+        {
+          "text": "the",
+          "start": 119.96,
+          "end": 120.12
+        },
+        {
+          "text": "stuff",
+          "start": 120.12,
+          "end": 120.4
+        },
+        {
+          "text": "a",
+          "start": 120.4,
+          "end": 120.6
+        },
+        {
+          "text": "curated",
+          "start": 120.6,
+          "end": 120.94
+        },
+        {
+          "text": "data",
+          "start": 120.94,
+          "end": 121.26
+        },
+        {
+          "text": "set",
+          "start": 121.26,
+          "end": 121.54
+        },
+        {
+          "text": "never",
+          "start": 121.54,
+          "end": 121.86
+        },
+        {
+          "text": "shows",
+          "start": 121.86,
+          "end": 122.24
+        },
+        {
+          "text": "you.",
+          "start": 122.24,
+          "end": 122.52
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "That's the lab-to-field gap in one number. Lab accuracy is evidence about curated inputs. It says nothing about the field.",
       "start": 123.05,
-      "end": 132.28
+      "end": 132.28,
+      "words": [
+        {
+          "text": "That's",
+          "start": 122.52,
+          "end": 123.74
+        },
+        {
+          "text": "the",
+          "start": 123.74,
+          "end": 123.9
+        },
+        {
+          "text": "lab",
+          "start": 123.9,
+          "end": 124.1
+        },
+        {
+          "text": "to",
+          "start": 124.1,
+          "end": 124.22
+        },
+        {
+          "text": "field",
+          "start": 124.22,
+          "end": 124.46
+        },
+        {
+          "text": "gap",
+          "start": 124.46,
+          "end": 124.82
+        },
+        {
+          "text": "in",
+          "start": 124.82,
+          "end": 125.06
+        },
+        {
+          "text": "one",
+          "start": 125.06,
+          "end": 125.32
+        },
+        {
+          "text": "number.",
+          "start": 125.32,
+          "end": 125.66
+        },
+        {
+          "text": "Lab",
+          "start": 126.18,
+          "end": 126.54
+        },
+        {
+          "text": "accuracy",
+          "start": 126.54,
+          "end": 127.04
+        },
+        {
+          "text": "is",
+          "start": 127.04,
+          "end": 127.46
+        },
+        {
+          "text": "evidence",
+          "start": 127.46,
+          "end": 127.84
+        },
+        {
+          "text": "about",
+          "start": 127.84,
+          "end": 128.28
+        },
+        {
+          "text": "curated",
+          "start": 128.28,
+          "end": 128.68
+        },
+        {
+          "text": "inputs.",
+          "start": 128.68,
+          "end": 129.26
+        },
+        {
+          "text": "It",
+          "start": 129.82,
+          "end": 130.0
+        },
+        {
+          "text": "says",
+          "start": 130.0,
+          "end": 130.28
+        },
+        {
+          "text": "nothing",
+          "start": 130.28,
+          "end": 130.66
+        },
+        {
+          "text": "about",
+          "start": 130.66,
+          "end": 130.98
+        },
+        {
+          "text": "the",
+          "start": 130.98,
+          "end": 131.2
+        },
+        {
+          "text": "field.",
+          "start": 131.2,
+          "end": 131.6
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "Okay, so now the failure story the whole chapter pivots on. Day one hundred fifty-three.",
       "start": 132.28,
-      "end": 138.2
+      "end": 138.2,
+      "words": [
+        {
+          "text": "Okay,",
+          "start": 132.46,
+          "end": 132.86
+        },
+        {
+          "text": "so",
+          "start": 133.14,
+          "end": 133.3
+        },
+        {
+          "text": "now",
+          "start": 133.3,
+          "end": 133.48
+        },
+        {
+          "text": "the",
+          "start": 133.48,
+          "end": 133.64
+        },
+        {
+          "text": "failure",
+          "start": 133.64,
+          "end": 133.94
+        },
+        {
+          "text": "story",
+          "start": 133.94,
+          "end": 134.36
+        },
+        {
+          "text": "the",
+          "start": 134.36,
+          "end": 134.54
+        },
+        {
+          "text": "whole",
+          "start": 134.54,
+          "end": 134.72
+        },
+        {
+          "text": "chapter",
+          "start": 134.72,
+          "end": 135.02
+        },
+        {
+          "text": "pivots",
+          "start": 135.02,
+          "end": 135.58
+        },
+        {
+          "text": "on",
+          "start": 135.58,
+          "end": 135.76
+        },
+        {
+          "text": "day",
+          "start": 135.76,
+          "end": 136.54
+        },
+        {
+          "text": "153.",
+          "start": 136.54,
+          "end": 137.62
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/03-ml-lifecycle/diagrams/day-153-cascade.svg",
+        "title": "The day-153 cascade",
+        "alt": "Five months of dependent decisions harden before the 500 MB constraint arrives at deployment. The rework arrows propagate back to every stage whose artifacts assumed a feasible target \u2014 revise, repeat, re-validate."
+      }
     },
     {
       "speaker": "A",
       "text": "The team spends five months building. Data curated, model trained, sensitivity validated, climbing from ninety-two to ninety-four percent. And on day one hundred fifty-three, during deployment, someone discovers the model needs four gigabytes of memory.",
       "start": 138.2,
-      "end": 156.65
+      "end": 156.65,
+      "words": [
+        {
+          "text": "The",
+          "start": 138.28,
+          "end": 138.66
+        },
+        {
+          "text": "team",
+          "start": 138.66,
+          "end": 138.96
+        },
+        {
+          "text": "spends",
+          "start": 138.96,
+          "end": 139.48
+        },
+        {
+          "text": "five",
+          "start": 139.48,
+          "end": 139.84
+        },
+        {
+          "text": "months",
+          "start": 139.84,
+          "end": 140.14
+        },
+        {
+          "text": "building",
+          "start": 140.14,
+          "end": 140.66
+        },
+        {
+          "text": "data",
+          "start": 140.66,
+          "end": 141.52
+        },
+        {
+          "text": "curated",
+          "start": 141.52,
+          "end": 142.18
+        },
+        {
+          "text": "model",
+          "start": 142.18,
+          "end": 142.82
+        },
+        {
+          "text": "trained",
+          "start": 142.82,
+          "end": 143.42
+        },
+        {
+          "text": "sensitivity",
+          "start": 143.42,
+          "end": 144.04
+        },
+        {
+          "text": "validated",
+          "start": 144.04,
+          "end": 144.92
+        },
+        {
+          "text": "climbing",
+          "start": 144.92,
+          "end": 145.78
+        },
+        {
+          "text": "from",
+          "start": 145.78,
+          "end": 146.12
+        },
+        {
+          "text": "92",
+          "start": 146.12,
+          "end": 146.72
+        },
+        {
+          "text": "to",
+          "start": 146.72,
+          "end": 147.04
+        },
+        {
+          "text": "94%.",
+          "start": 147.04,
+          "end": 148.02
+        },
+        {
+          "text": "And",
+          "start": 148.02,
+          "end": 149.0
+        },
+        {
+          "text": "on",
+          "start": 149.0,
+          "end": 149.16
+        },
+        {
+          "text": "day",
+          "start": 149.16,
+          "end": 149.48
+        },
+        {
+          "text": "153",
+          "start": 149.48,
+          "end": 150.86
+        },
+        {
+          "text": "during",
+          "start": 150.86,
+          "end": 151.4
+        },
+        {
+          "text": "deployment,",
+          "start": 151.4,
+          "end": 152.04
+        },
+        {
+          "text": "someone",
+          "start": 152.48,
+          "end": 152.92
+        },
+        {
+          "text": "discovers",
+          "start": 152.92,
+          "end": 153.32
+        },
+        {
+          "text": "the",
+          "start": 153.32,
+          "end": 153.72
+        },
+        {
+          "text": "model",
+          "start": 153.72,
+          "end": 154.06
+        },
+        {
+          "text": "needs",
+          "start": 154.06,
+          "end": 154.38
+        },
+        {
+          "text": "four",
+          "start": 154.38,
+          "end": 154.82
+        },
+        {
+          "text": "gigabytes",
+          "start": 154.82,
+          "end": 155.22
+        },
+        {
+          "text": "of",
+          "start": 155.22,
+          "end": 155.56
+        },
+        {
+          "text": "memory",
+          "start": 155.56,
+          "end": 155.96
+        },
+        {
+          "text": "on",
+          "start": 155.96,
+          "end": 157.04
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "On a device that reserves five hundred megabytes.",
       "start": 156.65,
-      "end": 160.08
+      "end": 160.08,
+      "words": [
+        {
+          "text": "a",
+          "start": 157.04,
+          "end": 157.14
+        },
+        {
+          "text": "device",
+          "start": 157.14,
+          "end": 157.5
+        },
+        {
+          "text": "that",
+          "start": 157.5,
+          "end": 157.92
+        },
+        {
+          "text": "reserves",
+          "start": 157.92,
+          "end": 158.28
+        },
+        {
+          "text": "500",
+          "start": 158.28,
+          "end": 158.88
+        },
+        {
+          "text": "megabytes.",
+          "start": 158.88,
+          "end": 159.58
+        }
+      ]
     },
     {
       "speaker": "A",
@@ -95,25 +1964,953 @@
         "id": "constraint-rework",
         "title": "Constraint-propagation rework",
         "latex": "R = \\sum_{a \\in A_{\\mathrm{dep}}} \\bigl( c_{\\mathrm{revise}}(a) + c_{\\mathrm{repeat}}(a) + c_{\\mathrm{validate}}(a) \\bigr)"
-      }
+      },
+      "words": [
+        {
+          "text": "Five",
+          "start": 159.98,
+          "end": 160.7
+        },
+        {
+          "text": "months",
+          "start": 160.7,
+          "end": 161.0
+        },
+        {
+          "text": "of",
+          "start": 161.0,
+          "end": 161.2
+        },
+        {
+          "text": "work",
+          "start": 161.2,
+          "end": 161.46
+        },
+        {
+          "text": "gone.",
+          "start": 161.46,
+          "end": 161.86
+        },
+        {
+          "text": "Not",
+          "start": 162.38,
+          "end": 162.66
+        },
+        {
+          "text": "because",
+          "start": 162.66,
+          "end": 163.0
+        },
+        {
+          "text": "anyone",
+          "start": 163.0,
+          "end": 163.4
+        },
+        {
+          "text": "was",
+          "start": 163.4,
+          "end": 163.78
+        },
+        {
+          "text": "bad",
+          "start": 163.78,
+          "end": 164.1
+        },
+        {
+          "text": "at",
+          "start": 164.1,
+          "end": 164.26
+        },
+        {
+          "text": "machine",
+          "start": 164.26,
+          "end": 164.52
+        },
+        {
+          "text": "learning,",
+          "start": 164.52,
+          "end": 164.92
+        },
+        {
+          "text": "but",
+          "start": 165.16,
+          "end": 165.4
+        },
+        {
+          "text": "because",
+          "start": 165.4,
+          "end": 165.74
+        },
+        {
+          "text": "a",
+          "start": 165.74,
+          "end": 165.9
+        },
+        {
+          "text": "constraint",
+          "start": 165.9,
+          "end": 166.32
+        },
+        {
+          "text": "that",
+          "start": 166.32,
+          "end": 166.62
+        },
+        {
+          "text": "existed",
+          "start": 166.62,
+          "end": 167.06
+        },
+        {
+          "text": "on",
+          "start": 167.06,
+          "end": 167.34
+        },
+        {
+          "text": "day",
+          "start": 167.34,
+          "end": 167.62
+        },
+        {
+          "text": "one",
+          "start": 167.62,
+          "end": 167.94
+        },
+        {
+          "text": "was",
+          "start": 167.94,
+          "end": 168.3
+        },
+        {
+          "text": "never",
+          "start": 168.3,
+          "end": 168.6
+        },
+        {
+          "text": "written",
+          "start": 168.6,
+          "end": 168.9
+        },
+        {
+          "text": "down",
+          "start": 168.9,
+          "end": 169.18
+        },
+        {
+          "text": "anywhere.",
+          "start": 169.18,
+          "end": 169.64
+        },
+        {
+          "text": "The",
+          "start": 169.64,
+          "end": 170.5
+        },
+        {
+          "text": "chapter",
+          "start": 170.5,
+          "end": 170.82
+        },
+        {
+          "text": "calls",
+          "start": 170.82,
+          "end": 171.28
+        },
+        {
+          "text": "this",
+          "start": 171.28,
+          "end": 171.54
+        },
+        {
+          "text": "the",
+          "start": 171.54,
+          "end": 171.7
+        },
+        {
+          "text": "constraint",
+          "start": 171.7,
+          "end": 172.12
+        },
+        {
+          "text": "propagation",
+          "start": 172.12,
+          "end": 172.72
+        },
+        {
+          "text": "principle,",
+          "start": 172.72,
+          "end": 173.4
+        },
+        {
+          "text": "a",
+          "start": 174.08,
+          "end": 174.2
+        },
+        {
+          "text": "constraint",
+          "start": 174.2,
+          "end": 174.6
+        },
+        {
+          "text": "that",
+          "start": 174.6,
+          "end": 174.92
+        },
+        {
+          "text": "exists",
+          "start": 174.92,
+          "end": 175.38
+        },
+        {
+          "text": "but",
+          "start": 175.38,
+          "end": 175.64
+        },
+        {
+          "text": "never",
+          "start": 175.64,
+          "end": 175.92
+        },
+        {
+          "text": "gets",
+          "start": 175.92,
+          "end": 176.2
+        },
+        {
+          "text": "bound",
+          "start": 176.2,
+          "end": 176.6
+        },
+        {
+          "text": "into",
+          "start": 176.6,
+          "end": 176.92
+        },
+        {
+          "text": "an",
+          "start": 176.92,
+          "end": 177.12
+        },
+        {
+          "text": "early",
+          "start": 177.12,
+          "end": 177.48
+        },
+        {
+          "text": "stages",
+          "start": 177.48,
+          "end": 177.9
+        },
+        {
+          "text": "contract",
+          "start": 177.9,
+          "end": 178.52
+        },
+        {
+          "text": "doesn't",
+          "start": 178.52,
+          "end": 179.1
+        },
+        {
+          "text": "disappear.",
+          "start": 179.1,
+          "end": 179.58
+        },
+        {
+          "text": "It",
+          "start": 180.24,
+          "end": 180.44
+        },
+        {
+          "text": "reemerges",
+          "start": 180.44,
+          "end": 181.06
+        },
+        {
+          "text": "downstream",
+          "start": 181.06,
+          "end": 181.68
+        },
+        {
+          "text": "after",
+          "start": 181.68,
+          "end": 182.68
+        },
+        {
+          "text": "every",
+          "start": 182.68,
+          "end": 183.08
+        },
+        {
+          "text": "dependent",
+          "start": 183.08,
+          "end": 183.56
+        },
+        {
+          "text": "decision",
+          "start": 183.56,
+          "end": 184.1
+        },
+        {
+          "text": "has",
+          "start": 184.1,
+          "end": 184.4
+        },
+        {
+          "text": "hardened.",
+          "start": 184.4,
+          "end": 184.82
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "And the rework bill is every affected artifact, revised, repeated, and re-validated. The book prices an illustrative repair at six days of sequential work after the discovery. But that's only because the fix happened to be feasible.",
       "start": 185.6,
-      "end": 200.83
+      "end": 200.83,
+      "words": [
+        {
+          "text": "And",
+          "start": 185.4,
+          "end": 185.98
+        },
+        {
+          "text": "the",
+          "start": 185.98,
+          "end": 186.1
+        },
+        {
+          "text": "rework",
+          "start": 186.1,
+          "end": 186.34
+        },
+        {
+          "text": "bill",
+          "start": 186.34,
+          "end": 186.66
+        },
+        {
+          "text": "is",
+          "start": 186.66,
+          "end": 186.92
+        },
+        {
+          "text": "every",
+          "start": 186.92,
+          "end": 187.24
+        },
+        {
+          "text": "affected",
+          "start": 187.24,
+          "end": 187.72
+        },
+        {
+          "text": "artifact",
+          "start": 187.72,
+          "end": 188.24
+        },
+        {
+          "text": "revised,",
+          "start": 188.24,
+          "end": 189.12
+        },
+        {
+          "text": "repeated",
+          "start": 189.66,
+          "end": 189.98
+        },
+        {
+          "text": "and",
+          "start": 189.98,
+          "end": 190.5
+        },
+        {
+          "text": "revalidated.",
+          "start": 190.5,
+          "end": 191.22
+        },
+        {
+          "text": "The",
+          "start": 191.8,
+          "end": 192.04
+        },
+        {
+          "text": "book",
+          "start": 192.04,
+          "end": 192.24
+        },
+        {
+          "text": "prices",
+          "start": 192.24,
+          "end": 192.64
+        },
+        {
+          "text": "an",
+          "start": 192.64,
+          "end": 192.86
+        },
+        {
+          "text": "illustrative",
+          "start": 192.86,
+          "end": 193.34
+        },
+        {
+          "text": "repair",
+          "start": 193.34,
+          "end": 193.82
+        },
+        {
+          "text": "at",
+          "start": 193.82,
+          "end": 194.2
+        },
+        {
+          "text": "six",
+          "start": 194.2,
+          "end": 194.52
+        },
+        {
+          "text": "days",
+          "start": 194.52,
+          "end": 194.82
+        },
+        {
+          "text": "of",
+          "start": 194.82,
+          "end": 195.04
+        },
+        {
+          "text": "sequential",
+          "start": 195.04,
+          "end": 195.38
+        },
+        {
+          "text": "work",
+          "start": 195.38,
+          "end": 195.84
+        },
+        {
+          "text": "after",
+          "start": 195.84,
+          "end": 196.18
+        },
+        {
+          "text": "the",
+          "start": 196.18,
+          "end": 196.34
+        },
+        {
+          "text": "discovery.",
+          "start": 196.34,
+          "end": 196.8
+        },
+        {
+          "text": "But",
+          "start": 196.8,
+          "end": 197.6
+        },
+        {
+          "text": "that's",
+          "start": 197.6,
+          "end": 198.0
+        },
+        {
+          "text": "only",
+          "start": 198.0,
+          "end": 198.24
+        },
+        {
+          "text": "because",
+          "start": 198.24,
+          "end": 198.58
+        },
+        {
+          "text": "the",
+          "start": 198.58,
+          "end": 198.84
+        },
+        {
+          "text": "fix",
+          "start": 198.84,
+          "end": 199.06
+        },
+        {
+          "text": "happened",
+          "start": 199.06,
+          "end": 199.5
+        },
+        {
+          "text": "to",
+          "start": 199.5,
+          "end": 199.68
+        },
+        {
+          "text": "be",
+          "start": 199.68,
+          "end": 199.8
+        },
+        {
+          "text": "feasible.",
+          "start": 199.8,
+          "end": 200.12
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "The deeper point is organizational. Deployment found the defect, but deployment didn't own it. Walk back the chain: evaluation measured sensitivity, contract met. Model development never received a memory budget. Problem definition never wrote the five hundred megabytes down. So the fix starts at problem definition, the earliest boundary whose contract never stated the condition.",
       "start": 200.83,
-      "end": 226.78
+      "end": 226.78,
+      "words": [
+        {
+          "text": "The",
+          "start": 200.98,
+          "end": 201.32
+        },
+        {
+          "text": "deeper",
+          "start": 201.32,
+          "end": 201.62
+        },
+        {
+          "text": "point",
+          "start": 201.62,
+          "end": 201.96
+        },
+        {
+          "text": "is",
+          "start": 201.96,
+          "end": 202.24
+        },
+        {
+          "text": "organizational",
+          "start": 202.24,
+          "end": 203.08
+        },
+        {
+          "text": "deployment",
+          "start": 203.08,
+          "end": 203.98
+        },
+        {
+          "text": "found",
+          "start": 203.98,
+          "end": 204.44
+        },
+        {
+          "text": "the",
+          "start": 204.44,
+          "end": 204.64
+        },
+        {
+          "text": "defect,",
+          "start": 204.64,
+          "end": 205.04
+        },
+        {
+          "text": "but",
+          "start": 205.34,
+          "end": 205.38
+        },
+        {
+          "text": "deployment",
+          "start": 205.38,
+          "end": 205.82
+        },
+        {
+          "text": "didn't",
+          "start": 205.82,
+          "end": 206.18
+        },
+        {
+          "text": "own",
+          "start": 206.18,
+          "end": 206.42
+        },
+        {
+          "text": "it.",
+          "start": 206.42,
+          "end": 206.62
+        },
+        {
+          "text": "Walk",
+          "start": 206.96,
+          "end": 207.3
+        },
+        {
+          "text": "back",
+          "start": 207.3,
+          "end": 207.6
+        },
+        {
+          "text": "the",
+          "start": 207.6,
+          "end": 207.78
+        },
+        {
+          "text": "chain.",
+          "start": 207.78,
+          "end": 208.18
+        },
+        {
+          "text": "Evaluation",
+          "start": 208.6,
+          "end": 209.22
+        },
+        {
+          "text": "measured",
+          "start": 209.22,
+          "end": 209.78
+        },
+        {
+          "text": "sensitivity",
+          "start": 209.78,
+          "end": 210.48
+        },
+        {
+          "text": "contract",
+          "start": 210.48,
+          "end": 211.26
+        },
+        {
+          "text": "met",
+          "start": 211.26,
+          "end": 211.7
+        },
+        {
+          "text": "model",
+          "start": 211.7,
+          "end": 212.62
+        },
+        {
+          "text": "development",
+          "start": 212.62,
+          "end": 213.12
+        },
+        {
+          "text": "never",
+          "start": 213.12,
+          "end": 213.54
+        },
+        {
+          "text": "received",
+          "start": 213.54,
+          "end": 214.04
+        },
+        {
+          "text": "a",
+          "start": 214.04,
+          "end": 214.24
+        },
+        {
+          "text": "memory",
+          "start": 214.24,
+          "end": 214.52
+        },
+        {
+          "text": "budget.",
+          "start": 214.52,
+          "end": 215.0
+        },
+        {
+          "text": "Problem",
+          "start": 215.44,
+          "end": 215.96
+        },
+        {
+          "text": "definition",
+          "start": 215.96,
+          "end": 216.48
+        },
+        {
+          "text": "never",
+          "start": 216.48,
+          "end": 216.98
+        },
+        {
+          "text": "wrote",
+          "start": 216.98,
+          "end": 217.3
+        },
+        {
+          "text": "the",
+          "start": 217.3,
+          "end": 217.48
+        },
+        {
+          "text": "500",
+          "start": 217.48,
+          "end": 218.08
+        },
+        {
+          "text": "megabytes",
+          "start": 218.08,
+          "end": 218.78
+        },
+        {
+          "text": "down.",
+          "start": 218.78,
+          "end": 219.16
+        },
+        {
+          "text": "So",
+          "start": 219.16,
+          "end": 219.9
+        },
+        {
+          "text": "the",
+          "start": 219.9,
+          "end": 220.08
+        },
+        {
+          "text": "fix",
+          "start": 220.08,
+          "end": 220.32
+        },
+        {
+          "text": "starts",
+          "start": 220.32,
+          "end": 220.64
+        },
+        {
+          "text": "at",
+          "start": 220.64,
+          "end": 220.88
+        },
+        {
+          "text": "problem",
+          "start": 220.88,
+          "end": 221.3
+        },
+        {
+          "text": "definition,",
+          "start": 221.3,
+          "end": 221.76
+        },
+        {
+          "text": "the",
+          "start": 222.38,
+          "end": 222.56
+        },
+        {
+          "text": "earliest",
+          "start": 222.56,
+          "end": 222.98
+        },
+        {
+          "text": "boundary",
+          "start": 222.98,
+          "end": 223.6
+        },
+        {
+          "text": "whose",
+          "start": 223.6,
+          "end": 223.96
+        },
+        {
+          "text": "contract",
+          "start": 223.96,
+          "end": 224.5
+        },
+        {
+          "text": "never",
+          "start": 224.5,
+          "end": 224.94
+        },
+        {
+          "text": "stated",
+          "start": 224.94,
+          "end": 225.4
+        },
+        {
+          "text": "the",
+          "start": 225.4,
+          "end": 225.58
+        },
+        {
+          "text": "condition.",
+          "start": 225.58,
+          "end": 226.06
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "That walk-back is why stage interface contracts matter. Every stage has an input contract, an output contract, and a quality invariant, meaning what must hold for the stage to count as done.",
       "start": 226.78,
-      "end": 239.05
+      "end": 239.05,
+      "words": [
+        {
+          "text": "That",
+          "start": 226.88,
+          "end": 227.22
+        },
+        {
+          "text": "walk",
+          "start": 227.22,
+          "end": 227.44
+        },
+        {
+          "text": "back",
+          "start": 227.44,
+          "end": 227.74
+        },
+        {
+          "text": "is",
+          "start": 227.74,
+          "end": 228.02
+        },
+        {
+          "text": "why",
+          "start": 228.02,
+          "end": 228.22
+        },
+        {
+          "text": "stage",
+          "start": 228.22,
+          "end": 228.54
+        },
+        {
+          "text": "interface",
+          "start": 228.54,
+          "end": 229.04
+        },
+        {
+          "text": "contracts",
+          "start": 229.04,
+          "end": 229.56
+        },
+        {
+          "text": "matter.",
+          "start": 229.56,
+          "end": 230.06
+        },
+        {
+          "text": "Every",
+          "start": 230.8,
+          "end": 231.1
+        },
+        {
+          "text": "stage",
+          "start": 231.1,
+          "end": 231.36
+        },
+        {
+          "text": "has",
+          "start": 231.36,
+          "end": 231.74
+        },
+        {
+          "text": "an",
+          "start": 231.74,
+          "end": 231.86
+        },
+        {
+          "text": "input",
+          "start": 231.86,
+          "end": 232.1
+        },
+        {
+          "text": "contract,",
+          "start": 232.1,
+          "end": 232.68
+        },
+        {
+          "text": "an",
+          "start": 233.02,
+          "end": 233.2
+        },
+        {
+          "text": "output",
+          "start": 233.2,
+          "end": 233.5
+        },
+        {
+          "text": "contract",
+          "start": 233.5,
+          "end": 234.04
+        },
+        {
+          "text": "and",
+          "start": 234.04,
+          "end": 234.62
+        },
+        {
+          "text": "a",
+          "start": 234.62,
+          "end": 234.76
+        },
+        {
+          "text": "quality",
+          "start": 234.76,
+          "end": 235.0
+        },
+        {
+          "text": "invariant,",
+          "start": 235.0,
+          "end": 235.66
+        },
+        {
+          "text": "meaning",
+          "start": 235.94,
+          "end": 236.26
+        },
+        {
+          "text": "what",
+          "start": 236.26,
+          "end": 236.5
+        },
+        {
+          "text": "must",
+          "start": 236.5,
+          "end": 236.66
+        },
+        {
+          "text": "hold",
+          "start": 236.66,
+          "end": 236.96
+        },
+        {
+          "text": "for",
+          "start": 236.96,
+          "end": 237.14
+        },
+        {
+          "text": "the",
+          "start": 237.14,
+          "end": 237.26
+        },
+        {
+          "text": "stage",
+          "start": 237.26,
+          "end": 237.6
+        },
+        {
+          "text": "to",
+          "start": 237.6,
+          "end": 237.74
+        },
+        {
+          "text": "count",
+          "start": 237.74,
+          "end": 238.04
+        },
+        {
+          "text": "is",
+          "start": 238.04,
+          "end": 238.2
+        },
+        {
+          "text": "done.",
+          "start": 238.2,
+          "end": 238.48
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/03-ml-lifecycle/diagrams/contract-audit.svg",
+        "title": "The contract walk-back",
+        "alt": "Ownership is assigned by boundary, not by discovery site: deployment found the 4 GB defect, evaluation's contract was met, model development received no budget \u2014 so the fix starts at problem definition, the earliest boundary whose contract never stated the condition."
+      }
     },
     {
       "speaker": "A",
@@ -124,19 +2921,585 @@
         "id": "iron-law-task",
         "title": "Iron law, additive form: stage ownership map",
         "latex": "T_{\\mathrm{task}} = \\frac{D_{\\mathrm{vol}}}{BW} + \\frac{\\mathrm{Ops}}{R_{\\mathrm{peak}} \\cdot \\eta} + L"
-      }
+      },
+      "words": [
+        {
+          "text": "And",
+          "start": 239.4,
+          "end": 239.58
+        },
+        {
+          "text": "each",
+          "start": 239.58,
+          "end": 239.86
+        },
+        {
+          "text": "stage",
+          "start": 239.86,
+          "end": 240.24
+        },
+        {
+          "text": "owns",
+          "start": 240.24,
+          "end": 240.72
+        },
+        {
+          "text": "a",
+          "start": 240.72,
+          "end": 240.9
+        },
+        {
+          "text": "term",
+          "start": 240.9,
+          "end": 241.2
+        },
+        {
+          "text": "of",
+          "start": 241.2,
+          "end": 241.38
+        },
+        {
+          "text": "the",
+          "start": 241.38,
+          "end": 241.48
+        },
+        {
+          "text": "iron",
+          "start": 241.48,
+          "end": 241.88
+        },
+        {
+          "text": "law",
+          "start": 241.88,
+          "end": 242.22
+        },
+        {
+          "text": "from",
+          "start": 242.22,
+          "end": 242.46
+        },
+        {
+          "text": "chapter",
+          "start": 242.46,
+          "end": 242.72
+        },
+        {
+          "text": "one.",
+          "start": 242.72,
+          "end": 243.22
+        },
+        {
+          "text": "Data",
+          "start": 243.8,
+          "end": 244.1
+        },
+        {
+          "text": "sets",
+          "start": 244.1,
+          "end": 244.44
+        },
+        {
+          "text": "the",
+          "start": 244.44,
+          "end": 244.66
+        },
+        {
+          "text": "volume",
+          "start": 244.66,
+          "end": 245.02
+        },
+        {
+          "text": "moved.",
+          "start": 245.02,
+          "end": 245.6
+        },
+        {
+          "text": "Model",
+          "start": 246.24,
+          "end": 246.46
+        },
+        {
+          "text": "development",
+          "start": 246.46,
+          "end": 246.96
+        },
+        {
+          "text": "sets",
+          "start": 246.96,
+          "end": 247.4
+        },
+        {
+          "text": "the",
+          "start": 247.4,
+          "end": 247.64
+        },
+        {
+          "text": "operation",
+          "start": 247.64,
+          "end": 248.14
+        },
+        {
+          "text": "count.",
+          "start": 248.14,
+          "end": 248.58
+        },
+        {
+          "text": "Deployment",
+          "start": 248.58,
+          "end": 249.74
+        },
+        {
+          "text": "sets",
+          "start": 249.74,
+          "end": 249.98
+        },
+        {
+          "text": "the",
+          "start": 249.98,
+          "end": 250.24
+        },
+        {
+          "text": "machine's",
+          "start": 250.24,
+          "end": 250.86
+        },
+        {
+          "text": "rate",
+          "start": 250.86,
+          "end": 251.14
+        },
+        {
+          "text": "and",
+          "start": 251.14,
+          "end": 251.34
+        },
+        {
+          "text": "overheads.",
+          "start": 251.34,
+          "end": 251.68
+        },
+        {
+          "text": "The",
+          "start": 252.46,
+          "end": 252.64
+        },
+        {
+          "text": "contract",
+          "start": 252.64,
+          "end": 253.06
+        },
+        {
+          "text": "table",
+          "start": 253.06,
+          "end": 253.66
+        },
+        {
+          "text": "is",
+          "start": 253.66,
+          "end": 253.98
+        },
+        {
+          "text": "literally",
+          "start": 253.98,
+          "end": 254.36
+        },
+        {
+          "text": "the",
+          "start": 254.36,
+          "end": 254.66
+        },
+        {
+          "text": "time",
+          "start": 254.66,
+          "end": 255.0
+        },
+        {
+          "text": "equation",
+          "start": 255.0,
+          "end": 255.34
+        },
+        {
+          "text": "written",
+          "start": 255.34,
+          "end": 256.02
+        },
+        {
+          "text": "as",
+          "start": 256.02,
+          "end": 256.34
+        },
+        {
+          "text": "an",
+          "start": 256.34,
+          "end": 256.46
+        },
+        {
+          "text": "org",
+          "start": 256.46,
+          "end": 256.8
+        },
+        {
+          "text": "chart.",
+          "start": 256.8,
+          "end": 257.12
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "Let's talk about where the hours actually go, because this surprised me. In a practitioner survey, about eighty percent of data scientists named data collection or cleaning as their most time-consuming activity. All the model-focused work, mining, building training sets, refining algorithms, draws about sixteen percent combined.",
       "start": 257.88,
-      "end": 278.05
+      "end": 278.05,
+      "words": [
+        {
+          "text": "Let's",
+          "start": 257.96,
+          "end": 258.42
+        },
+        {
+          "text": "talk",
+          "start": 258.42,
+          "end": 258.62
+        },
+        {
+          "text": "about",
+          "start": 258.62,
+          "end": 258.86
+        },
+        {
+          "text": "where",
+          "start": 258.86,
+          "end": 259.04
+        },
+        {
+          "text": "the",
+          "start": 259.04,
+          "end": 259.14
+        },
+        {
+          "text": "hours",
+          "start": 259.14,
+          "end": 259.46
+        },
+        {
+          "text": "actually",
+          "start": 259.46,
+          "end": 259.96
+        },
+        {
+          "text": "go",
+          "start": 259.96,
+          "end": 260.24
+        },
+        {
+          "text": "because",
+          "start": 260.24,
+          "end": 260.64
+        },
+        {
+          "text": "this",
+          "start": 260.64,
+          "end": 260.92
+        },
+        {
+          "text": "surprised",
+          "start": 260.92,
+          "end": 261.24
+        },
+        {
+          "text": "me.",
+          "start": 261.24,
+          "end": 261.58
+        },
+        {
+          "text": "In",
+          "start": 262.16,
+          "end": 262.32
+        },
+        {
+          "text": "a",
+          "start": 262.32,
+          "end": 262.44
+        },
+        {
+          "text": "practitioner",
+          "start": 262.44,
+          "end": 262.76
+        },
+        {
+          "text": "survey",
+          "start": 262.76,
+          "end": 263.26
+        },
+        {
+          "text": "about",
+          "start": 263.26,
+          "end": 263.8
+        },
+        {
+          "text": "80",
+          "start": 263.8,
+          "end": 264.16
+        },
+        {
+          "text": "%",
+          "start": 264.16,
+          "end": 264.52
+        },
+        {
+          "text": "of",
+          "start": 264.52,
+          "end": 264.66
+        },
+        {
+          "text": "data",
+          "start": 264.66,
+          "end": 264.88
+        },
+        {
+          "text": "scientists",
+          "start": 264.88,
+          "end": 265.48
+        },
+        {
+          "text": "named",
+          "start": 265.48,
+          "end": 265.92
+        },
+        {
+          "text": "data",
+          "start": 265.92,
+          "end": 266.3
+        },
+        {
+          "text": "collection",
+          "start": 266.3,
+          "end": 266.74
+        },
+        {
+          "text": "or",
+          "start": 266.74,
+          "end": 267.06
+        },
+        {
+          "text": "cleaning",
+          "start": 267.06,
+          "end": 267.38
+        },
+        {
+          "text": "as",
+          "start": 267.38,
+          "end": 267.7
+        },
+        {
+          "text": "their",
+          "start": 267.7,
+          "end": 267.84
+        },
+        {
+          "text": "most",
+          "start": 267.84,
+          "end": 268.02
+        },
+        {
+          "text": "time",
+          "start": 268.02,
+          "end": 268.34
+        },
+        {
+          "text": "consuming",
+          "start": 268.34,
+          "end": 268.66
+        },
+        {
+          "text": "activity.",
+          "start": 268.66,
+          "end": 269.32
+        },
+        {
+          "text": "All",
+          "start": 270.06,
+          "end": 270.38
+        },
+        {
+          "text": "the",
+          "start": 270.38,
+          "end": 270.52
+        },
+        {
+          "text": "model",
+          "start": 270.52,
+          "end": 270.72
+        },
+        {
+          "text": "focused",
+          "start": 270.72,
+          "end": 271.02
+        },
+        {
+          "text": "work,",
+          "start": 271.02,
+          "end": 271.44
+        },
+        {
+          "text": "mining,",
+          "start": 271.88,
+          "end": 272.12
+        },
+        {
+          "text": "building",
+          "start": 272.52,
+          "end": 272.72
+        },
+        {
+          "text": "training",
+          "start": 272.72,
+          "end": 273.04
+        },
+        {
+          "text": "sets,",
+          "start": 273.04,
+          "end": 273.48
+        },
+        {
+          "text": "refining",
+          "start": 273.9,
+          "end": 274.28
+        },
+        {
+          "text": "algorithms",
+          "start": 274.28,
+          "end": 274.82
+        },
+        {
+          "text": "draws",
+          "start": 274.82,
+          "end": 275.6
+        },
+        {
+          "text": "about",
+          "start": 275.6,
+          "end": 275.98
+        },
+        {
+          "text": "16",
+          "start": 275.98,
+          "end": 276.52
+        },
+        {
+          "text": "%",
+          "start": 276.52,
+          "end": 276.9
+        },
+        {
+          "text": "combined.",
+          "start": 276.9,
+          "end": 277.34
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "Which is why the book insists data engineering gets explicit planning rather than being treated as setup work.",
       "start": 278.05,
-      "end": 286.0
+      "end": 286.0,
+      "words": [
+        {
+          "text": "Which",
+          "start": 277.94,
+          "end": 278.54
+        },
+        {
+          "text": "is",
+          "start": 278.54,
+          "end": 278.74
+        },
+        {
+          "text": "why",
+          "start": 278.74,
+          "end": 279.0
+        },
+        {
+          "text": "the",
+          "start": 279.0,
+          "end": 279.18
+        },
+        {
+          "text": "book",
+          "start": 279.18,
+          "end": 279.4
+        },
+        {
+          "text": "insists",
+          "start": 279.4,
+          "end": 279.92
+        },
+        {
+          "text": "data",
+          "start": 279.92,
+          "end": 280.28
+        },
+        {
+          "text": "engineering",
+          "start": 280.28,
+          "end": 280.94
+        },
+        {
+          "text": "gets",
+          "start": 280.94,
+          "end": 281.6
+        },
+        {
+          "text": "explicit",
+          "start": 281.6,
+          "end": 282.16
+        },
+        {
+          "text": "planning",
+          "start": 282.16,
+          "end": 282.66
+        },
+        {
+          "text": "rather",
+          "start": 282.66,
+          "end": 283.38
+        },
+        {
+          "text": "than",
+          "start": 283.38,
+          "end": 283.68
+        },
+        {
+          "text": "being",
+          "start": 283.68,
+          "end": 283.88
+        },
+        {
+          "text": "treated",
+          "start": 283.88,
+          "end": 284.3
+        },
+        {
+          "text": "as",
+          "start": 284.3,
+          "end": 284.58
+        },
+        {
+          "text": "set",
+          "start": 284.58,
+          "end": 284.84
+        },
+        {
+          "text": "up",
+          "start": 284.84,
+          "end": 285.0
+        },
+        {
+          "text": "work.",
+          "start": 285.0,
+          "end": 285.34
+        }
+      ]
     },
     {
       "speaker": "B",
@@ -147,25 +3510,988 @@
         "id": "iteration-tax",
         "title": "Iteration tax: search breadth per window",
         "latex": "N_{\\mathrm{ideas}} \\approx \\frac{T_{\\mathrm{window}}}{t_{\\mathrm{cycle}}}"
-      }
+      },
+      "words": [
+        {
+          "text": "And",
+          "start": 286.4,
+          "end": 286.4
+        },
+        {
+          "text": "wherever",
+          "start": 286.4,
+          "end": 286.64
+        },
+        {
+          "text": "the",
+          "start": 286.64,
+          "end": 286.86
+        },
+        {
+          "text": "hours",
+          "start": 286.86,
+          "end": 287.12
+        },
+        {
+          "text": "concentrate,",
+          "start": 287.12,
+          "end": 287.76
+        },
+        {
+          "text": "the",
+          "start": 288.12,
+          "end": 288.24
+        },
+        {
+          "text": "binding",
+          "start": 288.24,
+          "end": 288.5
+        },
+        {
+          "text": "constraint",
+          "start": 288.5,
+          "end": 289.02
+        },
+        {
+          "text": "is",
+          "start": 289.02,
+          "end": 289.32
+        },
+        {
+          "text": "cycle",
+          "start": 289.32,
+          "end": 289.64
+        },
+        {
+          "text": "time.",
+          "start": 289.64,
+          "end": 289.96
+        },
+        {
+          "text": "If",
+          "start": 290.68,
+          "end": 290.8
+        },
+        {
+          "text": "your",
+          "start": 290.8,
+          "end": 290.92
+        },
+        {
+          "text": "training",
+          "start": 290.92,
+          "end": 291.2
+        },
+        {
+          "text": "loop",
+          "start": 291.2,
+          "end": 291.46
+        },
+        {
+          "text": "takes",
+          "start": 291.46,
+          "end": 291.68
+        },
+        {
+          "text": "a",
+          "start": 291.68,
+          "end": 291.86
+        },
+        {
+          "text": "week,",
+          "start": 291.86,
+          "end": 292.06
+        },
+        {
+          "text": "you",
+          "start": 292.46,
+          "end": 292.62
+        },
+        {
+          "text": "test",
+          "start": 292.62,
+          "end": 292.9
+        },
+        {
+          "text": "maybe",
+          "start": 292.9,
+          "end": 293.24
+        },
+        {
+          "text": "26",
+          "start": 293.24,
+          "end": 293.8
+        },
+        {
+          "text": "candidates",
+          "start": 293.8,
+          "end": 294.26
+        },
+        {
+          "text": "in",
+          "start": 294.26,
+          "end": 294.64
+        },
+        {
+          "text": "six",
+          "start": 294.64,
+          "end": 294.92
+        },
+        {
+          "text": "months.",
+          "start": 294.92,
+          "end": 295.18
+        },
+        {
+          "text": "If",
+          "start": 295.82,
+          "end": 296.02
+        },
+        {
+          "text": "it",
+          "start": 296.02,
+          "end": 296.14
+        },
+        {
+          "text": "takes",
+          "start": 296.14,
+          "end": 296.3
+        },
+        {
+          "text": "an",
+          "start": 296.3,
+          "end": 296.5
+        },
+        {
+          "text": "hour,",
+          "start": 296.5,
+          "end": 296.72
+        },
+        {
+          "text": "you",
+          "start": 297.08,
+          "end": 297.2
+        },
+        {
+          "text": "test",
+          "start": 297.2,
+          "end": 297.52
+        },
+        {
+          "text": "around",
+          "start": 297.52,
+          "end": 297.78
+        },
+        {
+          "text": "100.",
+          "start": 297.78,
+          "end": 298.28
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "Nearly four times the search breadth from the same calendar. Though, and this is the counter-intuitive beat, faster iterations don't guarantee a better model. The book's scenario has the fast small model hit its accuracy ceiling early while the slow big one keeps climbing. What the iteration tax actually costs you is optionality. Fewer experiments means fewer chances to find the right family at all.",
       "start": 298.95,
-      "end": 325.47
+      "end": 325.47,
+      "words": [
+        {
+          "text": "Nearly",
+          "start": 299.0,
+          "end": 299.6
+        },
+        {
+          "text": "four",
+          "start": 299.6,
+          "end": 300.0
+        },
+        {
+          "text": "times",
+          "start": 300.0,
+          "end": 300.46
+        },
+        {
+          "text": "the",
+          "start": 300.46,
+          "end": 300.66
+        },
+        {
+          "text": "search",
+          "start": 300.66,
+          "end": 300.94
+        },
+        {
+          "text": "breadth",
+          "start": 300.94,
+          "end": 301.28
+        },
+        {
+          "text": "from",
+          "start": 301.28,
+          "end": 301.54
+        },
+        {
+          "text": "the",
+          "start": 301.54,
+          "end": 301.66
+        },
+        {
+          "text": "same",
+          "start": 301.66,
+          "end": 301.96
+        },
+        {
+          "text": "calendar.",
+          "start": 301.96,
+          "end": 302.48
+        },
+        {
+          "text": "Though,",
+          "start": 302.48,
+          "end": 303.28
+        },
+        {
+          "text": "and",
+          "start": 303.62,
+          "end": 303.8
+        },
+        {
+          "text": "this",
+          "start": 303.8,
+          "end": 304.04
+        },
+        {
+          "text": "is",
+          "start": 304.04,
+          "end": 304.3
+        },
+        {
+          "text": "the",
+          "start": 304.3,
+          "end": 304.44
+        },
+        {
+          "text": "counterintuitive",
+          "start": 304.44,
+          "end": 305.2
+        },
+        {
+          "text": "beat,",
+          "start": 305.2,
+          "end": 305.56
+        },
+        {
+          "text": "faster",
+          "start": 306.0,
+          "end": 306.4
+        },
+        {
+          "text": "iterations",
+          "start": 306.4,
+          "end": 306.98
+        },
+        {
+          "text": "don't",
+          "start": 306.98,
+          "end": 307.44
+        },
+        {
+          "text": "guarantee",
+          "start": 307.44,
+          "end": 307.88
+        },
+        {
+          "text": "a",
+          "start": 307.88,
+          "end": 308.18
+        },
+        {
+          "text": "better",
+          "start": 308.18,
+          "end": 308.4
+        },
+        {
+          "text": "model.",
+          "start": 308.4,
+          "end": 308.82
+        },
+        {
+          "text": "The",
+          "start": 309.34,
+          "end": 309.56
+        },
+        {
+          "text": "book's",
+          "start": 309.56,
+          "end": 309.84
+        },
+        {
+          "text": "scenario",
+          "start": 309.84,
+          "end": 310.22
+        },
+        {
+          "text": "has",
+          "start": 310.22,
+          "end": 310.6
+        },
+        {
+          "text": "the",
+          "start": 310.6,
+          "end": 310.8
+        },
+        {
+          "text": "fast",
+          "start": 310.8,
+          "end": 311.12
+        },
+        {
+          "text": "small",
+          "start": 311.12,
+          "end": 311.54
+        },
+        {
+          "text": "model",
+          "start": 311.54,
+          "end": 312.02
+        },
+        {
+          "text": "hit",
+          "start": 312.02,
+          "end": 312.26
+        },
+        {
+          "text": "its",
+          "start": 312.26,
+          "end": 312.4
+        },
+        {
+          "text": "accuracy",
+          "start": 312.4,
+          "end": 312.84
+        },
+        {
+          "text": "ceiling",
+          "start": 312.84,
+          "end": 313.32
+        },
+        {
+          "text": "early",
+          "start": 313.32,
+          "end": 313.86
+        },
+        {
+          "text": "while",
+          "start": 313.86,
+          "end": 314.2
+        },
+        {
+          "text": "the",
+          "start": 314.2,
+          "end": 314.36
+        },
+        {
+          "text": "slow",
+          "start": 314.36,
+          "end": 314.7
+        },
+        {
+          "text": "big",
+          "start": 314.7,
+          "end": 314.96
+        },
+        {
+          "text": "one",
+          "start": 314.96,
+          "end": 315.2
+        },
+        {
+          "text": "keeps",
+          "start": 315.2,
+          "end": 315.5
+        },
+        {
+          "text": "climbing.",
+          "start": 315.5,
+          "end": 315.96
+        },
+        {
+          "text": "What",
+          "start": 316.62,
+          "end": 316.76
+        },
+        {
+          "text": "the",
+          "start": 316.76,
+          "end": 316.88
+        },
+        {
+          "text": "iteration",
+          "start": 316.88,
+          "end": 317.3
+        },
+        {
+          "text": "tax",
+          "start": 317.3,
+          "end": 317.72
+        },
+        {
+          "text": "actually",
+          "start": 317.72,
+          "end": 318.3
+        },
+        {
+          "text": "costs",
+          "start": 318.3,
+          "end": 318.68
+        },
+        {
+          "text": "you",
+          "start": 318.68,
+          "end": 319.0
+        },
+        {
+          "text": "is",
+          "start": 319.0,
+          "end": 319.22
+        },
+        {
+          "text": "optionality.",
+          "start": 319.22,
+          "end": 319.56
+        },
+        {
+          "text": "Fewer",
+          "start": 320.62,
+          "end": 321.0
+        },
+        {
+          "text": "experiments",
+          "start": 321.0,
+          "end": 321.52
+        },
+        {
+          "text": "means",
+          "start": 321.52,
+          "end": 321.96
+        },
+        {
+          "text": "fewer",
+          "start": 321.96,
+          "end": 322.36
+        },
+        {
+          "text": "chances",
+          "start": 322.36,
+          "end": 322.84
+        },
+        {
+          "text": "to",
+          "start": 322.84,
+          "end": 323.14
+        },
+        {
+          "text": "find",
+          "start": 323.14,
+          "end": 323.42
+        },
+        {
+          "text": "the",
+          "start": 323.42,
+          "end": 323.56
+        },
+        {
+          "text": "right",
+          "start": 323.56,
+          "end": 323.82
+        },
+        {
+          "text": "family",
+          "start": 323.82,
+          "end": 324.3
+        },
+        {
+          "text": "at",
+          "start": 324.3,
+          "end": 324.48
+        },
+        {
+          "text": "all.",
+          "start": 324.48,
+          "end": 324.76
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "Stage one deserves a moment too, because this is where the metric trap lives. If your population is ninety percent healthy, a model that predicts \"no disease\" for everyone scores ninety percent accuracy while failing every single patient who matters.",
       "start": 325.47,
-      "end": 341.35
+      "end": 341.35,
+      "words": [
+        {
+          "text": "Stage",
+          "start": 325.64,
+          "end": 326.04
+        },
+        {
+          "text": "one",
+          "start": 326.04,
+          "end": 326.36
+        },
+        {
+          "text": "deserves",
+          "start": 326.36,
+          "end": 326.64
+        },
+        {
+          "text": "a",
+          "start": 326.64,
+          "end": 326.94
+        },
+        {
+          "text": "moment",
+          "start": 326.94,
+          "end": 327.12
+        },
+        {
+          "text": "too",
+          "start": 327.12,
+          "end": 327.44
+        },
+        {
+          "text": "because",
+          "start": 327.44,
+          "end": 328.04
+        },
+        {
+          "text": "this",
+          "start": 328.04,
+          "end": 328.38
+        },
+        {
+          "text": "is",
+          "start": 328.38,
+          "end": 328.6
+        },
+        {
+          "text": "where",
+          "start": 328.6,
+          "end": 328.76
+        },
+        {
+          "text": "the",
+          "start": 328.76,
+          "end": 328.88
+        },
+        {
+          "text": "metric",
+          "start": 328.88,
+          "end": 329.2
+        },
+        {
+          "text": "trap",
+          "start": 329.2,
+          "end": 329.46
+        },
+        {
+          "text": "lives.",
+          "start": 329.46,
+          "end": 329.78
+        },
+        {
+          "text": "If",
+          "start": 329.78,
+          "end": 330.62
+        },
+        {
+          "text": "your",
+          "start": 330.62,
+          "end": 330.74
+        },
+        {
+          "text": "population",
+          "start": 330.74,
+          "end": 331.34
+        },
+        {
+          "text": "is",
+          "start": 331.34,
+          "end": 331.7
+        },
+        {
+          "text": "90",
+          "start": 331.7,
+          "end": 332.04
+        },
+        {
+          "text": "%",
+          "start": 332.04,
+          "end": 332.46
+        },
+        {
+          "text": "healthy,",
+          "start": 332.46,
+          "end": 332.74
+        },
+        {
+          "text": "a",
+          "start": 333.3,
+          "end": 333.42
+        },
+        {
+          "text": "model",
+          "start": 333.42,
+          "end": 333.74
+        },
+        {
+          "text": "that",
+          "start": 333.74,
+          "end": 333.96
+        },
+        {
+          "text": "predicts",
+          "start": 333.96,
+          "end": 334.48
+        },
+        {
+          "text": "no",
+          "start": 334.48,
+          "end": 334.72
+        },
+        {
+          "text": "disease",
+          "start": 334.72,
+          "end": 335.18
+        },
+        {
+          "text": "for",
+          "start": 335.18,
+          "end": 335.74
+        },
+        {
+          "text": "everyone",
+          "start": 335.74,
+          "end": 336.16
+        },
+        {
+          "text": "scores",
+          "start": 336.16,
+          "end": 336.54
+        },
+        {
+          "text": "90",
+          "start": 336.54,
+          "end": 337.0
+        },
+        {
+          "text": "%",
+          "start": 337.0,
+          "end": 337.38
+        },
+        {
+          "text": "accuracy",
+          "start": 337.38,
+          "end": 337.86
+        },
+        {
+          "text": "while",
+          "start": 337.86,
+          "end": 338.52
+        },
+        {
+          "text": "failing",
+          "start": 338.52,
+          "end": 338.9
+        },
+        {
+          "text": "every",
+          "start": 338.9,
+          "end": 339.3
+        },
+        {
+          "text": "single",
+          "start": 339.3,
+          "end": 339.66
+        },
+        {
+          "text": "patient",
+          "start": 339.66,
+          "end": 340.14
+        },
+        {
+          "text": "who",
+          "start": 340.14,
+          "end": 340.34
+        },
+        {
+          "text": "matters.",
+          "start": 340.34,
+          "end": 340.66
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "Training optimizes the metric it's given, not the goal you meant. The Amazon recruiting story is the war scar. Trained on ten years of male-dominated hiring, the model learned to penalize the word \"women's.\" The labels were the bias. No downstream stage fixes a contract that encoded the wrong objective.",
       "start": 341.35,
-      "end": 363.12
+      "end": 363.12,
+      "words": [
+        {
+          "text": "Training",
+          "start": 341.4,
+          "end": 341.96
+        },
+        {
+          "text": "optimizes",
+          "start": 341.96,
+          "end": 342.76
+        },
+        {
+          "text": "the",
+          "start": 342.76,
+          "end": 342.98
+        },
+        {
+          "text": "metric",
+          "start": 342.98,
+          "end": 343.3
+        },
+        {
+          "text": "it's",
+          "start": 343.3,
+          "end": 343.62
+        },
+        {
+          "text": "given,",
+          "start": 343.62,
+          "end": 343.88
+        },
+        {
+          "text": "not",
+          "start": 344.38,
+          "end": 344.48
+        },
+        {
+          "text": "the",
+          "start": 344.48,
+          "end": 344.66
+        },
+        {
+          "text": "goal",
+          "start": 344.66,
+          "end": 344.92
+        },
+        {
+          "text": "you",
+          "start": 344.92,
+          "end": 345.12
+        },
+        {
+          "text": "meant.",
+          "start": 345.12,
+          "end": 345.38
+        },
+        {
+          "text": "The",
+          "start": 346.0,
+          "end": 346.12
+        },
+        {
+          "text": "Amazon",
+          "start": 346.12,
+          "end": 346.58
+        },
+        {
+          "text": "recruiting",
+          "start": 346.58,
+          "end": 346.98
+        },
+        {
+          "text": "story",
+          "start": 346.98,
+          "end": 347.68
+        },
+        {
+          "text": "is",
+          "start": 347.68,
+          "end": 347.92
+        },
+        {
+          "text": "the",
+          "start": 347.92,
+          "end": 348.08
+        },
+        {
+          "text": "war",
+          "start": 348.08,
+          "end": 348.3
+        },
+        {
+          "text": "scar.",
+          "start": 348.3,
+          "end": 348.6
+        },
+        {
+          "text": "Trained",
+          "start": 349.24,
+          "end": 349.76
+        },
+        {
+          "text": "on",
+          "start": 349.76,
+          "end": 349.94
+        },
+        {
+          "text": "10",
+          "start": 349.94,
+          "end": 350.24
+        },
+        {
+          "text": "years",
+          "start": 350.24,
+          "end": 350.58
+        },
+        {
+          "text": "of",
+          "start": 350.58,
+          "end": 350.78
+        },
+        {
+          "text": "male",
+          "start": 350.78,
+          "end": 351.1
+        },
+        {
+          "text": "dominated",
+          "start": 351.1,
+          "end": 351.6
+        },
+        {
+          "text": "hiring,",
+          "start": 351.6,
+          "end": 352.18
+        },
+        {
+          "text": "the",
+          "start": 352.66,
+          "end": 352.76
+        },
+        {
+          "text": "model",
+          "start": 352.76,
+          "end": 353.08
+        },
+        {
+          "text": "learned",
+          "start": 353.08,
+          "end": 353.44
+        },
+        {
+          "text": "to",
+          "start": 353.44,
+          "end": 353.64
+        },
+        {
+          "text": "penalize",
+          "start": 353.64,
+          "end": 354.22
+        },
+        {
+          "text": "the",
+          "start": 354.22,
+          "end": 354.36
+        },
+        {
+          "text": "word",
+          "start": 354.36,
+          "end": 354.6
+        },
+        {
+          "text": "women's.",
+          "start": 354.6,
+          "end": 355.26
+        },
+        {
+          "text": "The",
+          "start": 355.74,
+          "end": 355.94
+        },
+        {
+          "text": "labels",
+          "start": 355.94,
+          "end": 356.34
+        },
+        {
+          "text": "were",
+          "start": 356.34,
+          "end": 356.64
+        },
+        {
+          "text": "the",
+          "start": 356.64,
+          "end": 356.76
+        },
+        {
+          "text": "bias.",
+          "start": 356.76,
+          "end": 357.1
+        },
+        {
+          "text": "No",
+          "start": 357.1,
+          "end": 357.96
+        },
+        {
+          "text": "downstream",
+          "start": 357.96,
+          "end": 358.52
+        },
+        {
+          "text": "stage",
+          "start": 358.52,
+          "end": 359.1
+        },
+        {
+          "text": "fixes",
+          "start": 359.1,
+          "end": 359.7
+        },
+        {
+          "text": "a",
+          "start": 359.7,
+          "end": 359.98
+        },
+        {
+          "text": "contract",
+          "start": 359.98,
+          "end": 360.46
+        },
+        {
+          "text": "that",
+          "start": 360.46,
+          "end": 360.78
+        },
+        {
+          "text": "encoded",
+          "start": 360.78,
+          "end": 361.2
+        },
+        {
+          "text": "the",
+          "start": 361.2,
+          "end": 361.44
+        },
+        {
+          "text": "wrong",
+          "start": 361.44,
+          "end": 361.74
+        },
+        {
+          "text": "objective.",
+          "start": 361.74,
+          "end": 362.36
+        }
+      ]
     },
     {
       "speaker": "B",
@@ -176,25 +4502,803 @@
         "id": "operating-point",
         "title": "Feasible operating point: the ROC pass corner",
         "latex": "\\exists\\, \\tau:\\ \\mathrm{Sens}(\\tau) \\ge 0.90 \\ \\land\\ \\mathrm{Spec}(\\tau) \\ge 0.80"
-      }
+      },
+      "words": [
+        {
+          "text": "Then",
+          "start": 363.18,
+          "end": 363.58
+        },
+        {
+          "text": "stage",
+          "start": 363.58,
+          "end": 363.84
+        },
+        {
+          "text": "four,",
+          "start": 363.84,
+          "end": 364.24
+        },
+        {
+          "text": "and",
+          "start": 364.5,
+          "end": 364.58
+        },
+        {
+          "text": "this",
+          "start": 364.58,
+          "end": 364.8
+        },
+        {
+          "text": "is",
+          "start": 364.8,
+          "end": 364.98
+        },
+        {
+          "text": "the",
+          "start": 364.98,
+          "end": 365.1
+        },
+        {
+          "text": "distinction",
+          "start": 365.1,
+          "end": 365.52
+        },
+        {
+          "text": "I",
+          "start": 365.52,
+          "end": 365.88
+        },
+        {
+          "text": "keep",
+          "start": 365.88,
+          "end": 366.12
+        },
+        {
+          "text": "rereading.",
+          "start": 366.12,
+          "end": 366.66
+        },
+        {
+          "text": "Evaluation",
+          "start": 367.32,
+          "end": 367.72
+        },
+        {
+          "text": "measures.",
+          "start": 367.72,
+          "end": 368.2
+        },
+        {
+          "text": "Validation",
+          "start": 368.94,
+          "end": 369.54
+        },
+        {
+          "text": "decides.",
+          "start": 369.54,
+          "end": 369.92
+        },
+        {
+          "text": "Model",
+          "start": 370.76,
+          "end": 371.06
+        },
+        {
+          "text": "validation",
+          "start": 371.06,
+          "end": 371.5
+        },
+        {
+          "text": "is",
+          "start": 371.5,
+          "end": 371.98
+        },
+        {
+          "text": "the",
+          "start": 371.98,
+          "end": 372.14
+        },
+        {
+          "text": "release",
+          "start": 372.14,
+          "end": 372.44
+        },
+        {
+          "text": "decision.",
+          "start": 372.44,
+          "end": 372.9
+        },
+        {
+          "text": "Does",
+          "start": 373.48,
+          "end": 373.6
+        },
+        {
+          "text": "the",
+          "start": 373.6,
+          "end": 373.76
+        },
+        {
+          "text": "integrated",
+          "start": 373.76,
+          "end": 374.2
+        },
+        {
+          "text": "pipeline",
+          "start": 374.2,
+          "end": 374.78
+        },
+        {
+          "text": "hit",
+          "start": 374.78,
+          "end": 375.12
+        },
+        {
+          "text": "latency",
+          "start": 375.12,
+          "end": 375.5
+        },
+        {
+          "text": "targets?",
+          "start": 375.5,
+          "end": 375.94
+        },
+        {
+          "text": "Subgroup",
+          "start": 376.52,
+          "end": 376.9
+        },
+        {
+          "text": "floors?",
+          "start": 376.9,
+          "end": 377.26
+        },
+        {
+          "text": "Robustness",
+          "start": 377.64,
+          "end": 378.18
+        },
+        {
+          "text": "under",
+          "start": 378.18,
+          "end": 378.42
+        },
+        {
+          "text": "shift?",
+          "start": 378.42,
+          "end": 378.74
+        },
+        {
+          "text": "Cost",
+          "start": 379.14,
+          "end": 379.32
+        },
+        {
+          "text": "budgets?",
+          "start": 379.32,
+          "end": 379.68
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "And the first check is geometric: sweep the classification threshold, and does any point satisfy both floors at once, sensitivity above ninety and specificity above eighty? If the curve never reaches that corner, the candidate fails before deployment questions even start.",
       "start": 380.37,
-      "end": 400.07
+      "end": 400.07,
+      "words": [
+        {
+          "text": "And",
+          "start": 380.52,
+          "end": 380.9
+        },
+        {
+          "text": "the",
+          "start": 380.9,
+          "end": 381.0
+        },
+        {
+          "text": "first",
+          "start": 381.0,
+          "end": 381.28
+        },
+        {
+          "text": "check",
+          "start": 381.28,
+          "end": 381.58
+        },
+        {
+          "text": "is",
+          "start": 381.58,
+          "end": 381.8
+        },
+        {
+          "text": "geometric.",
+          "start": 381.8,
+          "end": 382.2
+        },
+        {
+          "text": "Sweep",
+          "start": 383.02,
+          "end": 383.38
+        },
+        {
+          "text": "the",
+          "start": 383.38,
+          "end": 383.56
+        },
+        {
+          "text": "classification",
+          "start": 383.56,
+          "end": 384.22
+        },
+        {
+          "text": "threshold.",
+          "start": 384.22,
+          "end": 384.9
+        },
+        {
+          "text": "And",
+          "start": 384.9,
+          "end": 385.78
+        },
+        {
+          "text": "does",
+          "start": 385.78,
+          "end": 385.9
+        },
+        {
+          "text": "any",
+          "start": 385.9,
+          "end": 386.24
+        },
+        {
+          "text": "point",
+          "start": 386.24,
+          "end": 386.54
+        },
+        {
+          "text": "satisfy",
+          "start": 386.54,
+          "end": 387.2
+        },
+        {
+          "text": "both",
+          "start": 387.2,
+          "end": 387.54
+        },
+        {
+          "text": "floors",
+          "start": 387.54,
+          "end": 388.02
+        },
+        {
+          "text": "at",
+          "start": 388.02,
+          "end": 388.28
+        },
+        {
+          "text": "once?",
+          "start": 388.28,
+          "end": 388.66
+        },
+        {
+          "text": "Sensitivity",
+          "start": 389.22,
+          "end": 389.94
+        },
+        {
+          "text": "above",
+          "start": 389.94,
+          "end": 390.28
+        },
+        {
+          "text": "90",
+          "start": 390.28,
+          "end": 390.86
+        },
+        {
+          "text": "and",
+          "start": 390.86,
+          "end": 391.14
+        },
+        {
+          "text": "specificity",
+          "start": 391.14,
+          "end": 391.96
+        },
+        {
+          "text": "above",
+          "start": 391.96,
+          "end": 392.24
+        },
+        {
+          "text": "80.",
+          "start": 392.24,
+          "end": 392.64
+        },
+        {
+          "text": "If",
+          "start": 393.36,
+          "end": 393.56
+        },
+        {
+          "text": "the",
+          "start": 393.56,
+          "end": 393.72
+        },
+        {
+          "text": "curve",
+          "start": 393.72,
+          "end": 394.02
+        },
+        {
+          "text": "never",
+          "start": 394.02,
+          "end": 394.38
+        },
+        {
+          "text": "reaches",
+          "start": 394.38,
+          "end": 394.82
+        },
+        {
+          "text": "that",
+          "start": 394.82,
+          "end": 395.12
+        },
+        {
+          "text": "corner,",
+          "start": 395.12,
+          "end": 395.52
+        },
+        {
+          "text": "the",
+          "start": 395.94,
+          "end": 396.04
+        },
+        {
+          "text": "candidate",
+          "start": 396.04,
+          "end": 396.38
+        },
+        {
+          "text": "fails",
+          "start": 396.38,
+          "end": 397.02
+        },
+        {
+          "text": "before",
+          "start": 397.02,
+          "end": 397.4
+        },
+        {
+          "text": "deployment",
+          "start": 397.4,
+          "end": 397.94
+        },
+        {
+          "text": "questions",
+          "start": 397.94,
+          "end": 398.4
+        },
+        {
+          "text": "even",
+          "start": 398.4,
+          "end": 398.88
+        },
+        {
+          "text": "start.",
+          "start": 398.88,
+          "end": 399.32
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "Meanwhile ninety-four percent aggregate sensitivity can hide below-eighty on cataract patients or low-light clinics. The release manifest is where per-subgroup evidence has to live.",
       "start": 400.07,
-      "end": 411.92
+      "end": 411.92,
+      "words": [
+        {
+          "text": "Meanwhile,",
+          "start": 400.26,
+          "end": 400.72
+        },
+        {
+          "text": "94",
+          "start": 400.92,
+          "end": 401.46
+        },
+        {
+          "text": "%",
+          "start": 401.46,
+          "end": 401.9
+        },
+        {
+          "text": "aggregate",
+          "start": 401.9,
+          "end": 402.4
+        },
+        {
+          "text": "sensitivity",
+          "start": 402.4,
+          "end": 403.02
+        },
+        {
+          "text": "can",
+          "start": 403.02,
+          "end": 403.64
+        },
+        {
+          "text": "hide",
+          "start": 403.64,
+          "end": 403.96
+        },
+        {
+          "text": "below",
+          "start": 403.96,
+          "end": 404.22
+        },
+        {
+          "text": "80",
+          "start": 404.22,
+          "end": 404.54
+        },
+        {
+          "text": "on",
+          "start": 404.54,
+          "end": 404.8
+        },
+        {
+          "text": "cataract",
+          "start": 404.8,
+          "end": 405.32
+        },
+        {
+          "text": "patients",
+          "start": 405.32,
+          "end": 405.84
+        },
+        {
+          "text": "or",
+          "start": 405.84,
+          "end": 406.3
+        },
+        {
+          "text": "low",
+          "start": 406.3,
+          "end": 406.52
+        },
+        {
+          "text": "light",
+          "start": 406.52,
+          "end": 406.7
+        },
+        {
+          "text": "clinics.",
+          "start": 406.7,
+          "end": 407.06
+        },
+        {
+          "text": "The",
+          "start": 407.82,
+          "end": 407.96
+        },
+        {
+          "text": "release",
+          "start": 407.96,
+          "end": 408.28
+        },
+        {
+          "text": "manifest",
+          "start": 408.28,
+          "end": 408.76
+        },
+        {
+          "text": "is",
+          "start": 408.76,
+          "end": 409.36
+        },
+        {
+          "text": "where",
+          "start": 409.36,
+          "end": 409.56
+        },
+        {
+          "text": "per",
+          "start": 409.56,
+          "end": 409.74
+        },
+        {
+          "text": "subgroup",
+          "start": 409.74,
+          "end": 410.18
+        },
+        {
+          "text": "evidence",
+          "start": 410.18,
+          "end": 410.64
+        },
+        {
+          "text": "has",
+          "start": 410.64,
+          "end": 410.94
+        },
+        {
+          "text": "to",
+          "start": 410.94,
+          "end": 411.12
+        },
+        {
+          "text": "live.",
+          "start": 411.12,
+          "end": 411.42
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "And monitoring, stage six, is a discipline of its own, not a dashboard. Four metric categories on wildly different clocks. Proxy signals like referral rate and confidence distribution are immediate. Operational metrics like tail latency are immediate. But model performance, actual field sensitivity, needs ground truth labels, which arrive weeks late.",
       "start": 411.92,
-      "end": 436.62
+      "end": 436.62,
+      "words": [
+        {
+          "text": "And",
+          "start": 411.42,
+          "end": 412.48
+        },
+        {
+          "text": "monitoring",
+          "start": 412.48,
+          "end": 412.96
+        },
+        {
+          "text": "stage",
+          "start": 412.96,
+          "end": 413.44
+        },
+        {
+          "text": "six",
+          "start": 413.44,
+          "end": 413.96
+        },
+        {
+          "text": "is",
+          "start": 413.96,
+          "end": 414.42
+        },
+        {
+          "text": "a",
+          "start": 414.42,
+          "end": 414.52
+        },
+        {
+          "text": "discipline",
+          "start": 414.52,
+          "end": 414.9
+        },
+        {
+          "text": "of",
+          "start": 414.9,
+          "end": 415.08
+        },
+        {
+          "text": "its",
+          "start": 415.08,
+          "end": 415.22
+        },
+        {
+          "text": "own,",
+          "start": 415.22,
+          "end": 415.6
+        },
+        {
+          "text": "not",
+          "start": 415.76,
+          "end": 415.88
+        },
+        {
+          "text": "a",
+          "start": 415.88,
+          "end": 416.04
+        },
+        {
+          "text": "dashboard.",
+          "start": 416.04,
+          "end": 416.48
+        },
+        {
+          "text": "Four",
+          "start": 417.08,
+          "end": 417.46
+        },
+        {
+          "text": "metric",
+          "start": 417.46,
+          "end": 417.8
+        },
+        {
+          "text": "categories",
+          "start": 417.8,
+          "end": 418.5
+        },
+        {
+          "text": "on",
+          "start": 418.5,
+          "end": 418.8
+        },
+        {
+          "text": "wildly",
+          "start": 418.8,
+          "end": 419.26
+        },
+        {
+          "text": "different",
+          "start": 419.26,
+          "end": 419.6
+        },
+        {
+          "text": "clocks.",
+          "start": 419.6,
+          "end": 420.06
+        },
+        {
+          "text": "Proxy",
+          "start": 420.64,
+          "end": 421.1
+        },
+        {
+          "text": "signals",
+          "start": 421.1,
+          "end": 421.56
+        },
+        {
+          "text": "like",
+          "start": 421.56,
+          "end": 421.96
+        },
+        {
+          "text": "referral",
+          "start": 421.96,
+          "end": 422.4
+        },
+        {
+          "text": "rate",
+          "start": 422.4,
+          "end": 422.8
+        },
+        {
+          "text": "and",
+          "start": 422.8,
+          "end": 423.0
+        },
+        {
+          "text": "confidence",
+          "start": 423.0,
+          "end": 423.44
+        },
+        {
+          "text": "distribution",
+          "start": 423.44,
+          "end": 424.16
+        },
+        {
+          "text": "are",
+          "start": 424.16,
+          "end": 424.52
+        },
+        {
+          "text": "immediate.",
+          "start": 424.52,
+          "end": 424.92
+        },
+        {
+          "text": "Operational",
+          "start": 425.72,
+          "end": 426.32
+        },
+        {
+          "text": "metrics",
+          "start": 426.32,
+          "end": 426.74
+        },
+        {
+          "text": "like",
+          "start": 426.74,
+          "end": 427.08
+        },
+        {
+          "text": "tail",
+          "start": 427.08,
+          "end": 427.44
+        },
+        {
+          "text": "latency",
+          "start": 427.44,
+          "end": 427.9
+        },
+        {
+          "text": "are",
+          "start": 427.9,
+          "end": 428.28
+        },
+        {
+          "text": "immediate.",
+          "start": 428.28,
+          "end": 428.7
+        },
+        {
+          "text": "But",
+          "start": 429.16,
+          "end": 429.46
+        },
+        {
+          "text": "model",
+          "start": 429.46,
+          "end": 429.82
+        },
+        {
+          "text": "performance,",
+          "start": 429.82,
+          "end": 430.36
+        },
+        {
+          "text": "actual",
+          "start": 430.76,
+          "end": 431.06
+        },
+        {
+          "text": "field",
+          "start": 431.06,
+          "end": 431.52
+        },
+        {
+          "text": "sensitivity",
+          "start": 431.52,
+          "end": 432.08
+        },
+        {
+          "text": "needs",
+          "start": 432.08,
+          "end": 433.02
+        },
+        {
+          "text": "ground",
+          "start": 433.02,
+          "end": 433.44
+        },
+        {
+          "text": "truth",
+          "start": 433.44,
+          "end": 433.82
+        },
+        {
+          "text": "labels",
+          "start": 433.82,
+          "end": 434.22
+        },
+        {
+          "text": "which",
+          "start": 434.22,
+          "end": 434.84
+        },
+        {
+          "text": "arrive",
+          "start": 434.84,
+          "end": 435.2
+        },
+        {
+          "text": "weeks",
+          "start": 435.2,
+          "end": 435.52
+        },
+        {
+          "text": "late.",
+          "start": 435.52,
+          "end": 435.92
+        }
+      ]
     },
     {
       "speaker": "B",
@@ -205,37 +5309,1134 @@
         "id": "specificity",
         "title": "Specificity: the false-referral budget",
         "latex": "\\mathrm{Spec} = \\frac{\\mathrm{TN}}{\\mathrm{TN} + \\mathrm{FP}}"
-      }
+      },
+      "words": [
+        {
+          "text": "And",
+          "start": 436.58,
+          "end": 437.04
+        },
+        {
+          "text": "here's",
+          "start": 437.04,
+          "end": 437.34
+        },
+        {
+          "text": "the",
+          "start": 437.34,
+          "end": 437.46
+        },
+        {
+          "text": "trap",
+          "start": 437.46,
+          "end": 437.72
+        },
+        {
+          "text": "I",
+          "start": 437.72,
+          "end": 437.96
+        },
+        {
+          "text": "loved.",
+          "start": 437.96,
+          "end": 438.3
+        },
+        {
+          "text": "Routine",
+          "start": 438.3,
+          "end": 439.12
+        },
+        {
+          "text": "care",
+          "start": 439.12,
+          "end": 439.52
+        },
+        {
+          "text": "only",
+          "start": 439.52,
+          "end": 439.96
+        },
+        {
+          "text": "grades",
+          "start": 439.96,
+          "end": 440.44
+        },
+        {
+          "text": "referred",
+          "start": 440.44,
+          "end": 440.8
+        },
+        {
+          "text": "patients.",
+          "start": 440.8,
+          "end": 441.32
+        },
+        {
+          "text": "The",
+          "start": 441.98,
+          "end": 442.12
+        },
+        {
+          "text": "people",
+          "start": 442.12,
+          "end": 442.36
+        },
+        {
+          "text": "the",
+          "start": 442.36,
+          "end": 442.52
+        },
+        {
+          "text": "model",
+          "start": 442.52,
+          "end": 442.78
+        },
+        {
+          "text": "cleared",
+          "start": 442.78,
+          "end": 443.14
+        },
+        {
+          "text": "are",
+          "start": 443.14,
+          "end": 443.44
+        },
+        {
+          "text": "never",
+          "start": 443.44,
+          "end": 443.66
+        },
+        {
+          "text": "rechecked.",
+          "start": 443.66,
+          "end": 444.36
+        },
+        {
+          "text": "So",
+          "start": 444.82,
+          "end": 445.02
+        },
+        {
+          "text": "field",
+          "start": 445.02,
+          "end": 445.38
+        },
+        {
+          "text": "sensitivity",
+          "start": 445.38,
+          "end": 445.84
+        },
+        {
+          "text": "is",
+          "start": 445.84,
+          "end": 446.42
+        },
+        {
+          "text": "literally",
+          "start": 446.42,
+          "end": 446.8
+        },
+        {
+          "text": "unmeasurable",
+          "start": 446.8,
+          "end": 447.62
+        },
+        {
+          "text": "unless",
+          "start": 447.62,
+          "end": 447.96
+        },
+        {
+          "text": "you",
+          "start": 447.96,
+          "end": 448.6
+        },
+        {
+          "text": "build",
+          "start": 448.6,
+          "end": 448.84
+        },
+        {
+          "text": "a",
+          "start": 448.84,
+          "end": 448.98
+        },
+        {
+          "text": "data",
+          "start": 448.98,
+          "end": 449.2
+        },
+        {
+          "text": "path",
+          "start": 449.2,
+          "end": 449.64
+        },
+        {
+          "text": "that",
+          "start": 449.64,
+          "end": 449.94
+        },
+        {
+          "text": "samples",
+          "start": 449.94,
+          "end": 450.4
+        },
+        {
+          "text": "and",
+          "start": 450.4,
+          "end": 450.7
+        },
+        {
+          "text": "labels",
+          "start": 450.7,
+          "end": 451.0
+        },
+        {
+          "text": "unreferred",
+          "start": 451.0,
+          "end": 451.86
+        },
+        {
+          "text": "images.",
+          "start": 451.86,
+          "end": 452.18
+        },
+        {
+          "text": "The",
+          "start": 452.92,
+          "end": 453.1
+        },
+        {
+          "text": "monitoring",
+          "start": 453.1,
+          "end": 453.44
+        },
+        {
+          "text": "system",
+          "start": 453.44,
+          "end": 453.92
+        },
+        {
+          "text": "has",
+          "start": 453.92,
+          "end": 454.38
+        },
+        {
+          "text": "to",
+          "start": 454.38,
+          "end": 454.56
+        },
+        {
+          "text": "manufacture",
+          "start": 454.56,
+          "end": 455.08
+        },
+        {
+          "text": "its",
+          "start": 455.08,
+          "end": 455.46
+        },
+        {
+          "text": "own",
+          "start": 455.46,
+          "end": 455.8
+        },
+        {
+          "text": "ground",
+          "start": 455.8,
+          "end": 456.04
+        },
+        {
+          "text": "truth.",
+          "start": 456.04,
+          "end": 456.4
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "Which brings it full circle, the camera upgrade scenario. A clinic swaps fundus cameras, the color profile shifts, a drift alert fires within hours, but the sensitivity loss stays unconfirmed until labels arrive. And the fix re-enters the lifecycle at whichever stage owns the defect and leaves through the same release checks.",
       "start": 457.0,
-      "end": 479.9
+      "end": 479.9,
+      "words": [
+        {
+          "text": "Which",
+          "start": 456.94,
+          "end": 457.52
+        },
+        {
+          "text": "brings",
+          "start": 457.52,
+          "end": 457.84
+        },
+        {
+          "text": "it",
+          "start": 457.84,
+          "end": 458.02
+        },
+        {
+          "text": "full",
+          "start": 458.02,
+          "end": 458.3
+        },
+        {
+          "text": "circle,",
+          "start": 458.3,
+          "end": 458.74
+        },
+        {
+          "text": "the",
+          "start": 459.2,
+          "end": 459.32
+        },
+        {
+          "text": "camera",
+          "start": 459.32,
+          "end": 459.74
+        },
+        {
+          "text": "upgrade",
+          "start": 459.74,
+          "end": 460.18
+        },
+        {
+          "text": "scenario.",
+          "start": 460.18,
+          "end": 460.84
+        },
+        {
+          "text": "A",
+          "start": 461.56,
+          "end": 461.72
+        },
+        {
+          "text": "clinic",
+          "start": 461.72,
+          "end": 461.94
+        },
+        {
+          "text": "swaps",
+          "start": 461.94,
+          "end": 462.4
+        },
+        {
+          "text": "fundus",
+          "start": 462.4,
+          "end": 462.88
+        },
+        {
+          "text": "cameras,",
+          "start": 462.88,
+          "end": 463.26
+        },
+        {
+          "text": "the",
+          "start": 463.8,
+          "end": 463.94
+        },
+        {
+          "text": "color",
+          "start": 463.94,
+          "end": 464.22
+        },
+        {
+          "text": "profile",
+          "start": 464.22,
+          "end": 464.7
+        },
+        {
+          "text": "shifts,",
+          "start": 464.7,
+          "end": 465.28
+        },
+        {
+          "text": "a",
+          "start": 465.82,
+          "end": 465.94
+        },
+        {
+          "text": "drift",
+          "start": 465.94,
+          "end": 466.14
+        },
+        {
+          "text": "alert",
+          "start": 466.14,
+          "end": 466.48
+        },
+        {
+          "text": "fires",
+          "start": 466.48,
+          "end": 466.96
+        },
+        {
+          "text": "within",
+          "start": 466.96,
+          "end": 467.34
+        },
+        {
+          "text": "hours,",
+          "start": 467.34,
+          "end": 467.84
+        },
+        {
+          "text": "but",
+          "start": 467.84,
+          "end": 468.16
+        },
+        {
+          "text": "the",
+          "start": 468.16,
+          "end": 468.32
+        },
+        {
+          "text": "sensitivity",
+          "start": 468.32,
+          "end": 468.86
+        },
+        {
+          "text": "law",
+          "start": 468.86,
+          "end": 469.38
+        },
+        {
+          "text": "stays",
+          "start": 469.38,
+          "end": 469.72
+        },
+        {
+          "text": "unconfirmed",
+          "start": 469.72,
+          "end": 470.8
+        },
+        {
+          "text": "until",
+          "start": 470.8,
+          "end": 471.1
+        },
+        {
+          "text": "labels",
+          "start": 471.1,
+          "end": 471.48
+        },
+        {
+          "text": "arrive.",
+          "start": 471.48,
+          "end": 472.02
+        },
+        {
+          "text": "And",
+          "start": 472.62,
+          "end": 472.82
+        },
+        {
+          "text": "the",
+          "start": 472.82,
+          "end": 472.96
+        },
+        {
+          "text": "fix",
+          "start": 472.96,
+          "end": 473.22
+        },
+        {
+          "text": "reenters",
+          "start": 473.22,
+          "end": 473.84
+        },
+        {
+          "text": "the",
+          "start": 473.84,
+          "end": 474.0
+        },
+        {
+          "text": "life",
+          "start": 474.0,
+          "end": 474.26
+        },
+        {
+          "text": "cycle",
+          "start": 474.26,
+          "end": 474.68
+        },
+        {
+          "text": "at",
+          "start": 474.68,
+          "end": 474.94
+        },
+        {
+          "text": "whichever",
+          "start": 474.94,
+          "end": 475.26
+        },
+        {
+          "text": "stage",
+          "start": 475.26,
+          "end": 475.8
+        },
+        {
+          "text": "owns",
+          "start": 475.8,
+          "end": 476.24
+        },
+        {
+          "text": "the",
+          "start": 476.24,
+          "end": 476.44
+        },
+        {
+          "text": "defect",
+          "start": 476.44,
+          "end": 476.78
+        },
+        {
+          "text": "and",
+          "start": 476.78,
+          "end": 477.24
+        },
+        {
+          "text": "leaves",
+          "start": 477.24,
+          "end": 477.6
+        },
+        {
+          "text": "through",
+          "start": 477.6,
+          "end": 477.88
+        },
+        {
+          "text": "the",
+          "start": 477.88,
+          "end": 478.06
+        },
+        {
+          "text": "same",
+          "start": 478.06,
+          "end": 478.4
+        },
+        {
+          "text": "release",
+          "start": 478.4,
+          "end": 478.76
+        },
+        {
+          "text": "checks.",
+          "start": 478.76,
+          "end": 479.2
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/03-ml-lifecycle/diagrams/lifecycle-loop.svg",
+        "title": "The lifecycle is a loop, not a waterfall",
+        "alt": "Six stages, one artifact per edge: targets \u2192 dataset \u2192 reproducible artifact \u2192 manifest \u2192 endpoint \u2192 drift evidence \u2192 back upstream. The shaded bottom half is the operational phase \u2014 deployment starts a phase rather than ending one."
+      }
     },
     {
       "speaker": "B",
       "text": "Rollback can't even save you cleanly, the old binary doesn't restore the old data distribution. It's containment, not a restore point.",
       "start": 479.9,
-      "end": 488.85
+      "end": 488.85,
+      "words": [
+        {
+          "text": "Rollback",
+          "start": 480.16,
+          "end": 480.62
+        },
+        {
+          "text": "can't",
+          "start": 480.62,
+          "end": 481.02
+        },
+        {
+          "text": "even",
+          "start": 481.02,
+          "end": 481.18
+        },
+        {
+          "text": "save",
+          "start": 481.18,
+          "end": 481.52
+        },
+        {
+          "text": "you",
+          "start": 481.52,
+          "end": 481.72
+        },
+        {
+          "text": "cleanly.",
+          "start": 481.72,
+          "end": 482.16
+        },
+        {
+          "text": "The",
+          "start": 482.5,
+          "end": 482.6
+        },
+        {
+          "text": "old",
+          "start": 482.6,
+          "end": 482.82
+        },
+        {
+          "text": "binary",
+          "start": 482.82,
+          "end": 483.16
+        },
+        {
+          "text": "doesn't",
+          "start": 483.16,
+          "end": 483.64
+        },
+        {
+          "text": "restore",
+          "start": 483.64,
+          "end": 484.02
+        },
+        {
+          "text": "the",
+          "start": 484.02,
+          "end": 484.18
+        },
+        {
+          "text": "old",
+          "start": 484.18,
+          "end": 484.46
+        },
+        {
+          "text": "data",
+          "start": 484.46,
+          "end": 484.72
+        },
+        {
+          "text": "distribution.",
+          "start": 484.72,
+          "end": 485.32
+        },
+        {
+          "text": "It's",
+          "start": 486.1,
+          "end": 486.34
+        },
+        {
+          "text": "containment,",
+          "start": 486.34,
+          "end": 486.76
+        },
+        {
+          "text": "not",
+          "start": 487.22,
+          "end": 487.46
+        },
+        {
+          "text": "a",
+          "start": 487.46,
+          "end": 487.6
+        },
+        {
+          "text": "restore",
+          "start": 487.6,
+          "end": 487.9
+        },
+        {
+          "text": "point.",
+          "start": 487.9,
+          "end": 488.24
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "So the takeaway: the lifecycle is a loop because learned behavior is coupled to a moving world. Constraint propagation says write your deployment limits on day one. Contracts say every hand-off gets checked at the boundary. Validation decides, measurement alone isn't a release. And monitoring is a stage, not an afterthought, because the system fails silently in ways no exception will ever catch.",
       "start": 488.85,
-      "end": 515.17
+      "end": 515.17,
+      "words": [
+        {
+          "text": "So",
+          "start": 489.1,
+          "end": 489.38
+        },
+        {
+          "text": "the",
+          "start": 489.38,
+          "end": 489.52
+        },
+        {
+          "text": "takeaway,",
+          "start": 489.52,
+          "end": 489.9
+        },
+        {
+          "text": "the",
+          "start": 490.5,
+          "end": 490.62
+        },
+        {
+          "text": "life",
+          "start": 490.62,
+          "end": 490.9
+        },
+        {
+          "text": "cycle",
+          "start": 490.9,
+          "end": 491.28
+        },
+        {
+          "text": "is",
+          "start": 491.28,
+          "end": 491.5
+        },
+        {
+          "text": "a",
+          "start": 491.5,
+          "end": 491.64
+        },
+        {
+          "text": "loop",
+          "start": 491.64,
+          "end": 491.82
+        },
+        {
+          "text": "because",
+          "start": 491.82,
+          "end": 492.18
+        },
+        {
+          "text": "learned",
+          "start": 492.18,
+          "end": 492.52
+        },
+        {
+          "text": "behavior",
+          "start": 492.52,
+          "end": 493.12
+        },
+        {
+          "text": "is",
+          "start": 493.12,
+          "end": 493.42
+        },
+        {
+          "text": "coupled",
+          "start": 493.42,
+          "end": 493.72
+        },
+        {
+          "text": "to",
+          "start": 493.72,
+          "end": 493.96
+        },
+        {
+          "text": "a",
+          "start": 493.96,
+          "end": 494.1
+        },
+        {
+          "text": "moving",
+          "start": 494.1,
+          "end": 494.36
+        },
+        {
+          "text": "world.",
+          "start": 494.36,
+          "end": 494.86
+        },
+        {
+          "text": "Constraint",
+          "start": 494.86,
+          "end": 495.9
+        },
+        {
+          "text": "propagation",
+          "start": 495.9,
+          "end": 496.4
+        },
+        {
+          "text": "says",
+          "start": 496.4,
+          "end": 496.84
+        },
+        {
+          "text": "write",
+          "start": 496.84,
+          "end": 497.16
+        },
+        {
+          "text": "your",
+          "start": 497.16,
+          "end": 497.36
+        },
+        {
+          "text": "deployment",
+          "start": 497.36,
+          "end": 497.72
+        },
+        {
+          "text": "limits",
+          "start": 497.72,
+          "end": 498.18
+        },
+        {
+          "text": "on",
+          "start": 498.18,
+          "end": 498.42
+        },
+        {
+          "text": "day",
+          "start": 498.42,
+          "end": 498.68
+        },
+        {
+          "text": "one.",
+          "start": 498.68,
+          "end": 499.06
+        },
+        {
+          "text": "Contracts",
+          "start": 499.6,
+          "end": 500.28
+        },
+        {
+          "text": "say",
+          "start": 500.28,
+          "end": 500.4
+        },
+        {
+          "text": "every",
+          "start": 500.4,
+          "end": 500.78
+        },
+        {
+          "text": "handoff",
+          "start": 500.78,
+          "end": 501.3
+        },
+        {
+          "text": "gets",
+          "start": 501.3,
+          "end": 501.58
+        },
+        {
+          "text": "checked",
+          "start": 501.58,
+          "end": 501.88
+        },
+        {
+          "text": "at",
+          "start": 501.88,
+          "end": 502.04
+        },
+        {
+          "text": "the",
+          "start": 502.04,
+          "end": 502.1
+        },
+        {
+          "text": "boundary.",
+          "start": 502.1,
+          "end": 502.46
+        },
+        {
+          "text": "Validation",
+          "start": 503.16,
+          "end": 503.84
+        },
+        {
+          "text": "decides,",
+          "start": 503.84,
+          "end": 504.32
+        },
+        {
+          "text": "measurement",
+          "start": 504.9,
+          "end": 505.3
+        },
+        {
+          "text": "alone",
+          "start": 505.3,
+          "end": 505.76
+        },
+        {
+          "text": "isn't",
+          "start": 505.76,
+          "end": 506.14
+        },
+        {
+          "text": "a",
+          "start": 506.14,
+          "end": 506.26
+        },
+        {
+          "text": "release.",
+          "start": 506.26,
+          "end": 506.6
+        },
+        {
+          "text": "And",
+          "start": 507.28,
+          "end": 507.42
+        },
+        {
+          "text": "monitoring",
+          "start": 507.42,
+          "end": 507.84
+        },
+        {
+          "text": "is",
+          "start": 507.84,
+          "end": 508.2
+        },
+        {
+          "text": "a",
+          "start": 508.2,
+          "end": 508.3
+        },
+        {
+          "text": "stage,",
+          "start": 508.3,
+          "end": 508.84
+        },
+        {
+          "text": "not",
+          "start": 509.14,
+          "end": 509.32
+        },
+        {
+          "text": "an",
+          "start": 509.32,
+          "end": 509.48
+        },
+        {
+          "text": "afterthought,",
+          "start": 509.48,
+          "end": 510.12
+        },
+        {
+          "text": "because",
+          "start": 510.28,
+          "end": 510.48
+        },
+        {
+          "text": "the",
+          "start": 510.48,
+          "end": 510.68
+        },
+        {
+          "text": "system",
+          "start": 510.68,
+          "end": 511.06
+        },
+        {
+          "text": "fails",
+          "start": 511.06,
+          "end": 511.56
+        },
+        {
+          "text": "silently",
+          "start": 511.56,
+          "end": 512.06
+        },
+        {
+          "text": "in",
+          "start": 512.06,
+          "end": 512.42
+        },
+        {
+          "text": "ways",
+          "start": 512.42,
+          "end": 512.68
+        },
+        {
+          "text": "no",
+          "start": 512.68,
+          "end": 512.98
+        },
+        {
+          "text": "exception",
+          "start": 512.98,
+          "end": 513.5
+        },
+        {
+          "text": "will",
+          "start": 513.5,
+          "end": 513.84
+        },
+        {
+          "text": "ever",
+          "start": 513.84,
+          "end": 514.1
+        },
+        {
+          "text": "catch.",
+          "start": 514.1,
+          "end": 514.5
+        }
+      ]
     },
     {
       "speaker": "B",
       "text": "Five months is a long time to learn that a number was never written down.",
       "start": 515.17,
-      "end": 520.1
+      "end": 520.1,
+      "words": [
+        {
+          "text": "Five",
+          "start": 515.48,
+          "end": 515.72
+        },
+        {
+          "text": "months",
+          "start": 515.72,
+          "end": 516.0
+        },
+        {
+          "text": "is",
+          "start": 516.0,
+          "end": 516.4
+        },
+        {
+          "text": "a",
+          "start": 516.4,
+          "end": 516.52
+        },
+        {
+          "text": "long",
+          "start": 516.52,
+          "end": 516.78
+        },
+        {
+          "text": "time",
+          "start": 516.78,
+          "end": 517.12
+        },
+        {
+          "text": "to",
+          "start": 517.12,
+          "end": 517.34
+        },
+        {
+          "text": "learn",
+          "start": 517.34,
+          "end": 517.6
+        },
+        {
+          "text": "that",
+          "start": 517.6,
+          "end": 518.06
+        },
+        {
+          "text": "a",
+          "start": 518.06,
+          "end": 518.16
+        },
+        {
+          "text": "number",
+          "start": 518.16,
+          "end": 518.38
+        },
+        {
+          "text": "was",
+          "start": 518.38,
+          "end": 518.64
+        },
+        {
+          "text": "never",
+          "start": 518.64,
+          "end": 518.92
+        },
+        {
+          "text": "written",
+          "start": 518.92,
+          "end": 519.18
+        },
+        {
+          "text": "down.",
+          "start": 519.18,
+          "end": 519.48
+        },
+        {
+          "text": "Next",
+          "start": 519.48,
+          "end": 520.7
+        }
+      ]
     },
     {
       "speaker": "A",
       "text": "Next chapter, we get into data engineering proper, where eighty percent of those hours live.",
       "start": 520.1,
-      "end": 526.92
+      "end": 526.92,
+      "words": [
+        {
+          "text": "chapter,",
+          "start": 520.7,
+          "end": 521.18
+        },
+        {
+          "text": "we",
+          "start": 521.66,
+          "end": 521.8
+        },
+        {
+          "text": "get",
+          "start": 521.8,
+          "end": 521.96
+        },
+        {
+          "text": "into",
+          "start": 521.96,
+          "end": 522.16
+        },
+        {
+          "text": "data",
+          "start": 522.16,
+          "end": 522.54
+        },
+        {
+          "text": "engineering",
+          "start": 522.54,
+          "end": 523.1
+        },
+        {
+          "text": "proper,",
+          "start": 523.1,
+          "end": 523.66
+        },
+        {
+          "text": "where",
+          "start": 524.0,
+          "end": 524.3
+        },
+        {
+          "text": "80",
+          "start": 524.3,
+          "end": 524.66
+        },
+        {
+          "text": "%",
+          "start": 524.66,
+          "end": 525.06
+        },
+        {
+          "text": "of",
+          "start": 525.06,
+          "end": 525.22
+        },
+        {
+          "text": "those",
+          "start": 525.22,
+          "end": 525.38
+        },
+        {
+          "text": "hours",
+          "start": 525.38,
+          "end": 525.76
+        },
+        {
+          "text": "live.",
+          "start": 525.76,
+          "end": 526.2
+        }
+      ]
     }
   ]
 }

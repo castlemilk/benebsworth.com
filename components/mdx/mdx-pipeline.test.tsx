@@ -43,6 +43,28 @@ describe('production technical MDX pipeline', () => {
 
 })
 
+describe('benchmark score tables', () => {
+  it('preserves provider links, labels ties and keeps changes out of the score scale', async () => {
+    const source = [
+      '| Benchmark score (%) | A | B | C | Change |',
+      '| --- | ---: | ---: | ---: | ---: |',
+      '| [IFBench](https://github.com/allenai/IFBench) | 48.2 | **78.1** | **78.1** | +29.9 pp |',
+      '',
+      '| Other table | Value |',
+      '| --- | ---: |',
+      '| A | 45 |',
+    ].join('\n')
+    const { content } = await compileMDX({ source, options: mdxOptions(), components: mdxComponents })
+    const html = renderToStaticMarkup(<>{content}</>)
+    expect(html).toContain('<th scope="row">')
+    expect(html).toContain('href="https://github.com/allenai/IFBench"')
+    expect(html.match(/class="benchmark-best-label">Best/g)).toHaveLength(2)
+    expect(html.match(/class="benchmark-score-track"/g)).toHaveLength(3)
+    expect(html).toContain('style="width:78.1%"')
+    expect(html).toContain('>+29.9 pp</td>')
+  })
+})
+
 describe('production equation MDX pipeline', () => {
   it('renders real inline, display and aligned mathematics, optional metadata and anchors', async () => {
     const { equationFixture } = await import('@/app/lab/folio-review/equation-fixture')

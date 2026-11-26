@@ -13,6 +13,9 @@ import {
   handleMessage,
   toolDefinitions,
   type BenchMcpDeps,
+  type CallToolResult,
+  type JsonRpcResponse,
+  type McpToolDefinition,
 } from './mcp'
 import { openTraceFromDisk } from './mcp-fs'
 import { BENCHMARK_MODELS, BENCHMARK_TASKS } from './registry'
@@ -149,7 +152,14 @@ function deps(overrides: Partial<BenchMcpDeps> = {}): BenchMcpDeps {
   }
 }
 
-/** The JSON payload a tool call carries in its single text content block. */
+/** A JSON-RPC reply narrowed to the result shape an assertion needs. */
+type RpcResult<T> = Omit<JsonRpcResponse, 'result' | 'error'> & {
+  result: T
+  error: { code: number; message: string }
+}
+
+// The JSON payload a tool call carries in its single text content block.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- JSON.parse boundary; each test asserts the fields it needs
 function payload(name: string, args: unknown, d: BenchMcpDeps = deps()): any {
   const call = callTool(name, args, d)
   expect(call.ok, `callTool(${name}) rejected: ${call.ok ? '' : call.message}`).toBe(true)
@@ -185,13 +195,13 @@ describe('mcp: handshake', () => {
     const newer = handleMessage(
       { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18' } },
       deps(),
-    ) as any
+    ) as RpcResult<{ protocolVersion: string }>
     expect(newer.result.protocolVersion).toBe('2025-06-18')
 
     const alien = handleMessage(
       { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: 'banana' } },
       deps(),
-    ) as any
+    ) as RpcResult<{ protocolVersion: string }>
     expect(alien.result.protocolVersion).toBe(MCP_PROTOCOL_VERSION)
   })
 
@@ -205,22 +215,22 @@ describe('mcp: handshake', () => {
   })
 
   it('rejects unknown methods with method-not-found', () => {
-    const res = handleMessage({ jsonrpc: '2.0', id: 2, method: 'resources/list' }, deps()) as any
+    const res = handleMessage({ jsonrpc: '2.0', id: 2, method: 'resources/list' }, deps()) as RpcResult<unknown>
     expect(res.error.code).toBe(-32601)
     expect(res.result).toBeUndefined()
   })
 
   it('rejects a malformed line with a parse error but keeps the shape valid', () => {
-    const res = handleLine('{not json', deps()) as any
+    const res = handleLine('{not json', deps())
     expect(res).toMatchObject({ jsonrpc: '2.0', id: null, error: { code: -32700 } })
   })
 
   it('rejects a non-object message and a batch array as invalid requests', () => {
-    expect((handleLine('42', deps()) as any).error.code).toBe(-32600)
-    const batch = handleLine('[{"jsonrpc":"2.0","id":1,"method":"ping"}]', deps()) as any
-    expect(batch.error.code).toBe(-32600)
-    expect(batch.error.message).toMatch(/batch/i)
-    expect(batch.id).toBeNull()
+    expect(handleLine('42', deps())?.error?.code).toBe(-32600)
+    const batch = handleLine('[{"jsonrpc":"2.0","id":1,"method":"ping"}]', deps())
+    expect(batch?.error?.code).toBe(-32600)
+    expect(batch?.error?.message).toMatch(/batch/i)
+    expect(batch?.id).toBeNull()
   })
 
   it('skips blank lines entirely', () => {
@@ -229,10 +239,12 @@ describe('mcp: handshake', () => {
 })
 
 describe('mcp: tools/list', () => {
-  const listed = handleMessage({ jsonrpc: '2.0', id: 3, method: 'tools/list' }, deps()) as any
+  const listed = handleMessage({ jsonrpc: '2.0', id: 3, method: 'tools/list' }, deps()) as RpcResult<{
+    tools: McpToolDefinition[]
+  }>
 
   it('lists every tool with a description and an object input schema', () => {
-    const names = listed.result.tools.map((t: any) => t.name).sort()
+    const names = listed.result.tools.map((t) => t.name).sort()
     expect(names).toEqual([
       'bench_checks_used',
       'bench_get_result',
@@ -245,7 +257,7 @@ describe('mcp: tools/list', () => {
     for (const tool of listed.result.tools) {
       expect(tool.description, tool.name).toBeTruthy()
       expect(tool.inputSchema.type, tool.name).toBe('object')
-      for (const [prop, schema] of Object.entries<any>(tool.inputSchema.properties ?? {})) {
+      for (const [prop, schema] of Object.entries(tool.inputSchema.properties ?? {})) {
         expect(schema.description, `${tool.name}.${prop}`).toBeTruthy()
       }
     }
@@ -260,7 +272,7 @@ describe('mcp: bench_list_models', () => {
   it('returns every registry model with completion stats', () => {
     const out = payload('bench_list_models', {})
     expect(out.models.length).toBe(BENCHMARK_MODELS.length)
-    const deepseek = out.models.find((m: any) => m.id === 'deepseek-v4-flash-free')
+    const deepseek = out.models.find((m: { id: string }) => m.id === 'deepseek-v4-flash-free')
     expect(deepseek.completion.tasksTotal).toBe(BENCHMARK_TASKS.length)
     expect(deepseek.completion.attempted).toBe(1)
     expect(deepseek.completion.meanScore).toBeCloseTo(55.3, 5)
@@ -271,7 +283,7 @@ describe('mcp: bench_list_tasks', () => {
   it('returns id/category/title/scorer/pluginId for every task', () => {
     const out = payload('bench_list_tasks', {})
     expect(out.tasks.length).toBe(BENCHMARK_TASKS.length)
-    const task = out.tasks.find((t: any) => t.id === 'mini-platformer')
+    const task = out.tasks.find((t: { id: string }) => t.id === 'mini-platformer')
     expect(task).toMatchObject({ id: 'mini-platformer', category: expect.any(String), title: expect.any(String) })
     expect(Object.keys(task).sort()).toEqual(['category', 'id', 'pluginId', 'scorer', 'title'])
   })
@@ -330,7 +342,7 @@ describe('mcp: bench_get_result', () => {
       { model: 'kimi-k3', task: 'equation-solver' },
       deps({ results: [fellBack] }),
     )
-    expect(out.failedChecks.map((c: any) => c.name)).toEqual(['solutions-correct'])
+    expect(out.failedChecks.map((c: { name: string }) => c.name)).toEqual(['solutions-correct'])
   })
 
   it('carries the quota and budget stamps when present', () => {
@@ -494,7 +506,7 @@ describe('mcp: tools/call routing', () => {
     const res = handleMessage(
       { jsonrpc: '2.0', id: 9, method: 'tools/call', params: { name: 'bench_get_result', arguments: {} } },
       deps(),
-    ) as any
+    ) as RpcResult<unknown>
     expect(res.error.code).toBe(-32602)
   })
 
@@ -502,17 +514,17 @@ describe('mcp: tools/call routing', () => {
     const unknown = handleMessage(
       { jsonrpc: '2.0', id: 10, method: 'tools/call', params: { name: 'bench_drop_table', arguments: {} } },
       deps(),
-    ) as any
+    ) as RpcResult<unknown>
     expect(unknown.error.code).toBe(-32602)
     expect(unknown.error.message).toMatch(/unknown tool/i)
 
-    const noParams = handleMessage({ jsonrpc: '2.0', id: 11, method: 'tools/call' }, deps()) as any
+    const noParams = handleMessage({ jsonrpc: '2.0', id: 11, method: 'tools/call' }, deps()) as RpcResult<unknown>
     expect(noParams.error.code).toBe(-32602)
 
     const badArgs = handleMessage(
       { jsonrpc: '2.0', id: 12, method: 'tools/call', params: { name: 'bench_list_models', arguments: 'nope' } },
       deps(),
-    ) as any
+    ) as RpcResult<unknown>
     expect(badArgs.error.code).toBe(-32602)
   })
 
@@ -520,7 +532,7 @@ describe('mcp: tools/call routing', () => {
     const res = handleMessage(
       { jsonrpc: '2.0', id: 13, method: 'tools/call', params: { name: 'bench_list_tasks' } },
       deps(),
-    ) as any
+    ) as RpcResult<CallToolResult>
     expect(res.result.content[0].type).toBe('text')
   })
 })
@@ -568,7 +580,7 @@ describe('scripts/bench-mcp.mjs over stdio', () => {
       stdio: ['pipe', 'pipe', 'pipe'],
     })
     try {
-      const responses: any[] = []
+      const responses: JsonRpcResponse[] = []
       let buffer = ''
       const done = new Promise<void>((resolveDone, rejectDone) => {
         child.stdout.setEncoding('utf8')
@@ -605,15 +617,21 @@ describe('scripts/bench-mcp.mjs over stdio', () => {
 
       await done
 
-      expect(responses[0].result.serverInfo.name).toBe(SERVER_INFO.name)
-      expect(responses[0].result.capabilities.tools).toBeDefined()
-      expect(responses[1].result.tools.length).toBe(toolDefinitions().length)
-      const checks = JSON.parse(responses[2].result.content[0].text)
+      const init = responses[0].result as {
+        serverInfo: { name: string }
+        capabilities: { tools: unknown }
+      }
+      expect(init.serverInfo.name).toBe(SERVER_INFO.name)
+      expect(init.capabilities.tools).toBeDefined()
+      const list = responses[1].result as { tools: unknown[] }
+      expect(list.tools.length).toBe(toolDefinitions().length)
+      const call = responses[2].result as CallToolResult
+      const checks = JSON.parse(call.content[0].text)
       expect(checks.taskId).toBe('mini-platformer')
       expect(checks.browserCheckCount).toBe(2)
       // Against the REAL board, so assert containment: the scorer's synthetic
       // `no-runtime-errors` entry rides along whenever some run's page threw.
-      expect(checks.recordedChecks.map((c: any) => c.name)).toEqual(
+      expect(checks.recordedChecks.map((c: { name: string }) => c.name)).toEqual(
         expect.arrayContaining(['platformer-jump', 'platformer-move']),
       )
       expect(checks.totalPoints).toBe(55)

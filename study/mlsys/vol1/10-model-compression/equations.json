@@ -1,0 +1,119 @@
+[
+  {
+    "id": "weight-bytes",
+    "number": 1,
+    "title": "Raw weight payload",
+    "latex": "M_{\\mathrm{weights}}=\\frac{N b}{8}",
+    "caption": "For $N$ uniformly packed parameters at $b$ bits each. For mixed precision, add the payloads of the separate groups. This excludes scales, padding, other metadata and runtime buffers.",
+    "symbols": [
+      { "symbol": "M_{\\mathrm{weights}}", "name": "Raw weight payload", "meaning": "Bytes needed for the weight values before metadata, padding, and runtime buffers." },
+      { "symbol": "N", "name": "Parameter count", "meaning": "Number of weight values stored at the given precision." },
+      { "symbol": "b", "name": "Bit width", "meaning": "Bits stored per weight value." },
+      { "symbol": "8", "name": "Unit conversion", "meaning": "Bits in one byte." }
+    ]
+  },
+  {
+    "id": "low-rank-cost",
+    "number": 2,
+    "title": "Low-rank weight count and break-even",
+    "latex": "\\begin{aligned} N_{\\mathrm{factored}}&=r(m+n)\\\\ N_{\\mathrm{dense}}&=mn\\\\ N_{\\mathrm{factored}}<N_{\\mathrm{dense}}&\\iff r<\\frac{mn}{m+n} \\end{aligned}",
+    "caption": "An $m$ by $n$ matrix is replaced by two factors of shapes $m$ by $r$ and $r$ by $n$. For a matrix-vector product the same counts apply to multiply-accumulates, before intermediate traffic and dispatch.",
+    "symbols": [
+      { "symbol": "N_{\\mathrm{factored}}", "name": "Factored weight count", "meaning": "Values across both factor matrices." },
+      { "symbol": "N_{\\mathrm{dense}}", "name": "Dense weight count", "meaning": "Values in the original weight matrix." },
+      { "symbol": "m,n", "name": "Original shape", "meaning": "Rows and columns of the original matrix." },
+      { "symbol": "r", "name": "Retained rank", "meaning": "Count of retained components, also the width of the intermediate between factor operations." }
+    ]
+  },
+  {
+    "id": "distillation-loss",
+    "number": 3,
+    "title": "Distillation with hard and soft targets",
+    "latex": "\\begin{aligned} \\mathcal L&=(1-\\alpha)\\,\\mathrm{CE}(y,p_{S,1})\\\\ &\\quad+\\alpha T^2\\,D_{\\mathrm{KL}}(p_{T,T}\\,\\|\\,p_{S,T}) \\end{aligned}",
+    "caption": "Both teacher and student soft targets use temperature $T$. Multiplying the soft-target term by $T^2$ compensates for the approximate gradient scaling with temperature. Only the student is needed at inference.",
+    "symbols": [
+      { "symbol": "\\mathcal L", "name": "Training loss", "meaning": "Scalar objective minimized over student parameters." },
+      { "symbol": "\\alpha", "name": "Soft-target weight", "meaning": "Mixer between zero and one for the distillation term. The remaining weight goes to the supervised loss." },
+      { "symbol": "T", "name": "Temperature", "meaning": "Positive divisor on logits before softmax. Values above one soften the probabilities." },
+      { "symbol": "y", "name": "Hard label", "meaning": "Observed target class, represented as a one-hot target for cross-entropy." },
+      { "symbol": "p_{S,1}", "name": "Student probabilities", "meaning": "Student outputs at temperature one for the hard-label objective." },
+      { "symbol": "p_{T,T}", "name": "Soft teacher targets", "meaning": "Teacher probabilities after dividing teacher logits by the distillation temperature." },
+      { "symbol": "p_{S,T}", "name": "Soft student outputs", "meaning": "Student probabilities using the same distillation temperature." },
+      { "symbol": "\\mathrm{CE}", "name": "Cross-entropy", "meaning": "Hard-target classification loss using the student's probability for the observed class." },
+      { "symbol": "D_{\\mathrm{KL}}", "name": "KL divergence", "meaning": "Measures how the soft student distribution differs from the soft teacher distribution, in the stated direction." }
+    ]
+  },
+  {
+    "id": "affine-quantizer",
+    "number": 4,
+    "title": "Affine quantization and reconstruction",
+    "latex": "\\begin{aligned} s&=\\frac{u-l}{q_{\\max}-q_{\\min}}\\\\ z&=\\operatorname{clip}_{[q_{\\min},q_{\\max}]}\\!\\left(\\operatorname{round}\\!\\left(q_{\\min}-\\frac{l}{s}\\right)\\right)\\\\ q&=\\operatorname{clip}_{[q_{\\min},q_{\\max}]}\\!\\left(\\operatorname{round}(x/s)+z\\right)\\\\ \\hat x&=s(q-z) \\end{aligned}",
+    "caption": "Use a nonzero-width range containing real zero. The integer zero-point anchors zero. Keeping the number of codes fixed makes a wider calibration range increase the step between represented values.",
+    "symbols": [
+      { "symbol": "l,u", "name": "Calibration bounds", "meaning": "Lower and upper real-valued endpoints with upper greater than lower." },
+      { "symbol": "q_{\\min},q_{\\max}", "name": "Code limits", "meaning": "Smallest and largest integer codes in the chosen signed or unsigned representation." },
+      { "symbol": "s", "name": "Scale", "meaning": "Spacing between adjacent represented values in real-value units per code." },
+      { "symbol": "z", "name": "Zero-point", "meaning": "Integer code used to represent real zero exactly." },
+      { "symbol": "x", "name": "Original value", "meaning": "Real-valued input before quantization." },
+      { "symbol": "q", "name": "Quantized code", "meaning": "Integer obtained by rounding, adding the zero-point, and saturating to the code range." },
+      { "symbol": "\\hat x", "name": "Reconstructed value", "meaning": "Real value associated with the stored code." },
+      { "symbol": "\\operatorname{round}", "name": "Rounding", "meaning": "Map a real number to its nearest integer under the runtime's tie rule." },
+      { "symbol": "\\operatorname{clip}", "name": "Saturation", "meaning": "Clamp a code to the allowed endpoints." }
+    ]
+  },
+  {
+    "id": "decode-lower-bound",
+    "number": 5,
+    "title": "Bandwidth lower bound for decode",
+    "latex": "t_{\\mathrm{token}}\\ge\\frac{D_{\\mathrm{weights}}+D_{\\mathrm{KV}}}{B}",
+    "caption": "Apply at a fixed batch size and context length for traffic that crosses the same memory interface. Quantizing weights leaves the KV-cache term intact unless it is changed separately.",
+    "symbols": [
+      { "symbol": "t_{\\mathrm{token}}", "name": "Token latency", "meaning": "Time per decoded token at the stated workload, in seconds." },
+      { "symbol": "D_{\\mathrm{weights}}", "name": "Weight traffic", "meaning": "Weight bytes moved through the selected interface per token. Include quantization metadata in a physical measurement." },
+      { "symbol": "D_{\\mathrm{KV}}", "name": "KV-cache traffic", "meaning": "Key/value cache bytes moved through the same interface per token." },
+      { "symbol": "B", "name": "Available bandwidth", "meaning": "Bytes per second at that memory interface, using an upper bound for a theoretical latency floor." }
+    ]
+  },
+  {
+    "id": "fusion-traffic",
+    "number": 6,
+    "title": "Traffic of a fused equal-size chain",
+    "latex": "D_{\\mathrm{separate}}=2kA,\\qquad D_{\\mathrm{fused}}=2A",
+    "caption": "Counts activation reads and writes for $k$ stages with input and output of size $A$ at every stage, assuming every separate stage spills its output to the interface and fusion can keep intermediates on-chip. Weight reads are counted separately.",
+    "symbols": [
+      { "symbol": "D_{\\mathrm{separate}}", "name": "Separate-kernel traffic", "meaning": "Bytes read and written when every stage materializes output to the memory interface." },
+      { "symbol": "D_{\\mathrm{fused}}", "name": "Fused-kernel traffic", "meaning": "Bytes read and written when the chain keeps every intermediate on-chip." },
+      { "symbol": "k", "name": "Stage count", "meaning": "Number of operators that each read one input and write one output." },
+      { "symbol": "A", "name": "Activation tensor size", "meaning": "Identical input and output size for each stage, measured in bytes." },
+      { "symbol": "2", "name": "Read plus write", "meaning": "Counts one input read and one output write per materialized boundary." }
+    ]
+  },
+  {
+    "id": "amdahl",
+    "number": 7,
+    "title": "Amdahl’s law for an accelerated model stage",
+    "latex": "S_{\\mathrm{end}}=\\frac{1}{(1-f)+f/S_{\\mathrm{model}}}",
+    "caption": "This serial-stage model assumes the other work stays fixed. The model share is measured on the original request boundary. Overlapped pipelines require tracing the actual critical path.",
+    "symbols": [
+      { "symbol": "S_{\\mathrm{end}}", "name": "End-to-end speedup", "meaning": "Baseline request time divided by optimized request time." },
+      { "symbol": "f", "name": "Baseline model fraction", "meaning": "Fraction of baseline request latency spent in the accelerated stage." },
+      { "symbol": "1-f", "name": "Other work fraction", "meaning": "Fraction of baseline request latency unaffected by the stage speedup." },
+      { "symbol": "S_{\\mathrm{model}}", "name": "Model-stage speedup", "meaning": "Old stage duration divided by new stage duration." }
+    ]
+  },
+  {
+    "id": "sparse-break-even",
+    "number": 8,
+    "title": "Sparse storage break-even with metadata",
+    "latex": "\\begin{aligned} N(1-s)(b_v+b_i)+R&<Nb_v\\\\ s&>\\frac{b_i+R/N}{b_v+b_i} \\end{aligned}",
+    "caption": "Each retained value has its own index. Fixed overhead is charged once. The inequality is about storage. Sparse-kernel latency needs a separate experiment.",
+    "symbols": [
+      { "symbol": "N", "name": "Dense value count", "meaning": "Original number of matrix entries, including zeros." },
+      { "symbol": "s", "name": "Sparsity", "meaning": "Fraction of original entries stored implicitly as zero." },
+      { "symbol": "b_v", "name": "Value width", "meaning": "Bytes used for each stored weight, at the same precision on both sides." },
+      { "symbol": "b_i", "name": "Index width", "meaning": "Bytes of position metadata for each retained weight in the chosen format." },
+      { "symbol": "R", "name": "Fixed metadata", "meaning": "Other bytes needed by the sparse encoding, such as row pointers. These do not scale with the number of retained entries in this model." },
+      { "symbol": "1-s", "name": "Retained density", "meaning": "Fraction of the original entries kept as explicit values." }
+    ]
+  }
+]

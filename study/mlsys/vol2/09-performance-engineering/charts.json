@@ -1,0 +1,29 @@
+[
+  {
+    "id": "software-gains",
+    "kind": "BAR_STACKED",
+    "title": "Software-only throughput gains across MLPerf rounds",
+    "caption": "Relative offline throughput per benchmark across MLPerf training rounds, hardware unchanged: GPT-J about 2.7x, Llama 2 about 1.4x, SDXL about 1.2x. The single bar per benchmark is total gain; values are measured round-over-round results.",
+    "xLabel": "Benchmark",
+    "yLabel": "Relative throughput (x)",
+    "xPoints": ["GPT-J", "Llama 2", "SDXL"],
+    "series": [
+      {"key": "gain", "label": "Software-only throughput gain", "color": "var(--chart-2)", "values": [2.7, 1.4, 1.2]}
+    ]
+  },
+  {
+    "id": "fleet-loss-shares",
+    "kind": "BAR_STACKED",
+    "title": "Where the 128-GPU example's fleet capacity goes",
+    "caption": "Illustrative split anchored to the chapter's composition: a little over a quarter of held capacity becomes progress; loss shares rank scheduling, then program, then runtime for the example — the reverse of Llama 3's dedicated-cluster ordering.",
+    "xLabel": "Job",
+    "yLabel": "Share of held capacity",
+    "xPoints": ["128-GPU example", "Llama 3 405B (dedicated)"],
+    "series": [
+      {"key": "progress", "label": "Progress (MPG)", "color": "var(--chart-2)", "values": [0.27, 0.37]},
+      {"key": "sched", "label": "Scheduling loss", "color": "var(--chart-1)", "values": [0.28, 0.0]},
+      {"key": "runtime", "label": "Runtime loss", "color": "var(--chart-4)", "values": [0.17, 0.10]},
+      {"key": "program", "label": "Program loss", "color": "var(--chart-3)", "values": [0.28, 0.53]}
+    ]
+  }
+]

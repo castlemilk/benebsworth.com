@@ -1,0 +1,6 @@
+[
+ {"id":"six-principles","file":"six-principles.svg","title":"Six principles, six questions","caption":"Each principle pairs a governing question with the metric that tests it. Infrastructure, communication, failure, serving contract, responsibility, sustainability — the fleet can bind at any layer."},
+ {"id":"expansion-arithmetic","file":"expansion-arithmetic.svg","title":"The doubling arithmetic","caption":"Doubling the cluster halves ideal step time and halves job MTBF in the same motion. Checkpoint overhead climbs; accelerator-hours rise even at perfect speedup. Capability and efficiency move in opposite directions."},
+ {"id":"constraint-migration","file":"constraint-migration.svg","title":"The constraint migrates","caption":"Each optimization shrinks one term and exposes the next. Compute gives way to fabric, fabric to recovery, recovery to serving tail, serving tail to governance. The binding constraint never disappears; it moves."},
+ {"id":"fleet-stack","file":"fleet-stack.svg","title":"The fleet stack","caption":"Physical substrate, distribution band, serving band, governance band. Each layer supplies the rates and obligations the next inherits."}
+]

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="pri-map" class="study-fig-fit" viewBox="0 0 380 340" role="img" aria-labelledby="pri-map-title pri-map-desc">
+  <title id="pri-map-title">Thirteen principles, three questions</title>
+  <desc id="pri-map-desc">The thirteen quantitative principles sorted by the three questions of the introduction. What shapes predictions: data-as-code and bias feedback. What limits execution: data gravity, iron law, silicon contract, Pareto frontier, arithmetic intensity, energy movement, Amdahl. What evidence supports deployment: verification gap, statistical drift, training-serving skew, latency budget. Kinds marked: bound, decomposition, fitted model, policy, heuristic.</desc>
+  <style>
+    .dark #pri-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#pri-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="340" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">Three questions own thirteen tools</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">B bound · D decomposition · F fitted · P policy · H heuristic</text>
+
+    <text x="20" y="74" font-size="12.5" font-weight="650">1 · What shapes its predictions</text>
+    <g font-size="11.5">
+      <rect x="20" y="82" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="28" y="96">1 data-as-code</text><text x="164" y="96" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">H</text>
+      <rect x="200" y="82" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="208" y="96">13 bias feedback</text><text x="344" y="96" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">F</text>
+    </g>
+
+    <text x="20" y="124" font-size="12.5" font-weight="650">2 · What limits its execution</text>
+    <g font-size="11.5">
+      <rect x="20" y="132" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="28" y="146">2 data gravity</text><text x="164" y="146" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">H</text>
+      <rect x="200" y="132" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="208" y="146">3 iron law</text><text x="344" y="146" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">D</text>
+      <rect x="20" y="158" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="28" y="172">4 silicon contract</text><text x="164" y="172" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">H</text>
+      <rect x="200" y="158" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="208" y="172">5 Pareto frontier</text><text x="344" y="172" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">B</text>
+      <rect x="20" y="184" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="28" y="198">6 arithmetic intensity</text><text x="164" y="198" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">B</text>
+      <rect x="200" y="184" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="208" y="198">7 energy movement</text><text x="344" y="198" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">D</text>
+      <rect x="20" y="210" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="28" y="224">8 Amdahl's law</text><text x="164" y="224" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">B</text>
+    </g>
+
+    <text x="20" y="250" font-size="12.5" font-weight="650">3 · What evidence supports deployment</text>
+    <g font-size="11.5">
+      <rect x="20" y="258" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="28" y="272">9 verification gap</text><text x="164" y="272" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">P</text>
+      <rect x="200" y="258" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="208" y="272">10 statistical drift</text><text x="344" y="272" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">F</text>
+      <rect x="20" y="284" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="28" y="298">11 train-serve skew</text><text x="164" y="298" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">H</text>
+      <rect x="200" y="284" width="160" height="20" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="208" y="298">12 latency budget</text><text x="344" y="298" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">P</text>
+    </g>
+
+    <text x="20" y="322" font-size="11" fill="var(--fig-rule, #6e6a5b)">above them: conservation of complexity — displaced cost lands</text>
+    <text x="20" y="335" font-size="11" fill="var(--fig-rule, #6e6a5b)">somewhere; find where</text>
+  </g>
+</svg>

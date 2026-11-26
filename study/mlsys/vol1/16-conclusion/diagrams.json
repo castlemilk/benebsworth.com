@@ -1,0 +1,26 @@
+[
+  {
+    "id": "interface-failure",
+    "file": "interface-failure.svg",
+    "title": "Local wins compose into a global loss",
+    "caption": "Architecture, compression and serving each hit their metric. The failure lived between them: INT8 clipping ranges met a firmware-specific preprocessing path, the input shifted on one cohort, and aggregate telemetry never saw the four-point drop."
+  },
+  {
+    "id": "lighthouse-trace",
+    "file": "lighthouse-trace.svg",
+    "title": "Five lighthouses, five limiting terms",
+    "caption": "Each lighthouse saturates one resource first — compute, bandwidth, capacity, compute-in-envelope, power. The regime belongs to the workload on a machine; batch, phase and precision can move it."
+  },
+  {
+    "id": "principle-map",
+    "file": "principle-map.svg",
+    "title": "Thirteen principles, three questions",
+    "caption": "The book's quantitative toolkit sorted by what shapes predictions, what limits execution, and what evidence supports deployment — with each tool's kind (bound, decomposition, fitted model, policy, heuristic) marked."
+  },
+  {
+    "id": "request-trace",
+    "file": "request-trace.svg",
+    "title": "One request, four limiting terms",
+    "caption": "The closing voice-assistant trace: KWS power-bound, the front end compute-in-envelope, DLRM capacity-bound, GPT-2 decode bandwidth-bound — four different physics inside one user request."
+  }
+]

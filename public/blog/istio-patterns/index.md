@@ -5,6 +5,7 @@ author: Ben Ebsworth
 description: >-
   Overview of some common Istio Service Mesh topologies and configuration
   examples and diagrams
+heroImage: /blog/istio-patterns/hero.webp
 labels: 'technology,kubernetes,service mesh,istio'
 keywords: 'technology,kubernetes,service mesh,istio'
 release: true

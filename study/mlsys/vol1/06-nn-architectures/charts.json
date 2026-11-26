@@ -1,0 +1,76 @@
+[
+ {
+  "id": "attention-takeover",
+  "kind": "BAR_STACKED",
+  "title": "Dense GEMM vs attention MACs per block, by context length",
+  "caption": "Packet-owned computation from the block MAC account for a GPT-2 XL-shaped model (width 1,600, FFN 4x): projections+FFN cost 12·S·d^2 MACs and the two attention products cost 2·S^2·d. Attention is a minority below a few thousand tokens, reaches parity at S = 6d ≈ 9,600, and dominates at 16K - the crossover equation plotted. This counts arithmetic only; materialized score storage is the separate quadratic term tiled kernels avoid.",
+  "xLabel": "Context length (tokens)",
+  "yLabel": "MACs per block (billions)",
+  "xPoints": [
+   "1K",
+   "4K",
+   "8K",
+   "16K"
+  ],
+  "series": [
+   {
+    "key": "dense",
+    "label": "Dense GEMMs (projections + FFN)",
+    "color": "var(--chart-1)",
+    "values": [31.5, 125.8, 251.7, 503.3]
+   },
+   {
+    "key": "attention",
+    "label": "Attention products (QK^T and score·V)",
+    "color": "var(--chart-2)",
+    "values": [3.4, 53.7, 214.7, 858.9]
+   }
+  ]
+ },
+ {
+  "id": "kv-growth",
+  "kind": "BAR_STACKED",
+  "title": "KV cache per request vs context (GPT-2 XL, FP16)",
+  "caption": "Packet-owned computation from the KV-cache formula: 48 layers x 2 tensors x 1,600 wide x 2 bytes = ~307 KB per token per request. The cache is negligible at prompt scale, crosses the ~3 GB FP16 weight footprint near ten thousand tokens, and keeps climbing linearly - multiply again by concurrent requests. Weights stay flat; the cache is the moving term in decode memory.",
+  "xLabel": "Context length (tokens)",
+  "yLabel": "KV cache per request (GB)",
+  "xPoints": [
+   "1K",
+   "4K",
+   "10K",
+   "32K",
+   "128K"
+  ],
+  "series": [
+   {
+    "key": "kv",
+    "label": "KV cache (GB)",
+    "color": "var(--chart-1)",
+    "values": [0.31, 1.23, 3.07, 9.83, 39.3]
+   }
+  ]
+ },
+ {
+  "id": "intensity-signatures",
+  "kind": "BAR_STACKED",
+  "title": "Weight-traffic intensity signatures by lighthouse (FLOP/byte)",
+  "caption": "Qualitative proxies from the chapter's workload profile: how much arithmetic each family buys per byte of weight traffic in its common regime. Batched ResNet-50 convolutions reuse each weight across ~50K positions and the whole batch; depthwise MobileNetV2 trades some of that reuse away for the ~9x param cut; a batch-one dense layer and GPT-2 decode sit at the GEMV floor. DLRM plots at the floor because lookups are copies - its constraint is capacity, which intensity can't express.",
+  "xLabel": "Workload",
+  "yLabel": "FLOP / byte (weight stream)",
+  "xPoints": [
+   "ResNet-50 (batched conv)",
+   "MobileNetV2 (depthwise)",
+   "GPT-2 XL decode (B=1)",
+   "MLP dense (B=1)",
+   "DLRM lookups"
+  ],
+  "series": [
+   {
+    "key": "intensity",
+    "label": "Weight-stream intensity",
+    "color": "var(--chart-1)",
+    "values": [150, 12, 1.0, 0.5, 0.02]
+   }
+  ]
+ }
+]

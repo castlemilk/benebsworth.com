@@ -1,0 +1,29 @@
+[
+  {
+    "id": "fanout-tail",
+    "kind": "BAR_STACKED",
+    "title": "Fan-out turns leaf tail into user tail",
+    "caption": "When one user request waits on n parallel leaves each at p99, the user-level probability of a >p99 wait is 1 − 0.99ⁿ: ~10% at 10 leaves, ~39% at 50, ~63% at 100. Shaving the median cannot fix a tail built by width.",
+    "xLabel": "Leaves per user request (n)",
+    "yLabel": "P(user > leaf p99)",
+    "xPoints": [
+      "1",
+      "10",
+      "50",
+      "100"
+    ],
+    "series": [
+      {
+        "key": "prob",
+        "label": "Probability",
+        "color": "var(--chart-4)",
+        "values": [
+          0.01,
+          0.096,
+          0.395,
+          0.634
+        ]
+      }
+    ]
+  }
+]

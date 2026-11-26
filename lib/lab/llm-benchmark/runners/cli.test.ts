@@ -9,7 +9,6 @@ import {
   type ArtifactIndex,
 } from './cli'
 import { contentAddressedName } from '../content-address'
-import { spawn } from 'node:child_process'
 import { mkdtemp, writeFile, rm, readdir, readFile, stat } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'

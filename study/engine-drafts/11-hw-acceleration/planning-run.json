@@ -1,0 +1,113 @@
+{
+  "id": "vol1/02_hardware_pilot",
+  "title": "Hardware Acceleration",
+  "profile": "chapter",
+  "command": "outline",
+  "sourceUrl": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd",
+  "sourceHash": "ed96957a7d57264fafbd1b8ebd9f9d309697a5a59387b6bd2aeefbc45d94399b",
+  "specHash": "3af063304eb16d59f7e3858ba8bed40e38a4cf9e0c7be5f46838fdf747d6f088",
+  "status": "planned",
+  "sections": [
+    {
+      "id": "why-specialize",
+      "heading": "Identify the work worth specializing",
+      "sourceHeadings": [
+        "Anatomy of an Accelerator",
+        "Hardware Specialization"
+      ]
+    },
+    {
+      "id": "operator-to-execution-unit",
+      "heading": "Follow an operator to its execution units",
+      "sourceHeadings": [
+        "Compute Primitives",
+        "Compute Units"
+      ]
+    },
+    {
+      "id": "memory-traffic",
+      "heading": "Find which interface carries the bytes",
+      "sourceHeadings": [
+        "Memory Systems"
+      ]
+    },
+    {
+      "id": "roofline-bounds",
+      "heading": "Predict whether compute or bandwidth limits a kernel",
+      "sourceHeadings": [
+        "Performance Bounds"
+      ]
+    },
+    {
+      "id": "tile-capacity",
+      "heading": "Fit operands and accumulators on chip",
+      "sourceHeadings": [
+        "Anatomy of an Accelerator",
+        "Hardware Mapping"
+      ]
+    },
+    {
+      "id": "mapping-and-reuse",
+      "heading": "Turn reuse in the equations into reuse on the chip",
+      "sourceHeadings": [
+        "Hardware Mapping"
+      ]
+    },
+    {
+      "id": "compiler-runtime-path",
+      "heading": "Verify the plan the compiler and runtime actually execute",
+      "sourceHeadings": [
+        "Compilers and Runtimes"
+      ]
+    },
+    {
+      "id": "communication-across-devices",
+      "heading": "Extend the bottleneck analysis across accelerators",
+      "sourceHeadings": [
+        "Beyond One Accelerator"
+      ]
+    },
+    {
+      "id": "heterogeneous-soc",
+      "heading": "Map the full pipeline under a sustained power budget",
+      "sourceHeadings": [
+        "Heterogeneous SoC Design"
+      ]
+    },
+    {
+      "id": "accelerator-choice",
+      "heading": "Choose hardware by useful work delivered",
+      "sourceHeadings": [
+        "Choosing an Accelerator",
+        "Fallacies and Pitfalls"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "role": "architect",
+      "model": "gpt-6.2-sol",
+      "effort": "high",
+      "sections": [],
+      "promptBytes": 44726,
+      "cached": false,
+      "key": "84659124d17aab20f3189c507ec910fae9c5842a59abd4dccf45f744b2079c6f",
+      "usage": {
+        "input": 23150,
+        "cachedInput": 0,
+        "output": 8992
+      }
+    }
+  ],
+  "maxCalls": 2,
+  "stopAfterTokens": null,
+  "liveCalls": 1,
+  "tokens": {
+    "input": 23150,
+    "cachedInput": 0,
+    "output": 8992,
+    "total": 32142
+  },
+  "usageIncomplete": false,
+  "elapsedMs": 198168
+}

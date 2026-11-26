@@ -5,7 +5,7 @@
 // server's model-eval reports). We use ONLY the per-model summaries to
 // avoid shipping the full patch corpus to the client.
 
-import type { HarnessModelSummary, HarnessTaskResult } from '@/lib/lab/harness-eval/types';
+import type { HarnessModelSummary } from '@/lib/lab/harness-eval/types';
 
 export interface PerModelRow {
   modelId: string;

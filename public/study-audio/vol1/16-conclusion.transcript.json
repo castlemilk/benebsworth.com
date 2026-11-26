@@ -1,0 +1,6292 @@
+{
+  "hosts": {
+    "A": "Marcus",
+    "B": "Iris"
+  },
+  "segments": [
+    {
+      "speaker": "A",
+      "text": "I'm Marcus, this is Iris. Last chapter was responsible engineering \u2014 the obligations a system owes the people it affects. Today we close the book: the conclusion, which makes the whole thesis quantitative. It opens with a failure story: an image classifier deployed across a fleet of mobile devices.",
+      "start": 0.0,
+      "end": 21.82,
+      "words": [
+        {
+          "text": "I'm",
+          "start": 0.0,
+          "end": 0.6
+        },
+        {
+          "text": "Marcus,",
+          "start": 0.6,
+          "end": 0.9
+        },
+        {
+          "text": "this",
+          "start": 1.04,
+          "end": 1.26
+        },
+        {
+          "text": "is",
+          "start": 1.26,
+          "end": 1.46
+        },
+        {
+          "text": "Iris.",
+          "start": 1.46,
+          "end": 1.88
+        },
+        {
+          "text": "Last",
+          "start": 2.6,
+          "end": 2.88
+        },
+        {
+          "text": "chapter",
+          "start": 2.88,
+          "end": 3.34
+        },
+        {
+          "text": "was",
+          "start": 3.34,
+          "end": 3.58
+        },
+        {
+          "text": "responsible",
+          "start": 3.58,
+          "end": 4.1
+        },
+        {
+          "text": "engineering.",
+          "start": 4.1,
+          "end": 4.94
+        },
+        {
+          "text": "The",
+          "start": 5.48,
+          "end": 5.62
+        },
+        {
+          "text": "obligations",
+          "start": 5.62,
+          "end": 6.18
+        },
+        {
+          "text": "a",
+          "start": 6.18,
+          "end": 6.56
+        },
+        {
+          "text": "system",
+          "start": 6.56,
+          "end": 6.92
+        },
+        {
+          "text": "owes",
+          "start": 6.92,
+          "end": 7.3
+        },
+        {
+          "text": "the",
+          "start": 7.3,
+          "end": 7.5
+        },
+        {
+          "text": "people",
+          "start": 7.5,
+          "end": 7.78
+        },
+        {
+          "text": "it",
+          "start": 7.78,
+          "end": 7.94
+        },
+        {
+          "text": "affects.",
+          "start": 7.94,
+          "end": 8.26
+        },
+        {
+          "text": "Today",
+          "start": 9.02,
+          "end": 9.24
+        },
+        {
+          "text": "we",
+          "start": 9.24,
+          "end": 9.46
+        },
+        {
+          "text": "close",
+          "start": 9.46,
+          "end": 9.74
+        },
+        {
+          "text": "the",
+          "start": 9.74,
+          "end": 10.06
+        },
+        {
+          "text": "book,",
+          "start": 10.06,
+          "end": 10.34
+        },
+        {
+          "text": "the",
+          "start": 10.84,
+          "end": 10.96
+        },
+        {
+          "text": "conclusion,",
+          "start": 10.96,
+          "end": 11.44
+        },
+        {
+          "text": "which",
+          "start": 11.9,
+          "end": 12.08
+        },
+        {
+          "text": "makes",
+          "start": 12.08,
+          "end": 12.34
+        },
+        {
+          "text": "the",
+          "start": 12.34,
+          "end": 12.52
+        },
+        {
+          "text": "whole",
+          "start": 12.52,
+          "end": 12.76
+        },
+        {
+          "text": "thesis",
+          "start": 12.76,
+          "end": 13.16
+        },
+        {
+          "text": "quantitative.",
+          "start": 13.16,
+          "end": 13.76
+        },
+        {
+          "text": "It",
+          "start": 14.58,
+          "end": 14.78
+        },
+        {
+          "text": "opens",
+          "start": 14.78,
+          "end": 15.06
+        },
+        {
+          "text": "with",
+          "start": 15.06,
+          "end": 15.38
+        },
+        {
+          "text": "a",
+          "start": 15.38,
+          "end": 15.48
+        },
+        {
+          "text": "failure",
+          "start": 15.48,
+          "end": 15.92
+        },
+        {
+          "text": "story,",
+          "start": 15.92,
+          "end": 16.52
+        },
+        {
+          "text": "an",
+          "start": 16.98,
+          "end": 17.12
+        },
+        {
+          "text": "image",
+          "start": 17.12,
+          "end": 17.48
+        },
+        {
+          "text": "classifier",
+          "start": 17.48,
+          "end": 18.42
+        },
+        {
+          "text": "deployed",
+          "start": 18.42,
+          "end": 18.84
+        },
+        {
+          "text": "across",
+          "start": 18.84,
+          "end": 19.18
+        },
+        {
+          "text": "a",
+          "start": 19.18,
+          "end": 19.46
+        },
+        {
+          "text": "fleet",
+          "start": 19.46,
+          "end": 19.78
+        },
+        {
+          "text": "of",
+          "start": 19.78,
+          "end": 20.0
+        },
+        {
+          "text": "mobile",
+          "start": 20.0,
+          "end": 20.38
+        },
+        {
+          "text": "devices.",
+          "start": 20.38,
+          "end": 20.98
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Three teams, and every one of them hit its metric. The architecture team chose depthwise separable convolutions. The compression team quantized to INT8 so everything fit in on-chip SRAM. The serving team held end-to-end p99 under fifty milliseconds. All green.",
+      "start": 21.82,
+      "end": 40.75,
+      "words": [
+        {
+          "text": "Three",
+          "start": 21.98,
+          "end": 22.3
+        },
+        {
+          "text": "teams,",
+          "start": 22.3,
+          "end": 22.74
+        },
+        {
+          "text": "and",
+          "start": 23.0,
+          "end": 23.16
+        },
+        {
+          "text": "every",
+          "start": 23.16,
+          "end": 23.46
+        },
+        {
+          "text": "one",
+          "start": 23.46,
+          "end": 23.66
+        },
+        {
+          "text": "of",
+          "start": 23.66,
+          "end": 23.74
+        },
+        {
+          "text": "them",
+          "start": 23.74,
+          "end": 23.9
+        },
+        {
+          "text": "hit",
+          "start": 23.9,
+          "end": 24.12
+        },
+        {
+          "text": "its",
+          "start": 24.12,
+          "end": 24.36
+        },
+        {
+          "text": "metric.",
+          "start": 24.36,
+          "end": 24.7
+        },
+        {
+          "text": "The",
+          "start": 25.26,
+          "end": 25.42
+        },
+        {
+          "text": "architecture",
+          "start": 25.42,
+          "end": 25.84
+        },
+        {
+          "text": "team",
+          "start": 25.84,
+          "end": 26.32
+        },
+        {
+          "text": "chose",
+          "start": 26.32,
+          "end": 26.92
+        },
+        {
+          "text": "depth",
+          "start": 26.92,
+          "end": 27.24
+        },
+        {
+          "text": "-wise",
+          "start": 27.24,
+          "end": 27.48
+        },
+        {
+          "text": "separable",
+          "start": 27.48,
+          "end": 28.02
+        },
+        {
+          "text": "convolutions.",
+          "start": 28.02,
+          "end": 28.58
+        },
+        {
+          "text": "The",
+          "start": 28.58,
+          "end": 29.48
+        },
+        {
+          "text": "compression",
+          "start": 29.48,
+          "end": 29.82
+        },
+        {
+          "text": "team",
+          "start": 29.82,
+          "end": 30.26
+        },
+        {
+          "text": "quantized",
+          "start": 30.26,
+          "end": 31.1
+        },
+        {
+          "text": "to",
+          "start": 31.1,
+          "end": 31.26
+        },
+        {
+          "text": "INT",
+          "start": 31.26,
+          "end": 31.54
+        },
+        {
+          "text": "-8",
+          "start": 31.54,
+          "end": 32.04
+        },
+        {
+          "text": "so",
+          "start": 32.04,
+          "end": 32.3
+        },
+        {
+          "text": "everything",
+          "start": 32.3,
+          "end": 32.68
+        },
+        {
+          "text": "fit",
+          "start": 32.68,
+          "end": 33.1
+        },
+        {
+          "text": "in",
+          "start": 33.1,
+          "end": 33.38
+        },
+        {
+          "text": "on",
+          "start": 33.38,
+          "end": 33.6
+        },
+        {
+          "text": "-chip",
+          "start": 33.6,
+          "end": 33.88
+        },
+        {
+          "text": "SRAM.",
+          "start": 33.88,
+          "end": 34.34
+        },
+        {
+          "text": "The",
+          "start": 34.84,
+          "end": 35.04
+        },
+        {
+          "text": "serving",
+          "start": 35.04,
+          "end": 35.32
+        },
+        {
+          "text": "team",
+          "start": 35.32,
+          "end": 35.72
+        },
+        {
+          "text": "held",
+          "start": 35.72,
+          "end": 36.0
+        },
+        {
+          "text": "end",
+          "start": 36.0,
+          "end": 36.32
+        },
+        {
+          "text": "-to",
+          "start": 36.32,
+          "end": 36.48
+        },
+        {
+          "text": "-end",
+          "start": 36.48,
+          "end": 36.68
+        },
+        {
+          "text": "P99",
+          "start": 36.68,
+          "end": 37.48
+        },
+        {
+          "text": "under",
+          "start": 37.48,
+          "end": 37.92
+        },
+        {
+          "text": "50",
+          "start": 37.92,
+          "end": 38.24
+        },
+        {
+          "text": "milliseconds,",
+          "start": 38.24,
+          "end": 38.76
+        },
+        {
+          "text": "all",
+          "start": 39.34,
+          "end": 39.74
+        },
+        {
+          "text": "green.",
+          "start": 39.74,
+          "end": 40.04
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And then within weeks, accuracy fell four percentage points \u2014 on specific firmware and device cohorts only.",
+      "start": 40.75,
+      "end": 48.58,
+      "words": [
+        {
+          "text": "And",
+          "start": 41.1,
+          "end": 41.24
+        },
+        {
+          "text": "then",
+          "start": 41.24,
+          "end": 41.38
+        },
+        {
+          "text": "within",
+          "start": 41.38,
+          "end": 41.62
+        },
+        {
+          "text": "weeks,",
+          "start": 41.62,
+          "end": 42.12
+        },
+        {
+          "text": "accuracy",
+          "start": 42.52,
+          "end": 42.92
+        },
+        {
+          "text": "fell",
+          "start": 42.92,
+          "end": 43.32
+        },
+        {
+          "text": "4",
+          "start": 43.32,
+          "end": 43.58
+        },
+        {
+          "text": "percentage",
+          "start": 43.58,
+          "end": 43.98
+        },
+        {
+          "text": "points",
+          "start": 43.98,
+          "end": 44.52
+        },
+        {
+          "text": "on",
+          "start": 44.52,
+          "end": 45.18
+        },
+        {
+          "text": "specific",
+          "start": 45.18,
+          "end": 45.64
+        },
+        {
+          "text": "firmware",
+          "start": 45.64,
+          "end": 46.2
+        },
+        {
+          "text": "and",
+          "start": 46.2,
+          "end": 46.48
+        },
+        {
+          "text": "device",
+          "start": 46.48,
+          "end": 46.82
+        },
+        {
+          "text": "cohorts",
+          "start": 46.82,
+          "end": 47.46
+        },
+        {
+          "text": "only.",
+          "start": 47.46,
+          "end": 47.86
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And nothing failed in isolation. INT8 quantization fixes its clipping ranges during calibration \u2014 it permanently encodes the distribution of the calibration images. A firmware-specific preprocessing routine interpolated images differently. On those cohorts the input distribution shifted, the calibrated ranges were wrong, and accuracy dropped.",
+      "start": 48.58,
+      "end": 71.97,
+      "visual": {
+        "src": "/study/vol1/16-conclusion/diagrams/interface-failure.svg",
+        "title": "Local wins compose into a global loss",
+        "alt": "Three teams each hit their local metric \u2014 architecture (depthwise), compression (INT8 in SRAM), serving (p99 under 50 ms). A calibration choice then travels three stages downstream: INT8 clipping ranges meet a firmware-specific preprocessing path, the input distribution shifts on one cohort, and accuracy drops four points where nobody measured."
+      },
+      "words": [
+        {
+          "text": "And",
+          "start": 48.82,
+          "end": 49.0
+        },
+        {
+          "text": "nothing",
+          "start": 49.0,
+          "end": 49.26
+        },
+        {
+          "text": "failed",
+          "start": 49.26,
+          "end": 49.84
+        },
+        {
+          "text": "in",
+          "start": 49.84,
+          "end": 50.08
+        },
+        {
+          "text": "isolation.",
+          "start": 50.08,
+          "end": 50.58
+        },
+        {
+          "text": "INT",
+          "start": 51.32,
+          "end": 51.78
+        },
+        {
+          "text": "-8",
+          "start": 51.78,
+          "end": 52.14
+        },
+        {
+          "text": "quantization",
+          "start": 52.14,
+          "end": 52.82
+        },
+        {
+          "text": "fixes",
+          "start": 52.82,
+          "end": 53.4
+        },
+        {
+          "text": "its",
+          "start": 53.4,
+          "end": 53.68
+        },
+        {
+          "text": "clipping",
+          "start": 53.68,
+          "end": 53.98
+        },
+        {
+          "text": "ranges",
+          "start": 53.98,
+          "end": 54.5
+        },
+        {
+          "text": "during",
+          "start": 54.5,
+          "end": 54.84
+        },
+        {
+          "text": "calibration.",
+          "start": 54.84,
+          "end": 55.4
+        },
+        {
+          "text": "It",
+          "start": 55.4,
+          "end": 55.82
+        },
+        {
+          "text": "permanently",
+          "start": 55.82,
+          "end": 56.64
+        },
+        {
+          "text": "encodes",
+          "start": 56.64,
+          "end": 57.28
+        },
+        {
+          "text": "the",
+          "start": 57.28,
+          "end": 57.48
+        },
+        {
+          "text": "distribution",
+          "start": 57.48,
+          "end": 57.96
+        },
+        {
+          "text": "of",
+          "start": 57.96,
+          "end": 58.26
+        },
+        {
+          "text": "the",
+          "start": 58.26,
+          "end": 58.36
+        },
+        {
+          "text": "calibration",
+          "start": 58.36,
+          "end": 58.78
+        },
+        {
+          "text": "images.",
+          "start": 58.78,
+          "end": 59.42
+        },
+        {
+          "text": "A",
+          "start": 60.08,
+          "end": 60.26
+        },
+        {
+          "text": "firmware",
+          "start": 60.26,
+          "end": 60.58
+        },
+        {
+          "text": "-specific",
+          "start": 60.58,
+          "end": 60.98
+        },
+        {
+          "text": "processing",
+          "start": 60.98,
+          "end": 61.66
+        },
+        {
+          "text": "routine",
+          "start": 61.66,
+          "end": 62.34
+        },
+        {
+          "text": "interpolated",
+          "start": 62.34,
+          "end": 63.34
+        },
+        {
+          "text": "images",
+          "start": 63.34,
+          "end": 63.82
+        },
+        {
+          "text": "differently.",
+          "start": 63.82,
+          "end": 64.3
+        },
+        {
+          "text": "On",
+          "start": 65.14,
+          "end": 65.34
+        },
+        {
+          "text": "those",
+          "start": 65.34,
+          "end": 65.58
+        },
+        {
+          "text": "cohorts",
+          "start": 65.58,
+          "end": 66.12
+        },
+        {
+          "text": "the",
+          "start": 66.12,
+          "end": 66.3
+        },
+        {
+          "text": "input",
+          "start": 66.3,
+          "end": 66.64
+        },
+        {
+          "text": "distribution",
+          "start": 66.64,
+          "end": 67.12
+        },
+        {
+          "text": "shifted,",
+          "start": 67.12,
+          "end": 67.76
+        },
+        {
+          "text": "the",
+          "start": 68.26,
+          "end": 68.36
+        },
+        {
+          "text": "calibrated",
+          "start": 68.36,
+          "end": 68.94
+        },
+        {
+          "text": "ranges",
+          "start": 68.94,
+          "end": 69.36
+        },
+        {
+          "text": "were",
+          "start": 69.36,
+          "end": 69.66
+        },
+        {
+          "text": "wrong,",
+          "start": 69.66,
+          "end": 69.98
+        },
+        {
+          "text": "and",
+          "start": 70.24,
+          "end": 70.46
+        },
+        {
+          "text": "accuracy",
+          "start": 70.46,
+          "end": 70.86
+        },
+        {
+          "text": "dropped.",
+          "start": 70.86,
+          "end": 71.34
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "So no component broke, nothing crashed \u2014 and the monitoring never saw it because accuracy was only measured as an aggregate scalar over an offline eval set.",
+      "start": 71.97,
+      "end": 83.47,
+      "words": [
+        {
+          "text": "So",
+          "start": 72.32,
+          "end": 72.5
+        },
+        {
+          "text": "no",
+          "start": 72.5,
+          "end": 72.76
+        },
+        {
+          "text": "component",
+          "start": 72.76,
+          "end": 73.24
+        },
+        {
+          "text": "broke,",
+          "start": 73.24,
+          "end": 73.62
+        },
+        {
+          "text": "nothing",
+          "start": 74.22,
+          "end": 74.46
+        },
+        {
+          "text": "crashed,",
+          "start": 74.46,
+          "end": 74.98
+        },
+        {
+          "text": "and",
+          "start": 75.52,
+          "end": 75.7
+        },
+        {
+          "text": "the",
+          "start": 75.7,
+          "end": 75.8
+        },
+        {
+          "text": "monitoring",
+          "start": 75.8,
+          "end": 76.26
+        },
+        {
+          "text": "never",
+          "start": 76.26,
+          "end": 76.62
+        },
+        {
+          "text": "saw",
+          "start": 76.62,
+          "end": 77.0
+        },
+        {
+          "text": "it",
+          "start": 77.0,
+          "end": 77.16
+        },
+        {
+          "text": "because",
+          "start": 77.16,
+          "end": 77.38
+        },
+        {
+          "text": "accuracy",
+          "start": 77.38,
+          "end": 78.04
+        },
+        {
+          "text": "was",
+          "start": 78.04,
+          "end": 78.42
+        },
+        {
+          "text": "only",
+          "start": 78.42,
+          "end": 78.82
+        },
+        {
+          "text": "measured",
+          "start": 78.82,
+          "end": 79.26
+        },
+        {
+          "text": "as",
+          "start": 79.26,
+          "end": 79.54
+        },
+        {
+          "text": "an",
+          "start": 79.54,
+          "end": 79.7
+        },
+        {
+          "text": "aggregate",
+          "start": 79.7,
+          "end": 80.2
+        },
+        {
+          "text": "scalar",
+          "start": 80.2,
+          "end": 80.8
+        },
+        {
+          "text": "over",
+          "start": 80.8,
+          "end": 81.28
+        },
+        {
+          "text": "an",
+          "start": 81.28,
+          "end": 81.42
+        },
+        {
+          "text": "offline",
+          "start": 81.42,
+          "end": 81.88
+        },
+        {
+          "text": "eval",
+          "start": 81.88,
+          "end": 82.42
+        },
+        {
+          "text": "set.",
+          "start": 82.42,
+          "end": 82.8
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Exactly. The chapter's point: the failure lived at an interface no component test exercises. Per-cohort accuracy tracking from day one would have fired in week one. That's the opening argument for the thesis: the system is the model \u2014 the behavior a user receives comes from the pipeline, the weights, the execution stack, the serving path and the monitoring loop together. Never the weights alone.",
+      "start": 83.47,
+      "end": 107.95,
+      "words": [
+        {
+          "text": "Exactly.",
+          "start": 83.42,
+          "end": 84.02
+        },
+        {
+          "text": "The",
+          "start": 84.7,
+          "end": 84.84
+        },
+        {
+          "text": "chapter's",
+          "start": 84.84,
+          "end": 85.3
+        },
+        {
+          "text": "point,",
+          "start": 85.3,
+          "end": 85.5
+        },
+        {
+          "text": "the",
+          "start": 85.98,
+          "end": 86.08
+        },
+        {
+          "text": "failure",
+          "start": 86.08,
+          "end": 86.36
+        },
+        {
+          "text": "lived",
+          "start": 86.36,
+          "end": 86.74
+        },
+        {
+          "text": "at",
+          "start": 86.74,
+          "end": 86.88
+        },
+        {
+          "text": "an",
+          "start": 86.88,
+          "end": 87.0
+        },
+        {
+          "text": "interface",
+          "start": 87.0,
+          "end": 87.38
+        },
+        {
+          "text": "no",
+          "start": 87.38,
+          "end": 87.74
+        },
+        {
+          "text": "component",
+          "start": 87.74,
+          "end": 88.2
+        },
+        {
+          "text": "test",
+          "start": 88.2,
+          "end": 88.52
+        },
+        {
+          "text": "exercises.",
+          "start": 88.52,
+          "end": 89.24
+        },
+        {
+          "text": "Per",
+          "start": 89.84,
+          "end": 90.08
+        },
+        {
+          "text": "cohort",
+          "start": 90.08,
+          "end": 90.36
+        },
+        {
+          "text": "accuracy",
+          "start": 90.36,
+          "end": 90.96
+        },
+        {
+          "text": "tracking",
+          "start": 90.96,
+          "end": 91.44
+        },
+        {
+          "text": "from",
+          "start": 91.44,
+          "end": 91.72
+        },
+        {
+          "text": "day",
+          "start": 91.72,
+          "end": 91.94
+        },
+        {
+          "text": "one",
+          "start": 91.94,
+          "end": 92.22
+        },
+        {
+          "text": "would",
+          "start": 92.22,
+          "end": 92.38
+        },
+        {
+          "text": "have",
+          "start": 92.38,
+          "end": 92.5
+        },
+        {
+          "text": "fired",
+          "start": 92.5,
+          "end": 92.86
+        },
+        {
+          "text": "in",
+          "start": 92.86,
+          "end": 93.1
+        },
+        {
+          "text": "week",
+          "start": 93.1,
+          "end": 93.26
+        },
+        {
+          "text": "one.",
+          "start": 93.26,
+          "end": 93.56
+        },
+        {
+          "text": "That's",
+          "start": 94.16,
+          "end": 94.58
+        },
+        {
+          "text": "the",
+          "start": 94.58,
+          "end": 94.7
+        },
+        {
+          "text": "opening",
+          "start": 94.7,
+          "end": 95.0
+        },
+        {
+          "text": "argument",
+          "start": 95.0,
+          "end": 95.5
+        },
+        {
+          "text": "for",
+          "start": 95.5,
+          "end": 95.72
+        },
+        {
+          "text": "the",
+          "start": 95.72,
+          "end": 95.8
+        },
+        {
+          "text": "thesis.",
+          "start": 95.8,
+          "end": 96.08
+        },
+        {
+          "text": "The",
+          "start": 96.72,
+          "end": 96.86
+        },
+        {
+          "text": "system",
+          "start": 96.86,
+          "end": 97.22
+        },
+        {
+          "text": "is",
+          "start": 97.22,
+          "end": 97.52
+        },
+        {
+          "text": "the",
+          "start": 97.52,
+          "end": 97.66
+        },
+        {
+          "text": "model",
+          "start": 97.66,
+          "end": 97.96
+        },
+        {
+          "text": "the",
+          "start": 97.96,
+          "end": 98.36
+        },
+        {
+          "text": "behavior",
+          "start": 98.36,
+          "end": 98.72
+        },
+        {
+          "text": "a",
+          "start": 98.72,
+          "end": 99.0
+        },
+        {
+          "text": "user",
+          "start": 99.0,
+          "end": 99.26
+        },
+        {
+          "text": "receives",
+          "start": 99.26,
+          "end": 99.68
+        },
+        {
+          "text": "comes",
+          "start": 99.68,
+          "end": 100.1
+        },
+        {
+          "text": "from",
+          "start": 100.1,
+          "end": 100.32
+        },
+        {
+          "text": "the",
+          "start": 100.32,
+          "end": 100.42
+        },
+        {
+          "text": "pipeline,",
+          "start": 100.42,
+          "end": 100.78
+        },
+        {
+          "text": "the",
+          "start": 101.26,
+          "end": 101.36
+        },
+        {
+          "text": "weights,",
+          "start": 101.36,
+          "end": 101.68
+        },
+        {
+          "text": "the",
+          "start": 102.1,
+          "end": 102.16
+        },
+        {
+          "text": "execution",
+          "start": 102.16,
+          "end": 102.54
+        },
+        {
+          "text": "stack,",
+          "start": 102.54,
+          "end": 103.02
+        },
+        {
+          "text": "the",
+          "start": 103.42,
+          "end": 103.54
+        },
+        {
+          "text": "serving",
+          "start": 103.54,
+          "end": 103.84
+        },
+        {
+          "text": "path,",
+          "start": 103.84,
+          "end": 104.16
+        },
+        {
+          "text": "and",
+          "start": 104.38,
+          "end": 104.46
+        },
+        {
+          "text": "the",
+          "start": 104.46,
+          "end": 104.56
+        },
+        {
+          "text": "monitoring",
+          "start": 104.56,
+          "end": 104.94
+        },
+        {
+          "text": "loop",
+          "start": 104.94,
+          "end": 105.26
+        },
+        {
+          "text": "together.",
+          "start": 105.26,
+          "end": 105.56
+        },
+        {
+          "text": "Never",
+          "start": 106.32,
+          "end": 106.58
+        },
+        {
+          "text": "the",
+          "start": 106.58,
+          "end": 106.74
+        },
+        {
+          "text": "weights",
+          "start": 106.74,
+          "end": 106.94
+        },
+        {
+          "text": "alone.",
+          "start": 106.94,
+          "end": 107.26
+        },
+        {
+          "text": "The",
+          "start": 107.26,
+          "end": 108.4
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The model as a file of floats is the wrong object to test, version and monitor.",
+      "start": 107.95,
+      "end": 113.75,
+      "words": [
+        {
+          "text": "model",
+          "start": 108.4,
+          "end": 108.72
+        },
+        {
+          "text": "as",
+          "start": 108.72,
+          "end": 108.94
+        },
+        {
+          "text": "a",
+          "start": 108.94,
+          "end": 109.08
+        },
+        {
+          "text": "file",
+          "start": 109.08,
+          "end": 109.26
+        },
+        {
+          "text": "of",
+          "start": 109.26,
+          "end": 109.4
+        },
+        {
+          "text": "floats",
+          "start": 109.4,
+          "end": 109.76
+        },
+        {
+          "text": "is",
+          "start": 109.76,
+          "end": 110.04
+        },
+        {
+          "text": "the",
+          "start": 110.04,
+          "end": 110.2
+        },
+        {
+          "text": "wrong",
+          "start": 110.2,
+          "end": 110.46
+        },
+        {
+          "text": "object",
+          "start": 110.46,
+          "end": 110.92
+        },
+        {
+          "text": "to",
+          "start": 110.92,
+          "end": 111.12
+        },
+        {
+          "text": "test,",
+          "start": 111.12,
+          "end": 111.54
+        },
+        {
+          "text": "version",
+          "start": 111.92,
+          "end": 112.38
+        },
+        {
+          "text": "and",
+          "start": 112.38,
+          "end": 112.6
+        },
+        {
+          "text": "monitor.",
+          "start": 112.6,
+          "end": 113.08
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Right. And the way the chapter makes that claim predictive is the five lighthouse models \u2014 each one a different limiting term.",
+      "start": 113.75,
+      "end": 121.42,
+      "words": [
+        {
+          "text": "Right,",
+          "start": 113.84,
+          "end": 114.26
+        },
+        {
+          "text": "and",
+          "start": 114.6,
+          "end": 114.76
+        },
+        {
+          "text": "the",
+          "start": 114.76,
+          "end": 114.86
+        },
+        {
+          "text": "way",
+          "start": 114.86,
+          "end": 115.02
+        },
+        {
+          "text": "the",
+          "start": 115.02,
+          "end": 115.22
+        },
+        {
+          "text": "chapter",
+          "start": 115.22,
+          "end": 115.5
+        },
+        {
+          "text": "makes",
+          "start": 115.5,
+          "end": 115.84
+        },
+        {
+          "text": "that",
+          "start": 115.84,
+          "end": 116.1
+        },
+        {
+          "text": "claim",
+          "start": 116.1,
+          "end": 116.42
+        },
+        {
+          "text": "predictive",
+          "start": 116.42,
+          "end": 116.9
+        },
+        {
+          "text": "is",
+          "start": 116.9,
+          "end": 117.38
+        },
+        {
+          "text": "the",
+          "start": 117.38,
+          "end": 117.52
+        },
+        {
+          "text": "five",
+          "start": 117.52,
+          "end": 117.84
+        },
+        {
+          "text": "lighthouse",
+          "start": 117.84,
+          "end": 118.18
+        },
+        {
+          "text": "models.",
+          "start": 118.18,
+          "end": 118.68
+        },
+        {
+          "text": "Each",
+          "start": 119.18,
+          "end": 119.62
+        },
+        {
+          "text": "one",
+          "start": 119.62,
+          "end": 119.82
+        },
+        {
+          "text": "a",
+          "start": 119.82,
+          "end": 119.96
+        },
+        {
+          "text": "different",
+          "start": 119.96,
+          "end": 120.14
+        },
+        {
+          "text": "limiting",
+          "start": 120.14,
+          "end": 120.44
+        },
+        {
+          "text": "term.",
+          "start": 120.44,
+          "end": 120.8
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Walk me through them.",
+      "start": 121.42,
+      "end": 123.4,
+      "words": [
+        {
+          "text": "Walk",
+          "start": 121.66,
+          "end": 122.0
+        },
+        {
+          "text": "me",
+          "start": 122.0,
+          "end": 122.24
+        },
+        {
+          "text": "through",
+          "start": 122.24,
+          "end": 122.48
+        },
+        {
+          "text": "them.",
+          "start": 122.48,
+          "end": 122.78
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "ResNet-50 is compute-bound \u2014 batching and reduced precision pay, extra bandwidth past the ridge is wasted. GPT-2 and Llama decode is bandwidth-bound \u2014 batching, fewer bytes per weight and KV-cache management pay; peak arithmetic at batch one is wasted. DLRM is capacity-bound \u2014 the embedding tables exceed one accelerator's memory, so sharding and caching pay and faster dense math is wasted. MobileNetV2 is compute-bound inside a phone power envelope \u2014 depthwise, then INT8. And keyword spotting is power-bound \u2014 a sub-megabyte INT8 model under a milliwatt beats streaming audio to the cloud, because the radio costs more energy than local inference.",
+      "start": 123.4,
+      "end": 149.77,
+      "visual": {
+        "src": "/study/vol1/16-conclusion/diagrams/lighthouse-trace.svg",
+        "title": "Five lighthouses, five limiting terms",
+        "alt": "Each lighthouse saturates one resource first. ResNet-50 compute, GPT-2/Llama decode bandwidth, DLRM memory capacity, MobileNetV2 compute inside a power envelope, keyword spotting energy. Each row names the lever that paid and the lever that was wasted."
+      },
+      "words": [
+        {
+          "text": "ResNet",
+          "start": 123.58,
+          "end": 124.02
+        },
+        {
+          "text": "50",
+          "start": 124.02,
+          "end": 124.42
+        },
+        {
+          "text": "is",
+          "start": 124.42,
+          "end": 124.66
+        },
+        {
+          "text": "compute",
+          "start": 124.66,
+          "end": 124.96
+        },
+        {
+          "text": "bound,",
+          "start": 124.96,
+          "end": 125.28
+        },
+        {
+          "text": "batching",
+          "start": 125.62,
+          "end": 126.08
+        },
+        {
+          "text": "and",
+          "start": 126.08,
+          "end": 126.2
+        },
+        {
+          "text": "reduced",
+          "start": 126.2,
+          "end": 126.52
+        },
+        {
+          "text": "precision",
+          "start": 126.52,
+          "end": 126.94
+        },
+        {
+          "text": "pay,",
+          "start": 126.94,
+          "end": 127.3
+        },
+        {
+          "text": "extra",
+          "start": 127.66,
+          "end": 128.02
+        },
+        {
+          "text": "bandwidth",
+          "start": 128.02,
+          "end": 128.36
+        },
+        {
+          "text": "past",
+          "start": 128.36,
+          "end": 128.76
+        },
+        {
+          "text": "the",
+          "start": 128.76,
+          "end": 128.98
+        },
+        {
+          "text": "ridge",
+          "start": 128.98,
+          "end": 129.2
+        },
+        {
+          "text": "is",
+          "start": 129.2,
+          "end": 129.34
+        },
+        {
+          "text": "wasted.",
+          "start": 129.34,
+          "end": 129.66
+        },
+        {
+          "text": "GPT",
+          "start": 129.66,
+          "end": 130.92
+        },
+        {
+          "text": "-2",
+          "start": 130.92,
+          "end": 131.24
+        },
+        {
+          "text": "and",
+          "start": 131.24,
+          "end": 131.48
+        },
+        {
+          "text": "Lama",
+          "start": 131.48,
+          "end": 131.72
+        },
+        {
+          "text": "decode",
+          "start": 131.72,
+          "end": 132.22
+        },
+        {
+          "text": "is",
+          "start": 132.22,
+          "end": 132.42
+        },
+        {
+          "text": "bandwidth",
+          "start": 132.42,
+          "end": 132.78
+        },
+        {
+          "text": "bound,",
+          "start": 132.78,
+          "end": 133.18
+        },
+        {
+          "text": "batching,",
+          "start": 133.7,
+          "end": 134.16
+        },
+        {
+          "text": "fewer",
+          "start": 134.48,
+          "end": 134.66
+        },
+        {
+          "text": "bytes",
+          "start": 134.66,
+          "end": 134.9
+        },
+        {
+          "text": "per",
+          "start": 134.9,
+          "end": 135.18
+        },
+        {
+          "text": "weight",
+          "start": 135.18,
+          "end": 135.44
+        },
+        {
+          "text": "and",
+          "start": 135.44,
+          "end": 135.64
+        },
+        {
+          "text": "KV",
+          "start": 135.64,
+          "end": 135.98
+        },
+        {
+          "text": "cache",
+          "start": 135.98,
+          "end": 136.24
+        },
+        {
+          "text": "management",
+          "start": 136.24,
+          "end": 136.64
+        },
+        {
+          "text": "pay,",
+          "start": 136.64,
+          "end": 136.92
+        },
+        {
+          "text": "peak",
+          "start": 137.42,
+          "end": 137.66
+        },
+        {
+          "text": "arithmetic",
+          "start": 137.66,
+          "end": 138.02
+        },
+        {
+          "text": "at",
+          "start": 138.02,
+          "end": 138.38
+        },
+        {
+          "text": "batch",
+          "start": 138.38,
+          "end": 138.6
+        },
+        {
+          "text": "one",
+          "start": 138.6,
+          "end": 138.9
+        },
+        {
+          "text": "is",
+          "start": 138.9,
+          "end": 139.08
+        },
+        {
+          "text": "wasted.",
+          "start": 139.08,
+          "end": 139.46
+        },
+        {
+          "text": "DLRM",
+          "start": 140.18,
+          "end": 140.86
+        },
+        {
+          "text": "is",
+          "start": 140.86,
+          "end": 141.02
+        },
+        {
+          "text": "capacity",
+          "start": 141.02,
+          "end": 141.44
+        },
+        {
+          "text": "bound,",
+          "start": 141.44,
+          "end": 141.8
+        },
+        {
+          "text": "the",
+          "start": 142.34,
+          "end": 142.44
+        },
+        {
+          "text": "embedding",
+          "start": 142.44,
+          "end": 142.82
+        },
+        {
+          "text": "tables",
+          "start": 142.82,
+          "end": 143.18
+        },
+        {
+          "text": "exceed",
+          "start": 143.18,
+          "end": 143.66
+        },
+        {
+          "text": "one",
+          "start": 143.66,
+          "end": 144.0
+        },
+        {
+          "text": "accelerator's",
+          "start": 144.0,
+          "end": 144.78
+        },
+        {
+          "text": "memory,",
+          "start": 144.78,
+          "end": 145.08
+        },
+        {
+          "text": "so",
+          "start": 145.5,
+          "end": 145.76
+        },
+        {
+          "text": "sharding",
+          "start": 145.76,
+          "end": 146.34
+        },
+        {
+          "text": "and",
+          "start": 146.34,
+          "end": 146.46
+        },
+        {
+          "text": "caching",
+          "start": 146.46,
+          "end": 146.84
+        },
+        {
+          "text": "pay",
+          "start": 146.84,
+          "end": 147.18
+        },
+        {
+          "text": "and",
+          "start": 147.18,
+          "end": 147.46
+        },
+        {
+          "text": "faster",
+          "start": 147.46,
+          "end": 147.8
+        },
+        {
+          "text": "dense",
+          "start": 147.8,
+          "end": 148.16
+        },
+        {
+          "text": "math",
+          "start": 148.16,
+          "end": 148.52
+        },
+        {
+          "text": "is",
+          "start": 148.52,
+          "end": 148.78
+        },
+        {
+          "text": "wasted.",
+          "start": 148.78,
+          "end": 149.16
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And the regime isn't a property of the model name \u2014 it's the workload on a machine.",
+      "start": 149.77,
+      "end": 155.72,
+      "words": [
+        {
+          "text": "And",
+          "start": 150.14,
+          "end": 150.26
+        },
+        {
+          "text": "the",
+          "start": 150.26,
+          "end": 150.38
+        },
+        {
+          "text": "regime",
+          "start": 150.38,
+          "end": 150.82
+        },
+        {
+          "text": "isn't",
+          "start": 150.82,
+          "end": 151.34
+        },
+        {
+          "text": "a",
+          "start": 151.34,
+          "end": 151.44
+        },
+        {
+          "text": "property",
+          "start": 151.44,
+          "end": 151.86
+        },
+        {
+          "text": "of",
+          "start": 151.86,
+          "end": 152.08
+        },
+        {
+          "text": "the",
+          "start": 152.08,
+          "end": 152.18
+        },
+        {
+          "text": "model",
+          "start": 152.18,
+          "end": 152.44
+        },
+        {
+          "text": "name,",
+          "start": 152.44,
+          "end": 152.82
+        },
+        {
+          "text": "it's",
+          "start": 153.2,
+          "end": 153.62
+        },
+        {
+          "text": "the",
+          "start": 153.62,
+          "end": 153.74
+        },
+        {
+          "text": "workload",
+          "start": 153.74,
+          "end": 154.14
+        },
+        {
+          "text": "on",
+          "start": 154.14,
+          "end": 154.48
+        },
+        {
+          "text": "a",
+          "start": 154.48,
+          "end": 154.58
+        },
+        {
+          "text": "machine.",
+          "start": 154.58,
+          "end": 154.92
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "That's the subtlety. GPT-2 training is compute-bound even though its decode is bandwidth-bound, because a training step reuses each weight across the batch. Precision moves it too: INT8 doubles the H100's peak rate without raising bandwidth, so the ridge point doubles \u2014 a layer whose activations still move at sixteen bits can fall below the new ridge and become bandwidth-bound.",
+      "start": 155.72,
+      "end": 180.07,
+      "words": [
+        {
+          "text": "That's",
+          "start": 155.64,
+          "end": 156.24
+        },
+        {
+          "text": "the",
+          "start": 156.24,
+          "end": 156.36
+        },
+        {
+          "text": "subtlety.",
+          "start": 156.36,
+          "end": 156.76
+        },
+        {
+          "text": "GPT",
+          "start": 157.34,
+          "end": 157.84
+        },
+        {
+          "text": "-2",
+          "start": 157.84,
+          "end": 158.08
+        },
+        {
+          "text": "training",
+          "start": 158.08,
+          "end": 158.4
+        },
+        {
+          "text": "is",
+          "start": 158.4,
+          "end": 158.66
+        },
+        {
+          "text": "compute",
+          "start": 158.66,
+          "end": 158.98
+        },
+        {
+          "text": "bound",
+          "start": 158.98,
+          "end": 159.26
+        },
+        {
+          "text": "even",
+          "start": 159.26,
+          "end": 159.62
+        },
+        {
+          "text": "though",
+          "start": 159.62,
+          "end": 159.84
+        },
+        {
+          "text": "its",
+          "start": 159.84,
+          "end": 160.0
+        },
+        {
+          "text": "decode",
+          "start": 160.0,
+          "end": 160.42
+        },
+        {
+          "text": "is",
+          "start": 160.42,
+          "end": 160.64
+        },
+        {
+          "text": "bandwidth",
+          "start": 160.64,
+          "end": 160.98
+        },
+        {
+          "text": "bound,",
+          "start": 160.98,
+          "end": 161.38
+        },
+        {
+          "text": "because",
+          "start": 161.76,
+          "end": 162.04
+        },
+        {
+          "text": "a",
+          "start": 162.04,
+          "end": 162.2
+        },
+        {
+          "text": "training",
+          "start": 162.2,
+          "end": 162.46
+        },
+        {
+          "text": "step",
+          "start": 162.46,
+          "end": 162.88
+        },
+        {
+          "text": "reuses",
+          "start": 162.88,
+          "end": 163.42
+        },
+        {
+          "text": "each",
+          "start": 163.42,
+          "end": 163.8
+        },
+        {
+          "text": "weight",
+          "start": 163.8,
+          "end": 164.04
+        },
+        {
+          "text": "across",
+          "start": 164.04,
+          "end": 164.3
+        },
+        {
+          "text": "the",
+          "start": 164.3,
+          "end": 164.56
+        },
+        {
+          "text": "batch.",
+          "start": 164.56,
+          "end": 164.86
+        },
+        {
+          "text": "Precision",
+          "start": 165.44,
+          "end": 165.9
+        },
+        {
+          "text": "moves",
+          "start": 165.9,
+          "end": 166.3
+        },
+        {
+          "text": "it",
+          "start": 166.3,
+          "end": 166.48
+        },
+        {
+          "text": "too.",
+          "start": 166.48,
+          "end": 166.7
+        },
+        {
+          "text": "I",
+          "start": 167.34,
+          "end": 167.52
+        },
+        {
+          "text": "&T",
+          "start": 167.52,
+          "end": 167.76
+        },
+        {
+          "text": "8",
+          "start": 167.76,
+          "end": 168.0
+        },
+        {
+          "text": "doubles",
+          "start": 168.0,
+          "end": 168.32
+        },
+        {
+          "text": "the",
+          "start": 168.32,
+          "end": 168.52
+        },
+        {
+          "text": "H100's",
+          "start": 168.52,
+          "end": 169.4
+        },
+        {
+          "text": "peak",
+          "start": 169.4,
+          "end": 169.58
+        },
+        {
+          "text": "rate",
+          "start": 169.58,
+          "end": 169.94
+        },
+        {
+          "text": "without",
+          "start": 169.94,
+          "end": 170.24
+        },
+        {
+          "text": "raising",
+          "start": 170.24,
+          "end": 170.66
+        },
+        {
+          "text": "bandwidth,",
+          "start": 170.66,
+          "end": 171.16
+        },
+        {
+          "text": "so",
+          "start": 171.5,
+          "end": 171.78
+        },
+        {
+          "text": "the",
+          "start": 171.78,
+          "end": 171.9
+        },
+        {
+          "text": "ridge",
+          "start": 171.9,
+          "end": 172.08
+        },
+        {
+          "text": "point",
+          "start": 172.08,
+          "end": 172.36
+        },
+        {
+          "text": "doubles.",
+          "start": 172.36,
+          "end": 172.68
+        },
+        {
+          "text": "A",
+          "start": 173.3,
+          "end": 173.44
+        },
+        {
+          "text": "layer",
+          "start": 173.44,
+          "end": 173.7
+        },
+        {
+          "text": "whose",
+          "start": 173.7,
+          "end": 173.98
+        },
+        {
+          "text": "activation",
+          "start": 173.98,
+          "end": 174.54
+        },
+        {
+          "text": "still",
+          "start": 174.54,
+          "end": 175.06
+        },
+        {
+          "text": "move",
+          "start": 175.06,
+          "end": 175.34
+        },
+        {
+          "text": "at",
+          "start": 175.34,
+          "end": 175.52
+        },
+        {
+          "text": "16",
+          "start": 175.52,
+          "end": 175.9
+        },
+        {
+          "text": "bits",
+          "start": 175.9,
+          "end": 176.26
+        },
+        {
+          "text": "can",
+          "start": 176.26,
+          "end": 176.8
+        },
+        {
+          "text": "fall",
+          "start": 176.8,
+          "end": 177.1
+        },
+        {
+          "text": "below",
+          "start": 177.1,
+          "end": 177.38
+        },
+        {
+          "text": "the",
+          "start": 177.38,
+          "end": 177.62
+        },
+        {
+          "text": "new",
+          "start": 177.62,
+          "end": 177.78
+        },
+        {
+          "text": "ridge",
+          "start": 177.78,
+          "end": 178.12
+        },
+        {
+          "text": "and",
+          "start": 178.12,
+          "end": 178.38
+        },
+        {
+          "text": "become",
+          "start": 178.38,
+          "end": 178.66
+        },
+        {
+          "text": "bandwidth",
+          "start": 178.66,
+          "end": 179.1
+        },
+        {
+          "text": "bound.",
+          "start": 179.1,
+          "end": 179.46
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "MobileNetV2 on an H100 instead of a phone NPU \u2014 same crossing.",
+      "start": 180.07,
+      "end": 186.82,
+      "words": [
+        {
+          "text": "MobileNet",
+          "start": 180.32,
+          "end": 181.06
+        },
+        {
+          "text": "V2",
+          "start": 181.06,
+          "end": 181.7
+        },
+        {
+          "text": "on",
+          "start": 181.7,
+          "end": 182.2
+        },
+        {
+          "text": "an",
+          "start": 182.2,
+          "end": 182.34
+        },
+        {
+          "text": "H100",
+          "start": 182.34,
+          "end": 183.12
+        },
+        {
+          "text": "instead",
+          "start": 183.12,
+          "end": 183.6
+        },
+        {
+          "text": "of",
+          "start": 183.6,
+          "end": 184.0
+        },
+        {
+          "text": "a",
+          "start": 184.0,
+          "end": 184.1
+        },
+        {
+          "text": "phone",
+          "start": 184.1,
+          "end": 184.4
+        },
+        {
+          "text": "NPU",
+          "start": 184.4,
+          "end": 185.02
+        },
+        {
+          "text": "same",
+          "start": 185.02,
+          "end": 185.54
+        },
+        {
+          "text": "crossing.",
+          "start": 185.54,
+          "end": 186.1
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Same crossing. Compute-bound on the NPU, memory-bound on the H100. And the chapter walks MobileNetV2 through nine phases of the book \u2014 the deployment tier sets the watt envelope, depthwise convolutions cut FLOPs eight-point-seven times on a representative layer and thirteen-point-seven times versus ResNet-50 overall, training at high throughput for a model that will serve single requests, capacity-matched augmentation, INT8 \u2014 where FP32 costs four times the bytes and FP16 two times \u2014 then mapping, benchmarking, serving, and monitoring. Every decision narrowed what the next phase could choose.",
+      "start": 186.82,
+      "end": 192.17,
+      "words": [
+        {
+          "text": "Same",
+          "start": 186.68,
+          "end": 187.34
+        },
+        {
+          "text": "crossing.",
+          "start": 187.34,
+          "end": 187.78
+        },
+        {
+          "text": "Compute",
+          "start": 188.36,
+          "end": 188.68
+        },
+        {
+          "text": "bound",
+          "start": 188.68,
+          "end": 188.9
+        },
+        {
+          "text": "on",
+          "start": 188.9,
+          "end": 189.08
+        },
+        {
+          "text": "the",
+          "start": 189.08,
+          "end": 189.18
+        },
+        {
+          "text": "NPU,",
+          "start": 189.18,
+          "end": 189.6
+        },
+        {
+          "text": "memory",
+          "start": 190.02,
+          "end": 190.24
+        },
+        {
+          "text": "bound",
+          "start": 190.24,
+          "end": 190.58
+        },
+        {
+          "text": "on",
+          "start": 190.58,
+          "end": 190.76
+        },
+        {
+          "text": "the",
+          "start": 190.76,
+          "end": 190.88
+        },
+        {
+          "text": "H100.",
+          "start": 190.88,
+          "end": 191.54
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Then the chapter takes its thirteen quantitative principles and re-sorts them by the three questions the introduction asked.",
+      "start": 192.17,
+      "end": 200.57,
+      "words": [
+        {
+          "text": "Then",
+          "start": 192.54,
+          "end": 192.86
+        },
+        {
+          "text": "the",
+          "start": 192.86,
+          "end": 193.06
+        },
+        {
+          "text": "chapter",
+          "start": 193.06,
+          "end": 193.38
+        },
+        {
+          "text": "takes",
+          "start": 193.38,
+          "end": 193.78
+        },
+        {
+          "text": "its",
+          "start": 193.78,
+          "end": 194.0
+        },
+        {
+          "text": "13",
+          "start": 194.0,
+          "end": 194.54
+        },
+        {
+          "text": "quantitative",
+          "start": 194.54,
+          "end": 195.18
+        },
+        {
+          "text": "principles",
+          "start": 195.18,
+          "end": 195.9
+        },
+        {
+          "text": "and",
+          "start": 195.9,
+          "end": 196.66
+        },
+        {
+          "text": "resorts",
+          "start": 196.66,
+          "end": 197.1
+        },
+        {
+          "text": "them",
+          "start": 197.1,
+          "end": 197.42
+        },
+        {
+          "text": "by",
+          "start": 197.42,
+          "end": 197.64
+        },
+        {
+          "text": "the",
+          "start": 197.64,
+          "end": 197.8
+        },
+        {
+          "text": "three",
+          "start": 197.8,
+          "end": 198.04
+        },
+        {
+          "text": "questions",
+          "start": 198.04,
+          "end": 198.6
+        },
+        {
+          "text": "the",
+          "start": 198.6,
+          "end": 198.84
+        },
+        {
+          "text": "introduction",
+          "start": 198.84,
+          "end": 199.24
+        },
+        {
+          "text": "asked.",
+          "start": 199.24,
+          "end": 199.92
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "What shapes predictions \u2014 data-as-code and the bias feedback model. What limits execution \u2014 data gravity, the iron law, the silicon contract, the Pareto frontier, arithmetic intensity, energy movement, Amdahl. What evidence supports deployment \u2014 the verification gap, statistical drift, training-serving skew, and the latency budget.",
+      "start": 200.57,
+      "end": 222.07,
+      "visual": {
+        "src": "/study/vol1/16-conclusion/diagrams/principle-map.svg",
+        "title": "Thirteen principles, three questions",
+        "alt": "The thirteen quantitative principles sorted by the three questions of the introduction. What shapes predictions: data-as-code and bias feedback. What limits execution: data gravity, iron law, silicon contract, Pareto frontier, arithmetic intensity, energy movement, Amdahl. What evidence supports deployment: verification gap, statistical drift, training-serving skew, latency budget. Kinds marked: bound, decomposition, fitted model, policy, heuristic."
+      },
+      "words": [
+        {
+          "text": "What",
+          "start": 200.74,
+          "end": 201.02
+        },
+        {
+          "text": "shapes",
+          "start": 201.02,
+          "end": 201.28
+        },
+        {
+          "text": "predictions,",
+          "start": 201.28,
+          "end": 201.82
+        },
+        {
+          "text": "data",
+          "start": 202.12,
+          "end": 202.32
+        },
+        {
+          "text": "as",
+          "start": 202.32,
+          "end": 202.58
+        },
+        {
+          "text": "code",
+          "start": 202.58,
+          "end": 202.8
+        },
+        {
+          "text": "and",
+          "start": 202.8,
+          "end": 203.06
+        },
+        {
+          "text": "the",
+          "start": 203.06,
+          "end": 203.18
+        },
+        {
+          "text": "bias",
+          "start": 203.18,
+          "end": 203.46
+        },
+        {
+          "text": "feedback",
+          "start": 203.46,
+          "end": 203.78
+        },
+        {
+          "text": "model?",
+          "start": 203.78,
+          "end": 204.28
+        },
+        {
+          "text": "What",
+          "start": 204.28,
+          "end": 205.06
+        },
+        {
+          "text": "limits",
+          "start": 205.06,
+          "end": 205.32
+        },
+        {
+          "text": "execution,",
+          "start": 205.32,
+          "end": 205.9
+        },
+        {
+          "text": "data",
+          "start": 206.36,
+          "end": 206.56
+        },
+        {
+          "text": "gravity,",
+          "start": 206.56,
+          "end": 207.0
+        },
+        {
+          "text": "the",
+          "start": 207.34,
+          "end": 207.4
+        },
+        {
+          "text": "iron",
+          "start": 207.4,
+          "end": 207.72
+        },
+        {
+          "text": "law,",
+          "start": 207.72,
+          "end": 208.06
+        },
+        {
+          "text": "the",
+          "start": 208.26,
+          "end": 208.32
+        },
+        {
+          "text": "silicon",
+          "start": 208.32,
+          "end": 208.6
+        },
+        {
+          "text": "contract,",
+          "start": 208.6,
+          "end": 209.24
+        },
+        {
+          "text": "the",
+          "start": 209.72,
+          "end": 209.84
+        },
+        {
+          "text": "parade",
+          "start": 209.84,
+          "end": 210.16
+        },
+        {
+          "text": "of",
+          "start": 210.16,
+          "end": 210.38
+        },
+        {
+          "text": "frontier,",
+          "start": 210.38,
+          "end": 210.86
+        },
+        {
+          "text": "arithmetic",
+          "start": 211.16,
+          "end": 211.44
+        },
+        {
+          "text": "intensity,",
+          "start": 211.44,
+          "end": 212.14
+        },
+        {
+          "text": "energy",
+          "start": 212.6,
+          "end": 212.86
+        },
+        {
+          "text": "movement,",
+          "start": 212.86,
+          "end": 213.26
+        },
+        {
+          "text": "amdol?",
+          "start": 213.62,
+          "end": 213.98
+        },
+        {
+          "text": "What",
+          "start": 214.68,
+          "end": 214.82
+        },
+        {
+          "text": "evidence",
+          "start": 214.82,
+          "end": 215.18
+        },
+        {
+          "text": "supports",
+          "start": 215.18,
+          "end": 215.56
+        },
+        {
+          "text": "deployment,",
+          "start": 215.56,
+          "end": 216.1
+        },
+        {
+          "text": "the",
+          "start": 216.44,
+          "end": 216.5
+        },
+        {
+          "text": "verification",
+          "start": 216.5,
+          "end": 216.92
+        },
+        {
+          "text": "gap,",
+          "start": 216.92,
+          "end": 217.44
+        },
+        {
+          "text": "statistical",
+          "start": 217.78,
+          "end": 218.26
+        },
+        {
+          "text": "drift,",
+          "start": 218.26,
+          "end": 218.68
+        },
+        {
+          "text": "training",
+          "start": 219.06,
+          "end": 219.34
+        },
+        {
+          "text": "serving",
+          "start": 219.34,
+          "end": 219.66
+        },
+        {
+          "text": "skew,",
+          "start": 219.66,
+          "end": 220.2
+        },
+        {
+          "text": "and",
+          "start": 220.4,
+          "end": 220.56
+        },
+        {
+          "text": "the",
+          "start": 220.56,
+          "end": 220.68
+        },
+        {
+          "text": "latency",
+          "start": 220.68,
+          "end": 221.06
+        },
+        {
+          "text": "budget?",
+          "start": 221.06,
+          "end": 221.42
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And they're not all the same kind of statement.",
+      "start": 222.07,
+      "end": 225.05,
+      "words": [
+        {
+          "text": "And",
+          "start": 222.28,
+          "end": 222.54
+        },
+        {
+          "text": "they're",
+          "start": 222.54,
+          "end": 222.68
+        },
+        {
+          "text": "not",
+          "start": 222.68,
+          "end": 222.82
+        },
+        {
+          "text": "all",
+          "start": 222.82,
+          "end": 223.04
+        },
+        {
+          "text": "the",
+          "start": 223.04,
+          "end": 223.2
+        },
+        {
+          "text": "same",
+          "start": 223.2,
+          "end": 223.52
+        },
+        {
+          "text": "kind",
+          "start": 223.52,
+          "end": 223.78
+        },
+        {
+          "text": "of",
+          "start": 223.78,
+          "end": 223.94
+        },
+        {
+          "text": "statement.",
+          "start": 223.94,
+          "end": 224.3
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Right \u2014 three are hard bounds, two are decompositions, two fitted models, two policies, and four heuristics. The silicon contract is a heuristic: it predicts which resource saturates first, and the arithmetic intensity bound is what tests that prediction. Each principle only holds inside its stated assumptions.",
+      "start": 225.05,
+      "end": 245.65,
+      "words": [
+        {
+          "text": "Write",
+          "start": 225.2,
+          "end": 225.6
+        },
+        {
+          "text": "three",
+          "start": 225.6,
+          "end": 226.04
+        },
+        {
+          "text": "are",
+          "start": 226.04,
+          "end": 226.34
+        },
+        {
+          "text": "hard",
+          "start": 226.34,
+          "end": 226.6
+        },
+        {
+          "text": "bounds,",
+          "start": 226.6,
+          "end": 227.0
+        },
+        {
+          "text": "two",
+          "start": 227.44,
+          "end": 227.64
+        },
+        {
+          "text": "are",
+          "start": 227.64,
+          "end": 227.84
+        },
+        {
+          "text": "decompositions,",
+          "start": 227.84,
+          "end": 228.7
+        },
+        {
+          "text": "two",
+          "start": 229.16,
+          "end": 229.34
+        },
+        {
+          "text": "fitted",
+          "start": 229.34,
+          "end": 229.64
+        },
+        {
+          "text": "models,",
+          "start": 229.64,
+          "end": 230.06
+        },
+        {
+          "text": "two",
+          "start": 230.42,
+          "end": 230.58
+        },
+        {
+          "text": "policies,",
+          "start": 230.58,
+          "end": 231.04
+        },
+        {
+          "text": "and",
+          "start": 231.34,
+          "end": 231.42
+        },
+        {
+          "text": "four",
+          "start": 231.42,
+          "end": 231.7
+        },
+        {
+          "text": "heuristics.",
+          "start": 231.7,
+          "end": 232.14
+        },
+        {
+          "text": "The",
+          "start": 232.14,
+          "end": 233.06
+        },
+        {
+          "text": "silicon",
+          "start": 233.06,
+          "end": 233.34
+        },
+        {
+          "text": "contract",
+          "start": 233.34,
+          "end": 234.06
+        },
+        {
+          "text": "is",
+          "start": 234.06,
+          "end": 234.3
+        },
+        {
+          "text": "a",
+          "start": 234.3,
+          "end": 234.42
+        },
+        {
+          "text": "heuristic.",
+          "start": 234.42,
+          "end": 234.88
+        },
+        {
+          "text": "It",
+          "start": 235.44,
+          "end": 235.58
+        },
+        {
+          "text": "predicts",
+          "start": 235.58,
+          "end": 235.96
+        },
+        {
+          "text": "which",
+          "start": 235.96,
+          "end": 236.08
+        },
+        {
+          "text": "resource",
+          "start": 236.08,
+          "end": 236.46
+        },
+        {
+          "text": "saturates",
+          "start": 236.46,
+          "end": 237.16
+        },
+        {
+          "text": "first,",
+          "start": 237.16,
+          "end": 237.44
+        },
+        {
+          "text": "and",
+          "start": 237.82,
+          "end": 238.04
+        },
+        {
+          "text": "the",
+          "start": 238.04,
+          "end": 238.14
+        },
+        {
+          "text": "arithmetic",
+          "start": 238.14,
+          "end": 238.5
+        },
+        {
+          "text": "intensity",
+          "start": 238.5,
+          "end": 239.04
+        },
+        {
+          "text": "bound",
+          "start": 239.04,
+          "end": 239.52
+        },
+        {
+          "text": "is",
+          "start": 239.52,
+          "end": 239.86
+        },
+        {
+          "text": "what",
+          "start": 239.86,
+          "end": 240.06
+        },
+        {
+          "text": "tests",
+          "start": 240.06,
+          "end": 240.4
+        },
+        {
+          "text": "that",
+          "start": 240.4,
+          "end": 240.66
+        },
+        {
+          "text": "prediction.",
+          "start": 240.66,
+          "end": 241.06
+        },
+        {
+          "text": "Each",
+          "start": 241.86,
+          "end": 242.12
+        },
+        {
+          "text": "principle",
+          "start": 242.12,
+          "end": 242.54
+        },
+        {
+          "text": "only",
+          "start": 242.54,
+          "end": 243.0
+        },
+        {
+          "text": "holds",
+          "start": 243.0,
+          "end": 243.34
+        },
+        {
+          "text": "inside",
+          "start": 243.34,
+          "end": 243.94
+        },
+        {
+          "text": "its",
+          "start": 243.94,
+          "end": 244.12
+        },
+        {
+          "text": "stated",
+          "start": 244.12,
+          "end": 244.4
+        },
+        {
+          "text": "assumptions.",
+          "start": 244.4,
+          "end": 244.94
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And the meta-principle above all of them is conservation of complexity \u2014 Tesler's law.",
+      "start": 245.65,
+      "end": 252.07,
+      "words": [
+        {
+          "text": "And",
+          "start": 246.0,
+          "end": 246.14
+        },
+        {
+          "text": "the",
+          "start": 246.14,
+          "end": 246.26
+        },
+        {
+          "text": "meta",
+          "start": 246.26,
+          "end": 246.46
+        },
+        {
+          "text": "-principle",
+          "start": 246.46,
+          "end": 246.96
+        },
+        {
+          "text": "above",
+          "start": 246.96,
+          "end": 247.2
+        },
+        {
+          "text": "all",
+          "start": 247.2,
+          "end": 247.58
+        },
+        {
+          "text": "of",
+          "start": 247.58,
+          "end": 247.76
+        },
+        {
+          "text": "them",
+          "start": 247.76,
+          "end": 247.96
+        },
+        {
+          "text": "is",
+          "start": 247.96,
+          "end": 248.46
+        },
+        {
+          "text": "conservation",
+          "start": 248.46,
+          "end": 249.06
+        },
+        {
+          "text": "of",
+          "start": 249.06,
+          "end": 249.52
+        },
+        {
+          "text": "complexity,",
+          "start": 249.52,
+          "end": 250.1
+        },
+        {
+          "text": "Tesla's",
+          "start": 250.66,
+          "end": 251.12
+        },
+        {
+          "text": "law.",
+          "start": 251.12,
+          "end": 251.4
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "A diagnostic, not a physical law: simplifying one part tends to move complexity somewhere else. Pruning spends capacity, quantization spends precision, distillation spends compute. After any local simplification, trace where the cost landed.",
+      "start": 252.07,
+      "end": 268.75,
+      "words": [
+        {
+          "text": "A",
+          "start": 252.34,
+          "end": 252.44
+        },
+        {
+          "text": "diagnostic,",
+          "start": 252.44,
+          "end": 253.14
+        },
+        {
+          "text": "not",
+          "start": 253.54,
+          "end": 253.66
+        },
+        {
+          "text": "a",
+          "start": 253.66,
+          "end": 253.8
+        },
+        {
+          "text": "physical",
+          "start": 253.8,
+          "end": 254.02
+        },
+        {
+          "text": "law.",
+          "start": 254.02,
+          "end": 254.44
+        },
+        {
+          "text": "Simplifying",
+          "start": 255.02,
+          "end": 255.5
+        },
+        {
+          "text": "one",
+          "start": 255.5,
+          "end": 255.76
+        },
+        {
+          "text": "part",
+          "start": 255.76,
+          "end": 256.06
+        },
+        {
+          "text": "tends",
+          "start": 256.06,
+          "end": 256.44
+        },
+        {
+          "text": "to",
+          "start": 256.44,
+          "end": 256.66
+        },
+        {
+          "text": "move",
+          "start": 256.66,
+          "end": 256.86
+        },
+        {
+          "text": "complexity",
+          "start": 256.86,
+          "end": 257.38
+        },
+        {
+          "text": "somewhere",
+          "start": 257.38,
+          "end": 257.8
+        },
+        {
+          "text": "else.",
+          "start": 257.8,
+          "end": 258.14
+        },
+        {
+          "text": "Pruning",
+          "start": 258.14,
+          "end": 259.06
+        },
+        {
+          "text": "spends",
+          "start": 259.06,
+          "end": 259.42
+        },
+        {
+          "text": "capacity,",
+          "start": 259.42,
+          "end": 260.16
+        },
+        {
+          "text": "quantization",
+          "start": 260.68,
+          "end": 261.08
+        },
+        {
+          "text": "spends",
+          "start": 261.08,
+          "end": 261.7
+        },
+        {
+          "text": "precision,",
+          "start": 261.7,
+          "end": 262.14
+        },
+        {
+          "text": "distillation",
+          "start": 262.7,
+          "end": 263.2
+        },
+        {
+          "text": "spends",
+          "start": 263.2,
+          "end": 263.72
+        },
+        {
+          "text": "compute.",
+          "start": 263.72,
+          "end": 264.16
+        },
+        {
+          "text": "After",
+          "start": 264.74,
+          "end": 265.1
+        },
+        {
+          "text": "any",
+          "start": 265.1,
+          "end": 265.38
+        },
+        {
+          "text": "local",
+          "start": 265.38,
+          "end": 265.66
+        },
+        {
+          "text": "simplification,",
+          "start": 265.66,
+          "end": 266.5
+        },
+        {
+          "text": "trace",
+          "start": 266.92,
+          "end": 267.1
+        },
+        {
+          "text": "where",
+          "start": 267.1,
+          "end": 267.3
+        },
+        {
+          "text": "the",
+          "start": 267.3,
+          "end": 267.4
+        },
+        {
+          "text": "cost",
+          "start": 267.4,
+          "end": 267.7
+        },
+        {
+          "text": "landed.",
+          "start": 267.7,
+          "end": 268.16
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The energy-movement principle puts a number on the most basic asymmetry: one DRAM access costs about a hundred seventy-three to five hundred eighty-two times one arithmetic operation.",
+      "start": 268.75,
+      "end": 282.52,
+      "words": [
+        {
+          "text": "The",
+          "start": 269.1,
+          "end": 269.24
+        },
+        {
+          "text": "energy",
+          "start": 269.24,
+          "end": 269.54
+        },
+        {
+          "text": "movement",
+          "start": 269.54,
+          "end": 269.9
+        },
+        {
+          "text": "principle",
+          "start": 269.9,
+          "end": 270.46
+        },
+        {
+          "text": "puts",
+          "start": 270.46,
+          "end": 271.02
+        },
+        {
+          "text": "a",
+          "start": 271.02,
+          "end": 271.16
+        },
+        {
+          "text": "number",
+          "start": 271.16,
+          "end": 271.46
+        },
+        {
+          "text": "on",
+          "start": 271.46,
+          "end": 271.7
+        },
+        {
+          "text": "the",
+          "start": 271.7,
+          "end": 271.8
+        },
+        {
+          "text": "most",
+          "start": 271.8,
+          "end": 272.0
+        },
+        {
+          "text": "basic",
+          "start": 272.0,
+          "end": 272.42
+        },
+        {
+          "text": "asymmetry.",
+          "start": 272.42,
+          "end": 273.16
+        },
+        {
+          "text": "One",
+          "start": 273.84,
+          "end": 274.18
+        },
+        {
+          "text": "DRAM",
+          "start": 274.18,
+          "end": 274.64
+        },
+        {
+          "text": "access",
+          "start": 274.64,
+          "end": 275.04
+        },
+        {
+          "text": "costs",
+          "start": 275.04,
+          "end": 275.7
+        },
+        {
+          "text": "about",
+          "start": 275.7,
+          "end": 276.26
+        },
+        {
+          "text": "173",
+          "start": 276.26,
+          "end": 277.66
+        },
+        {
+          "text": "to",
+          "start": 277.66,
+          "end": 277.9
+        },
+        {
+          "text": "582",
+          "start": 277.9,
+          "end": 279.3
+        },
+        {
+          "text": "times",
+          "start": 279.3,
+          "end": 279.74
+        },
+        {
+          "text": "one",
+          "start": 279.74,
+          "end": 280.26
+        },
+        {
+          "text": "arithmetic",
+          "start": 280.26,
+          "end": 280.82
+        },
+        {
+          "text": "operation.",
+          "start": 280.82,
+          "end": 281.76
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "FP32 sits at the low end of that range, FP16 sets the high end. Data movement dominates both the time ledger and the energy ledger \u2014 which is why it shows up everywhere.",
+      "start": 282.52,
+      "end": 295.2,
+      "words": [
+        {
+          "text": "FP32",
+          "start": 283.04,
+          "end": 283.68
+        },
+        {
+          "text": "sits",
+          "start": 283.68,
+          "end": 284.32
+        },
+        {
+          "text": "at",
+          "start": 284.32,
+          "end": 284.54
+        },
+        {
+          "text": "the",
+          "start": 284.54,
+          "end": 284.62
+        },
+        {
+          "text": "low",
+          "start": 284.62,
+          "end": 284.86
+        },
+        {
+          "text": "end",
+          "start": 284.86,
+          "end": 285.06
+        },
+        {
+          "text": "of",
+          "start": 285.06,
+          "end": 285.16
+        },
+        {
+          "text": "that",
+          "start": 285.16,
+          "end": 285.3
+        },
+        {
+          "text": "range.",
+          "start": 285.3,
+          "end": 285.62
+        },
+        {
+          "text": "FP16",
+          "start": 286.32,
+          "end": 286.96
+        },
+        {
+          "text": "sets",
+          "start": 286.96,
+          "end": 287.46
+        },
+        {
+          "text": "the",
+          "start": 287.46,
+          "end": 287.7
+        },
+        {
+          "text": "high",
+          "start": 287.7,
+          "end": 287.9
+        },
+        {
+          "text": "end.",
+          "start": 287.9,
+          "end": 288.22
+        },
+        {
+          "text": "Data",
+          "start": 288.92,
+          "end": 289.14
+        },
+        {
+          "text": "movement",
+          "start": 289.14,
+          "end": 289.4
+        },
+        {
+          "text": "dominates",
+          "start": 289.4,
+          "end": 290.1
+        },
+        {
+          "text": "both",
+          "start": 290.1,
+          "end": 290.32
+        },
+        {
+          "text": "the",
+          "start": 290.32,
+          "end": 290.52
+        },
+        {
+          "text": "time",
+          "start": 290.52,
+          "end": 290.78
+        },
+        {
+          "text": "ledger",
+          "start": 290.78,
+          "end": 291.16
+        },
+        {
+          "text": "and",
+          "start": 291.16,
+          "end": 291.64
+        },
+        {
+          "text": "the",
+          "start": 291.64,
+          "end": 291.76
+        },
+        {
+          "text": "energy",
+          "start": 291.76,
+          "end": 292.08
+        },
+        {
+          "text": "ledger,",
+          "start": 292.08,
+          "end": 292.54
+        },
+        {
+          "text": "which",
+          "start": 292.66,
+          "end": 293.08
+        },
+        {
+          "text": "is",
+          "start": 293.08,
+          "end": 293.26
+        },
+        {
+          "text": "why",
+          "start": 293.26,
+          "end": 293.46
+        },
+        {
+          "text": "it",
+          "start": 293.46,
+          "end": 293.62
+        },
+        {
+          "text": "shows",
+          "start": 293.62,
+          "end": 293.86
+        },
+        {
+          "text": "up",
+          "start": 293.86,
+          "end": 294.14
+        },
+        {
+          "text": "everywhere.",
+          "start": 294.14,
+          "end": 294.46
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Then the dual mandate gets measured on two lighthouses \u2014 trustworthy behavior on DLRM, physical deliverability on the GPT-2 family.",
+      "start": 295.2,
+      "end": 306.07,
+      "words": [
+        {
+          "text": "Then",
+          "start": 295.64,
+          "end": 295.84
+        },
+        {
+          "text": "the",
+          "start": 295.84,
+          "end": 296.06
+        },
+        {
+          "text": "dual",
+          "start": 296.06,
+          "end": 296.34
+        },
+        {
+          "text": "mandate",
+          "start": 296.34,
+          "end": 296.76
+        },
+        {
+          "text": "gets",
+          "start": 296.76,
+          "end": 297.12
+        },
+        {
+          "text": "measured",
+          "start": 297.12,
+          "end": 297.58
+        },
+        {
+          "text": "on",
+          "start": 297.58,
+          "end": 297.82
+        },
+        {
+          "text": "two",
+          "start": 297.82,
+          "end": 298.08
+        },
+        {
+          "text": "lighthouses.",
+          "start": 298.08,
+          "end": 298.74
+        },
+        {
+          "text": "Trustworthy",
+          "start": 299.32,
+          "end": 299.96
+        },
+        {
+          "text": "behavior",
+          "start": 299.96,
+          "end": 300.44
+        },
+        {
+          "text": "on",
+          "start": 300.44,
+          "end": 300.82
+        },
+        {
+          "text": "DLRM",
+          "start": 300.82,
+          "end": 301.82
+        },
+        {
+          "text": "physical",
+          "start": 301.82,
+          "end": 302.4
+        },
+        {
+          "text": "deliverability",
+          "start": 302.4,
+          "end": 303.38
+        },
+        {
+          "text": "on",
+          "start": 303.38,
+          "end": 303.84
+        },
+        {
+          "text": "the",
+          "start": 303.84,
+          "end": 303.96
+        },
+        {
+          "text": "GPT2",
+          "start": 303.96,
+          "end": 304.84
+        },
+        {
+          "text": "family.",
+          "start": 304.84,
+          "end": 305.32
+        },
+        {
+          "text": "And",
+          "start": 305.32,
+          "end": 305.9
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And the sharpest physics in the chapter: Llama 2 seventy-B at batch one. About forty-seven times GPT-2's parameters \u2014 a hundred forty gigabytes of FP16 weights, a hundred forty gigaflops per token. On two H100s \u2014 six point seven terabytes per second of aggregate bandwidth, nearly two thousand teraflops of FP16 peak \u2014 the memory floor is twenty-point-nine milliseconds and the compute floor is point-zero-seven. Two hundred ninety-five times apart.",
+      "start": 306.07,
+      "end": 333.1,
+      "eq": {
+        "id": "decode-floor",
+        "title": "Llama 70B decode floor",
+        "latex": "T_{\\mathrm{mem}}=\\frac{140\\ \\mathrm{GB}}{6.70\\ \\mathrm{TB/s}}\\approx 20.9\\ \\mathrm{ms},\\qquad T_{\\mathrm{comp}}=\\frac{140\\ \\mathrm{GFLOP}}{1{,}978\\ \\mathrm{TFLOP/s}}\\approx 0.07\\ \\mathrm{ms}"
+      },
+      "words": [
+        {
+          "text": "the",
+          "start": 305.9,
+          "end": 306.6
+        },
+        {
+          "text": "sharpest",
+          "start": 306.6,
+          "end": 306.98
+        },
+        {
+          "text": "physics",
+          "start": 306.98,
+          "end": 307.22
+        },
+        {
+          "text": "in",
+          "start": 307.22,
+          "end": 307.48
+        },
+        {
+          "text": "the",
+          "start": 307.48,
+          "end": 307.56
+        },
+        {
+          "text": "chapter.",
+          "start": 307.56,
+          "end": 307.84
+        },
+        {
+          "text": "Lama",
+          "start": 308.46,
+          "end": 308.64
+        },
+        {
+          "text": "270B",
+          "start": 308.64,
+          "end": 309.58
+        },
+        {
+          "text": "at",
+          "start": 309.58,
+          "end": 309.74
+        },
+        {
+          "text": "batch",
+          "start": 309.74,
+          "end": 310.02
+        },
+        {
+          "text": "1.",
+          "start": 310.02,
+          "end": 310.32
+        },
+        {
+          "text": "About",
+          "start": 310.82,
+          "end": 311.04
+        },
+        {
+          "text": "47",
+          "start": 311.04,
+          "end": 311.6
+        },
+        {
+          "text": "times",
+          "start": 311.6,
+          "end": 312.02
+        },
+        {
+          "text": "GPT2's",
+          "start": 312.02,
+          "end": 312.94
+        },
+        {
+          "text": "parameters,",
+          "start": 312.94,
+          "end": 313.3
+        },
+        {
+          "text": "140",
+          "start": 313.9,
+          "end": 314.3
+        },
+        {
+          "text": "gigabytes",
+          "start": 314.3,
+          "end": 314.84
+        },
+        {
+          "text": "of",
+          "start": 314.84,
+          "end": 315.2
+        },
+        {
+          "text": "FP16",
+          "start": 315.2,
+          "end": 315.86
+        },
+        {
+          "text": "weights,",
+          "start": 315.86,
+          "end": 316.28
+        },
+        {
+          "text": "140",
+          "start": 316.7,
+          "end": 317.08
+        },
+        {
+          "text": "gigaflops",
+          "start": 317.08,
+          "end": 317.8
+        },
+        {
+          "text": "per",
+          "start": 317.8,
+          "end": 318.02
+        },
+        {
+          "text": "token.",
+          "start": 318.02,
+          "end": 318.32
+        },
+        {
+          "text": "On",
+          "start": 319.06,
+          "end": 319.22
+        },
+        {
+          "text": "two",
+          "start": 319.22,
+          "end": 319.44
+        },
+        {
+          "text": "H100s,",
+          "start": 319.44,
+          "end": 320.42
+        },
+        {
+          "text": "6",
+          "start": 320.6,
+          "end": 320.84
+        },
+        {
+          "text": ".7",
+          "start": 320.84,
+          "end": 321.44
+        },
+        {
+          "text": "terabytes",
+          "start": 321.44,
+          "end": 321.86
+        },
+        {
+          "text": "per",
+          "start": 321.86,
+          "end": 322.14
+        },
+        {
+          "text": "second",
+          "start": 322.14,
+          "end": 322.48
+        },
+        {
+          "text": "of",
+          "start": 322.48,
+          "end": 322.62
+        },
+        {
+          "text": "aggregate",
+          "start": 322.62,
+          "end": 322.96
+        },
+        {
+          "text": "bandwidth,",
+          "start": 322.96,
+          "end": 323.46
+        },
+        {
+          "text": "nearly",
+          "start": 323.96,
+          "end": 324.24
+        },
+        {
+          "text": "2",
+          "start": 324.24,
+          "end": 324.62
+        },
+        {
+          "text": ",000",
+          "start": 324.62,
+          "end": 325.04
+        },
+        {
+          "text": "teraflops",
+          "start": 325.04,
+          "end": 325.64
+        },
+        {
+          "text": "of",
+          "start": 325.64,
+          "end": 325.82
+        },
+        {
+          "text": "FP16",
+          "start": 325.82,
+          "end": 326.54
+        },
+        {
+          "text": "peak.",
+          "start": 326.54,
+          "end": 326.88
+        },
+        {
+          "text": "The",
+          "start": 327.5,
+          "end": 327.68
+        },
+        {
+          "text": "memory",
+          "start": 327.68,
+          "end": 327.94
+        },
+        {
+          "text": "floor",
+          "start": 327.94,
+          "end": 328.28
+        },
+        {
+          "text": "is",
+          "start": 328.28,
+          "end": 328.58
+        },
+        {
+          "text": "20",
+          "start": 328.58,
+          "end": 328.9
+        },
+        {
+          "text": ".9",
+          "start": 328.9,
+          "end": 329.4
+        },
+        {
+          "text": "milliseconds,",
+          "start": 329.4,
+          "end": 329.74
+        },
+        {
+          "text": "and",
+          "start": 330.3,
+          "end": 330.54
+        },
+        {
+          "text": "the",
+          "start": 330.54,
+          "end": 330.64
+        },
+        {
+          "text": "compute",
+          "start": 330.64,
+          "end": 330.88
+        },
+        {
+          "text": "floor",
+          "start": 330.88,
+          "end": 331.32
+        },
+        {
+          "text": "is",
+          "start": 331.32,
+          "end": 331.54
+        },
+        {
+          "text": ".07.",
+          "start": 331.54,
+          "end": 332.14
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "So a batch-one token is almost entirely a memory wait. The levers are batching, shrinking bytes per weight, or speculative decode \u2014 spending compute to get more tokens per weight read. Nothing else touches it.",
+      "start": 333.1,
+      "end": 347.8,
+      "words": [
+        {
+          "text": "So",
+          "start": 332.94,
+          "end": 333.62
+        },
+        {
+          "text": "a",
+          "start": 333.62,
+          "end": 333.8
+        },
+        {
+          "text": "batch",
+          "start": 333.8,
+          "end": 334.0
+        },
+        {
+          "text": "1",
+          "start": 334.0,
+          "end": 334.2
+        },
+        {
+          "text": "token",
+          "start": 334.2,
+          "end": 334.56
+        },
+        {
+          "text": "is",
+          "start": 334.56,
+          "end": 334.82
+        },
+        {
+          "text": "almost",
+          "start": 334.82,
+          "end": 335.2
+        },
+        {
+          "text": "entirely",
+          "start": 335.2,
+          "end": 335.96
+        },
+        {
+          "text": "a",
+          "start": 335.96,
+          "end": 336.26
+        },
+        {
+          "text": "memory",
+          "start": 336.26,
+          "end": 336.56
+        },
+        {
+          "text": "weight.",
+          "start": 336.56,
+          "end": 336.94
+        },
+        {
+          "text": "The",
+          "start": 337.64,
+          "end": 337.78
+        },
+        {
+          "text": "levers",
+          "start": 337.78,
+          "end": 338.04
+        },
+        {
+          "text": "are",
+          "start": 338.04,
+          "end": 338.3
+        },
+        {
+          "text": "batching,",
+          "start": 338.3,
+          "end": 338.9
+        },
+        {
+          "text": "shrinking",
+          "start": 339.3,
+          "end": 339.54
+        },
+        {
+          "text": "bytes",
+          "start": 339.54,
+          "end": 339.94
+        },
+        {
+          "text": "per",
+          "start": 339.94,
+          "end": 340.22
+        },
+        {
+          "text": "weight,",
+          "start": 340.22,
+          "end": 340.54
+        },
+        {
+          "text": "or",
+          "start": 340.92,
+          "end": 341.08
+        },
+        {
+          "text": "speculative",
+          "start": 341.08,
+          "end": 341.64
+        },
+        {
+          "text": "decodes",
+          "start": 341.64,
+          "end": 342.4
+        },
+        {
+          "text": "spending",
+          "start": 342.4,
+          "end": 342.92
+        },
+        {
+          "text": "compute",
+          "start": 342.92,
+          "end": 343.42
+        },
+        {
+          "text": "to",
+          "start": 343.42,
+          "end": 343.76
+        },
+        {
+          "text": "get",
+          "start": 343.76,
+          "end": 343.92
+        },
+        {
+          "text": "more",
+          "start": 343.92,
+          "end": 344.14
+        },
+        {
+          "text": "tokens",
+          "start": 344.14,
+          "end": 344.56
+        },
+        {
+          "text": "per",
+          "start": 344.56,
+          "end": 344.84
+        },
+        {
+          "text": "weight",
+          "start": 344.84,
+          "end": 345.04
+        },
+        {
+          "text": "read.",
+          "start": 345.04,
+          "end": 345.36
+        },
+        {
+          "text": "Nothing",
+          "start": 345.94,
+          "end": 346.28
+        },
+        {
+          "text": "else",
+          "start": 346.28,
+          "end": 346.54
+        },
+        {
+          "text": "touches",
+          "start": 346.54,
+          "end": 346.94
+        },
+        {
+          "text": "it.",
+          "start": 346.94,
+          "end": 347.2
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And the serving side of the same lesson: an LLM chat endpoint with a fifty-millisecond mean time to first token \u2014 looks healthy \u2014 but a two-thousand-millisecond p99. A tail forty times the mean, against a two-hundred-millisecond SLO. Prompt processing and queueing behind long generations do that while the mean stays green.",
+      "start": 347.8,
+      "end": 369.22,
+      "words": [
+        {
+          "text": "And",
+          "start": 347.8,
+          "end": 348.2
+        },
+        {
+          "text": "the",
+          "start": 348.2,
+          "end": 348.32
+        },
+        {
+          "text": "serving",
+          "start": 348.32,
+          "end": 348.62
+        },
+        {
+          "text": "side",
+          "start": 348.62,
+          "end": 348.96
+        },
+        {
+          "text": "of",
+          "start": 348.96,
+          "end": 349.1
+        },
+        {
+          "text": "the",
+          "start": 349.1,
+          "end": 349.18
+        },
+        {
+          "text": "same",
+          "start": 349.18,
+          "end": 349.44
+        },
+        {
+          "text": "lesson.",
+          "start": 349.44,
+          "end": 349.78
+        },
+        {
+          "text": "An",
+          "start": 350.3,
+          "end": 350.48
+        },
+        {
+          "text": "LLM",
+          "start": 350.48,
+          "end": 351.0
+        },
+        {
+          "text": "chat",
+          "start": 351.0,
+          "end": 351.2
+        },
+        {
+          "text": "endpoint",
+          "start": 351.2,
+          "end": 351.58
+        },
+        {
+          "text": "with",
+          "start": 351.58,
+          "end": 352.02
+        },
+        {
+          "text": "a",
+          "start": 352.02,
+          "end": 352.12
+        },
+        {
+          "text": "50",
+          "start": 352.12,
+          "end": 352.36
+        },
+        {
+          "text": "millisecond",
+          "start": 352.36,
+          "end": 352.9
+        },
+        {
+          "text": "mean",
+          "start": 352.9,
+          "end": 353.1
+        },
+        {
+          "text": "time",
+          "start": 353.1,
+          "end": 353.44
+        },
+        {
+          "text": "to",
+          "start": 353.44,
+          "end": 353.64
+        },
+        {
+          "text": "first",
+          "start": 353.64,
+          "end": 353.86
+        },
+        {
+          "text": "token",
+          "start": 353.86,
+          "end": 354.2
+        },
+        {
+          "text": "looks",
+          "start": 354.2,
+          "end": 354.58
+        },
+        {
+          "text": "healthy,",
+          "start": 354.58,
+          "end": 355.04
+        },
+        {
+          "text": "but",
+          "start": 355.42,
+          "end": 355.68
+        },
+        {
+          "text": "a",
+          "start": 355.68,
+          "end": 355.82
+        },
+        {
+          "text": "2",
+          "start": 355.82,
+          "end": 356.04
+        },
+        {
+          "text": ",000",
+          "start": 356.04,
+          "end": 356.56
+        },
+        {
+          "text": "millisecond",
+          "start": 356.56,
+          "end": 357.2
+        },
+        {
+          "text": "P99.",
+          "start": 357.2,
+          "end": 357.9
+        },
+        {
+          "text": "A",
+          "start": 357.9,
+          "end": 358.92
+        },
+        {
+          "text": "tail",
+          "start": 358.92,
+          "end": 359.18
+        },
+        {
+          "text": "40",
+          "start": 359.18,
+          "end": 359.56
+        },
+        {
+          "text": "times",
+          "start": 359.56,
+          "end": 359.92
+        },
+        {
+          "text": "the",
+          "start": 359.92,
+          "end": 360.12
+        },
+        {
+          "text": "mean",
+          "start": 360.12,
+          "end": 360.36
+        },
+        {
+          "text": "against",
+          "start": 360.36,
+          "end": 361.04
+        },
+        {
+          "text": "a",
+          "start": 361.04,
+          "end": 361.26
+        },
+        {
+          "text": "200",
+          "start": 361.26,
+          "end": 361.74
+        },
+        {
+          "text": "millisecond",
+          "start": 361.74,
+          "end": 362.38
+        },
+        {
+          "text": "SLO.",
+          "start": 362.38,
+          "end": 363.0
+        },
+        {
+          "text": "Prompt",
+          "start": 363.68,
+          "end": 364.0
+        },
+        {
+          "text": "processing",
+          "start": 364.0,
+          "end": 364.44
+        },
+        {
+          "text": "and",
+          "start": 364.44,
+          "end": 364.96
+        },
+        {
+          "text": "queuing",
+          "start": 364.96,
+          "end": 365.34
+        },
+        {
+          "text": "behind",
+          "start": 365.34,
+          "end": 365.6
+        },
+        {
+          "text": "long",
+          "start": 365.6,
+          "end": 365.98
+        },
+        {
+          "text": "generations",
+          "start": 365.98,
+          "end": 366.5
+        },
+        {
+          "text": "do",
+          "start": 366.5,
+          "end": 366.94
+        },
+        {
+          "text": "that",
+          "start": 366.94,
+          "end": 367.16
+        },
+        {
+          "text": "while",
+          "start": 367.16,
+          "end": 367.42
+        },
+        {
+          "text": "the",
+          "start": 367.42,
+          "end": 367.56
+        },
+        {
+          "text": "mean",
+          "start": 367.56,
+          "end": 367.78
+        },
+        {
+          "text": "stays",
+          "start": 367.78,
+          "end": 368.1
+        },
+        {
+          "text": "green.",
+          "start": 368.1,
+          "end": 368.56
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Both halves of the mandate are budgets the system keeps meeting, not certificates earned at launch.",
+      "start": 369.22,
+      "end": 375.87,
+      "words": [
+        {
+          "text": "Both",
+          "start": 369.5,
+          "end": 369.82
+        },
+        {
+          "text": "halves",
+          "start": 369.82,
+          "end": 370.24
+        },
+        {
+          "text": "of",
+          "start": 370.24,
+          "end": 370.4
+        },
+        {
+          "text": "the",
+          "start": 370.4,
+          "end": 370.48
+        },
+        {
+          "text": "mandate",
+          "start": 370.48,
+          "end": 370.86
+        },
+        {
+          "text": "are",
+          "start": 370.86,
+          "end": 371.18
+        },
+        {
+          "text": "budgets",
+          "start": 371.18,
+          "end": 371.52
+        },
+        {
+          "text": "the",
+          "start": 371.52,
+          "end": 371.78
+        },
+        {
+          "text": "system",
+          "start": 371.78,
+          "end": 372.16
+        },
+        {
+          "text": "keeps",
+          "start": 372.16,
+          "end": 372.56
+        },
+        {
+          "text": "meeting,",
+          "start": 372.56,
+          "end": 372.92
+        },
+        {
+          "text": "not",
+          "start": 373.42,
+          "end": 373.62
+        },
+        {
+          "text": "certificates",
+          "start": 373.62,
+          "end": 374.0
+        },
+        {
+          "text": "earned",
+          "start": 374.0,
+          "end": 374.52
+        },
+        {
+          "text": "at",
+          "start": 374.52,
+          "end": 374.74
+        },
+        {
+          "text": "launch.",
+          "start": 374.74,
+          "end": 375.1
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Then future directions \u2014 the same principles stretched into new contexts. The edge under watt budgets, TinyML in kilobytes and milliwatts, and composed services where a request fans out through retrieval, a planner, tools, a generator and a verifier.",
+      "start": 375.87,
+      "end": 392.07,
+      "words": [
+        {
+          "text": "Then",
+          "start": 375.96,
+          "end": 376.36
+        },
+        {
+          "text": "future",
+          "start": 376.36,
+          "end": 376.66
+        },
+        {
+          "text": "directions,",
+          "start": 376.66,
+          "end": 377.14
+        },
+        {
+          "text": "the",
+          "start": 377.66,
+          "end": 377.78
+        },
+        {
+          "text": "same",
+          "start": 377.78,
+          "end": 378.08
+        },
+        {
+          "text": "principles",
+          "start": 378.08,
+          "end": 378.54
+        },
+        {
+          "text": "stretched",
+          "start": 378.54,
+          "end": 378.94
+        },
+        {
+          "text": "into",
+          "start": 378.94,
+          "end": 379.24
+        },
+        {
+          "text": "new",
+          "start": 379.24,
+          "end": 379.46
+        },
+        {
+          "text": "contexts.",
+          "start": 379.46,
+          "end": 379.86
+        },
+        {
+          "text": "The",
+          "start": 379.86,
+          "end": 380.9
+        },
+        {
+          "text": "edge",
+          "start": 380.9,
+          "end": 381.16
+        },
+        {
+          "text": "under",
+          "start": 381.16,
+          "end": 381.44
+        },
+        {
+          "text": "watt",
+          "start": 381.44,
+          "end": 381.7
+        },
+        {
+          "text": "budgets,",
+          "start": 381.7,
+          "end": 382.04
+        },
+        {
+          "text": "tiny",
+          "start": 382.48,
+          "end": 382.74
+        },
+        {
+          "text": "ML",
+          "start": 382.74,
+          "end": 383.08
+        },
+        {
+          "text": "in",
+          "start": 383.08,
+          "end": 383.38
+        },
+        {
+          "text": "kilobytes",
+          "start": 383.38,
+          "end": 383.86
+        },
+        {
+          "text": "and",
+          "start": 383.86,
+          "end": 384.06
+        },
+        {
+          "text": "milliwatts,",
+          "start": 384.06,
+          "end": 384.7
+        },
+        {
+          "text": "and",
+          "start": 384.92,
+          "end": 385.14
+        },
+        {
+          "text": "composed",
+          "start": 385.14,
+          "end": 385.52
+        },
+        {
+          "text": "services",
+          "start": 385.52,
+          "end": 386.06
+        },
+        {
+          "text": "where",
+          "start": 386.06,
+          "end": 386.36
+        },
+        {
+          "text": "request",
+          "start": 386.36,
+          "end": 386.68
+        },
+        {
+          "text": "fans",
+          "start": 386.68,
+          "end": 387.2
+        },
+        {
+          "text": "out",
+          "start": 387.2,
+          "end": 387.42
+        },
+        {
+          "text": "through",
+          "start": 387.42,
+          "end": 387.64
+        },
+        {
+          "text": "retrieval,",
+          "start": 387.64,
+          "end": 388.2
+        },
+        {
+          "text": "a",
+          "start": 388.58,
+          "end": 388.72
+        },
+        {
+          "text": "planner,",
+          "start": 388.72,
+          "end": 388.98
+        },
+        {
+          "text": "tools,",
+          "start": 389.38,
+          "end": 389.58
+        },
+        {
+          "text": "a",
+          "start": 390.02,
+          "end": 390.08
+        },
+        {
+          "text": "generator,",
+          "start": 390.08,
+          "end": 390.44
+        },
+        {
+          "text": "and",
+          "start": 390.76,
+          "end": 390.84
+        },
+        {
+          "text": "a",
+          "start": 390.84,
+          "end": 390.92
+        },
+        {
+          "text": "verifier.",
+          "start": 390.92,
+          "end": 391.36
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The latency of a composed request follows its critical path \u2014 parallel tool calls collapse to the slower one, not a sum.",
+      "start": 392.07,
+      "end": 401.1,
+      "eq": {
+        "id": "critical-path",
+        "title": "Composed-request critical path",
+        "latex": "T_{\\mathrm{req}}=t_{\\mathrm{ret}}+t_{\\mathrm{plan}}+\\max(t_{a},t_{b})+t_{\\mathrm{gen}}+t_{\\mathrm{ver}}+t_{\\mathrm{oh}}"
+      },
+      "words": [
+        {
+          "text": "The",
+          "start": 392.34,
+          "end": 392.54
+        },
+        {
+          "text": "latency",
+          "start": 392.54,
+          "end": 392.9
+        },
+        {
+          "text": "of",
+          "start": 392.9,
+          "end": 393.34
+        },
+        {
+          "text": "a",
+          "start": 393.34,
+          "end": 393.44
+        },
+        {
+          "text": "composed",
+          "start": 393.44,
+          "end": 393.8
+        },
+        {
+          "text": "request",
+          "start": 393.8,
+          "end": 394.34
+        },
+        {
+          "text": "follows",
+          "start": 394.34,
+          "end": 394.94
+        },
+        {
+          "text": "its",
+          "start": 394.94,
+          "end": 395.16
+        },
+        {
+          "text": "critical",
+          "start": 395.16,
+          "end": 395.56
+        },
+        {
+          "text": "path.",
+          "start": 395.56,
+          "end": 396.04
+        },
+        {
+          "text": "Parallel",
+          "start": 396.62,
+          "end": 397.08
+        },
+        {
+          "text": "tool",
+          "start": 397.08,
+          "end": 397.36
+        },
+        {
+          "text": "calls",
+          "start": 397.36,
+          "end": 397.8
+        },
+        {
+          "text": "collapse",
+          "start": 397.8,
+          "end": 398.3
+        },
+        {
+          "text": "to",
+          "start": 398.3,
+          "end": 398.56
+        },
+        {
+          "text": "the",
+          "start": 398.56,
+          "end": 398.64
+        },
+        {
+          "text": "slower",
+          "start": 398.64,
+          "end": 398.98
+        },
+        {
+          "text": "one,",
+          "start": 398.98,
+          "end": 399.34
+        },
+        {
+          "text": "not",
+          "start": 399.74,
+          "end": 399.98
+        },
+        {
+          "text": "a",
+          "start": 399.98,
+          "end": 400.16
+        },
+        {
+          "text": "sum.",
+          "start": 400.16,
+          "end": 400.46
+        },
+        {
+          "text": "And",
+          "start": 400.46,
+          "end": 401.52
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And at fleet scale: a single GPU at about five point seven years mean time to failure. A thousand-twenty-four-accelerator pool \u2014 the cluster sees a failure about every forty-eight point eight hours. Roughly every two days.",
+      "start": 401.1,
+      "end": 416.02,
+      "eq": {
+        "id": "fleet-mtbf",
+        "title": "Fleet MTBF",
+        "latex": "\\mathrm{MTBF}_{\\mathrm{fleet}}=\\frac{\\mathrm{MTTF}}{N}=\\frac{50{,}000\\ \\mathrm{h}}{1{,}024}\\approx 48.8\\ \\mathrm{h}"
+      },
+      "words": [
+        {
+          "text": "at",
+          "start": 401.52,
+          "end": 401.66
+        },
+        {
+          "text": "fleet",
+          "start": 401.66,
+          "end": 401.88
+        },
+        {
+          "text": "scale,",
+          "start": 401.88,
+          "end": 402.22
+        },
+        {
+          "text": "a",
+          "start": 402.7,
+          "end": 402.88
+        },
+        {
+          "text": "single",
+          "start": 402.88,
+          "end": 403.14
+        },
+        {
+          "text": "GPU",
+          "start": 403.14,
+          "end": 403.6
+        },
+        {
+          "text": "at",
+          "start": 403.6,
+          "end": 404.14
+        },
+        {
+          "text": "about",
+          "start": 404.14,
+          "end": 404.36
+        },
+        {
+          "text": "5",
+          "start": 404.36,
+          "end": 404.78
+        },
+        {
+          "text": ".7",
+          "start": 404.78,
+          "end": 405.4
+        },
+        {
+          "text": "years",
+          "start": 405.4,
+          "end": 405.68
+        },
+        {
+          "text": "mean",
+          "start": 405.68,
+          "end": 405.92
+        },
+        {
+          "text": "time",
+          "start": 405.92,
+          "end": 406.24
+        },
+        {
+          "text": "to",
+          "start": 406.24,
+          "end": 406.46
+        },
+        {
+          "text": "failure.",
+          "start": 406.46,
+          "end": 406.76
+        },
+        {
+          "text": "A",
+          "start": 407.5,
+          "end": 407.7
+        },
+        {
+          "text": "1",
+          "start": 407.7,
+          "end": 407.82
+        },
+        {
+          "text": ",024",
+          "start": 407.82,
+          "end": 408.62
+        },
+        {
+          "text": "accelerator",
+          "start": 408.62,
+          "end": 409.0
+        },
+        {
+          "text": "pool,",
+          "start": 409.0,
+          "end": 409.52
+        },
+        {
+          "text": "the",
+          "start": 410.02,
+          "end": 410.12
+        },
+        {
+          "text": "cluster",
+          "start": 410.12,
+          "end": 410.42
+        },
+        {
+          "text": "sees",
+          "start": 410.42,
+          "end": 410.76
+        },
+        {
+          "text": "a",
+          "start": 410.76,
+          "end": 410.9
+        },
+        {
+          "text": "failure",
+          "start": 410.9,
+          "end": 411.28
+        },
+        {
+          "text": "about",
+          "start": 411.28,
+          "end": 411.58
+        },
+        {
+          "text": "every",
+          "start": 411.58,
+          "end": 411.96
+        },
+        {
+          "text": "48",
+          "start": 411.96,
+          "end": 412.52
+        },
+        {
+          "text": ".8",
+          "start": 412.52,
+          "end": 413.02
+        },
+        {
+          "text": "hours,",
+          "start": 413.02,
+          "end": 413.36
+        },
+        {
+          "text": "roughly",
+          "start": 413.92,
+          "end": 414.3
+        },
+        {
+          "text": "every",
+          "start": 414.3,
+          "end": 414.82
+        },
+        {
+          "text": "two",
+          "start": 414.82,
+          "end": 415.08
+        },
+        {
+          "text": "days.",
+          "start": 415.08,
+          "end": 415.42
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Fault tolerance stops being a property and becomes a requirement.",
+      "start": 416.02,
+      "end": 421.0,
+      "words": [
+        {
+          "text": "Fault",
+          "start": 416.2,
+          "end": 416.66
+        },
+        {
+          "text": "tolerance",
+          "start": 416.66,
+          "end": 417.14
+        },
+        {
+          "text": "stops",
+          "start": 417.14,
+          "end": 417.52
+        },
+        {
+          "text": "being",
+          "start": 417.52,
+          "end": 417.86
+        },
+        {
+          "text": "a",
+          "start": 417.86,
+          "end": 418.02
+        },
+        {
+          "text": "property",
+          "start": 418.02,
+          "end": 418.42
+        },
+        {
+          "text": "and",
+          "start": 418.42,
+          "end": 419.04
+        },
+        {
+          "text": "becomes",
+          "start": 419.04,
+          "end": 419.4
+        },
+        {
+          "text": "a",
+          "start": 419.4,
+          "end": 419.6
+        },
+        {
+          "text": "requirement.",
+          "start": 419.6,
+          "end": 420.22
+        },
+        {
+          "text": "The",
+          "start": 420.22,
+          "end": 421.34
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The closing section puts the responsibility where the physics put it: robust systems assume confident-and-wrong is normal and build graceful degradation in \u2014 fallback paths, uncertainty thresholds, scoped rollback. And the fallacies all share one root: treating the system as decomposable into independent parts.",
+      "start": 421.0,
+      "end": 441.0,
+      "words": [
+        {
+          "text": "closing",
+          "start": 421.34,
+          "end": 421.66
+        },
+        {
+          "text": "section",
+          "start": 421.66,
+          "end": 422.1
+        },
+        {
+          "text": "puts",
+          "start": 422.1,
+          "end": 422.54
+        },
+        {
+          "text": "the",
+          "start": 422.54,
+          "end": 422.72
+        },
+        {
+          "text": "responsibility",
+          "start": 422.72,
+          "end": 423.34
+        },
+        {
+          "text": "where",
+          "start": 423.34,
+          "end": 423.72
+        },
+        {
+          "text": "the",
+          "start": 423.72,
+          "end": 423.84
+        },
+        {
+          "text": "physics",
+          "start": 423.84,
+          "end": 424.08
+        },
+        {
+          "text": "put",
+          "start": 424.08,
+          "end": 424.36
+        },
+        {
+          "text": "it.",
+          "start": 424.36,
+          "end": 424.52
+        },
+        {
+          "text": "Robust",
+          "start": 425.0,
+          "end": 425.42
+        },
+        {
+          "text": "systems",
+          "start": 425.42,
+          "end": 425.88
+        },
+        {
+          "text": "assume",
+          "start": 425.88,
+          "end": 426.36
+        },
+        {
+          "text": "Confidentendrong",
+          "start": 426.36,
+          "end": 427.34
+        },
+        {
+          "text": "is",
+          "start": 427.34,
+          "end": 427.7
+        },
+        {
+          "text": "normal",
+          "start": 427.7,
+          "end": 428.1
+        },
+        {
+          "text": "and",
+          "start": 428.1,
+          "end": 428.38
+        },
+        {
+          "text": "build",
+          "start": 428.38,
+          "end": 428.6
+        },
+        {
+          "text": "graceful",
+          "start": 428.6,
+          "end": 429.16
+        },
+        {
+          "text": "degradation",
+          "start": 429.16,
+          "end": 429.58
+        },
+        {
+          "text": "in",
+          "start": 429.58,
+          "end": 430.12
+        },
+        {
+          "text": "fallback",
+          "start": 430.12,
+          "end": 430.66
+        },
+        {
+          "text": "paths,",
+          "start": 430.66,
+          "end": 431.2
+        },
+        {
+          "text": "uncertainty",
+          "start": 431.6,
+          "end": 432.04
+        },
+        {
+          "text": "thresholds,",
+          "start": 432.04,
+          "end": 432.94
+        },
+        {
+          "text": "scoped",
+          "start": 433.2,
+          "end": 433.54
+        },
+        {
+          "text": "rollback.",
+          "start": 433.54,
+          "end": 434.02
+        },
+        {
+          "text": "And",
+          "start": 434.68,
+          "end": 434.82
+        },
+        {
+          "text": "the",
+          "start": 434.82,
+          "end": 434.92
+        },
+        {
+          "text": "fallacies",
+          "start": 434.92,
+          "end": 435.34
+        },
+        {
+          "text": "all",
+          "start": 435.34,
+          "end": 435.74
+        },
+        {
+          "text": "share",
+          "start": 435.74,
+          "end": 436.06
+        },
+        {
+          "text": "one",
+          "start": 436.06,
+          "end": 436.36
+        },
+        {
+          "text": "route,",
+          "start": 436.36,
+          "end": 436.66
+        },
+        {
+          "text": "treating",
+          "start": 437.14,
+          "end": 437.44
+        },
+        {
+          "text": "the",
+          "start": 437.44,
+          "end": 437.64
+        },
+        {
+          "text": "system",
+          "start": 437.64,
+          "end": 437.98
+        },
+        {
+          "text": "as",
+          "start": 437.98,
+          "end": 438.3
+        },
+        {
+          "text": "decomposable",
+          "start": 438.3,
+          "end": 439.1
+        },
+        {
+          "text": "into",
+          "start": 439.1,
+          "end": 439.44
+        },
+        {
+          "text": "independent",
+          "start": 439.44,
+          "end": 439.94
+        },
+        {
+          "text": "parts.",
+          "start": 439.94,
+          "end": 440.42
+        },
+        {
+          "text": "The",
+          "start": 440.42,
+          "end": 441.48
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The Amdahl one is the arithmetic version: accelerate inference \u2014 ten percent of the request path \u2014 by ten times, and the system speeds up about ten percent.",
+      "start": 441.0,
+      "end": 452.75,
+      "eq": {
+        "id": "amdahl-cap",
+        "title": "Amdahl ceiling",
+        "latex": "S=\\frac{1}{(1-f)+f/s}=\\frac{1}{0.9+0.10/10}\\approx 1.1\\times"
+      },
+      "words": [
+        {
+          "text": "Amdahl",
+          "start": 441.48,
+          "end": 442.02
+        },
+        {
+          "text": "one",
+          "start": 442.02,
+          "end": 442.28
+        },
+        {
+          "text": "is",
+          "start": 442.28,
+          "end": 442.5
+        },
+        {
+          "text": "the",
+          "start": 442.5,
+          "end": 442.66
+        },
+        {
+          "text": "arithmetic",
+          "start": 442.66,
+          "end": 443.08
+        },
+        {
+          "text": "version.",
+          "start": 443.08,
+          "end": 443.76
+        },
+        {
+          "text": "Accelerate",
+          "start": 444.24,
+          "end": 444.96
+        },
+        {
+          "text": "inference,",
+          "start": 444.96,
+          "end": 445.38
+        },
+        {
+          "text": "10",
+          "start": 446.0,
+          "end": 446.2
+        },
+        {
+          "text": "%",
+          "start": 446.2,
+          "end": 446.62
+        },
+        {
+          "text": "of",
+          "start": 446.62,
+          "end": 446.82
+        },
+        {
+          "text": "the",
+          "start": 446.82,
+          "end": 446.9
+        },
+        {
+          "text": "request",
+          "start": 446.9,
+          "end": 447.2
+        },
+        {
+          "text": "path",
+          "start": 447.2,
+          "end": 447.74
+        },
+        {
+          "text": "by",
+          "start": 447.74,
+          "end": 448.26
+        },
+        {
+          "text": "10",
+          "start": 448.26,
+          "end": 448.58
+        },
+        {
+          "text": "times,",
+          "start": 448.58,
+          "end": 449.12
+        },
+        {
+          "text": "and",
+          "start": 449.54,
+          "end": 449.76
+        },
+        {
+          "text": "the",
+          "start": 449.76,
+          "end": 449.88
+        },
+        {
+          "text": "system",
+          "start": 449.88,
+          "end": 450.24
+        },
+        {
+          "text": "speeds",
+          "start": 450.24,
+          "end": 450.6
+        },
+        {
+          "text": "up",
+          "start": 450.6,
+          "end": 450.94
+        },
+        {
+          "text": "about",
+          "start": 450.94,
+          "end": 451.22
+        },
+        {
+          "text": "10%.",
+          "start": 451.22,
+          "end": 452.26
+        },
+        {
+          "text": "And",
+          "start": 452.26,
+          "end": 453.18
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And the accuracy-version: a ninety-five percent model at five hundred milliseconds is infeasible under a hundred-millisecond SLO, while a ninety-three percent model at fifty ships. Feasibility first, then quality inside the feasible set.",
+      "start": 452.75,
+      "end": 468.7,
+      "words": [
+        {
+          "text": "the",
+          "start": 453.18,
+          "end": 453.28
+        },
+        {
+          "text": "accuracy",
+          "start": 453.28,
+          "end": 453.66
+        },
+        {
+          "text": "version,",
+          "start": 453.66,
+          "end": 454.08
+        },
+        {
+          "text": "a",
+          "start": 454.66,
+          "end": 454.86
+        },
+        {
+          "text": "95",
+          "start": 454.86,
+          "end": 455.32
+        },
+        {
+          "text": "%",
+          "start": 455.32,
+          "end": 455.78
+        },
+        {
+          "text": "model",
+          "start": 455.78,
+          "end": 456.2
+        },
+        {
+          "text": "at",
+          "start": 456.2,
+          "end": 456.44
+        },
+        {
+          "text": "500",
+          "start": 456.44,
+          "end": 456.86
+        },
+        {
+          "text": "milliseconds",
+          "start": 456.86,
+          "end": 457.64
+        },
+        {
+          "text": "is",
+          "start": 457.64,
+          "end": 458.18
+        },
+        {
+          "text": "infeasible",
+          "start": 458.18,
+          "end": 458.8
+        },
+        {
+          "text": "under",
+          "start": 458.8,
+          "end": 459.08
+        },
+        {
+          "text": "a",
+          "start": 459.08,
+          "end": 459.26
+        },
+        {
+          "text": "100",
+          "start": 459.26,
+          "end": 459.58
+        },
+        {
+          "text": "millisecond",
+          "start": 459.58,
+          "end": 460.26
+        },
+        {
+          "text": "SLO",
+          "start": 460.26,
+          "end": 460.88
+        },
+        {
+          "text": "while",
+          "start": 460.88,
+          "end": 461.48
+        },
+        {
+          "text": "a",
+          "start": 461.48,
+          "end": 461.62
+        },
+        {
+          "text": "93",
+          "start": 461.62,
+          "end": 462.16
+        },
+        {
+          "text": "%",
+          "start": 462.16,
+          "end": 462.48
+        },
+        {
+          "text": "model",
+          "start": 462.48,
+          "end": 462.9
+        },
+        {
+          "text": "at",
+          "start": 462.9,
+          "end": 463.12
+        },
+        {
+          "text": "50",
+          "start": 463.12,
+          "end": 463.4
+        },
+        {
+          "text": "ships.",
+          "start": 463.4,
+          "end": 463.82
+        },
+        {
+          "text": "Feasibility",
+          "start": 464.52,
+          "end": 465.12
+        },
+        {
+          "text": "first,",
+          "start": 465.12,
+          "end": 465.52
+        },
+        {
+          "text": "then",
+          "start": 466.0,
+          "end": 466.2
+        },
+        {
+          "text": "quality",
+          "start": 466.2,
+          "end": 466.62
+        },
+        {
+          "text": "inside",
+          "start": 466.62,
+          "end": 467.14
+        },
+        {
+          "text": "the",
+          "start": 467.14,
+          "end": 467.42
+        },
+        {
+          "text": "feasible",
+          "start": 467.42,
+          "end": 467.74
+        },
+        {
+          "text": "set.",
+          "start": 467.74,
+          "end": 468.14
+        },
+        {
+          "text": "The",
+          "start": 468.14,
+          "end": 469.14
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The book ends by tracing that voice-assistant request through every layer one last time.",
+      "start": 468.7,
+      "end": 474.9,
+      "words": [
+        {
+          "text": "book",
+          "start": 469.14,
+          "end": 469.3
+        },
+        {
+          "text": "ends",
+          "start": 469.3,
+          "end": 469.62
+        },
+        {
+          "text": "by",
+          "start": 469.62,
+          "end": 469.86
+        },
+        {
+          "text": "tracing",
+          "start": 469.86,
+          "end": 470.24
+        },
+        {
+          "text": "that",
+          "start": 470.24,
+          "end": 470.54
+        },
+        {
+          "text": "voice",
+          "start": 470.54,
+          "end": 470.88
+        },
+        {
+          "text": "assistant",
+          "start": 470.88,
+          "end": 471.22
+        },
+        {
+          "text": "request",
+          "start": 471.22,
+          "end": 471.74
+        },
+        {
+          "text": "through",
+          "start": 471.74,
+          "end": 472.42
+        },
+        {
+          "text": "every",
+          "start": 472.42,
+          "end": 472.84
+        },
+        {
+          "text": "layer",
+          "start": 472.84,
+          "end": 473.2
+        },
+        {
+          "text": "one",
+          "start": 473.2,
+          "end": 473.48
+        },
+        {
+          "text": "last",
+          "start": 473.48,
+          "end": 473.84
+        },
+        {
+          "text": "time.",
+          "start": 473.84,
+          "end": 474.28
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "A keyword spotter \u2014 about two hundred thousand parameters, two hundred kilobytes of INT8 in one megabyte of flash, twenty megaflops, a milliwatt budget \u2014 listens for the wake word. Power-bound. A front end of MobileNetV2's size \u2014 six hundred megaflops on three and a half megabytes of INT8 inside five watts \u2014 transcribes on the NPU. DLRM ranks the retrieval against a hundred gigabytes of embeddings that exceed one H100's eighty \u2014 capacity before arithmetic. And GPT-2 writes the answer, reading three gigabytes of FP16 per token, a zero-point-nine millisecond memory floor. Power, compute, capacity, bandwidth \u2014 each stage bound by a different term of the same law.",
+      "start": 474.9,
+      "end": 498.0,
+      "visual": {
+        "src": "/study/vol1/16-conclusion/diagrams/request-trace.svg",
+        "title": "One request, four limiting terms",
+        "alt": "The voice-assistant request traced through the lighthouses. Wake word: KWS, 200 KB INT8 in 1 MB flash, 20 MFLOP under a milliwatt \u2014 power-bound. Speech front end on the phone NPU: 600 MFLOP on 3.5 MB INT8 inside 5 W \u2014 compute-in-envelope. Ranking: DLRM's 100 GB of embeddings exceed one H100's 80 GB \u2014 capacity-bound. Response: GPT-2 decode reads 3 GB of FP16 per token, a 0.9 ms memory floor \u2014 bandwidth-bound."
+      },
+      "words": [
+        {
+          "text": "A",
+          "start": 474.88,
+          "end": 475.26
+        },
+        {
+          "text": "keyword",
+          "start": 475.26,
+          "end": 475.54
+        },
+        {
+          "text": "spotter,",
+          "start": 475.54,
+          "end": 476.08
+        },
+        {
+          "text": "about",
+          "start": 476.34,
+          "end": 476.56
+        },
+        {
+          "text": "200",
+          "start": 476.56,
+          "end": 477.06
+        },
+        {
+          "text": ",000",
+          "start": 477.06,
+          "end": 477.56
+        },
+        {
+          "text": "parameters,",
+          "start": 477.56,
+          "end": 478.02
+        },
+        {
+          "text": "200",
+          "start": 478.7,
+          "end": 479.06
+        },
+        {
+          "text": "kilobytes",
+          "start": 479.06,
+          "end": 479.66
+        },
+        {
+          "text": "of",
+          "start": 479.66,
+          "end": 479.8
+        },
+        {
+          "text": "INT8",
+          "start": 479.8,
+          "end": 480.52
+        },
+        {
+          "text": "in",
+          "start": 480.52,
+          "end": 480.7
+        },
+        {
+          "text": "one",
+          "start": 480.7,
+          "end": 480.9
+        },
+        {
+          "text": "megabyte",
+          "start": 480.9,
+          "end": 481.38
+        },
+        {
+          "text": "of",
+          "start": 481.38,
+          "end": 481.46
+        },
+        {
+          "text": "flash,",
+          "start": 481.46,
+          "end": 481.76
+        },
+        {
+          "text": "20",
+          "start": 482.24,
+          "end": 482.54
+        },
+        {
+          "text": "megaflops,",
+          "start": 482.54,
+          "end": 483.16
+        },
+        {
+          "text": "a",
+          "start": 483.64,
+          "end": 483.76
+        },
+        {
+          "text": "milliwatt",
+          "start": 483.76,
+          "end": 484.18
+        },
+        {
+          "text": "budget,",
+          "start": 484.18,
+          "end": 484.48
+        },
+        {
+          "text": "lessons",
+          "start": 484.8,
+          "end": 485.1
+        },
+        {
+          "text": "for",
+          "start": 485.1,
+          "end": 485.44
+        },
+        {
+          "text": "the",
+          "start": 485.44,
+          "end": 485.52
+        },
+        {
+          "text": "wake",
+          "start": 485.52,
+          "end": 485.74
+        },
+        {
+          "text": "word.",
+          "start": 485.74,
+          "end": 486.02
+        },
+        {
+          "text": "Power",
+          "start": 486.7,
+          "end": 486.9
+        },
+        {
+          "text": "bound.",
+          "start": 486.9,
+          "end": 487.22
+        },
+        {
+          "text": "A",
+          "start": 487.92,
+          "end": 488.02
+        },
+        {
+          "text": "front",
+          "start": 488.02,
+          "end": 488.18
+        },
+        {
+          "text": "end",
+          "start": 488.18,
+          "end": 488.42
+        },
+        {
+          "text": "of",
+          "start": 488.42,
+          "end": 488.56
+        },
+        {
+          "text": "MobileNet",
+          "start": 488.56,
+          "end": 489.14
+        },
+        {
+          "text": "v2's",
+          "start": 489.14,
+          "end": 489.96
+        },
+        {
+          "text": "size,",
+          "start": 489.96,
+          "end": 490.32
+        },
+        {
+          "text": "600",
+          "start": 490.74,
+          "end": 491.04
+        },
+        {
+          "text": "megaflops",
+          "start": 491.04,
+          "end": 491.84
+        },
+        {
+          "text": "on",
+          "start": 491.84,
+          "end": 492.12
+        },
+        {
+          "text": "3",
+          "start": 492.12,
+          "end": 492.4
+        },
+        {
+          "text": ".5",
+          "start": 492.4,
+          "end": 492.72
+        },
+        {
+          "text": "megabytes",
+          "start": 492.72,
+          "end": 493.3
+        },
+        {
+          "text": "of",
+          "start": 493.3,
+          "end": 493.44
+        },
+        {
+          "text": "INT8",
+          "start": 493.44,
+          "end": 494.24
+        },
+        {
+          "text": "inside",
+          "start": 494.24,
+          "end": 494.66
+        },
+        {
+          "text": "5",
+          "start": 494.66,
+          "end": 495.2
+        },
+        {
+          "text": "watts",
+          "start": 495.2,
+          "end": 495.56
+        },
+        {
+          "text": "transcribes",
+          "start": 495.56,
+          "end": 496.62
+        },
+        {
+          "text": "on",
+          "start": 496.62,
+          "end": 496.8
+        },
+        {
+          "text": "the",
+          "start": 496.8,
+          "end": 496.9
+        },
+        {
+          "text": "NPU.",
+          "start": 496.9,
+          "end": 497.26
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "That's the book: the system is the model, the regime picks the lever, and the interfaces are where it breaks.",
+      "start": 498.0,
+      "end": 505.52,
+      "words": [
+        {
+          "text": "That's",
+          "start": 498.08,
+          "end": 498.68
+        },
+        {
+          "text": "the",
+          "start": 498.68,
+          "end": 498.82
+        },
+        {
+          "text": "book.",
+          "start": 498.82,
+          "end": 499.08
+        },
+        {
+          "text": "The",
+          "start": 499.62,
+          "end": 499.72
+        },
+        {
+          "text": "system",
+          "start": 499.72,
+          "end": 500.08
+        },
+        {
+          "text": "is",
+          "start": 500.08,
+          "end": 500.36
+        },
+        {
+          "text": "the",
+          "start": 500.36,
+          "end": 500.52
+        },
+        {
+          "text": "model.",
+          "start": 500.52,
+          "end": 500.9
+        },
+        {
+          "text": "The",
+          "start": 501.32,
+          "end": 501.38
+        },
+        {
+          "text": "regime",
+          "start": 501.38,
+          "end": 501.84
+        },
+        {
+          "text": "picks",
+          "start": 501.84,
+          "end": 502.2
+        },
+        {
+          "text": "the",
+          "start": 502.2,
+          "end": 502.44
+        },
+        {
+          "text": "lever,",
+          "start": 502.44,
+          "end": 502.64
+        },
+        {
+          "text": "and",
+          "start": 503.0,
+          "end": 503.1
+        },
+        {
+          "text": "the",
+          "start": 503.1,
+          "end": 503.22
+        },
+        {
+          "text": "interfaces",
+          "start": 503.22,
+          "end": 503.76
+        },
+        {
+          "text": "are",
+          "start": 503.76,
+          "end": 504.12
+        },
+        {
+          "text": "where",
+          "start": 504.12,
+          "end": 504.3
+        },
+        {
+          "text": "it",
+          "start": 504.3,
+          "end": 504.44
+        },
+        {
+          "text": "breaks.",
+          "start": 504.44,
+          "end": 504.72
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "What endures is the method \u2014 start from empirical evidence and physical bounds, quantify the trade-offs, and treat system design as constrained optimization. The world is rushing to build AI systems; the task is to engineer them.",
+      "start": 505.52,
+      "end": 520.55,
+      "words": [
+        {
+          "text": "What",
+          "start": 505.8,
+          "end": 505.96
+        },
+        {
+          "text": "endures",
+          "start": 505.96,
+          "end": 506.48
+        },
+        {
+          "text": "is",
+          "start": 506.48,
+          "end": 506.7
+        },
+        {
+          "text": "the",
+          "start": 506.7,
+          "end": 506.82
+        },
+        {
+          "text": "method?",
+          "start": 506.82,
+          "end": 507.12
+        },
+        {
+          "text": "Start",
+          "start": 507.68,
+          "end": 507.84
+        },
+        {
+          "text": "from",
+          "start": 507.84,
+          "end": 508.1
+        },
+        {
+          "text": "empirical",
+          "start": 508.1,
+          "end": 508.48
+        },
+        {
+          "text": "evidence",
+          "start": 508.48,
+          "end": 509.06
+        },
+        {
+          "text": "and",
+          "start": 509.06,
+          "end": 509.34
+        },
+        {
+          "text": "physical",
+          "start": 509.34,
+          "end": 509.62
+        },
+        {
+          "text": "bounds,",
+          "start": 509.62,
+          "end": 510.14
+        },
+        {
+          "text": "quantify",
+          "start": 510.56,
+          "end": 510.94
+        },
+        {
+          "text": "the",
+          "start": 510.94,
+          "end": 511.24
+        },
+        {
+          "text": "trade",
+          "start": 511.24,
+          "end": 511.46
+        },
+        {
+          "text": "-offs,",
+          "start": 511.46,
+          "end": 511.74
+        },
+        {
+          "text": "and",
+          "start": 511.94,
+          "end": 512.06
+        },
+        {
+          "text": "treat",
+          "start": 512.06,
+          "end": 512.28
+        },
+        {
+          "text": "system",
+          "start": 512.28,
+          "end": 512.72
+        },
+        {
+          "text": "design",
+          "start": 512.72,
+          "end": 513.14
+        },
+        {
+          "text": "as",
+          "start": 513.14,
+          "end": 513.56
+        },
+        {
+          "text": "constrained",
+          "start": 513.56,
+          "end": 514.06
+        },
+        {
+          "text": "optimization.",
+          "start": 514.06,
+          "end": 514.82
+        },
+        {
+          "text": "The",
+          "start": 515.72,
+          "end": 515.84
+        },
+        {
+          "text": "world",
+          "start": 515.84,
+          "end": 516.14
+        },
+        {
+          "text": "is",
+          "start": 516.14,
+          "end": 516.36
+        },
+        {
+          "text": "rushing",
+          "start": 516.36,
+          "end": 516.68
+        },
+        {
+          "text": "to",
+          "start": 516.68,
+          "end": 516.94
+        },
+        {
+          "text": "build",
+          "start": 516.94,
+          "end": 517.14
+        },
+        {
+          "text": "AI",
+          "start": 517.14,
+          "end": 517.42
+        },
+        {
+          "text": "systems.",
+          "start": 517.42,
+          "end": 517.88
+        },
+        {
+          "text": "The",
+          "start": 518.42,
+          "end": 518.56
+        },
+        {
+          "text": "task",
+          "start": 518.56,
+          "end": 518.92
+        },
+        {
+          "text": "is",
+          "start": 518.92,
+          "end": 519.14
+        },
+        {
+          "text": "to",
+          "start": 519.14,
+          "end": 519.28
+        },
+        {
+          "text": "engineer",
+          "start": 519.28,
+          "end": 519.64
+        },
+        {
+          "text": "them.",
+          "start": 519.64,
+          "end": 519.94
+        }
+      ]
+    }
+  ]
+}

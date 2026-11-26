@@ -1,3 +1,4 @@
+import { KolibriExplorers } from '@/components/study/kolibri-explorers'
 import { TechnicalPre, TechnicalTable } from './technical-prose'
 import { InteractiveStudy } from './interactive-study'
 import { PostBrief, EvidenceNote, MethodSteps } from './post-patterns'
@@ -59,6 +60,9 @@ import {
   DctBlock,
   GameOfLife,
   HashTableDemo,
+  ConstraintCascadeDemo,
+  DriftMonitorDemo,
+  LocalityBoundDemo,
   StorageEngineSim,
   KvCacheCompressor,
   KvQuantDial,
@@ -97,6 +101,7 @@ export const mdxComponents: MDXComponents = {
   AttentionCostCurve,
   DeltaMemory,
   AttnResDepth,
+  KolibriExplorers,
   PllDiagram,
   AttentionHeatmap,
   SoftmaxLab,
@@ -115,6 +120,9 @@ export const mdxComponents: MDXComponents = {
   DctBlock,
   GameOfLife,
   HashTableDemo,
+  ConstraintCascadeDemo,
+  DriftMonitorDemo,
+  LocalityBoundDemo,
   StorageEngineSim,
   KvCacheCompressor,
   KvQuantDial,

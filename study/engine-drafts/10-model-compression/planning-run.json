@@ -1,0 +1,104 @@
+{
+  "id": "vol1/01_compression_pilot",
+  "title": "Model Compression",
+  "profile": "chapter",
+  "command": "outline",
+  "sourceUrl": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd",
+  "sourceHash": "34b0e7eabed0900072c65cc00778cf22e32cafc56e30ae540878c66f564f35cd",
+  "specHash": "4473768e7b39e650ac73d370a8696f482546e4597aad55a98a8a253cefee03e0",
+  "status": "planned",
+  "sections": [
+    {
+      "id": "resident-memory-budget",
+      "heading": "Count the entire resident footprint",
+      "sourceHeadings": [
+        "Fitting the Deployment Budget"
+      ]
+    },
+    {
+      "id": "reduce-existing-layer-work",
+      "heading": "Remove work from a trained model",
+      "sourceHeadings": [
+        "Structural Optimization: Changing What the Model Computes"
+      ]
+    },
+    {
+      "id": "design-a-cheaper-inference-path",
+      "heading": "Train a smaller graph or vary work by input",
+      "sourceHeadings": [
+        "Structural Optimization: Changing What the Model Computes"
+      ]
+    },
+    {
+      "id": "match-precision-to-bottleneck",
+      "heading": "Choose a precision the device can use",
+      "sourceHeadings": [
+        "Numerical Precision: Changing How Values Are Stored"
+      ]
+    },
+    {
+      "id": "calibrate-quantization",
+      "heading": "Manage quantization error",
+      "sourceHeadings": [
+        "Numerical Precision: Changing How Values Are Stored"
+      ]
+    },
+    {
+      "id": "realize-savings-in-kernels",
+      "heading": "Make the runtime realize the savings",
+      "sourceHeadings": [
+        "Hardware Implementation: Changing How the Model Executes"
+      ]
+    },
+    {
+      "id": "sequence-and-compare-candidates",
+      "heading": "Sequence changes and compare feasible candidates",
+      "sourceHeadings": [
+        "Choosing and Combining Techniques",
+        "Fallacies and Pitfalls"
+      ]
+    },
+    {
+      "id": "accept-the-shipping-artifact",
+      "heading": "Run an end-to-end acceptance test",
+      "sourceHeadings": [
+        "Measuring Compression Gains"
+      ]
+    },
+    {
+      "id": "diagnose-missing-gains",
+      "heading": "Trace a failed gate to its cause",
+      "sourceHeadings": [
+        "Measuring Compression Gains",
+        "Fallacies and Pitfalls"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "role": "architect",
+      "model": "gpt-6.2-sol",
+      "effort": "high",
+      "sections": [],
+      "promptBytes": 35833,
+      "cached": false,
+      "key": "bbd98e097c2c254d22cfa7dc21eb19f31aba9f2a448ff4145b663227c1b94691",
+      "usage": {
+        "input": 21031,
+        "cachedInput": 0,
+        "output": 7107
+      }
+    }
+  ],
+  "maxCalls": 2,
+  "stopAfterTokens": null,
+  "liveCalls": 1,
+  "tokens": {
+    "input": 21031,
+    "cachedInput": 0,
+    "output": 7107,
+    "total": 28138
+  },
+  "usageIncomplete": false,
+  "elapsedMs": 151401
+}

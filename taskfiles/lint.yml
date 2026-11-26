@@ -1,16 +1,22 @@
-# Static analysis: ESLint, TypeScript, and the bespoke prose linter.
+# Static analysis: ESLint, TypeScript, prose, and diagram coverage.
 #
-# Three independent gates. They fail for different reasons and are kept
+# Independent gates. They fail for different reasons and are kept
 # separate so a hook can run the cheap subset on changed files only.
 version: '3'
 
 tasks:
   default:
-    desc: Run every static check — eslint, typecheck, prose
+    desc: Run every static check — eslint, typecheck, prose, diagrams
     cmds:
       - task: eslint
       - task: types
       - task: prose
+      - task: diagrams
+
+  diagrams:
+    desc: Check section-level diagram plans, inline placement, and assets
+    cmds:
+      - node scripts/check-diagram-coverage.mjs {{.CLI_ARGS}}
 
   eslint:
     desc: ESLint over the whole repo

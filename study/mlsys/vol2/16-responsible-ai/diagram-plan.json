@@ -1,0 +1,34 @@
+{
+ "source": "packet.md",
+ "sections": {
+  "Thesis": {"proseOnly": "The thesis frames responsibility as an architectural property priced in evidence, latency, memory, and owners; prose carries the framing."},
+  "The Governance Band Is Not a Checklist": {
+   "figure": "::fig[assurance-chain]",
+   "teaches": "The assurance case is a chain: claim, argument, bounded evidence, owner, action. Dashboards and certificates feed only the evidence link.",
+   "source": "Book assurance-case figure redrawn as an ownership chain ending in action."
+  },
+  "Three Fairness Criteria, One Impossibility": {
+   "figure": "::fig[fairness-impossibility-triangle]",
+   "teaches": "Calibration and both class-conditional balance constraints cannot all hold with unequal base rates and imperfect prediction; the criterion choice is a signed decision.",
+   "source": "Book impossibility result and the two-hundred-applicant worked example."
+  },
+  "The Threshold Is Policy, Not Machinery": {"proseOnly": "Threshold semantics, intervention tiers, and metric freshness are propositional contrasts carried by the two embedded equations and the fairness chart."},
+  "The Proxy Is the Target": {"proseOnly": "The healthcare study is narrative evidence with a single pinned correction statistic; prose carries it."},
+  "Conservation of Overhead": {
+   "figure": "::fig[conservation-of-overhead]",
+   "teaches": "Deferred explanation work relocates onto the serial request path, memory budget, or review queue; replicas preserve throughput but not per-request latency.",
+   "source": "Book conservation-of-overhead principle and the retrofit sizing example."
+  },
+  "Privacy Is a Retraining Architecture": {"proseOnly": "DP-SGD and SISA are quantitative mechanisms carried by their two equations; prose connects them to the erasure workload."},
+  "Reliability Breeds Over-Reliance": {
+   "figure": "::fig[bias-amplification-loop]",
+   "teaches": "Automation bias plus retraining on operational data closes a positive-gain feedback loop; breaking it requires intervening on data collection.",
+   "source": "Book bias amplification feedback loop, redrawn with the loop-gain framing."
+  },
+  "Accountability Does Not Transfer": {"proseOnly": "Third-party accountability and representation cost are governance arguments with pinned numbers; prose carries them."},
+  "Fallacies and Pitfalls": {"proseOnly": "Fallacies are corrective prose tied back to earlier sections."},
+  "The physics": {"proseOnly": "Reference table."},
+  "Glossary": {"proseOnly": "Definitions."},
+  "Open questions": {"proseOnly": "Reflection prompts."}
+ }
+}

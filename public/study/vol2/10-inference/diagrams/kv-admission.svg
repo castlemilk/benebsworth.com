@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="kv-admission" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="ka-title ka-desc">
+  <title id="ka-title">KV cache as an admission budget</title>
+  <desc id="ka-desc">A memory budget for an eight-H100 node serving a 70B GQA model. FP16 weights and system reserve leave a 526 GB KV pool; twelve 128K-token requests of 42.9 GB each exhaust that pool, leaving no room for a thirteenth.</desc>
+  <style>
+    .dark #kv-admission { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#kv-admission { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">KV cache is an admission budget</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">70B-class GQA model · 128K context · 8×H100 node</text>
+
+    <text x="24" y="69" font-size="9" fill="var(--fig-rule, #6e6a5b)">bytes/token = 2 × 80 layers × 8 KV heads × 128 × 2 bytes</text>
+    <text x="24" y="83" font-size="9" fill="var(--fig-rule, #6e6a5b)">= 327,680 bytes/token → 42.9 GB for one 128K request</text>
+
+    <!-- total HBM bar, 320 px represents 687.3 GB -->
+    <rect x="30" y="101" width="320" height="38" rx="5" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.3"/>
+    <rect x="30" y="101" width="66" height="38" fill="var(--fig-outline, #364c50)" opacity="0.28"/>
+    <rect x="96" y="101" width="9" height="38" fill="var(--fig-rule, #6e6a5b)" opacity="0.34"/>
+    <rect x="105" y="101" width="245" height="38" fill="var(--fig-outline, #364c50)" opacity="0.12"/>
+    <text x="63" y="125" font-size="8.5" font-weight="650" text-anchor="middle">weights 141.2 GB</text>
+    <text x="101" y="94" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">reserve</text>
+    <text x="228" y="125" font-size="9.5" font-weight="650" text-anchor="middle">KV admission pool · 526 GB</text>
+    <text x="348" y="94" font-size="8.5" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">687.3 GB total</text>
+
+    <!-- 12 request blocks within pool; widths approximately proportional but expanded for legibility -->
+    <text x="30" y="164" font-size="9.5" font-weight="650">what the pool admits</text>
+    <g fill="var(--fig-mark, #b4571f)">
+      <rect x="30" y="174" width="24" height="34" opacity=".88"/><rect x="56" y="174" width="24" height="34" opacity=".84"/><rect x="82" y="174" width="24" height="34" opacity=".80"/><rect x="108" y="174" width="24" height="34" opacity=".76"/><rect x="134" y="174" width="24" height="34" opacity=".72"/><rect x="160" y="174" width="24" height="34" opacity=".68"/><rect x="186" y="174" width="24" height="34" opacity=".64"/><rect x="212" y="174" width="24" height="34" opacity=".60"/><rect x="238" y="174" width="24" height="34" opacity=".56"/><rect x="264" y="174" width="24" height="34" opacity=".52"/><rect x="290" y="174" width="24" height="34" opacity=".48"/><rect x="316" y="174" width="24" height="34" opacity=".44"/>
+    </g>
+    <text x="185" y="196" font-size="9" font-weight="650" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">12 × 42.9 GB</text>
+    <rect x="30" y="218" width="24" height="20" rx="3" fill="none" stroke="var(--fig-mark, #b4571f)" stroke-width="1.3" stroke-dasharray="4 3"/>
+    <line x1="32" y1="236" x2="52" y2="220" stroke="var(--fig-mark, #b4571f)" stroke-width="1.5"/>
+    <text x="62" y="231" font-size="9.2" font-weight="650" fill="var(--fig-mark, #b4571f)">a thirteenth 128K request does not fit</text>
+
+    <text x="24" y="263" font-size="9" fill="var(--fig-rule, #6e6a5b)">Paged allocation can recover fragmentation waste; it cannot shrink</text>
+    <text x="24" y="277" font-size="9" fill="var(--fig-rule, #6e6a5b)">the attention tensors. More concurrency means changing the budget,</text>
+    <text x="24" y="291" font-size="9" fill="var(--fig-rule, #6e6a5b)">the cache representation, or where the state lives.</text>
+  </g>
+</svg>

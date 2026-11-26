@@ -6,6 +6,7 @@ description: >-
   A practical look at Helm, the Kubernetes package manager — what a chart is,
   how Go templating and Sprig drive value substitution, how releases and
   revisions work, and when to reach for Helm over Kustomize
+heroImage: /blog/using-helm/hero.webp
 labels: 'technology,kubernetes,developer experience'
 keywords: >-
   helm,helm 3,kubernetes,charts,chart,templating,go

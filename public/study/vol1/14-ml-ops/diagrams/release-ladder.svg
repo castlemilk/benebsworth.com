@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="release-ladder-art" class="study-fig-fit" viewBox="0 0 380 333" role="img" aria-labelledby="release-ladder-title release-ladder-desc">
+  <title id="release-ladder-title">Which model answers the request?</title>
+  <desc id="release-ladder-desc">In shadow mode, both models can see a request and the incumbent supplies the reply. In this illustrative 5% canary, the router assigns one request in twenty on average to the candidate for a real reply. Full rollout moves all replies to the candidate. Rollback routes new requests back to the incumbent.</desc>
+  <style>
+    .dark #release-ladder-art { --fig-paper:#252a27; --fig-ink:#efece1; --fig-rule:#93a094; --fig-route:#b6d5be; --fig-candidate:#ffab7c }
+    @media (prefers-color-scheme: dark) { svg:root#release-ladder-art { --fig-paper:#252a27; --fig-ink:#efece1; --fig-rule:#93a094; --fig-route:#b6d5be; --fig-candidate:#ffab7c } }
+  </style>
+  <rect width="380" height="333" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <defs>
+      <marker id="release-live-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0l8 4-8 4z" fill="var(--fig-route, #395447)"/></marker>
+    </defs>
+    <text x="18" y="30" font-size="19" font-weight="650">Who sends the reply?</text>
+    <text x="18" y="60" font-size="16" font-weight="650">Shadow</text>
+    <g font-size="14">
+      <text x="18" y="98">Request</text><text x="151" y="98">Incumbent</text><text x="300" y="98">Reply</text>
+      <text x="151" y="136">Candidate</text><text x="282" y="136">Log only</text>
+    </g>
+    <g fill="none" stroke="var(--fig-route, #395447)" stroke-width="2" marker-end="url(#release-live-arrow)">
+      <path d="M80 93h62"/><path d="M232 93h58"/><path d="M108 93v38h34" stroke-dasharray="3 3"/><path d="M230 131h42" stroke-dasharray="3 3"/>
+    </g>
+    <text x="18" y="160" font-size="13">The candidate receives a copy of live traffic.</text>
+    <path d="M18 177h344" stroke="var(--fig-rule, #b7b4a7)"/>
+    <text x="18" y="204" font-size="16" font-weight="650">Canary</text>
+    <g font-size="14">
+      <text x="18" y="262">Router</text><text x="138" y="238">95% incumbent</text><text x="138" y="286" fill="var(--fig-candidate, #97391c)">5% candidate</text><text x="304" y="262">Reply</text>
+    </g>
+    <g fill="none" stroke="var(--fig-route, #395447)" stroke-width="2" marker-end="url(#release-live-arrow)">
+      <path d="M71 257h24v-24h34"/><path d="M95 257v24h34"/><path d="M252 233h20v24h24"/><path d="M242 281h30v-24"/>
+    </g>
+    <text x="18" y="315" font-size="13">Each request takes one route. Either can reply.</text>
+  </g>
+</svg>

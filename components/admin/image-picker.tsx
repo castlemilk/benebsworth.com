@@ -147,7 +147,7 @@ export function ImagePicker({
                 className="group relative aspect-square overflow-hidden rounded-lg border-2 transition-colors"
                 style={{ borderColor: selected ? 'var(--color-about)' : 'var(--color-border)' } as CSSProperties}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+                { }
                 <img src={thumbOf(a)} alt={a.alt || ''} loading="lazy" decoding="async" className="pointer-events-none absolute inset-0 h-full w-full object-cover" />
                 {multi && (
                   <span

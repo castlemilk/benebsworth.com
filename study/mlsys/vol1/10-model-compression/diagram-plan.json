@@ -1,0 +1,58 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "State the camera decision and name the production constraints before the timing comparison."
+    },
+    "Fitting the Deployment Budget": {
+      "figure": "::chart[camera-frame-time]",
+      "teaches": "Compare end-to-end frame times against 33.3 ms and identify the fixed pipeline cost.",
+      "source": "The book's Fitting the Deployment Budget section supplies the mechanism. All camera candidates, timing costs and acceptance thresholds here are illustrative."
+    },
+    "Structural Optimization: Changing What the Model Computes": {
+      "figure": "::fig[pruning-addresses]",
+      "teaches": "Given four zeroed channels in a dense layer, distinguish zero values from a tensor whose dimensions and dense loop bounds actually change.",
+      "source": "The book's Structured and Unstructured Pruning and Knowledge Distillation sections. Channel counts, matrix shapes and the supporting soft-target example are illustrative."
+    },
+    "Numerical Precision: Changing How Values Are Stored": {
+      "figure": "::fig[calibration-grid]",
+      "teaches": "Hold the code count fixed and predict which calibration range rounds common values more precisely and which clips the outlier.",
+      "source": "The book's affine quantization and calibration sections. The three-bit ranges and input values are illustrative."
+    },
+    "Hardware Implementation: Changing How the Model Executes": {
+      "figure": "::fig[dequantization-traffic]",
+      "teaches": "Trace which off-chip reads and writes a fused weight-only kernel avoids.",
+      "source": "The book's When Fewer Bits Run Faster and Compression-Specific Fusion sections. Byte counts use the explicit hypothetical decoder model."
+    },
+    "Choosing and Combining: Which Candidate Ships?": {
+      "figure": "::fig[camera-release-gates]",
+      "teaches": "Apply the frame-time and night-recall gates together to select the mixed-precision candidate.",
+      "source": "The book's accuracy-efficiency frontier and decision framework. Gates and candidate outcomes are illustrative."
+    },
+    "Measuring Compression Gains": {
+      "figure": "::chart[request-time-ceiling]",
+      "teaches": "Calculate the request-latency improvement when an eight-millisecond model doubles in speed within a forty-millisecond request.",
+      "source": "The book's Amdahl-law argument in Profiling and Opportunity Analysis. Times are illustrative."
+    },
+    "Fallacies and Pitfalls": {
+      "figure": "::fig[sparse-storage-cost]",
+      "teaches": "Use the value, index and row-offset bytes to decide whether a 50% sparse INT8 matrix takes more space than its dense source.",
+      "source": "The book's Storage and Execution Break-Even section. The matrix dimensions, index width and row-pointer width are illustrative."
+    },
+    "Summary": {
+      "proseOnly": "Recall which camera candidate to choose, and carry the profiling question into Hardware Acceleration."
+    },
+    "The physics": {
+      "proseOnly": "Use the unit-aware table to look up arithmetic, inputs and assumptions from the worked examples."
+    },
+    "Glossary": {
+      "proseOnly": "Search short definitions in the packet and the concept index."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Transfer the same measurement boundaries to concrete projects in Ben's stack."
+    },
+    "Open questions": {
+      "proseOnly": "Give the reader three questions to investigate on target hardware during review."
+    }
+  }
+}

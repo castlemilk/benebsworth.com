@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="study-fig-fit ds9-coverage" viewBox="0 0 336 156" role="img" aria-labelledby="ds9-coverage-title ds9-coverage-desc">
+  <title id="ds9-coverage-title">Which examples survive a three-slot budget?</title>
+  <desc id="ds9-coverage-desc">The ranked common examples score 98, 95 and 92. The best rare example scores 80. A floor of one replaces common 92 with rare 80.</desc>
+  <style>
+    .ds9-coverage { --ink: #253741; --quiet: #435861; --accent: #086653; --wash: #c9e8dd; --line: #858e8a; }
+    .dark .ds9-coverage { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; }
+    @media (prefers-color-scheme: dark) { :root.ds9-coverage { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; } }
+    .ds9-coverage text { font: 16px system-ui, sans-serif; fill: var(--ink); }
+    .ds9-coverage .ds-title { font-weight: 650; }
+    .ds9-coverage .ds-note { font-size: 14px; fill: var(--quiet); }
+    .ds9-coverage .ds-track { fill: none; stroke: var(--line); stroke-width: 1.5; }
+    .ds9-coverage .ds-focus { fill: var(--wash); stroke: var(--accent); stroke-width: 1.5; }
+  </style>
+<text x="4" y="21" class="ds-title">Highest scores</text>
+<g text-anchor="middle">
+  <rect class="ds-track" x="4" y="32" width="103" height="32" rx="3"/>
+  <rect class="ds-track" x="116" y="32" width="103" height="32" rx="3"/>
+  <rect class="ds-track" x="228" y="32" width="103" height="32" rx="3"/>
+  <text x="55" y="54">Common 98</text><text x="167" y="54">Common 95</text><text x="279" y="54">Common 92</text>
+</g>
+<text x="4" y="99" class="ds-title">Reserve one rare example</text>
+<g text-anchor="middle">
+  <rect class="ds-track" x="4" y="111" width="103" height="32" rx="3"/>
+  <rect class="ds-track" x="116" y="111" width="103" height="32" rx="3"/>
+  <rect class="ds-focus" x="228" y="111" width="103" height="32" rx="3"/>
+  <text x="55" y="133">Common 98</text><text x="167" y="133">Common 95</text><text x="279" y="133" class="ds-title">Rare 80</text>
+</g>
+</svg>

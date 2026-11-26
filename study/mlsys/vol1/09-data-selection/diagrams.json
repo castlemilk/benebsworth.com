@@ -1,0 +1,32 @@
+[
+  {
+    "id": "inequality-timeline",
+    "title": "The selection inequality as two bars",
+    "caption": "Top bar: full-data training time. Bottom bar: the selection pipeline's bill -- scorer pass plus training on the subset. Selection is a win only while the bottom bar stays shorter at matched quality; the margin between them is the saving, and scorer cost is what eats it.",
+    "file": "inequality-timeline.svg"
+  },
+  {
+    "id": "coverage-floors",
+    "title": "Coverage floors constrain the score ranking",
+    "caption": "A score-ranked pool (left) under a three-slot budget and a one-per-slice floor: the rare class keeps its floor slot even with the lowest score, displacing the third-ranked common example. Floors spend opportunity cost on representativeness; a budget smaller than the summed floors is infeasible.",
+    "file": "coverage-floors.svg"
+  },
+  {
+    "id": "active-loop",
+    "title": "The active-learning loop and who pays each stage",
+    "caption": "Score the unlabeled pool, query the top-k for the oracle, add the new labels, retrain, repeat. The label bill sits at the oracle; the compute bill sits at scoring and retraining -- both enter the inequality against a budget-matched random baseline.",
+    "file": "active-loop.svg"
+  },
+  {
+    "id": "foundation-be",
+    "title": "Foundation amortization: prepaid versus scratch",
+    "caption": "From-scratch training costs 1,000 GPU-hours per task; the pretrained path pays 10,000 once and 50 per fine-tune. The lines cross at N = 11 downstream tasks -- below it, self-supervision is the more expensive option; above it, the per-task marginal cost is ~20x lower.",
+    "file": "foundation-be.svg"
+  },
+  {
+    "id": "read-penalty",
+    "title": "The random-access penalty by storage tier",
+    "caption": "A retained subset scattered across shards turns sequential reads into small random reads. Realized-bandwidth loss for 4 KB reads: ~375x on HDD, ~14x on SATA SSD, under 2x on NVMe. Stream-and-discard keeps sequential speed but still reads every corpus byte; materialized subset shards are what make the saving physical.",
+    "file": "read-penalty.svg"
+  }
+]

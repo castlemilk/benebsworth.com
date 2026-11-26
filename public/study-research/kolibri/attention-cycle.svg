@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 410" role="img" aria-labelledby="title desc">
+<title id="title">The five-layer attention cycle</title><desc id="desc">In the example position 1000, layers one to four read positions 488 to 1000. Layer five reads positions 0 to 1000.</desc>
+<style>
+text{font:22px system-ui,sans-serif;fill:#202d2c} .title{font-size:25px;font-weight:700} .small{font-size:19px;fill:#495a57} .label{font-weight:600} .card{fill:#e7eeeb;stroke:#8a9c98} .accent{fill:#bce5d8;stroke:#257660;stroke-width:2} .arrow{fill:none;stroke:#257660;stroke-width:2.5;marker-end:url(#head)}
+</style>
+<defs><marker id="head" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L7 3L0 6z" fill="#257660"/></marker></defs>
+<rect width="600" height="410" rx="12" fill="#f8faf9"/>
+<text x="26" y="40" class="title" text-anchor="start">One cycle through five layers</text>
+<text x="26" y="74" class="small" text-anchor="start">Direct reads for the token at position 1,000</text>
+<text x="26" y="128" class="label" text-anchor="start">Layer 1</text>
+<rect x="300" y="100" width="138" height="36" rx="9" class="card"/>
+<text x="452" y="127" class="small" text-anchor="start">local</text>
+<text x="26" y="172" class="label" text-anchor="start">Layer 2</text>
+<rect x="300" y="144" width="138" height="36" rx="9" class="card"/>
+<text x="452" y="171" class="small" text-anchor="start">local</text>
+<text x="26" y="216" class="label" text-anchor="start">Layer 3</text>
+<rect x="300" y="188" width="138" height="36" rx="9" class="card"/>
+<text x="452" y="215" class="small" text-anchor="start">local</text>
+<text x="26" y="260" class="label" text-anchor="start">Layer 4</text>
+<rect x="300" y="232" width="138" height="36" rx="9" class="card"/>
+<text x="452" y="259" class="small" text-anchor="start">local</text>
+<text x="26" y="304" class="label" text-anchor="start">Layer 5</text>
+<rect x="159" y="276" width="279" height="36" rx="9" class="accent"/>
+<text x="452" y="303" class="small" text-anchor="start">full</text>
+<text x="159" y="359" class="small" text-anchor="middle">0</text>
+<text x="300" y="359" class="small" text-anchor="middle">488</text>
+<text x="438" y="359" class="small" text-anchor="middle">1,000</text>
+<text x="26" y="390" class="small" text-anchor="start">The cycle repeats ten times across fifty layers.</text>
+</svg>

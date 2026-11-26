@@ -1,0 +1,30 @@
+[
+ {
+  "id": "mtbf-ladder",
+  "file": "mtbf-ladder.svg",
+  "title": "The MTBF ladder",
+  "caption": "Expected hours between GPU failures collapse as the fleet grows: one device at 50,000 h, 1,000 at 50 h, 10,000 at 5 h, with the full-system cascade and the Llama 3 measurement marked below the GPU-only line.",
+  "alt": "Bar chart of expected hours between GPU failures on a log scale across fleet sizes 1, 1,000, and 10,000 GPUs, with a dashed mark for the ~3.9 h full-system value and ~3.1 h measured Llama 3 cadence."
+ },
+ {
+  "id": "young-daly-floor",
+  "file": "young-daly-floor.svg",
+  "title": "The Young-Daly floor",
+  "caption": "Save overhead falls hyperbolically while expected rework climbs linearly with the interval; their sum has a shallow minimum near 14 minutes, where the two terms are equal. Being off the optimum is cheap; being far off is not.",
+  "alt": "Plot of wall-time waste vs checkpoint interval: a falling dashed write-overhead curve, a rising dashed rework line, and a solid total curve with a shallow marked minimum at ~14 min / ~5.9%, tinted writes-dominate left and rework-dominate right."
+ },
+ {
+  "id": "recovery-budget",
+  "file": "recovery-budget.svg",
+  "title": "The 6.6-minute recovery budget",
+  "caption": "One cold restart decomposed: detect ~30 s, restart ~4 min, load ~24.5 s, warmup ~2 min. Restart and warmup dominate the budget \u2014 the checkpoint read everyone worries about is the small term.",
+  "alt": "Horizontal stacked timeline of the four recovery terms totaling ~6.6 minutes, with restart and warmup drawn as the long segments and detect/load as thin ones."
+ },
+ {
+  "id": "detection-layers",
+  "file": "detection-layers.svg",
+  "title": "Detection layers",
+  "caption": "Escalating detection depth: liveness probes catch dead processes, heartbeat timeouts catch hangs, inference checks catch wrong answers, and progress-median comparison catches the straggler that passes every liveness check while halving the job.",
+  "alt": "Four stacked detection layers from liveness to progress-median, each labeled with the failure class it catches and the one that slips through."
+ }
+]

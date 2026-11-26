@@ -1,0 +1,38 @@
+[
+ {
+  "id": "book-pyramid",
+  "file": "data_storage_pyramid",
+  "title": "ML Storage Hierarchy (book)",
+  "caption": "The six tiers stacked by distance from the accelerator — the placement the packet's tier ladder re-draws in compressed form."
+ },
+ {
+  "id": "book-ckpt-dominance",
+  "file": "data_storage_checkpoint_dominance",
+  "title": "Checkpoint dominance (book)",
+  "caption": "The book's own log-bar contrast of 10.6 PB of checkpoint writes against one 6 TB epoch — the thesis number pair."
+ },
+ {
+  "id": "book-stall-frontier",
+  "file": "data_stall_frontier",
+  "title": "Data-stall frontier (book)",
+  "caption": "The min(1, supply/demand) knee with the text job's ~6,000x and image job's ~3.3x headroom markers."
+ },
+ {
+  "id": "book-gds-path",
+  "file": "data_storage_gds_path",
+  "title": "Traditional vs GPUDirect path (book)",
+  "caption": "The buffered bounce through host DRAM against the direct NVMe-to-HBM DMA, with the CPU's remaining control link."
+ },
+ {
+  "id": "book-ckpt-staging",
+  "file": "data_storage_checkpoint_staging",
+  "title": "Two-phase checkpoint staging (book)",
+  "caption": "The lane timeline from t0 to t3: local-write pause, async PFS copy, manifest publish; staged vs restorable spans."
+ },
+ {
+  "id": "book-commit-boundary",
+  "file": "data_storage_commit_boundary",
+  "title": "Commit boundary acknowledgment gap (book)",
+  "caption": "Event e42 written but never committed: append duplicates it, a stable key makes the replay an overwrite."
+ }
+]

@@ -1,0 +1,135 @@
+---
+title: 'Where a model runs is physics, not preference'
+date: '2026-11-26T00:00:00.000Z'
+author: Ben Ebsworth
+description: >-
+  A 4K drone frame takes two seconds to reach the cloud against a 16.7
+  millisecond deadline, and no network upgrade closes that gap, because
+  bandwidth and latency are different variables and one of them is priced in
+  light-speed. Cloud, edge, mobile and TinyML are not product categories but the
+  four constraint regimes the physical walls leave behind.
+labels: 'machine-learning,mlsys'
+draft: false
+release: true
+heroImage: /blog/deployment-is-a-physics-result/hero.webp
+takeaways:
+  - >-
+    A workload can be infeasible before it can be slow: memory capacity and
+    energy budget are preconditions checked before the timing equation is even
+    evaluated. The 99%-accurate model that pages on mobile RAM was never viable;
+    it just hadn't met the preconditions yet.
+  - >-
+    Bandwidth and latency are different variables. 5G raises one and does
+    nothing for the other, and no remote silicon buys back propagation time —
+    the transmission-plus-propagation floor is a rejection test, not an
+    optimization target.
+  - >-
+    The workload archetype is a regime, not a property of the model: the same
+    ResNet-50 is compute-bound at batch 256 and bandwidth-bound at batch 1. 'My
+    model is memory-bound' is shorthand missing three parameters.
+  - >-
+    Cloud, edge, mobile and TinyML are not four kinds of deployment but four
+    constraint regimes spanning nine orders of magnitude — each is the operating
+    envelope left over after one physical wall binds hardest.
+markdown_url: /blog/deployment-is-a-physics-result/
+canonical_url: 'https://benebsworth.com/blog/deployment-is-a-physics-result/'
+---
+## Key takeaways
+
+- A workload can be infeasible before it can be slow: memory capacity and energy budget are preconditions checked before the timing equation is even evaluated. The 99%-accurate model that pages on mobile RAM was never viable; it just hadn't met the preconditions yet.
+- Bandwidth and latency are different variables. 5G raises one and does nothing for the other, and no remote silicon buys back propagation time — the transmission-plus-propagation floor is a rejection test, not an optimization target.
+- The workload archetype is a regime, not a property of the model: the same ResNet-50 is compute-bound at batch 256 and bandwidth-bound at batch 1. 'My model is memory-bound' is shorthand missing three parameters.
+- Cloud, edge, mobile and TinyML are not four kinds of deployment but four constraint regimes spanning nine orders of magnitude — each is the operating envelope left over after one physical wall binds hardest.
+
+A drone inspecting a warehouse roof captures a 4K frame: 24.9 megabytes, 199 megabits. The plan is to beam it to the cloud for detection. Over a 100 Mbps uplink, the transmission alone takes about two seconds; add propagation and compute and you are at roughly 2.1 seconds end to end. The frame deadline, if the drone is tracking anything that moves at video rate, is 16.7 milliseconds. The plan misses its deadline by a factor of 125. Not by 25%, not by a hardware generation, not by a network upgrade. By two orders of magnitude.
+
+There is no version of "use a faster cloud" that fixes this, and the reason is the whole chapter in one sentence: where a model runs is not a preference, it is a physics result.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+This essay is part of a series where I work through *[Machine Learning Systems](https://mlsysbook.ai)* (Vijay Janapa Reddi, Harvard CS249r, CC-BY-NC-SA), one idea per chapter. [Last time](/blog/ml-systems-fail-silently/): ML systems fail silently. This is chapter 2, and the idea that stuck: deployment tiers are not product categories, they are the constraint regimes the physical walls leave behind.
+
+## The silicon contract
+
+Every machine you might run a model on offers what the book calls a silicon contract: a memory bandwidth, a peak compute rate, and a fixed latency entering the three terms of the iron law, plus two preconditions, memory capacity and energy budget, that get checked *before* the timing equation is even evaluated. That ordering matters more than it looks. A workload can be infeasible before it can be slow. The 99%-accurate model that pages on mobile RAM or thermally throttles in seconds was never viable; it just had not met the preconditions yet. Accuracy-first selection, picking the model and treating hardware as a downstream detail, is the chapter's named fallacy, and it fails precisely here, at the gate before the gate.
+
+## Wall one: light
+
+Fiber carries light at about 200,000 km/s, which means every remote path has a propagation floor:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+T_{\mathrm{RTT}} \ge \frac{2\,D}{c_{\mathrm{fiber}}} \approx \frac{2\,D}{200{,}000\ \mathrm{km/s}}
+```
+
+$$
+T_{\mathrm{RTT}} \ge \frac{2\,D}{c_{\mathrm{fiber}}} \approx \frac{2\,D}{200{,}000\ \mathrm{km/s}}
+$$
+
+California to Virginia is a 40 ms round trip before routing, queuing, or a single FLOP of compute. If your safety budget is 10 ms, remote cloud is not slow, it is *disqualified*, and the disqualification is physics rather than engineering. Emergency braking makes it visceral: at 100 km/h the car travels 2.8 metres in 100 ms. A remote round trip of 50-150 ms spends half to all of that budget before detection even runs.
+
+Here is the part the marketing skips. Bandwidth and latency are different variables, and the industry arms race is in exactly one of them. 5G raises bandwidth; it does nothing for the propagation and protocol floor. A tight deadline kills the remote path either way, and a loose one never needed the upgrade. You can watch this yourself below: crank the uplink bandwidth as high as you like and the total barely moves once the payload is small, because transmission stops being the dominant term, and the light barrier is what is left.
+
+> [LocalityBoundDemo component] An interactive rejection test for remote inference. Sliders for payload size, uplink bandwidth, distance, compute time and deadline (plus presets for a drone 4K frame, emergency braking and a wake word) stack the remote-path lower bound — transmission, propagation, compute — against the deadline on a log time axis, with a pass/fail verdict and miss ratio. An infinite-bandwidth readout deletes the transmission term to expose the propagation-plus-compute floor: the residue no network upgrade can buy down. The rendered post has the live version.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The locality invariant says the remote path costs at least transmission plus propagation plus remote compute. If even that idealized lower bound misses the deadline, the path is rejected outright: there is nothing left to optimize. This is a strange and useful inversion of the usual engineering reflex. You do not make the remote path fast enough; you check whether fast enough is even available, in principle, for free, and most of the time for tight loops it is not.
+
+## Wall two: power
+
+Dynamic power scales with capacitance times voltage squared times frequency, and since voltage scales with frequency, the practical result is cubic:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+P \propto C\,V^{2}\,f \quad\xrightarrow{\ V\propto f\ }\quad P \propto f^{3}
+```
+
+$$
+P \propto C\,V^{2}\,f \quad\xrightarrow{\ V\propto f\ }\quad P \propto f^{3}
+$$
+
+This is why clocks froze around 2005. Dennard scaling ended, transistors kept multiplying (~190× since), top clocks stayed near 4.7 GHz, and the slack went into cores and specialized units instead of frequency. It is also why your phone throttles. And here two different energy limits get constantly conflated: the *battery budget* (a 15 Wh pack gives you 15 hours at 1 W or 3 hours at 5 W, a capacity problem you can fix with duty cycling or a lighter model) and the *thermal ceiling* (about 2.5-5 W sustained in a passively cooled handset, which throttles you regardless of charge). One is a reservoir, the other is a radiator. Quantization shrinks the model's footprint roughly 4×, but leakage current and switching energy do not quantize with it, so INT8 is 4× the footprint, not 4× the battery life.
+
+## Wall three: memory
+
+Compute capability outgrows memory bandwidth every year, a ratio of about 1.33× annually, compounding to roughly 16× per decade. Data movement dominates both time and energy: an off-chip DRAM byte already costs orders of magnitude more than the arithmetic it feeds. This wall has a capacity shadow too, and at the bottom of the tier ladder the shadow is the whole story. TinyML is not scaled-down mobile: an ESP32-class part carries about 512 KB of SRAM at 1 mW average power, roughly *ten thousand times* less working memory than a phone. Below about 64 KB the answer is algorithmic redesign, not another quantization pass. You do not compress a ResNet into a microcontroller; you rethink what the model is.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+Cloud, edge, mobile and TinyML are not four kinds of deployment. Each is the operating regime left over after one wall binds hardest.
+
+Span the tiers and they cover nine orders of magnitude in power and memory, from a 3 MW cloud facility to a 1 mW microcontroller. The wake-word model on a smartwatch and the recommender system in a datacenter are the same kind of system only in one respect: both obey the iron law, and both are shaped by whichever wall they hit first.
+
+## The archetype is a regime, not a property
+
+Which wall a workload hits first classifies it: compute-bound, bandwidth-bound, capacity-bound, power-bound. The clean structure underneath is that two archetypes are iron-law terms, bandwidth and compute setting *time*, and two are preconditions, capacity and energy setting *feasibility*.
+
+But the surprise is that the archetype is not a property of the model. ResNet-50 is compute-bound at batch 256, where the weights are reused across hundreds of images and arithmetic intensity clears the ridge point, and bandwidth-bound at batch 1, where the same weights get streamed from memory for a single image. Same model, same weights, different regime, decided by the batch. "My model is memory-bound" is shorthand missing three parameters: bound to what, at what batch, on whose hardware balance? The question has a quantitative answer, the workload's arithmetic intensity against the platform's ridge point, and the answer changes when any of the three move.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+The iron law has two forms that do different work. The additive form prices one request's serialized path; the max form prices the interval between completions of an overlapped stream. Speeding a stage that is not the maximum buys nothing for the stream, though it still shortens one request's latency. Know which metric you are serving before you optimize, because they are not the same number and they are not improved by the same purchase.
+
+## The screen, and check zero
+
+So how do you actually choose? Not by accuracy. The book's discipline is a screen: four filters in the order they kill candidates fastest. Privacy first, because a legal prohibition beats any measurement. Then latency, the locality lower bound from the drone example. Then resource, capacity and sustained compute and energy, the preconditions. Then cost, and only matched lifecycle budgets, because hourly rates hide most of TCO and the cheapest box per inference can be the most expensive per year. If the surviving set is empty, you partition the pipeline across tiers, which is its own architecture with its own synchronized-state tax.
+
+And before all of it, check zero: does this need ML at all? A 50-line heuristic at 90% accuracy, maintained an hour a month, competes with an ML system at 95% that drags 2,000 lines of supporting infrastructure and 40 maintenance hours a month behind it. The complexity tax is 40× for five points of accuracy. Sometimes ML repays it with interest. Sometimes the heuristic was the right answer and the model was a very expensive way to learn that.
+
+## Recap
+
+Where a model runs is a physics result. Feasibility precedes speed: capacity and energy are preconditions checked before timing. The light barrier disqualifies remote paths for tight loops no matter what the bandwidth marketing says, because bandwidth and latency are different variables. Power is cubic in frequency, which froze the clocks and throttles the phone. Movement dominates arithmetic, which is why TinyML is a redesign and not a compression. The archetype is a regime that changes with batch, precision, and hardware, not a property of the model. And the screen, privacy, latency, resource, cost in that order, exists because the walls kill candidates at different speeds, and you want the fastest executioner first.
+
+## Reading further
+
+- **Janapa Reddi, *Machine Learning Systems*, chapter 2**: the chapter this essay works through, with the four tiers, the screens, and the voice-assistant cascade arithmetic in full. [mlsysbook.ai](https://mlsysbook.ai)
+- **Dennard et al. (1974), *Design of ion-implanted MOSFETs with very small physical dimensions***: the scaling rules whose end froze the clocks. Dense but short, and the foundation the power wall stands on. [IEEE](https://ieeexplore.ieee.org/document/1050511)
+- **Patterson (2004), *Latency lags bandwidth***: the classic measurement of the bandwidth-latency divergence, still the cleanest statement that the two variables move independently. [CACM](https://dl.acm.org/doi/10.1145/1031623.1031634)
+- **Horowitz (2014), *Computing's energy problem (and what we can do about it)***: the energy-per-operation table that makes data movement's dominance concrete. [ISSCC](https://ieeexplore.ieee.org/document/6757323)
+
+---
+
+*The series so far: [ML systems fail silently](/blog/ml-systems-fail-silently/). Next: chapter 3, the ML lifecycle, where the pipeline stages each become a contract the next stage inherits.*

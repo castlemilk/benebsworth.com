@@ -24,24 +24,22 @@ export default function StudyPage() {
       <JsonLd
         data={breadcrumbLd([
           { name: 'Home', url: `${SITE_URL}/` },
-          { name: 'Study', url: `${SITE_URL}/study/` },
+          { name: 'Learning', url: `${SITE_URL}/learning/` },
+          { name: 'Machine Learning Systems', url: `${SITE_URL}/learning/ml-systems/` },
         ])}
       />
       <SiteNav />
       <main id="main-content" className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-8">
-        <Breadcrumb className="mb-8" items={[{ label: 'Home', href: '/' }, { label: 'Study' }]} />
+        <Breadcrumb className="mb-8" items={[{ label: 'Home', href: '/' }, { label: 'Learning', href: '/learning/' }, { label: 'Machine Learning Systems' }]} />
 
-        <header className="mb-10 max-w-3xl">
-          <div className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">study · course</div>
+        <header className="mb-6 max-w-3xl">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{course.title}</h1>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            A step-by-step read-through of{' '}
+            Chapter notes, diagrams and self-tests for{' '}
             <a href={course.sourceUrl} className="underline underline-offset-4" target="_blank" rel="noreferrer">
               <em>{course.sourceTitle}</em>
             </a>{' '}
-            by {course.sourceAuthor} ({course.license}). Each chapter runs the same loop:{' '}
-            <strong>packet → review → quiz → essay</strong>. Packets and diagrams are my own study notes
-            synthesised from the book — attribution stays with the source.
+            by {course.sourceAuthor} ({course.license}).
           </p>
           <p className="mt-4 font-mono text-xs text-muted-foreground">
             <Link href="/study/concepts/" className="underline underline-offset-4 hover:text-foreground">

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 270" role="img" aria-labelledby="title desc">
+  <title id="title">Ideal time per batch on the two accelerators</title>
+  <desc id="desc">At batch one, A takes at least 67.1 microseconds and B 33.6. At batch 256, A takes at least 85.9 microseconds and B 171.8. Shorter bars have the lower modeled time floor.</desc>
+  <rect width="400" height="270" fill="#faf8f1"/>
+  <g font-family="system-ui,sans-serif" fill="#302c28">
+    <text x="20" y="30" font-size="19" font-weight="650">Ideal time per batch (µs)</text>
+    <text x="20" y="53" font-size="15">A · Compute machine</text>
+    <text x="202" y="53" font-size="15">B · Bandwidth machine</text>
+    <path d="M20 67H380M20 164H380" stroke="#d4cbbb"/>
+    <g font-size="15" font-weight="650">
+      <text x="20" y="91">Batch 1</text>
+      <text x="20" y="187">Batch 256</text>
+    </g>
+    <g font-size="14" text-anchor="end">
+      <text x="36" y="118">A</text><text x="36" y="144">B</text>
+      <text x="36" y="214">A</text><text x="36" y="240">B</text>
+      <text x="380" y="91">1.00 FLOP/byte</text><text x="380" y="187">227.56 FLOP/byte</text>
+    </g>
+    <g fill="#373d40">
+      <rect x="48" y="106" width="103" height="13"/><rect x="48" y="202" width="132" height="13"/>
+    </g>
+    <g fill="#9a4626">
+      <rect x="48" y="132" width="52" height="13"/><rect x="48" y="228" width="264" height="13"/>
+    </g>
+    <g font-size="16" font-weight="600">
+      <text x="159" y="118">67.1</text><text x="108" y="144">33.6</text>
+      <text x="188" y="214">85.9</text><text x="320" y="240">171.8</text>
+    </g>
+  </g>
+</svg>

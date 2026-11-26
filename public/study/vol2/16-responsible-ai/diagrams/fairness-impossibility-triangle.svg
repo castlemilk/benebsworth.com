@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Triangle of three fairness criteria that cannot all hold at once">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .vtx{fill:var(--diagram-accent-soft,#e8eefb);stroke:var(--diagram-accent,#3c64c8);stroke-width:1.4}
+    .vt{font:600 12px var(--font-sans,sans-serif);fill:var(--diagram-accent,#3c64c8)}
+    .edge{stroke:var(--diagram-edge,#bbb);stroke-width:1.4;fill:none}
+    .x{stroke:var(--diagram-warn,#c85a3c);stroke-width:2.4;fill:none;stroke-linecap:round}
+    .xt{font:600 11px var(--font-sans,sans-serif);fill:var(--diagram-warn,#c85a3c)}
+    .note{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+  </style>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="32">Three criteria, at most two chairs</text>
+  <text class="sub" x="30" y="51">Score-balance impossibility: with unequal base rates and imperfect prediction, the three vertices cannot hold jointly.</text>
+  <!-- triangle -->
+  <line class="edge" x1="380" y1="105" x2="165" y2="330"/>
+  <line class="edge" x1="380" y1="105" x2="595" y2="330"/>
+  <line class="edge" x1="165" y1="330" x2="595" y2="330"/>
+  <!-- vertices -->
+  <rect class="vtx" x="285" y="78" width="190" height="52" rx="8"/>
+  <text class="vt" x="380" y="100" text-anchor="middle">calibration within groups</text>
+  <text class="sm" x="380" y="118" text-anchor="middle">score means the same frequency in each</text>
+  <rect class="vtx" x="60" y="302" width="210" height="52" rx="8"/>
+  <text class="vt" x="165" y="324" text-anchor="middle">balance in positive class</text>
+  <text class="sm" x="165" y="342" text-anchor="middle">equal mean scores among repayers</text>
+  <rect class="vtx" x="490" y="302" width="210" height="52" rx="8"/>
+  <text class="vt" x="595" y="324" text-anchor="middle">balance in negative class</text>
+  <text class="sm" x="595" y="342" text-anchor="middle">equal mean scores among defaulters</text>
+  <!-- center X -->
+  <line class="x" x1="368" y1="218" x2="392" y2="242"/>
+  <line class="x" x1="392" y1="218" x2="368" y2="242"/>
+  <text class="xt" x="380" y="205" text-anchor="middle">all three at once</text>
+  <!-- edge annotations -->
+  <text class="note" x="222" y="196">pick any two:</text>
+  <text class="note" x="222" y="211">the third breaks</text>
+  <text class="note" x="452" y="196">escapes: perfect prediction</text>
+  <text class="note" x="452" y="211">or identical base rates</text>
+  <text class="note" x="300" y="352" text-anchor="middle">worked example: TPR 89% vs 60%, FPR 55% vs 20%</text>
+  <text class="sm" x="30" y="400">Choosing which vertex to sacrifice is a documented decision with an owner, not a modeling default.</text>
+</svg>

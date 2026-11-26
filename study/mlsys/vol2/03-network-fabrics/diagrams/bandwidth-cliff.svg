@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="bandwidth-cliff" class="study-fig-fit" viewBox="0 0 380 280" role="img" aria-labelledby="bc-title bc-desc">
+  <title id="bc-title">Nine times narrower at the node boundary</title>
+  <desc id="bc-desc">A node box holding eight GPUs at 450 gigabytes per second per direction each on NVLink, feeding through a cliff edge into one 50 gigabytes per second NDR port on the fabric side. The drop is marked roughly nine times.</desc>
+  <style>
+    .dark #bandwidth-cliff { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#bandwidth-cliff { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="280" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">The cliff lives at the node edge</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">Per-direction bandwidth · H100 class · persistent since 2016</text>
+
+    <!-- intra-node domain -->
+    <rect x="20" y="66" width="168" height="150" rx="6" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.4"/>
+    <text x="104" y="84" font-size="10.5" font-weight="650" text-anchor="middle" letter-spacing="1.2">INSIDE THE NODE</text>
+    <g stroke="var(--fig-outline, #364c50)" stroke-width="1.2" fill="var(--fig-paper, #f7f3e9)">
+      <rect x="34" y="96" width="30" height="22" rx="3"/><rect x="70" y="96" width="30" height="22" rx="3"/>
+      <rect x="106" y="96" width="30" height="22" rx="3"/><rect x="142" y="96" width="30" height="22" rx="3"/>
+      <rect x="34" y="126" width="30" height="22" rx="3"/><rect x="70" y="126" width="30" height="22" rx="3"/>
+      <rect x="106" y="126" width="30" height="22" rx="3"/><rect x="142" y="126" width="30" height="22" rx="3"/>
+    </g>
+    <g font-size="7.5" fill="var(--fig-rule, #6e6a5b)" text-anchor="middle">
+      <text x="49" y="110">GPU</text><text x="85" y="110">GPU</text><text x="121" y="110">GPU</text><text x="157" y="110">GPU</text>
+      <text x="49" y="140">GPU</text><text x="85" y="140">GPU</text><text x="121" y="140">GPU</text><text x="157" y="140">GPU</text>
+    </g>
+    <rect x="34" y="158" width="138" height="14" rx="3" fill="var(--fig-outline, #364c50)" opacity="0.25"/>
+    <text x="103" y="168" font-size="8" text-anchor="middle">NVLink 4 mesh</text>
+    <text x="104" y="194" font-size="13" font-weight="650" text-anchor="middle" fill="var(--fig-outline, #364c50)">450 GB/s each</text>
+    <text x="104" y="208" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">(900 GB/s bidirectional)</text>
+
+    <!-- cliff -->
+    <line x1="188" y1="66" x2="188" y2="216" stroke="var(--fig-mark, #b4571f)" stroke-width="2.4"/>
+    <text x="196" y="76" font-size="9" font-weight="650" fill="var(--fig-mark, #b4571f)">node edge</text>
+    <line x1="188" y1="140" x2="216" y2="140" stroke="var(--fig-mark, #b4571f)" stroke-width="2"/>
+    <path d="M 216 134 L 226 140 L 216 146 Z" fill="var(--fig-mark, #b4571f)"/>
+
+    <!-- fabric side -->
+    <rect x="226" y="118" width="134" height="60" rx="6" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.4"/>
+    <text x="293" y="140" font-size="10.5" font-weight="650" text-anchor="middle" letter-spacing="1">FABRIC PORT</text>
+    <text x="293" y="158" font-size="13" font-weight="650" text-anchor="middle" fill="var(--fig-outline, #364c50)">50 GB/s</text>
+    <text x="293" y="172" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">NDR InfiniBand · 400 Gb/s</text>
+
+    <!-- drop callout -->
+    <g>
+      <line x1="230" y1="100" x2="230" y2="112" stroke="var(--fig-mark, #b4571f)" stroke-width="1.2" stroke-dasharray="2 3"/>
+      <text x="234" y="98" font-size="10" font-weight="650" fill="var(--fig-mark, #b4571f)">≈ 9× narrower</text>
+      <text x="234" y="110" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">per direction, first hop</text>
+    </g>
+
+    <!-- footer -->
+    <text x="20" y="244" font-size="10" fill="var(--fig-rule, #6e6a5b)">Everything off-node crosses this ratio. Placement — what stays</text>
+    <text x="20" y="258" font-size="10" fill="var(--fig-rule, #6e6a5b)">inside the NVLink domain — is the design lever, not the port spec.</text>
+  </g>
+</svg>

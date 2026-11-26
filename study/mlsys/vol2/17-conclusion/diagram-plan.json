@@ -1,0 +1,43 @@
+{
+ "source": "packet.md",
+ "sections": {
+  "Thesis": {
+   "proseOnly": "The thesis states the scale-moment claim in its precise form; prose carries it."
+  },
+  "Six Principles, Six Questions": {
+   "figure": "::fig[six-principles]",
+   "teaches": "Each principle pairs a governing question with the metric that tests it; the fleet can bind at any of the six layers.",
+   "source": "Book six-principles table redrawn as a question-metric pairing."
+  },
+  "The Fleet Law Prices Growth": {
+   "figure": "::fig[expansion-arithmetic]",
+   "teaches": "Doubling halves ideal step time and job MTBF together; checkpoint overhead climbs; accelerator-hours rise even at ideal speedup.",
+   "source": "Book expansion worked example with Young-Daly overhead arithmetic."
+  },
+  "Stragglers and Tails Are Structural": {
+   "proseOnly": "The two probability facts are one-dimensional and carried by their equations plus the fan-out chart."
+  },
+  "No Corner of the Taxonomy Dominates": {
+   "figure": "::fig[constraint-migration]",
+   "teaches": "The binding constraint migrates across layers as each term shrinks; it never disappears.",
+   "source": "Book archetype mapping and the migration-of-bottlenecks practice."
+  },
+  "The Constraint Moves Next": {
+   "figure": "::fig[fleet-stack]",
+   "teaches": "The four-band stack supplies the rates and obligations each layer inherits; test-time compute and new substrates relocate cost without exempting it.",
+   "source": "Book fleet-stack figure and path-forward discussion."
+  },
+  "Fallacies and Pitfalls": {
+   "proseOnly": "Fallacies are corrective prose."
+  },
+  "The physics": {
+   "proseOnly": "Reference table."
+  },
+  "Glossary": {
+   "proseOnly": "Definitions."
+  },
+  "Open questions": {
+   "proseOnly": "Reflection prompts."
+  }
+ }
+}

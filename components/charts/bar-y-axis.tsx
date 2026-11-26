@@ -22,6 +22,7 @@ interface BarYAxisLabelProps {
   y: number;
   bandHeight: number;
   isHovered: boolean;
+  maxWidth: number;
 }
 
 function BarYAxisLabel({
@@ -29,6 +30,7 @@ function BarYAxisLabel({
   y,
   bandHeight,
   isHovered,
+  maxWidth,
 }: BarYAxisLabelProps) {
   return (
     <div
@@ -50,7 +52,8 @@ function BarYAxisLabel({
           opacity: 0.7,
           color: "var(--chart-label, var(--color-zinc-500))",
         }}
-        style={{ maxWidth: 70 }}
+        style={{ maxWidth }}
+        title={label}
         transition={{ duration: 0.15 }}
       >
         {label}
@@ -128,6 +131,7 @@ const BarYAxisInner = memo(function BarYAxisInner({
           isHovered={hoveredBarIndex === item.index}
           key={`${item.label}-${item.y}`}
           label={item.label}
+          maxWidth={Math.max(0, margin.left - 8)}
           y={item.y}
         />
       ))}

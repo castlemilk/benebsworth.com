@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 403" role="img" aria-labelledby="study-svg-accelerator-evaluation-sequence-title" aria-describedby="study-svg-accelerator-evaluation-sequence-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-accelerator-evaluation-sequence-title">From workload requirements to procurement</title>
+  <desc id="study-svg-accelerator-evaluation-sequence-desc">Reject candidates that miss service requirements before ranking the feasible platforms by the cost and energy of delivering useful work. Set service requirements: Specify workload mix, quality, capacity, and latency targets. Then Measure useful output: Count timely, successful results under representative load. Then Test the bottleneck: Change one relevant resource or mapping choice and remeasure. Then Compare feasible systems: Use measured power, useful throughput, and total operating cost.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Set service requirements</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Specify workload mix, quality,</tspan>
+    <tspan x="19" y="64">capacity, and latency targets.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Measure useful output</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Count timely, successful results</tspan>
+    <tspan x="19" y="165">under representative load.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Test the bottleneck</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Change one relevant resource or</tspan>
+    <tspan x="19" y="266">mapping choice and remeasure.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Compare feasible systems</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Use measured power, useful</tspan>
+    <tspan x="19" y="367">throughput, and total operating</tspan>
+    <tspan x="19" y="384">cost.</tspan></text>
+  </g>
+</svg>

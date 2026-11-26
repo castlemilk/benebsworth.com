@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, type CSSProperties } from 'react'
+import { useId } from 'react'
 import { smoothPath, type Pt } from '@/components/hiking/journey-core'
 import { KIND_ICON, type IconKind } from './icons'
 import { accentStyle } from './primitives'

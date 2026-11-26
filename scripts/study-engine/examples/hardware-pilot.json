@@ -1,0 +1,58 @@
+{
+  "id": "vol1/02_hardware_pilot",
+  "title": "Accelerator tile capacity",
+  "question": "How does changing tile width affect the local memory needed for a matrix multiply?",
+  "source": {
+    "file": "study/cs249r_book/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd",
+    "url": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd"
+  },
+  "sections": [{
+    "id": "tile-capacity",
+    "heading": "Fit operands and accumulators on chip",
+    "sourceHeading": "Anatomy of an Accelerator",
+    "terms": ["tile capacity", "local reuse", "on-chip storage"],
+    "goal": "Account for local input, weight, accumulator, and workspace storage and explain how a narrower output tile can fit a fixed SRAM budget.",
+    "case": "Hypothetical matrix multiply: an input tile A is 96 by 128 and a weight tile B is 128 by 64, producing a 96 by 64 output tile. Each input and weight element occupies 2 bytes; each FP32 accumulator occupies 4 bytes. Both A and B are double buffered, the accumulator is single buffered, and a separate 12 KiB workspace is resident. Assume no other allocations, padding, or alignment. Available SRAM is 96 KiB, with 1 KiB = 1024 bytes. For the transfer, halve the output tile width from 64 to 32 while keeping the other dimensions, buffering, precision, and workspace unchanged.",
+    "facts": {
+      "rows": 96,
+      "depth": 128,
+      "width": 64,
+      "narrowWidth": 32,
+      "operandBytes": 2,
+      "accumulatorBytes": 4,
+      "buffers": 2,
+      "bytesPerKiB": 1024,
+      "workspaceKiB": 12,
+      "sramKiB": 96,
+      "inputBytes": ["*", "rows", "depth", "operandBytes", "buffers"],
+      "weightBytes": ["*", "depth", "width", "operandBytes", "buffers"],
+      "accumulatorTotalBytes": ["*", "rows", "width", "accumulatorBytes"],
+      "inputKiB": ["/", "inputBytes", "bytesPerKiB"],
+      "weightKiB": ["/", "weightBytes", "bytesPerKiB"],
+      "accumulatorKiB": ["/", "accumulatorTotalBytes", "bytesPerKiB"],
+      "baselineKiB": ["+", "inputKiB", "weightKiB", "accumulatorKiB", "workspaceKiB"],
+      "narrowWeightBytes": ["*", "depth", "narrowWidth", "operandBytes", "buffers"],
+      "narrowAccumulatorBytes": ["*", "rows", "narrowWidth", "accumulatorBytes"],
+      "narrowWeightKiB": ["/", "narrowWeightBytes", "bytesPerKiB"],
+      "narrowAccumulatorKiB": ["/", "narrowAccumulatorBytes", "bytesPerKiB"],
+      "narrowTotalKiB": ["+", "inputKiB", "narrowWeightKiB", "narrowAccumulatorKiB", "workspaceKiB"],
+      "spareKiB": ["-", "sramKiB", "narrowTotalKiB"]
+    },
+    "workedFacts": ["baselineKiB", "sramKiB"],
+    "visual": {
+      "title": "Baseline tile storage",
+      "caption": "The baseline includes double-buffered operands, a single accumulator and workspace; compare its {{baselineKiB}} KiB footprint with the SRAM limit.",
+      "unit": "KiB",
+      "rows": [
+        {"label": "Input buffers", "fact": "inputKiB"},
+        {"label": "Weight buffers", "fact": "weightKiB"},
+        {"label": "Accumulator", "fact": "accumulatorKiB"},
+        {"label": "Workspace", "fact": "workspaceKiB"},
+        {"label": "Baseline total", "fact": "baselineKiB"},
+        {"label": "SRAM limit", "fact": "sramKiB"}
+      ]
+    },
+    "transfer": "Halve the output tile width to 32. Calculate the new total resident footprint in KiB, then say whether it fits and how much SRAM remains; show the input, weight, accumulator and workspace contributions.",
+    "answerFact": "narrowTotalKiB"
+  }]
+}

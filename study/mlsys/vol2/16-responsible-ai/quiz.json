@@ -1,0 +1,333 @@
+{
+ "title": "Responsible AI \u2014 self-test",
+ "questions": [
+  {
+   "id": "q1-governance-band",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "In the ML fleet stack, why does Responsible AI constitute the Governance band rather than existing as a supplementary post-training checklist?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Because it replaces lower-level distributed execution frameworks with legal compliance parsers that scan inference traffic for regulatory violations in real time, translating statute text directly into serving configuration without human interpretation."
+    },
+    {
+     "id": "b",
+     "label": "Because it serves solely to optimize training throughput and hardware acceleration efficiency across the fleet's accelerator population."
+    },
+    {
+     "id": "c",
+     "label": "Because it establishes requirements, evidence, and accountable owners for why the system runs and whom it serves, including risks that statistical optimization alone does not resolve."
+    },
+    {
+     "id": "d",
+     "label": "Because it operates exclusively as a hardware watchdog circuit preventing physical server overheating in dense accelerator deployments."
+    }
+   ],
+   "correctOptionId": "c",
+   "explanation": "Governance defines intended use, requirements, evidence, owners, and response paths for the fleet. These constraints make optimization answerable to stated human and legal requirements; their existence does not guarantee absence of harm."
+  },
+  {
+   "id": "q2-assurance-dashboard",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A product team submits a fairness dashboard showing small subgroup gaps as proof that its loan-screening system is responsible. Within an assurance case, what role should the dashboard play?",
+   "options": [
+    {
+     "id": "a",
+     "label": "It is sufficient proof, because a fairness dashboard already covers the system's privacy, security, and contestability obligations across the deployment lifecycle, so no further evidence collection or ownership assignment is required for launch."
+    },
+    {
+     "id": "b",
+     "label": "It is evidence for a bounded claim, valid only under stated assumptions, and it becomes operational only when an accountable owner can act on it and affected people can contest decisions."
+    },
+    {
+     "id": "c",
+     "label": "It replaces the claim and argument entirely, because measured results speak for themselves without requiring interpretation or stated assumptions."
+    },
+    {
+     "id": "d",
+     "label": "It is irrelevant once the model registry records which weights reached production, since versioning establishes accountability."
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "A fairness dashboard, privacy accountant, red-team report, or carbon inventory is evidence for a bounded claim; none is itself proof that the full system is responsible. The assurance case links claim, argument, evidence, owner, and action."
+  },
+  {
+   "id": "q3-impossibility-escapes",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "For risk scores, the chapter's score-balance impossibility result combines calibration within each group with equal mean scores across groups among positive outcomes and, separately, among negative outcomes. Which cases escape the stated incompatibility?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Whenever the training dataset contains more than one million balanced records across all demographic slices of the population, because statistical estimation error is the sole source of the incompatibility."
+    },
+    {
+     "id": "b",
+     "label": "Whenever the model is trained with L2 regularization followed by post-hoc isotonic calibration on a held-out validation set."
+    },
+    {
+     "id": "c",
+     "label": "Only in degenerate or trivial cases, such as perfect prediction with zero error or identical base rates across the groups being compared."
+    },
+    {
+     "id": "d",
+     "label": "Whenever demographic parity is explicitly enforced through multi-task adversarial training with a gradient-reversal layer."
+    }
+   ],
+   "correctOptionId": "c",
+   "explanation": "With unequal base rates and imperfect prediction, groupwise calibration and balance of mean scores within both outcome classes cannot all hold. Equal base rates or perfect prediction are the exceptional cases. No data volume or training technique removes arithmetic."
+  },
+  {
+   "id": "q4-intervention-tiers",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "Which statement correctly differentiates preprocessing, in-processing, and postprocessing fairness interventions with respect to ML system infrastructure requirements?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Preprocessing modifies serving thresholds at inference time, in-processing requires anonymizing all operational logs before training can start, and postprocessing alters training labels inside the feature store retroactively after deployment."
+    },
+    {
+     "id": "b",
+     "label": "Preprocessing changes training data and needs lineage; in-processing changes training optimization; group-specific threshold postprocessing requires authorized group information at the decision component."
+    },
+    {
+     "id": "c",
+     "label": "All three methods require identical runtime compute overhead on the live model serving path, because fairness logic executes at inference regardless of tier."
+    },
+    {
+     "id": "d",
+     "label": "Preprocessing applies only to TinyML devices, while in-processing and postprocessing can only execute inside cloud clusters with dedicated fairness accelerators."
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Preprocessing changes the training distribution, in-processing changes optimization, postprocessing changes the decision policy. Group-specific thresholds need authorized group information at the decision component, a dependency with its own legal and ethical review."
+  },
+  {
+   "id": "q5-metric-freshness",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A streaming loan-approval service records authorized group attributes and decisions immediately, but repayment outcomes arrive months later. Why can demographic-parity statistics update earlier than equalized-odds statistics?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Demographic parity depends only on model predictions and input demographics available at inference time, whereas equalized odds requires true outcome labels that arrive with substantial real-world latency."
+    },
+    {
+     "id": "b",
+     "label": "Demographic parity requires calculating large matrix inverses that execute faster on GPU tensor cores than the iterative constraint solvers that equalized odds needs for evaluating streaming data at scale."
+    },
+    {
+     "id": "c",
+     "label": "Equalized odds is a convex optimization problem that cannot be evaluated on streaming CPU worker nodes without specialized hardware acceleration support."
+    },
+    {
+     "id": "d",
+     "label": "Demographic parity violates privacy regulations when processed asynchronously in background databases, forcing it to complete synchronously during inference."
+    }
+   ],
+   "correctOptionId": "a",
+   "explanation": "Demographic parity uses group membership and decisions, both available when the decision is made. Equalized odds also needs matched positive and negative outcome labels. Label delay limits the freshness of error-rate metrics, so some fairness evidence is always older than the system it describes."
+  },
+  {
+   "id": "q6-sisa-erasure",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "An engineering team implements SISA training with 100 independent shards to support GDPR Article 17 erasure for a large model. Under what operational workload does this sharded unlearning strategy lose its cost advantage?",
+   "options": [
+    {
+     "id": "a",
+     "label": "When the model is quantized from FP16 to INT8 for edge deployment, because quantization entangles parameters across shard boundaries."
+    },
+    {
+     "id": "b",
+     "label": "When the primary storage system transitions from NVMe SSDs to distributed object storage, because retraining becomes network-bound."
+    },
+    {
+     "id": "c",
+     "label": "When the training pipeline switches from plain stochastic gradient descent to the Adam optimizer, because the second-moment optimizer state statistically couples parameter updates across all of the shard boundaries."
+    },
+    {
+     "id": "d",
+     "label": "When the daily volume of erasure requests is high enough that each retraining batch touches essentially all 100 shards, eroding the sharding-only saving."
+    }
+   ],
+   "correctOptionId": "d",
+   "explanation": "One isolated deletion affects one of a hundred shards. A batch touching essentially all shards erodes the saving. Request distribution, batching intervals, saved slice states, and validation all shape the real cost."
+  },
+  {
+   "id": "q7-dp-sgd-operations",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "In Differentially Private Stochastic Gradient Descent, what are the two core operations applied to gradients before weight updates, and what are their primary systems impacts?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Gradient quantization to 4 bits and dropout pruning applied before each weight update in the training loop, reducing GPU memory consumption by roughly half while preserving convergence rates across all standard benchmark training workloads evaluated."
+    },
+    {
+     "id": "b",
+     "label": "Gradient checkpointing and layer freezing, eliminating backpropagation memory overhead across the training pipeline."
+    },
+    {
+     "id": "c",
+     "label": "Per-example gradient clipping to a maximum norm and calibrated Gaussian noise addition, whose privacy bound requires sampling and composition accounting and whose compute and utility costs must be measured per configuration."
+    },
+    {
+     "id": "d",
+     "label": "Spectral normalization of weight matrices and label smoothing, eliminating adversarial vulnerability with zero additional compute overhead."
+    }
+   ],
+   "correctOptionId": "c",
+   "explanation": "Clipping bounds each example's gradient contribution; noise, sampling, and composition accounting determine the reported privacy bound. Compute and utility changes must be measured for the selected configuration; extra epochs are not guaranteed."
+  },
+  {
+   "id": "q8-shapley-enumeration",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A model-agnostic explanation service enumerates all feature coalitions for 20 input features, taking at least one microsecond per coalition. Why does this exhaustive Shapley calculation exceed a 100 ms inline serving budget?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Because Shapley values can only be computed in double-precision floating-point arithmetic, which crashes GPU tensor cores on modern accelerators and forces the computation onto slow host memory fallback paths."
+    },
+    {
+     "id": "b",
+     "label": "It evaluates 2^20 coalitions, requiring more than one second even at one microsecond per coalition; a cheaper method or a separate explanation path is needed."
+    },
+    {
+     "id": "c",
+     "label": "Because cooperative game theory axioms prohibit computing feature contributions for tabular data of any dimensionality."
+    },
+    {
+     "id": "d",
+     "label": "Because exact SHAP requires reading the client's raw hardware registers during inference, adding unavoidable bus latency."
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Exhaustive enumeration visits 2^20 = 1,048,576 coalitions; at one microsecond each that exceeds one second, before counting the model evaluations each coalition value can require. TreeSHAP exploits tree structure; sampling and caching trade fidelity for cost."
+  },
+  {
+   "id": "q9-certificate-boundaries",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A robustness report for a deployed model includes a randomized-smoothing certificate and an empirical attack evaluation. What must the assurance case record about each before a launch authority relies on it?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Nothing beyond the headline accuracy number, because both evaluation results already establish that the end-to-end workflow is safe for deployment across all operating conditions the fleet will encounter in production."
+    },
+    {
+     "id": "b",
+     "label": "Only the empirical result, because a certificate is a mathematical proof and needs no stated scope to remain valid."
+    },
+    {
+     "id": "c",
+     "label": "Only the certificate, because empirical attack results already guarantee immunity against all unseen future attacks."
+    },
+    {
+     "id": "d",
+     "label": "The certificate's norm, radius, confidence, and model configuration, and the empirical evaluation's attack protocol, since each supports a claim only within those stated boundaries."
+    }
+   ],
+   "correctOptionId": "d",
+   "explanation": "A certificate proves a property only for its stated norm, radius, confidence, and model configuration; an empirical evaluation reports resistance only under the tested attack protocol. Neither establishes safety for the complete workflow."
+  },
+  {
+   "id": "q10-paradox-of-reliability",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "In human-AI collaborative decision-making, what is the paradox of reliability and what is its primary engineering implication for interface design?",
+   "options": [
+    {
+     "id": "a",
+     "label": "High apparent reliability can encourage over-reliance; interface design must be evaluated by how often users accept erroneous recommendations, correct errors, or introduce new errors, not by the overall override rate."
+    },
+    {
+     "id": "b",
+     "label": "A model with 50 percent accuracy causes hardware crashes more frequently than a model with 90 percent accuracy, because predictive uncertainty propagates through the inference pipeline into memory corruption faults on the serving hosts."
+    },
+    {
+     "id": "c",
+     "label": "As model latency decreases, network packet loss increases proportionally, so interfaces must add confirmation delays artificially."
+    },
+    {
+     "id": "d",
+     "label": "Highly compressed models consume more DRAM than uncompressed ones, so interfaces must pre-cache all possible recommendations."
+    }
+   ],
+   "correctOptionId": "a",
+   "explanation": "Automation bias can lead users to accept a wrong recommendation because they over-trust the system. A low overall override rate cannot distinguish few model errors from failure to notice errors; the evaluation must measure error-specific behavior."
+  },
+  {
+   "id": "q11-healthcare-proxy",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A study of a widely used healthcare risk-prediction algorithm found that predicted healthcare expenditure could reproduce racial disparities in access to care. Why does this example challenge the claim that more data and better algorithms alone eliminate bias?",
+   "options": [
+    {
+     "id": "a",
+     "label": "The training dataset contained fewer than one thousand total medical records across all patient populations and care settings, making every downstream statistical estimate unreliable regardless of the model class or training procedure chosen by the team, as documented in the deployment review checklist for the serving fleet."
+    },
+    {
+     "id": "b",
+     "label": "The engineers selected healthcare expenditure as a proxy for health need; because Black patients faced historical access barriers and lower spending at equal illness, the model inferred they were less sick, and no improvement in predicting the proxy repairs the target."
+    },
+    {
+     "id": "c",
+     "label": "The deep neural network suffered from vanishing gradients across recurrent layers, corrupting the learned representations beyond repair."
+    },
+    {
+     "id": "d",
+     "label": "An external adversary poisoned the training labels with malicious random noise, so the failure is a security incident rather than a design flaw."
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Expenditure was a flawed proxy for need: patients with similar illness burden incurred different costs because access differed. In the simulated correction, the Black share of patients identified for additional care at the threshold rose from 17.7 percent to 46.5 percent. The pipeline worked exactly as specified; the specification was wrong."
+  },
+  {
+   "id": "q12-explanation-capacity",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A service uses 100 ms of baseline processing per request at 10,000 QPS. Adding inline explanations requires another 50 to 200 ms of processing. What is the approximate capacity increase needed to preserve throughput, and does it also preserve a 100 ms latency limit?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Approximately 1.5x to 3x capacity can preserve throughput, but serial request latency rises to 150 to 300 ms; meeting 100 ms requires reducing or moving explanation work off the critical path."
+    },
+    {
+     "id": "b",
+     "label": "No capacity increase is needed because SHAP values are precomputed during compiler optimization passes over the model graph, so explanation work adds no marginal cost to the inference serving path at runtime."
+    },
+    {
+     "id": "c",
+     "label": "Serving capacity can be reduced by half because explanations compress network bandwidth requirements for each response."
+    },
+    {
+     "id": "d",
+     "label": "The system requires upgrading DRAM from DDR4 to DDR5 with zero additional server nodes, because explanation work is memory-bandwidth bound."
+    }
+   ],
+   "correctOptionId": "a",
+   "explanation": "Processing demand rises from 100 ms to 150 to 300 ms per request, a 1.5x to 3x capacity ratio under the simplified sizing assumptions. More replicas preserve throughput but cannot remove serial work from an individual request."
+  },
+  {
+   "id": "q13-fairness-arithmetic",
+   "kind": "NUMERIC",
+   "source": "ORIGINAL",
+   "prompt": "In the chapter's loan scenario, Group A approves 70 of 100 applicants (40 repay, 30 default) and rejects 30 (5 would have repaid). Group B approves 40 of 100 (30 repay, 10 default) and rejects 60 (20 would have repaid). Compute the equality-of-opportunity gap: the absolute difference in true positive rates between the groups.",
+   "modelAnswer": "Group A TPR: 40 approved repayers out of 45 total repayers (40 approved plus 5 rejected who would have repaid) = 40/45 \u2248 0.889. Group B TPR: 30 out of 50 total repayers (30 plus 20) = 30/50 = 0.60. The gap is approximately 0.29, or 29 percentage points. The outcome-conditional criteria cannot even be computed until repayment labels arrive months after the decisions.",
+   "explanation": "Group A TPR: 40 approved repayers out of 45 total repayers (40 approved plus 5 rejected who would have repaid) = 40/45 \u2248 0.889. Group B TPR: 30 out of 50 total repayers (30 plus 20) = 30/50 = 0.60. The gap is approximately 0.29, or 29 percentage points. The outcome-conditional criteria cannot even be computed until repayment labels arrive months after the decisions."
+  },
+  {
+   "id": "q14-proxy-feynman",
+   "kind": "FEYNMAN",
+   "source": "ORIGINAL",
+   "prompt": "A colleague argues that their hiring model must be fair because it passes a demographic-parity check with flying colors, uses state-of-the-art architectures, and trains on millions of balanced records. Explain in plain language why each of those three defenses can be true while the system still produces measured, documented harm.",
+   "modelAnswer": "All three defenses guard the wrong layer. Demographic parity is one criterion among several in mathematical tension: equalizing selection rates says nothing about calibration or error rates within groups, and the impossibility result means some criterion is always being sacrificed whether the team chooses it or not. Architecture quality is irrelevant to the fairness question because the failure modes live in the target and the deployment context, not the model class; a perfect model of a biased proxy optimizes the bias faithfully. Data volume and balance cannot repair a misspecified target either: the healthcare algorithm predicted expenditure accurately, and expenditure encoded differential access to care, so more accurate prediction of the proxy meant more faithful reproduction of the disparity. The questions that matter are what the system is optimizing, who chose that target, which criterion was deliberately sacrificed, and who owns the outcome. Those are governance questions, and none of the three defenses answers them.",
+   "explanation": "All three defenses guard the wrong layer. Demographic parity is one criterion among several in mathematical tension: equalizing selection rates says nothing about calibration or error rates within groups, and the impossibility result means some criterion is always being sacrificed whether the team chooses it or not. Architecture quality is irrelevant to the fairness question because the failure modes live in the target and the deployment context, not the model class; a perfect model of a biased proxy optimizes the bias faithfully. Data volume and balance cannot repair a misspecified target either: the healthcare algorithm predicted expenditure accurately, and expenditure encoded differential access to care, so more accurate prediction of the proxy meant more faithful reproduction of the disparity. The questions that matter are what the system is optimizing, who chose that target, which criterion was deliberately sacrificed, and who owns the outcome. Those are governance questions, and none of the three defenses answers them."
+  }
+ ]
+}

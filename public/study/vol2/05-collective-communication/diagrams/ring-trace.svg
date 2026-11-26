@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ring-trace" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="rt-title rt-desc">
+  <title id="rt-title">Six steps to one sum</title>
+  <desc id="rt-desc">A four-rank Ring AllReduce trace drawn as a grid of six step columns and four rank rows. The first three columns form the scatter-reduce phase where each rank ends owning one fully reduced chunk. The last three form the all-gather phase where completed chunks circulate until every rank holds every sum.</desc>
+  <style>
+    .dark #ring-trace { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#ring-trace { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Six steps to one sum</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">N=4 ring · 2(N−1) = 6 steps · per-rank sends ≈ 2M</text>
+
+    <!-- phase banners -->
+    <rect x="64" y="58" width="140" height="16" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.18"/>
+    <text x="134" y="70" font-size="9" text-anchor="middle" font-weight="650">scatter-reduce · 3 steps</text>
+    <rect x="208" y="58" width="140" height="16" rx="3" fill="var(--fig-outline, #364c50)" opacity="0.16"/>
+    <text x="278" y="70" font-size="9" text-anchor="middle" font-weight="650">all-gather · 3 steps</text>
+
+    <!-- step columns -->
+    <g font-size="9" font-family="ui-monospace, monospace" text-anchor="middle">
+      <!-- header row -->
+      <text x="50" y="90" font-family="system-ui" font-weight="650" font-size="9.5" text-anchor="end">rank</text>
+      <text x="88" y="90" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">s1</text>
+      <text x="128" y="90" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">s2</text>
+      <text x="168" y="90" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">s3</text>
+      <text x="238" y="90" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">s4</text>
+      <text x="278" y="90" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">s5</text>
+      <text x="318" y="90" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">s6</text>
+
+      <!-- rank 0: owns a -->
+      <text x="50" y="118" font-size="9.5" text-anchor="end" font-family="system-ui" font-weight="650">r0</text>
+      <rect x="70" y="106" width="36" height="16" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="88" y="118">a</text>
+      <rect x="110" y="106" width="36" height="16" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="128" y="118">a+?</text>
+      <rect x="150" y="106" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="168" y="118" font-weight="700">Σa</text>
+      <rect x="220" y="106" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.18"/><text x="238" y="118">Σa Σd</text>
+      <rect x="260" y="106" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.18"/><text x="278" y="118">+Σc</text>
+      <rect x="300" y="106" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="318" y="118" font-weight="700">all Σ</text>
+
+      <!-- rank 1: owns b -->
+      <text x="50" y="154" font-size="9.5" text-anchor="end" font-family="system-ui" font-weight="650">r1</text>
+      <rect x="70" y="142" width="36" height="16" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="88" y="154">b</text>
+      <rect x="110" y="142" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="128" y="154" font-weight="700">Σb</text>
+      <rect x="150" y="142" width="36" height="16" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="168" y="154">Σb</text>
+      <rect x="220" y="142" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.18"/><text x="238" y="154">Σb Σa</text>
+      <rect x="260" y="142" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.18"/><text x="278" y="154">+Σd</text>
+      <rect x="300" y="142" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="318" y="154" font-weight="700">all Σ</text>
+
+      <!-- rank 2: owns c -->
+      <text x="50" y="190" font-size="9.5" text-anchor="end" font-family="system-ui" font-weight="650">r2</text>
+      <rect x="70" y="178" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="88" y="190" font-weight="700">Σc</text>
+      <rect x="110" y="178" width="36" height="16" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="128" y="190">Σc</text>
+      <rect x="150" y="178" width="36" height="16" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="168" y="190">Σc</text>
+      <rect x="220" y="178" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.18"/><text x="238" y="190">Σc Σb</text>
+      <rect x="260" y="178" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.18"/><text x="278" y="190">+Σa</text>
+      <rect x="300" y="178" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="318" y="190" font-weight="700">all Σ</text>
+
+      <!-- rank 3: owns d -->
+      <text x="50" y="226" font-size="9.5" text-anchor="end" font-family="system-ui" font-weight="650">r3</text>
+      <rect x="70" y="214" width="36" height="16" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="88" y="226">d</text>
+      <rect x="110" y="214" width="36" height="16" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="128" y="226">d+?</text>
+      <rect x="150" y="214" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="168" y="226" font-weight="700">Σd</text>
+      <rect x="220" y="214" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.18"/><text x="238" y="226">Σd Σc</text>
+      <rect x="260" y="214" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.18"/><text x="278" y="226">+Σb</text>
+      <rect x="300" y="214" width="36" height="16" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="318" y="226" font-weight="700">all Σ</text>
+    </g>
+
+    <!-- ring arrow note -->
+    <path d="M70 250 H336" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+    <text x="190" y="262" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">each step: send one M/N chunk right, receive one from the left</text>
+    <text x="190" y="284" font-size="9.5" text-anchor="middle" font-weight="600">bandwidth-optimal bytes · the bill is 2(N−1) startup rounds</text>
+  </g>
+</svg>

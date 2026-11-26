@@ -1,0 +1,35 @@
+{
+  "source": "index.mdx",
+  "sections": {
+    "First, let the token read": {
+      "figure": "./attention-cycle.svg",
+      "teaches": "Identify which of five layers can read the full causal prefix and locate the local window.",
+      "source": "Aleph Alpha technical report §2.1.3 and Figure 4."
+    },
+    "Then send it through seven experts": {
+      "figure": "./sparse-path.svg",
+      "teaches": "Distinguish the stored expert pool from the six selected experts and one shared expert evaluated for a token.",
+      "source": "Technical report Table 2 and §2.1.5."
+    },
+    "Teach the base model, then teach the assistant": {
+      "figure": "./training-stages.svg",
+      "teaches": "Explain how the data mix and maximum context change through the three base stages. The adjacent rollout sketch distinguishes post-training by reward.",
+      "source": "Technical report Figure 3 and §3.2."
+    },
+    "Where the released model performs well": {
+      "figure": "./checkpoint-benchmarks.svg",
+      "teaches": "Compare the checkpoint gains across instruction following, banking, coding and tool calling.",
+      "source": "Aleph Alpha technical report Table 25. The report used different sampling settings for the two checkpoints."
+    },
+    "How far can the model read?": {
+      "figure": "./ruler-context.svg",
+      "teaches": "Locate the base-model crossover at 1M tokens and compare it with the results at the 256k training limit.",
+      "source": "Aleph Alpha technical report Table 18, RULER base-model results at temperature zero."
+    },
+    "Read both axes of the throughput chart": {
+      "figure": "./decode-throughput-kpi.svg",
+      "teaches": "Identify the Origin baseline and live context behind each reported decode throughput multiplier.",
+      "source": "Aleph Alpha technical report Figure 1 and Appendix A. The preceding toy chart explains the frontier axes."
+    }
+  }
+}

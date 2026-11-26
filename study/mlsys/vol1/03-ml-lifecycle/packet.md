@@ -362,31 +362,6 @@ $$
    priced. If a clinic exits the program, is retraining-without-their-data
    the only real option at DR scale?
 
-## Figures to look at in the book
-
-Reference links appear alongside the discussion above; open the source book for
-the full figures, captions and surrounding prose.
-
-- [`fig-lifecycle-overview`](#fig-lifecycle-overview): the six-stage loop with
-  artifacts on the edges: the figure the whole chapter defends. Ours
-  ([`lifecycle-loop.svg`](#fig-lifecycle-loop)) distils the same cycle with
-  the operational phase shaded.
-- [`fig-ml-lifecycle`](#fig-lifecycle-detail): the dual-pipeline detail view
-  (upper data pipeline, lower model pipeline) with named feedback arrows.
-- [`fig-ds-time`](#fig-ds-time): the CrowdFlower pie: 60% cleaning, 19%
-  collecting: the survey anchor for where the hours go.
-- [`fig-eye-dr`](#fig-eye-dr): the actual fundus photographs: gradable vs
-  ungradable makes the 21% reject share visceral.
-- [`vol1_ml_lifecycle_margin_003.svg`](#fig-roc-corner): the ROC pass corner:
-  the threshold sweep must reach Sens ≥ 0.90 ∧ Spec ≥ 0.80.
-- [`ml_lifecycle_feedback_timescales.svg`](#fig-feedback-timescales): the
-  five-bar log-scale ladder: monitoring loops spanning minutes to quarters.
-- [`vol1_ml_lifecycle_margin_001.svg`](#fig-iteration-tax-bars): the margin bars:
-  ~100 experiments hourly vs ~26 weekly over six months; our `iteration-tax`
-  chart plots the same arithmetic.
-- [`fig-ml-lifecycle-feedback`](#fig-feedback-paths): the named upstream
-  return paths (data gaps, validation issues, performance insights) drawn
-  across stages 2–6.
 
 ## Essay candidates
 

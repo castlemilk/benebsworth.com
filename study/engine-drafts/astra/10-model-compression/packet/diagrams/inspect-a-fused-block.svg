@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 403" role="img" aria-labelledby="study-svg-inspect-a-fused-block-title" aria-describedby="study-svg-inspect-a-fused-block-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-inspect-a-fused-block-title">Checking a fused image-processing block</title>
+  <desc id="study-svg-inspect-a-fused-block-desc">The exported graph predicts which intermediate transfers can disappear. Kernel and traffic traces reveal whether the runtime realizes that saving. Freeze normalization: Use the fixed inference statistics and learned channel parameters. Then Fold into convolution: Absorb each channel&apos;s multiplier and offset into weights and bias. Then Calibrate and compile: Fit ranges to the folded graph and lower it for the target. Then Inspect the trace: Check launches, conversions and intermediate traffic at deployed shapes.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Freeze normalization</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Use the fixed inference statistics</tspan>
+    <tspan x="19" y="64">and learned channel parameters.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Fold into convolution</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Absorb each channel&apos;s multiplier and</tspan>
+    <tspan x="19" y="165">offset into weights and bias.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Calibrate and compile</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Fit ranges to the folded graph and</tspan>
+    <tspan x="19" y="266">lower it for the target.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Inspect the trace</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Check launches, conversions and</tspan>
+    <tspan x="19" y="367">intermediate traffic at deployed</tspan>
+    <tspan x="19" y="384">shapes.</tspan></text>
+  </g>
+</svg>

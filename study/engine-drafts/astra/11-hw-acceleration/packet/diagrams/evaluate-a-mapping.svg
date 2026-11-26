@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 403" role="img" aria-labelledby="study-svg-evaluate-a-mapping-title" aria-describedby="study-svg-evaluate-a-mapping-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-evaluate-a-mapping-title">Test a candidate schedule</title>
+  <desc id="study-svg-evaluate-a-mapping-desc">A reuse claim becomes testable when the proposed loop order predicts which transfers disappear and which transfers still have to occur. Place the outputs: Assign output blocks to processing elements and locate their consumers. Then Select local values: Mark which weights, inputs, or partial sums survive each loop iteration. Then Predict transactions: Count refills, intermediate stores, and bytes wasted by the layout. Then Profile the schedule: Compare actual traffic, spills, active lanes, and kernel time.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Place the outputs</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Assign output blocks to processing</tspan>
+    <tspan x="19" y="64">elements and locate their consumers.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Select local values</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Mark which weights, inputs, or</tspan>
+    <tspan x="19" y="165">partial sums survive each loop</tspan>
+    <tspan x="19" y="182">iteration.</tspan></text>
+  <path d="M172 202v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="222" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="246" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Predict transactions</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="266">Count refills, intermediate stores,</tspan>
+    <tspan x="19" y="283">and bytes wasted by the layout.</tspan></text>
+  <path d="M172 303v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="323" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="347" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Profile the schedule</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="367">Compare actual traffic, spills,</tspan>
+    <tspan x="19" y="384">active lanes, and kernel time.</tspan></text>
+  </g>
+</svg>

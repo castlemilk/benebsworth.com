@@ -5,6 +5,7 @@ author: Ben Ebsworth
 description: >-
   How we can get closer to unifying the local developer experience with
   production-grade kubernetes run-time environments
+heroImage: /blog/kubernetes-cicd-part-1/hero.webp
 labels: >-
   technology,GCP,kubernetes,containers,developer
   experience,knative,skaffold,kustomize

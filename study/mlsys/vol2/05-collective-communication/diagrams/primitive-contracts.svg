@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="primitive-contracts" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="pc-title pc-desc">
+  <title id="pc-title">Four contracts, one degree of freedom</title>
+  <desc id="pc-desc">Four panels showing the four collective primitives over ranks zero to three. AllReduce: four input chunks become the same sum on every rank. AllGather: one shard per rank becomes all four shards on every rank. ReduceScatter: four chunks become one reduced shard per rank. AllToAll: each rank's chunks transpose across ranks. The contract fixes the result; the schedule decides the cost.</desc>
+  <style>
+    .dark #primitive-contracts { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#primitive-contracts { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Four contracts, one degree of freedom</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">what each rank holds afterward · the schedule sets the cost</text>
+
+    <!-- ============ AllReduce ============ -->
+    <g>
+      <text x="20" y="74" font-size="11.5" font-weight="650">AllReduce</text>
+      <text x="88" y="74" font-size="9.5" fill="var(--fig-rule, #6e6a5b)">same sum</text>
+      <!-- inputs -->
+      <g font-size="8.5" text-anchor="middle" font-family="ui-monospace, monospace">
+        <rect x="20" y="84" width="30" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="35" y="94">a b c d</text>
+        <rect x="20" y="101" width="30" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="35" y="111">a b c d</text>
+        <rect x="20" y="118" width="30" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="35" y="128">a b c d</text>
+        <rect x="20" y="135" width="30" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="35" y="145">a b c d</text>
+      </g>
+      <text x="35" y="164" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">r0-3 in</text>
+      <!-- band -->
+      <rect x="60" y="84" width="44" height="64" rx="4" fill="var(--fig-mark, #b4571f)" opacity="0.22"/>
+      <text x="82" y="112" font-size="9" text-anchor="middle" font-weight="650">reduce</text>
+      <text x="82" y="124" font-size="9" text-anchor="middle" font-weight="650">+</text>
+      <!-- outputs: all four ranks hold Σ -->
+      <g font-size="9" text-anchor="middle" font-family="ui-monospace, monospace" font-weight="650">
+        <rect x="114" y="84" width="30" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="129" y="94">Σ</text>
+        <rect x="114" y="101" width="30" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="129" y="111">Σ</text>
+        <rect x="114" y="118" width="30" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="129" y="128">Σ</text>
+        <rect x="114" y="135" width="30" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="129" y="145">Σ</text>
+      </g>
+      <text x="129" y="164" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">identical Σ</text>
+    </g>
+
+    <!-- ============ AllGather ============ -->
+    <g>
+      <text x="166" y="74" font-size="11.5" font-weight="650">AllGather</text>
+      <text x="234" y="74" font-size="9.5" fill="var(--fig-rule, #6e6a5b)">all shards</text>
+      <g font-size="8.5" text-anchor="middle" font-family="ui-monospace, monospace">
+        <rect x="166" y="84" width="22" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="177" y="94">a</text>
+        <rect x="166" y="101" width="22" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="177" y="111">b</text>
+        <rect x="166" y="118" width="22" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="177" y="128">c</text>
+        <rect x="166" y="135" width="22" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="177" y="145">d</text>
+      </g>
+      <rect x="198" y="84" width="38" height="64" rx="4" fill="var(--fig-mark, #b4571f)" opacity="0.22"/>
+      <text x="217" y="112" font-size="9" text-anchor="middle" font-weight="650">concat</text>
+      <text x="217" y="124" font-size="9" text-anchor="middle" font-weight="650">+</text>
+      <g font-size="8" text-anchor="middle" font-family="ui-monospace, monospace">
+        <rect x="246" y="84" width="34" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="263" y="94">a b c d</text>
+        <rect x="246" y="101" width="34" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="263" y="111">a b c d</text>
+        <rect x="246" y="118" width="34" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="263" y="128">a b c d</text>
+        <rect x="246" y="135" width="34" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="263" y="145">a b c d</text>
+      </g>
+    </g>
+
+    <!-- ============ ReduceScatter ============ -->
+    <g>
+      <text x="20" y="196" font-size="11.5" font-weight="650">ReduceScatter</text>
+      <text x="112" y="196" font-size="9.5" fill="var(--fig-rule, #6e6a5b)">one shard</text>
+      <g font-size="8.5" text-anchor="middle" font-family="ui-monospace, monospace">
+        <rect x="20" y="206" width="30" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="35" y="216">a b c d</text>
+        <rect x="20" y="223" width="30" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="35" y="233">a b c d</text>
+        <rect x="20" y="240" width="30" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="35" y="250">a b c d</text>
+        <rect x="20" y="257" width="30" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="35" y="267">a b c d</text>
+      </g>
+      <rect x="60" y="206" width="44" height="64" rx="4" fill="var(--fig-mark, #b4571f)" opacity="0.22"/>
+      <text x="82" y="234" font-size="9" text-anchor="middle" font-weight="650">reduce</text>
+      <text x="82" y="246" font-size="9" text-anchor="middle" font-weight="650">scatter</text>
+      <g font-size="9" text-anchor="middle" font-family="ui-monospace, monospace" font-weight="650">
+        <rect x="114" y="206" width="30" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="129" y="216">Σa</text>
+        <rect x="114" y="223" width="30" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="129" y="233">Σb</text>
+        <rect x="114" y="240" width="30" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="129" y="250">Σc</text>
+        <rect x="114" y="257" width="30" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="129" y="267">Σd</text>
+      </g>
+      <text x="129" y="286" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">one shard each</text>
+    </g>
+
+    <!-- ============ AllToAll ============ -->
+    <g>
+      <text x="166" y="196" font-size="11.5" font-weight="650">AllToAll</text>
+      <text x="232" y="196" font-size="9.5" fill="var(--fig-rule, #6e6a5b)">a distributed transpose</text>
+      <g font-size="8" text-anchor="middle" font-family="ui-monospace, monospace">
+        <rect x="166" y="206" width="26" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="179" y="216">a0-a3</text>
+        <rect x="166" y="223" width="26" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="179" y="233">b0-b3</text>
+        <rect x="166" y="240" width="26" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="179" y="250">c0-c3</text>
+        <rect x="166" y="257" width="26" height="13" rx="2" fill="none" stroke="var(--fig-outline, #364c50)"/><text x="179" y="267">d0-d3</text>
+      </g>
+      <rect x="202" y="206" width="34" height="64" rx="4" fill="var(--fig-mark, #b4571f)" opacity="0.22"/>
+      <text x="219" y="234" font-size="9" text-anchor="middle" font-weight="650">route</text>
+      <text x="219" y="246" font-size="9" text-anchor="middle" font-weight="650">T</text>
+      <g font-size="8" text-anchor="middle" font-family="ui-monospace, monospace">
+        <rect x="246" y="206" width="34" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="263" y="216">a0-d0</text>
+        <rect x="246" y="223" width="34" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="263" y="233">a1-d1</text>
+        <rect x="246" y="240" width="34" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="263" y="250">a2-d2</text>
+        <rect x="246" y="257" width="34" height="13" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.30"/><text x="263" y="267">a3-d3</text>
+      </g>
+      <text x="263" y="286" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">chunk j → rank j</text>
+    </g>
+
+    <!-- footer -->
+    <text x="190" y="296" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">broadcast + reduce compose these four · the amber band is the schedule's freedom</text>
+  </g>
+</svg>

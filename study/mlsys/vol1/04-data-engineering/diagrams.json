@@ -1,0 +1,20 @@
+[
+ {
+  "id": "data-cascade",
+  "file": "data-cascade.svg",
+  "title": "Anatomy of a data cascade",
+  "caption": "A defect entered at collection passes every intermediate schema check, is converted into new derived state by each stage, and surfaces only at deployment — where the rework bill is every downstream artifact that consumed it. The widening band is remediation cost, not data volume."
+ },
+ {
+  "id": "two-contracts",
+  "file": "two-contracts.svg",
+  "title": "The two contracts data keeps",
+  "caption": "The dataset sits in both D·A·M overlaps at once. Left, the statistical contract with the algorithm: coverage, labels-as-spec, clean splits — the capability bound. Right, the physical contract with the machine: bytes arriving at the consumption rate — the throughput bound. Breaking either fails the system."
+ },
+ {
+  "id": "ingestion-boundary",
+  "file": "ingestion-boundary.svg",
+  "title": "The ingestion boundary as a membrane",
+  "caption": "Synchronous schema checks gate every record on the way in; failures go to the dead-letter queue rather than blocking or vanishing. Accepted data accumulates into windows the asynchronous statistical checks (PSI, K-S, parity replay) compare against the baseline — the two clocks are deliberately decoupled."
+ }
+]

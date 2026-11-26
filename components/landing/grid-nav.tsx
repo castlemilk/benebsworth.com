@@ -235,6 +235,7 @@ export function GridNav({ latest }: { latest: Latest }) {
           return (
             // Re-key by seed so a re-roll remounts the group and replays the draw.
             <Link key={`${w.key}-${seed}`} href={HREF[w.key]} aria-label={w.key}
+              className="no-underline"
               onMouseEnter={(e) => activateBlob(e.currentTarget)}
               onMouseLeave={() => blobRef.current?.clear()}
               onFocus={(e) => activateBlob(e.currentTarget)}
@@ -301,7 +302,7 @@ export function GridNav({ latest }: { latest: Latest }) {
             const s = cell * 0.84
             const x = cx(c) - s / 2, y = cy(r) - s / 2, rad = s * 0.16
             return (
-              <Link key={i} href={`/lab/${homeEmbedSlug(embedIndex)}/`} aria-label="generative lab" prefetch={false} {...active}>
+              <Link key={i} href={`/lab/${homeEmbedSlug(embedIndex)}/`} aria-label="generative lab" prefetch={false} className="no-underline" {...active}>
                 <g className="group cursor-pointer">
                   <rect x={x} y={y} width={s} height={s} rx={rad} className="fill-[var(--color-surface)] stroke-[var(--color-border)] [stroke-width:1.5] transition group-hover:stroke-[var(--color-muted)]" />
                   <foreignObject x={x} y={y} width={s} height={s}>
@@ -315,8 +316,8 @@ export function GridNav({ latest }: { latest: Latest }) {
           }
           const inner = <ArtifactTile artifact={a} cx={cx(c)} cy={cy(r)} cell={cell} reducedMotion={reducedMotion} />
           return external
-            ? <a key={i} href={a.link} target="_blank" rel="noreferrer" aria-label={a.label} {...active}>{inner}</a>
-            : <Link key={i} href={a.link} prefetch={a.link === '/archive/' ? false : undefined} aria-label={a.label} {...active}>{inner}</Link>
+            ? <a key={i} href={a.link} target="_blank" rel="noreferrer" aria-label={a.label} className="no-underline" {...active}>{inner}</a>
+            : <Link key={i} href={a.link} prefetch={a.link === '/archive/' ? false : undefined} aria-label={a.label} className="no-underline" {...active}>{inner}</Link>
         })}
         {/* Label layer painted after all tiles so it sits on top of any neighbour.
             Side is chosen to open into the most space and NOT clash with the big

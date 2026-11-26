@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="bm-measurement-boundary" class="study-fig-fit" viewBox="0 0 408 320" role="img" aria-labelledby="bm-boundary-title bm-boundary-desc">
+  <title id="bm-boundary-title">The meter boundary moves the measured energy</title>
+  <desc id="bm-boundary-desc">The same prompt costs 0.10 Wh measured at the accelerators and 0.24 Wh measured across the whole service: 58 percent active accelerators, 25 percent host CPUs and DRAM, 17 percent idle reserve and overhead.</desc>
+  <style>
+    #bm-measurement-boundary { font-family: system-ui, sans-serif; }
+    .dark #bm-measurement-boundary [fill="#fbf7f0"] { fill: #201a17; }
+    .dark #bm-measurement-boundary [fill="#29231e"] { fill: #f7eee3; }
+    .dark #bm-measurement-boundary [fill="#6f6055"] { fill: #c8b8aa; }
+    .dark #bm-measurement-boundary [fill="#cfc1b2"] { fill: #8b7f73; }
+    .dark #bm-measurement-boundary [fill="#cf8359"] { fill: #d99066; }
+    .dark #bm-measurement-boundary [fill="#9a3d1d"] { fill: #f6c6a5; }
+    .dark #bm-measurement-boundary [stroke="#b8a89c"] { stroke: #72665c; }
+  </style>
+  <rect width="408" height="320" rx="12" fill="#fbf7f0"/>
+  <text x="24" y="36" fill="#29231e" font-size="21" font-weight="650">One prompt, two measurements</text>
+
+  <rect x="34" y="56" width="340" height="196" rx="10" fill="none" stroke="#b8a89c" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <text x="50" y="76" fill="#6f6055" font-size="13">service boundary · 0.24 Wh</text>
+  <rect x="52" y="88" width="148" height="58" rx="7" fill="#cfc1b2"/>
+  <text x="126" y="112" text-anchor="middle" fill="#29231e" font-size="13" font-weight="600">host CPUs + DRAM</text>
+  <text x="126" y="130" text-anchor="middle" fill="#6f6055" font-size="12">25%</text>
+  <rect x="222" y="88" width="134" height="58" rx="7" fill="#cfc1b2"/>
+  <text x="289" y="112" text-anchor="middle" fill="#29231e" font-size="13" font-weight="600">idle reserve</text>
+  <text x="289" y="130" text-anchor="middle" fill="#6f6055" font-size="12">17%</text>
+
+  <rect x="52" y="164" width="304" height="70" rx="8" fill="#cf8359"/>
+  <rect x="52" y="164" width="304" height="70" rx="8" fill="none" stroke="#9a3d1d" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="204" y="192" text-anchor="middle" fill="#29231e" font-size="15" font-weight="650">accelerators · 58%</text>
+  <text x="204" y="216" text-anchor="middle" fill="#29231e" font-size="13">metered alone: 0.10 Wh</text>
+
+  <text x="34" y="284" fill="#29231e" font-size="14">dashed loops = where the meter could sit</text>
+  <text x="34" y="306" fill="#6f6055" font-size="13">same prompt, same machines — 0.10 Wh vs 0.24 Wh (2.4×)</text>
+</svg>

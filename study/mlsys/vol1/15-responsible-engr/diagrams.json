@@ -1,0 +1,26 @@
+[
+  {
+    "id": "responsibility-gap",
+    "file": "responsibility-gap.svg",
+    "title": "Correct optimization, wrong objective",
+    "caption": "The system satisfies every stated objective — latency, uptime, aggregate accuracy — while the unstated constraints (slices, cost, contestability, evidence) carry the harm. The gap is between what was specified and what was needed."
+  },
+  {
+    "id": "criteria-conflict",
+    "file": "criteria-conflict.svg",
+    "title": "Three fairness criteria that can't all hold",
+    "caption": "Demographic parity, equalized odds and calibration measure different errors. Under unequal base rates with imperfect prediction, satisfying one can violate another — the choice is a policy decision, not an optimization."
+  },
+  {
+    "id": "lifecycle-duties",
+    "file": "lifecycle-duties.svg",
+    "title": "A duty per stage",
+    "caption": "Specify the slices and budgets, measure the disaggregated criteria, explain and document the decisions, then operate fairness as loop stability — the duties chain like the rest of the lifecycle."
+  },
+  {
+    "id": "carbon-ledger",
+    "file": "carbon-ledger.svg",
+    "title": "The carbon ledger",
+    "caption": "0.16 kg CO₂eq per GPU-hour at the baseline assumptions; at GPT-3 scale, 1,287 MWh exceeds 100 passenger-car-years. Training is one ledger entry — serving at scale dominates the lifecycle."
+  }
+]

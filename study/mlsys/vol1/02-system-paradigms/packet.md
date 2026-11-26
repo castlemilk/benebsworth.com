@@ -311,23 +311,3 @@ $$
 4. TinyML training-adjacent work (on-device fine-tuning, federated updates)
    breaks the inference-only assumption the chapter leans on. Which
    precondition moves first: SRAM or energy?
-
-## Figures to look at in the book
-
-Reference links appear alongside the discussion above; open the source book for
-the full figures, captions and surrounding prose.
-
-- [`fig-cloud-edge-TinyML-comparison`](#fig-deployment-spectrum): the
-  five-position spectrum (sensors, device, gateway, on-prem, cloud) with
-  TinyML/edge/cloud spans marked. Ours redraws it as a constraint ladder
-  instead.
-- [`fig-microprocessor-trends`](#fig-microprocessor-trends): five log-scale
-  series 1971-2021 with the Dennard band at ~2005; the "transistors up,
-  clocks flat" split in one image.
-- [`system_paradigms_memory_wall_divergence.svg`](#fig-memory-wall-divergence):
-  the two growth curves pulling apart; compare with our `memory-wall` chart,
-  same data.
-- [`fig-mlsys-playbook-flowchart`](#fig-playbook-flowchart): the
-  privacy-latency-resource-cost filter chain as a vertical flow.
-- [`fig-doorbell-scorecard`](#fig-doorbell-scorecard): the two-level
-  feasibility screen (flash vs latency budgets) plotted as a scorecard.

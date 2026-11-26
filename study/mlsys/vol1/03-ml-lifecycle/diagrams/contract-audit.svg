@@ -1,4 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 340" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#3b82f6"]{fill:#7cb3f8}
+    .dark [stroke="#3b82f6"]{stroke:#7cb3f8}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#991b1b"]{fill:#f87171}
+    .dark [stroke="#991b1b"]{stroke:#f87171}
+    .dark [fill="#dc2626"]{fill:#f87171}
+    .dark [stroke="#dc2626"]{stroke:#f87171}
+  </style>
+
   <!-- Contract audit: defect at stage N walks back to the earliest boundary that never stated the condition -->
   <defs>
     <marker id="arrC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
@@ -50,12 +65,14 @@
   <path d="M 540 190 C 460 232, 380 236, 340 200" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrW)"/>
   <path d="M 460 200 C 380 246, 260 252, 220 208" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrW)"/>
   <path d="M 280 208 C 220 258, 130 258, 92 210" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrW)"/>
-  <text x="330" y="252" text-anchor="middle" font-size="10" fill="#dc2626">audit walks back: who should have stated it? — eval's contract met (sens measured), model got no budget, problem def never wrote it</text>
-  <text x="330" y="268" text-anchor="middle" font-size="10" fill="#dc2626">→ fix starts at boundary 1, not where the defect surfaced</text>
+  <text x="330" y="248" text-anchor="middle" font-size="10" fill="#dc2626">audit walks back: who should have stated it? — eval's contract met</text>
+  <text x="330" y="260" text-anchor="middle" font-size="10" fill="#dc2626">(sens measured), model got no budget, problem def never wrote it</text>
+  <text x="330" y="272" text-anchor="middle" font-size="10" fill="#dc2626">→ fix starts at boundary 1, not where the defect surfaced</text>
 
   <!-- contract anatomy callout -->
   <g>
     <rect x="30" y="290" width="640" height="36" rx="6" fill="#3b82f6" fill-opacity="0.08" stroke="#2563eb" stroke-width="1"/>
-    <text x="350" y="312" text-anchor="middle" font-size="10" fill="#1d4ed8">a contract = required inputs + output deliverables + quality invariant · the defect's owner = earliest boundary whose contract never stated the condition</text>
+    <text x="350" y="306" text-anchor="middle" font-size="10" fill="#1d4ed8">a contract = required inputs + output deliverables + quality invariant</text>
+    <text x="350" y="319" text-anchor="middle" font-size="10" fill="#1d4ed8">the defect's owner = earliest boundary whose contract never stated the condition</text>
   </g>
 </svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 167" role="img" aria-labelledby="study-svg-compare-kernel-time-floors-title" aria-describedby="study-svg-compare-kernel-time-floors-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-compare-kernel-time-floors-title">Time floors for the hypothetical projection</title>
+  <desc id="study-svg-compare-kernel-time-floors-desc">The transfer floor is ten times the compute floor. Even complete overlap cannot bring this kernel below 4 ms under the stated traffic and bandwidth assumptions. Arithmetic floor: 0.4 ms. Device transfer floor: 4 ms.</desc>
+  <rect x="0" y="0" width="344" height="167" rx="8" fill="var(--surface, #fbf7f0)"/>
+  <g fill="var(--fg, #31251d)" font-family="ui-monospace, monospace">
+  <text x="328" y="22" font-size="13.5" text-anchor="end">ms</text>
+  <text x="16" y="43" font-size="15">Arithmetic floor</text>
+  <text x="328" y="81" font-size="14" text-anchor="end">0.4</text>
+  <rect x="16" y="51" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="51" width="31" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="50" y2="64" stroke="var(--fg, #4b3a2d)"/>
+  <text x="16" y="109" font-size="15">Device transfer floor</text>
+  <text x="328" y="147" font-size="14" text-anchor="end">4</text>
+  <rect x="16" y="117" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="117" width="312" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="116" y2="130" stroke="var(--fg, #4b3a2d)"/>
+  </g>
+</svg>

@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#bfdbfe"]{fill:#1e3a5f}
+    .dark [fill="#dbeafe"]{fill:#1e3a5f}
+    .dark [fill="#d1fae5"]{fill:#123a2b}
+    .dark [fill="#fef3c7"]{fill:#453007}
+    .dark [fill="#f3f4f6"]{fill:#1f2937}
+    .dark [fill="#ffffff"]{fill:#161a22}
+    .dark rect.bg{fill:#0f1115}
+    .dark [fill="none"]{fill:none}
+  </style>
+  <rect class="bg" x="0" y="0" width="700" height="400" fill="#ffffff"/>
+
+  <text x="350" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#374151">sqrt(L) anchors, recompute the rest</text>
+  <text x="350" y="44" text-anchor="middle" font-size="10" fill="#6b7280">48 layers, 7 segment boundaries retained -- interiors re-run during backward</text>
+
+  <!-- forward pass: 48-layer strip, checkpoint cells filled -->
+  <text x="60" y="86" font-size="10" font-weight="bold" fill="#374151">forward</text>
+  <!-- 48 cells of 11px starting x=130 -->
+  <g>
+    <rect x="130" y="92" width="11" height="20" fill="#2563eb"/>
+    <rect x="141" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="152" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="163" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="174" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="185" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="196" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="207" y="92" width="11" height="20" fill="#2563eb"/>
+    <rect x="218" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="229" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="240" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="251" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="262" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="273" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="284" y="92" width="11" height="20" fill="#2563eb"/>
+    <rect x="295" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="306" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="317" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="328" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="339" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="350" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="361" y="92" width="11" height="20" fill="#2563eb"/>
+    <rect x="372" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="383" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="394" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="405" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="416" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="427" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="438" y="92" width="11" height="20" fill="#2563eb"/>
+    <rect x="449" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="460" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="471" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="482" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="493" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="504" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="515" y="92" width="11" height="20" fill="#2563eb"/>
+    <rect x="526" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="537" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="548" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="559" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="570" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="581" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="592" y="92" width="11" height="20" fill="#2563eb"/>
+    <rect x="603" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="614" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="625" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="636" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="647" y="92" width="11" height="20" fill="#f3f4f6" stroke="#9ca3af"/>
+    <rect x="658" y="92" width="11" height="20" fill="#2563eb"/>
+  </g>
+  <text x="130" y="80" font-size="9" fill="#1d4ed8">store</text>
+  <text x="669" y="80" text-anchor="end" font-size="9" fill="#1d4ed8">7 anchors = sqrt(48)</text>
+
+  <!-- backward: recompute brackets per segment -->
+  <text x="60" y="160" font-size="10" font-weight="bold" fill="#374151">backward</text>
+  <path d="M 652 130 L 147 130" stroke="#b91c1c" stroke-width="1.5" fill="none" marker-end="url(#arrL)"/>
+  <defs><marker id="arrL" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#b91c1c"/></marker></defs>
+  <!-- segment brackets -->
+  <path d="M 592 146 L 592 152 L 658 152 L 658 146" stroke="#d97706" stroke-width="1" fill="none"/>
+  <text x="625" y="166" text-anchor="middle" font-size="8" fill="#d97706">re-run 7 layers</text>
+  <path d="M 438 146 L 438 152 L 581 152 L 581 146" stroke="#d97706" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+  <text x="510" y="166" text-anchor="middle" font-size="8" fill="#d97706">one segment re-run per boundary</text>
+
+  <!-- comparison columns -->
+  <text x="170" y="216" text-anchor="middle" font-size="10" font-weight="bold" fill="#374151">no checkpointing</text>
+  <rect x="120" y="228" width="100" height="110" fill="#bfdbfe" stroke="#2563eb"/>
+  <text x="170" y="286" text-anchor="middle" font-size="10" fill="#1d4ed8">all 48 layers</text>
+  <text x="170" y="300" text-anchor="middle" font-size="10" fill="#1d4ed8">stored</text>
+  <text x="170" y="356" text-anchor="middle" font-size="9" fill="#6b7280">O(L) activations</text>
+
+  <text x="340" y="216" text-anchor="middle" font-size="10" font-weight="bold" fill="#374151">k = sqrt(L) = 7</text>
+  <rect x="300" y="305" width="80" height="33" fill="#d1fae5" stroke="#047857"/>
+  <text x="340" y="325" text-anchor="middle" font-size="10" fill="#047857">~14 layers'</text>
+  <text x="340" y="356" text-anchor="middle" font-size="9" fill="#6b7280">anchors + one live segment</text>
+
+  <!-- arrow between -->
+  <path d="M 235 283 L 285 283" stroke="#374151" stroke-width="1.5" fill="none" marker-end="url(#arrR)"/>
+  <defs><marker id="arrR" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#374151"/></marker></defs>
+  <text x="260" y="274" text-anchor="middle" font-size="8" fill="#374151">~71% saved</text>
+
+  <!-- cost note -->
+  <text x="480" y="240" font-size="10" font-weight="bold" fill="#b91c1c">the price</text>
+  <text x="480" y="258" font-size="9" fill="#4b5563">each re-run segment adds its</text>
+  <text x="480" y="270" font-size="9" fill="#4b5563">forward work back: ~+33% step</text>
+  <text x="480" y="282" font-size="9" fill="#4b5563">arithmetic for the 7-segment</text>
+  <text x="480" y="294" font-size="9" fill="#4b5563">schedule. Compute for memory,</text>
+  <text x="480" y="306" font-size="9" fill="#4b5563">priced openly.</text>
+
+  <text x="350" y="390" text-anchor="middle" font-size="9" fill="#6b7280">M_act = kA + (L/k)A -- minimized when boundaries and segments balance at k = sqrt(L)</text>
+</svg>

@@ -1,0 +1,95 @@
+[
+  {
+    "id": "demographic-parity-gap",
+    "number": 1,
+    "title": "Demographic parity gap",
+    "latex": "\\Delta_{\\mathrm{DP}}=\\bigl|\\Pr(\\hat{Y}=1\\mid A{=}a)-\\Pr(\\hat{Y}=1\\mid A{=}b)\\bigr|=|0.70-0.40|=0.30",
+    "caption": "The selection-rate difference across groups uses only decisions and group membership, so it is computable at inference time, months before outcome labels arrive. In the two-hundred-applicant scenario the gap is thirty points.",
+    "symbols": [
+      {"symbol": "\\hat{Y}=1", "meaning": "positive decision (approval) issued by the system"},
+      {"symbol": "A", "meaning": "group membership attribute"},
+      {"symbol": "\\Delta_{\\mathrm{DP}}", "meaning": "absolute selection-rate difference across the two groups"}
+    ]
+  },
+  {
+    "id": "equal-opportunity-gap",
+    "number": 2,
+    "title": "Equality of opportunity gap",
+    "latex": "\\Delta_{\\mathrm{EOpp}}=\\bigl|\\mathrm{TPR}_{a}-\\mathrm{TPR}_{b}\\bigr|=\\bigl|\\tfrac{40}{45}-\\tfrac{30}{50}\\bigr|\\approx|0.89-0.60|=0.29",
+    "caption": "True positive rates condition on the outcome, so they cannot be computed until labels arrive. Group A repayers are approved 89 percent of the time, group B repayers 60 percent.",
+    "symbols": [
+      {"symbol": "\\mathrm{TPR}", "meaning": "true positive rate within one group: approved among those who would repay"},
+      {"symbol": "\\Delta_{\\mathrm{EOpp}}", "meaning": "absolute true-positive-rate difference across groups"}
+    ]
+  },
+  {
+    "id": "impossibility-constraint",
+    "number": 3,
+    "title": "Score-balance impossibility",
+    "latex": "\\mathrm{calib}_{a}=\\mathrm{calib}_{b}\\;\\wedge\\;\\mathbb{E}[s\\mid Y{=}1,a]=\\mathbb{E}[s\\mid Y{=}1,b]\\;\\wedge\\;\\mathbb{E}[s\\mid Y{=}0,a]=\\mathbb{E}[s\\mid Y{=}0,b]\\;\\Rightarrow\\;\\text{impossible}",
+    "caption": "When base rates differ across groups and prediction is imperfect, groupwise calibration and equal mean scores within both outcome classes cannot all hold. The escapes are degenerate: perfect prediction or identical base rates.",
+    "symbols": [
+      {"symbol": "\\mathrm{calib}", "meaning": "calibration of the score within one group"},
+      {"symbol": "s", "meaning": "the model's risk score"},
+      {"symbol": "Y", "meaning": "the true outcome label"}
+    ]
+  },
+  {
+    "id": "shapley-enumeration",
+    "number": 4,
+    "title": "Exhaustive Shapley enumeration cost",
+    "latex": "T_{\\mathrm{shap}}=2^{n}\\cdot t_{\\mathrm{eval}}=2^{20}\\times 1\\,\\mu\\mathrm{s}\\approx 1.05\\,\\mathrm{s}",
+    "caption": "Enumerating every feature coalition grows exponentially in feature count. Twenty features at one microsecond per coalition already exceeds any inline serving budget, before counting the model evaluations each coalition value requires.",
+    "symbols": [
+      {"symbol": "n", "meaning": "number of input features"},
+      {"symbol": "t_{\\mathrm{eval}}", "meaning": "cost of evaluating one feature coalition"},
+      {"symbol": "T_{\\mathrm{shap}}", "meaning": "total time for exhaustive enumeration"}
+    ]
+  },
+  {
+    "id": "explanation-capacity",
+    "number": 5,
+    "title": "Explanation capacity multiple",
+    "latex": "\\mathrm{capacity}=\\frac{100\\,\\mathrm{ms}+[50,200]\\,\\mathrm{ms}}{100\\,\\mathrm{ms}}\\approx[1.5,3.0]\\times",
+    "caption": "Capacity scales with occupied resource time per request when latency grows on the serial path. Replicas preserve throughput but cannot restore per-request latency; meeting the original deadline requires shrinking or relocating the explanation work.",
+    "symbols": [
+      {"symbol": "100\\,\\mathrm{ms}", "meaning": "baseline processing per request"},
+      {"symbol": "[50,200]\\,\\mathrm{ms}", "meaning": "added inline explanation processing"}
+    ]
+  },
+  {
+    "id": "dp-sgd-update",
+    "number": 6,
+    "title": "DP-SGD gradient transformation",
+    "latex": "\\tilde{g}=\\sum_{i}\\mathrm{clip}\\bigl(g_i,C\\bigr)+\\mathcal{N}\\!\\bigl(0,\\sigma^{2}C^{2}\\mathbb{I}\\bigr)",
+    "caption": "Per-example clipping bounds each training example's influence; Gaussian noise scaled to the clipping norm hides any single example's contribution. The privacy bound depends on sampling and composition accounting, and utility cost must be measured per configuration.",
+    "symbols": [
+      {"symbol": "g_i", "meaning": "per-example gradient"},
+      {"symbol": "C", "meaning": "clipping norm bound"},
+      {"symbol": "\\sigma", "meaning": "noise multiplier, the privacy-utility dial"}
+    ]
+  },
+  {
+    "id": "sisa-erasure-cost",
+    "number": 7,
+    "title": "SISA erasure cost",
+    "latex": "\\mathrm{cost}_{\\mathrm{erase}}\\propto\\frac{|\\text{shards touched}|}{S}\\times\\mathrm{cost}_{\\mathrm{full}}\\qquad(S=100)",
+    "caption": "One deletion re-trains one shard of a hundred. When erasure volume is high enough that each retraining batch touches essentially all shards, the sharding saving erodes and the architecture must be re-evaluated against batching interval and saved slice state.",
+    "symbols": [
+      {"symbol": "S", "meaning": "number of independent shards"},
+      {"symbol": "\\mathrm{cost}_{\\mathrm{full}}", "meaning": "cost of retraining on the full corpus"}
+    ]
+  },
+  {
+    "id": "feedback-amplification",
+    "number": 8,
+    "title": "Bias amplification loop",
+    "latex": "b_{t+1}=b_{t}+\\gamma\\cdot g(b_{t})\\qquad(\\gamma>0\\;\\Rightarrow\\;\\text{divergent})",
+    "caption": "When outputs shape the data the next generation trains on, bias is a feedback state with positive gain. Unconstrained retraining amplifies; breaking the loop requires intervening on data collection, not just the model.",
+    "symbols": [
+      {"symbol": "b_t", "meaning": "systemic bias level at retraining generation t"},
+      {"symbol": "g(b_t)", "meaning": "bias reinforcement captured in operational data"},
+      {"symbol": "\\gamma", "meaning": "loop gain from deployment back into training data"}
+    ]
+  }
+]

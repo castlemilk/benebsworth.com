@@ -1,0 +1,38 @@
+[
+  {
+    "id": "book-cost-asymmetry",
+    "file": "training_cost_asymmetry.svg",
+    "title": "Training versus inference cost asymmetry",
+    "caption": "The book's opening comparison of one inference against a full training run -- the orders-of-magnitude gap that motivates the whole chapter. Our physics table carries the same point as a row of numbers; theirs shows it as a shape."
+  },
+  {
+    "id": "book-iron-law-bars",
+    "file": "training_iron_law_bars.svg",
+    "title": "The iron law applied to training",
+    "caption": "The D.A.M product split for a training run -- Data supplies D, Algorithm supplies the 6P coefficient, Machine supplies R_peak and eta. Ours decomposes the same law through the utilization factor; theirs labels the taxonomy axes."
+  },
+  {
+    "id": "book-optimizer-memory",
+    "file": "training_optimizer_memory.svg",
+    "title": "Optimizer state across optimizers",
+    "caption": "The book's comparison of bytes-per-parameter under SGD, momentum, and Adam. Our four-term budget equation fixes the mixed-precision Adam recipe at 16 B/param; theirs shows how the recipe choice moves the static floor."
+  },
+  {
+    "id": "book-margin-1",
+    "file": "vol1_training_margin_001.svg",
+    "title": "Margin figure: pipeline staging",
+    "caption": "One of the book's margin sketches on the staged input pipeline. Our overlap-timeline diagram carries the serial-to-max argument as a worked numeric example; theirs sketches the same staging abstractly."
+  },
+  {
+    "id": "book-margin-2",
+    "file": "vol1_training_margin_002.svg",
+    "title": "Margin figure: memory components",
+    "caption": "The book's margin view of training-state components. Our memory-staircase chart plots the walkthrough's actual GB values descending into capacity; theirs shows the component taxonomy."
+  },
+  {
+    "id": "book-margin-3",
+    "file": "vol1_training_margin_003.svg",
+    "title": "Margin figure: scaling behavior",
+    "caption": "The book's margin sketch of scaling efficiency. Our sync-share chart makes the mechanism quantitative -- the fixed ~1.75x gradient volume against shrinking per-replica compute; theirs shows the scaling curve."
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "bandwidth-stairs",
+    "kind": "BAR_STACKED",
+    "title": "The bandwidth staircase — each tier ~7–9× down",
+    "caption": "Per-GPU data-movement bandwidth at each hierarchy boundary on H100: on-package HBM3 3.35 TB/s, NVLink 900 GB/s, InfiniBand NDR 50 GB/s, storage ~7 GB/s. Drops of 7.4×, 9× and 7.1× decide which kind of parallelism may live on each tier.",
+    "xLabel": "Hierarchy tier",
+    "yLabel": "Bandwidth (GB/s)",
+    "xPoints": ["HBM3 (on-package)", "NVLink (in-chassis)", "InfiniBand NDR (fabric)", "Storage (network)"],
+    "series": [
+      {"key": "bw", "label": "GB/s per GPU", "color": "var(--chart-1)", "values": [3350, 900, 50, 7]}
+    ]
+  },
+  {
+    "id": "precision-fit",
+    "kind": "BAR_STACKED",
+    "title": "Precision is a capacity dial — 350 GB of GPT-3 weights",
+    "caption": "Devices needed just to hold 175B of weights on 80 GB accelerators: 5 at FP16, 3 at INT8, 2 at INT4. The same silicon spec carries a different nameplate per precision — and the weights fit differently too.",
+    "xLabel": "Weight precision",
+    "yLabel": "80-GB devices to hold weights",
+    "xPoints": ["FP16 (2 B/param)", "INT8 (1 B/param)", "INT4 (0.5 B/param)"],
+    "series": [
+      {"key": "devices", "label": "Devices for weights only", "color": "var(--chart-2)", "values": [5, 3, 2]}
+    ]
+  }
+]

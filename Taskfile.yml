@@ -118,16 +118,17 @@ tasks:
         echo "  credential type; deploy:auth tests the Pages API directly."
 
   verify:
-    desc: Full local verification — lint, typecheck, prose, unit tests (no build)
+    desc: Full local verification — lint, typecheck, prose, diagrams, unit tests (no build)
     summary: |
-      The "is my working tree healthy" gate. Runs the four fast checks in the
+      The "is my working tree healthy" gate. Runs the fast checks in the
       order that fails cheapest-first:
 
-        lint:eslint  ->  lint:types  ->  lint:prose  ->  test:unit
+        lint:diagrams  ->  lint:eslint  ->  lint:types  ->  lint:prose  ->  test:unit
 
       Excludes the build and e2e (both need a ~2-4 min static export); use
       `task ci` for the everything-gate.
     cmds:
+      - task: lint:diagrams
       - task: lint:eslint
       - task: lint:types
       - task: lint:prose

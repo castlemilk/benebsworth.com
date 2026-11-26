@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 167" role="img" aria-labelledby="study-svg-estimated-weight-transfer-time-title" aria-describedby="study-svg-estimated-weight-transfer-time-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-estimated-weight-transfer-time-title">Estimated time to stream one weight block</title>
+  <desc id="study-svg-estimated-weight-transfer-time-desc">At the same assumed bandwidth, the smaller INT8 payload reduces transfer time even after metadata is counted. These estimates cover the weight reads alone. FP16 weights: 20 ms. INT8 with metadata: 11.25 ms.</desc>
+  <rect x="0" y="0" width="344" height="167" rx="8" fill="var(--surface, #fbf7f0)"/>
+  <g fill="var(--fg, #31251d)" font-family="ui-monospace, monospace">
+  <text x="328" y="22" font-size="13.5" text-anchor="end">ms</text>
+  <text x="16" y="43" font-size="15">FP16 weights</text>
+  <text x="328" y="81" font-size="14" text-anchor="end">20</text>
+  <rect x="16" y="51" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="51" width="312" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="50" y2="64" stroke="var(--fg, #4b3a2d)"/>
+  <text x="16" y="109" font-size="15">INT8 with metadata</text>
+  <text x="328" y="147" font-size="14" text-anchor="end">11.25</text>
+  <rect x="16" y="117" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="117" width="176" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="116" y2="130" stroke="var(--fg, #4b3a2d)"/>
+  </g>
+</svg>

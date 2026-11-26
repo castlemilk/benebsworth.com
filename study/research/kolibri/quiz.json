@@ -1,0 +1,166 @@
+{
+  "chapterId": "research/kolibri",
+  "title": "Self-test",
+  "questions": [
+    {
+      "id": "mc1",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "Why is the active parameter count insufficient to size serving memory?",
+      "options": [
+        {
+          "id": "a",
+          "label": "The entire weight pool may still need to be stored, sharded or fetched."
+        },
+        {
+          "id": "b",
+          "label": "Only the selected experts exist after training."
+        },
+        {
+          "id": "c",
+          "label": "Attention has no memory cost."
+        },
+        {
+          "id": "d",
+          "label": "Active parameters always equal total parameters."
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Sparse activation reduces computation per token, but the larger pool of weights must remain accessible."
+    },
+    {
+      "id": "mc2",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "What does the hybrid attention pattern retain?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Full attention in every layer."
+        },
+        {
+          "id": "b",
+          "label": "Periodic global attention, while most layers attend within a window."
+        },
+        {
+          "id": "c",
+          "label": "A fixed KV cache for every layer at arbitrary context."
+        },
+        {
+          "id": "d",
+          "label": "A guaranteed fourfold serving speedup."
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The report uses 40 sliding-window and 10 full-attention layers. Full layers still have sequence-dependent costs."
+    },
+    {
+      "id": "mc3",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "Why compare decoded bytes per second across models?",
+      "options": [
+        {
+          "id": "a",
+          "label": "It makes the evaluation independent of hardware."
+        },
+        {
+          "id": "b",
+          "label": "It eliminates differences in benchmark difficulty."
+        },
+        {
+          "id": "c",
+          "label": "Different tokenisers can represent the same text with different token counts."
+        },
+        {
+          "id": "d",
+          "label": "It measures end-to-end cost for every deployment."
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Byte throughput makes the amount of decoded text more comparable across tokenisers, but still depends on the serving setup."
+    },
+    {
+      "id": "mc4",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "What does the HumanEval disclosure imply?",
+      "options": [
+        {
+          "id": "a",
+          "label": "All published benchmarks are invalid."
+        },
+        {
+          "id": "b",
+          "label": "Later-stage filtering erases pre-training exposure."
+        },
+        {
+          "id": "c",
+          "label": "Memorised reference solutions can inflate HumanEval scores."
+        },
+        {
+          "id": "d",
+          "label": "The model cannot write code."
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The authors observed recitation, making this benchmark less reliable evidence of generalisation."
+    },
+    {
+      "id": "f1",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "Explain why a globally balanced expert load can still yield poor latency.",
+      "modelAnswer": "Averages can conceal a heavily loaded device or microbatch; a synchronised step waits for its slowest work."
+    },
+    {
+      "id": "f2",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "Explain what the reported Pareto frontier does and does not establish.",
+      "modelAnswer": "It describes quality and throughput relative to selected models and measured configurations, not every workload or hardware choice."
+    },
+    {
+      "id": "n1",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "Using 3.46B active and 78.1B total parameters, estimate the active fraction.",
+      "modelAnswer": "3.46 / 78.1 is approximately 0.0443, or 4.4%. This parameter ratio is not a measured speedup."
+    },
+    {
+      "id": "n2",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "Kolibri has 48 query heads and four KV heads. How many query heads share each KV head?",
+      "modelAnswer": "Twelve. Each group of 48 / 4 query heads reads the same head’s keys and values."
+    },
+    {
+      "id": "n3",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "For 1,024 tokens, six routed choices per token and 384 experts, what is the even-load target? How far above target are 24 assignments?",
+      "modelAnswer": "The target is 6 × 1,024 / 384 = 16 assignments per expert. Twenty-four assignments are 50% above target."
+    },
+    {
+      "id": "f3",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "A routing bias makes expert C enter the top six. What score determines how strongly its output contributes?",
+      "modelAnswer": "The sigmoid of C’s raw logit determines its output weight. The bias affects selection, and the selected scores are used without renormalising them."
+    },
+    {
+      "id": "n4",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "Four single-segment rollouts get rewards 1, 1, 0 and 0. What advantages do the generated tokens inherit?",
+      "modelAnswer": "The mean reward is 0.5. Subtracting it gives +0.5, +0.5, −0.5 and −0.5 for the four attempts."
+    },
+    {
+      "id": "f4",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "Why can two batches with the same number of tokens have very different full-attention costs during supervised fine-tuning?",
+      "modelAnswer": "Packed conversations are masked from one another. Full-attention pairs within an individual conversation grow roughly with the square of its length, so one long conversation takes more work than several shorter conversations with the same total tokens."
+    }
+  ]
+}

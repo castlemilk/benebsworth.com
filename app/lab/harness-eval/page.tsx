@@ -8,7 +8,7 @@ import { Reveal } from '@/components/motion/reveal';
 import { ALL_SUMMARIES } from '@/lib/lab/harness-eval/results';
 import { rankModels, aggregateFailures, overallStats } from '@/lib/lab/harness-eval/analytics';
 import { formatModelLabel, suiteCoverage } from '@/lib/lab/harness-eval/labels';
-import { HARNESS_SUITES, HARNESS_TASKS } from '@/lib/lab/harness-eval/registry';
+import { HARNESS_SUITES } from '@/lib/lab/harness-eval/registry';
 import { loadIntroContent } from '@/lib/lab/harness-eval/content';
 import { harnessModelPath } from '@/lib/lab/harness-eval/nav';
 

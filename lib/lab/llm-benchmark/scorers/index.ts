@@ -1,4 +1,4 @@
-import type { BenchmarkScorerName, BenchmarkTask, Scorer } from '../types'
+import type { BenchmarkTask, Scorer } from '../types'
 import { htmlScorer } from './html'
 import { textScorer } from './text'
 import { behavioralScorer } from './behavioral'

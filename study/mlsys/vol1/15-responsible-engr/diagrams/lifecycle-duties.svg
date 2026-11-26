@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="lifecycle-duties" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="life-title life-desc">
+  <title id="life-title">A duty per stage</title>
+  <desc id="life-desc">Specify slices and budgets, measure disaggregated criteria, explain and document, operate fairness as loop stability — four duties chained through the lifecycle.</desc>
+  <style>
+    .dark #lifecycle-duties { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#lifecycle-duties { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="32" font-size="19" font-weight="650">Responsibility is four duties, chained</text>
+    <text x="20" y="54" font-size="13.5">each stage has a number it must answer for</text>
+
+    <g font-size="12.5">
+      <rect x="20" y="76" width="160" height="66" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="30" y="94" font-weight="650">Specify</text>
+      <text x="30" y="110">slices, criteria, budgets,</text>
+      <text x="30" y="124">oversight placement</text>
+      <rect x="200" y="76" width="160" height="66" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="210" y="94" font-weight="650">Measure</text>
+      <text x="210" y="110">disaggregated criteria,</text>
+      <text x="210" y="124">representation cost</text>
+      <rect x="200" y="162" width="160" height="66" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="210" y="180" font-weight="650">Explain</text>
+      <text x="210" y="196">attribution priced like</text>
+      <text x="210" y="210">inference; docs</text>
+      <rect x="20" y="162" width="160" height="66" rx="6" fill="var(--fig-mark, #a33c20)"/>
+      <text x="30" y="180" font-weight="650" fill="var(--fig-paper, #f7f3e9)">Operate</text>
+      <text x="30" y="196" fill="var(--fig-paper, #f7f3e9)">fairness as loop stability;</text>
+      <text x="30" y="210" fill="var(--fig-paper, #f7f3e9)">per-group telemetry</text>
+    </g>
+    <path d="M180 109h20M280 142v20M180 195h20M100 162v-20" stroke="var(--fig-rule, #b7b4a7)" stroke-width="1.5" fill="none"/>
+
+    <text x="190" y="258" text-anchor="middle" font-size="12.5">the loop closes: disparity drifts back through feedback,</text>
+    <text x="190" y="278" text-anchor="middle" font-size="12.5">so operate watches the same slices specify declared</text>
+  </g>
+</svg>

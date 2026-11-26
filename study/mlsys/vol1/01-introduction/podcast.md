@@ -8,6 +8,7 @@ one TTS segment; keep units spoken naturally (no formulas, spell numbers out).
 stripped from speech, rendered as math in the transcript.
 
 A: Welcome back, I'm Marcus. Today we're doing chapter one of Machine
+![Machine learning systems](/study/vol1/01-introduction/cover.webp)
 Learning Systems, Vijay Janapa Reddi's Harvard text and honestly, it's the
 chapter that reframes what "AI engineering" even means.
 
@@ -15,6 +16,7 @@ B: And I'm Iris. The chapter's big move is to say: the model isn't the
 product. The system is. And they have a name for that — the dual mandate.
 
 A: The dual mandate, yeah. Two obligations at once: the model has to keep
+::fig[dam-loop]
 producing statistically trustworthy behaviour, and the system has to execute
 inside physical budgets, time, memory, energy, cost. Fail either side and
 you've failed, even if the other side looks perfect.
@@ -52,6 +54,7 @@ that code correctness is the wrong verification target for ML systems:
 you're verifying the wrong layer.
 
 B: Which sets up the thing I found most counter-intuitive, silent
+::fig[silent-degradation]
 degradation. In normal software, broken things scream. Exceptions, crash
 loops, five-hundreds.
 
@@ -71,6 +74,7 @@ A: There's a nice phrase in the packet for this: a green dashboard is not
 evidence the model works.
 
 B: Good line. Okay, second pillar of the chapter: the iron law of execution.
+::fig[iron-law-budget]
 If software engineering has Amdahl, ML systems has this.
 
 A: Execution time decomposes into data over bandwidth, plus operations over
@@ -85,6 +89,7 @@ Moving a byte costs orders of magnitude more energy than computing on it. So
 the fastest fix is rarely a faster chip, it's moving less data.
 
 A: And that loops back to the D-A-M structure: data, algorithm, machine.
+::fig[dam-loop]
 Three axes, and every edge of the triangle points both ways, relax a
 bottleneck on one axis and it migrates to a neighbour.
 

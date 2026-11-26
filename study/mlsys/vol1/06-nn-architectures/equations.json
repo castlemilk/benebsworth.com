@@ -1,0 +1,115 @@
+[
+ {
+  "id": "conv-layer",
+  "number": 1,
+  "title": "One convolutional layer",
+  "latex": "H_{i,j,k} = f\\!\\left(\\sum_{c}\\sum_{u,v} W_{u,v,c,k}\\,X_{i+u,j+v,c} + b_k\\right)",
+  "caption": "Each output activation reads only a K-by-K window of the input, and the same W is used at every spatial position. Local connectivity shrinks the weight count per detector; sharing multiplies each weight's reuse by the number of positions. The two constraints are the whole CNN bias.",
+  "symbols": [
+   {"symbol": "H_{i,j,k}", "name": "output activation", "meaning": "feature-map value at row i, column j, output channel k"},
+   {"symbol": "X_{i+u,j+v,c}", "name": "input window", "meaning": "input pixel at offset (u,v) inside the kernel footprint, channel c"},
+   {"symbol": "W_{u,v,c,k}", "name": "kernel weights", "meaning": "K x K x C_in x C_out parameters shared across all positions"},
+   {"symbol": "b_k", "name": "bias", "meaning": "one scalar per output channel"},
+   {"symbol": "c", "name": "input channel", "meaning": "sums over every input channel in the window"},
+   {"symbol": "u,v", "name": "kernel offsets", "meaning": "positions inside the K x K stencil"},
+   {"symbol": "f", "name": "activation", "meaning": "element-wise nonlinearity applied after the sum"}
+  ]
+ },
+ {
+  "id": "dw-reduction",
+  "number": 2,
+  "title": "Depthwise-separable cost ratio",
+  "latex": "\\frac{\\text{factorized}}{\\text{standard}} \\approx \\frac{1}{C_{out}} + \\frac{1}{K^2}",
+  "caption": "Splitting a K x K convolution into a per-channel spatial filter plus a 1 x 1 channel mix divides parameters and MACs by roughly the larger of C_out or K^2 - about 8-9x for 3 x 3 kernels. The saving is real arithmetic, but the depthwise stage has no cross-channel reuse, so its arithmetic intensity drops and wall-clock speedup lags the FLOP count on wide-GEMM hardware.",
+  "symbols": [
+   {"symbol": "\\text{factorized}", "name": "depthwise-separable cost", "meaning": "parameters or MACs of the two-stage factorization"},
+   {"symbol": "\\text{standard}", "name": "standard conv cost", "meaning": "parameters or MACs of the monolithic K x K x C_in x C_out kernel"},
+   {"symbol": "C_{out}", "name": "output channels", "meaning": "channel mix width; its inverse is the pointwise term"},
+   {"symbol": "K^2", "name": "kernel area", "meaning": "spatial positions per filter; its inverse is the depthwise term"},
+   {"symbol": "K", "name": "kernel side", "meaning": "spatial extent of each per-channel filter (3 for MobileNetV2)"}
+  ]
+ },
+ {
+  "id": "attention",
+  "number": 3,
+  "title": "Scaled dot-product attention",
+  "latex": "\\mathrm{Attention}(Q,K,V) = \\mathrm{softmax}\\!\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V",
+  "caption": "Content-based routing: every query scores against every key, softmax turns scores into mixing weights, and the output is a weighted sum of values. The QK^T product is where the S-squared score work lives - the family's signature cost. Dividing by sqrt(d_k) keeps score magnitudes out of the softmax's saturated tail as head width grows.",
+  "symbols": [
+   {"symbol": "Q", "name": "queries", "meaning": "S x d_k projected representations, one row per position"},
+   {"symbol": "K", "name": "keys", "meaning": "S x d_k projections each query is scored against"},
+   {"symbol": "V", "name": "values", "meaning": "S x d_v content actually mixed by the weights"},
+   {"symbol": "QK^T", "name": "score matrix", "meaning": "S x S pairwise relevance scores; the quadratic term"},
+   {"symbol": "\\sqrt{d_k}", "name": "scale factor", "meaning": "per-head dimension root; stops dot products saturating softmax"},
+   {"symbol": "d_k", "name": "head dimension", "meaning": "feature width of each attention head (d_model / heads)"},
+   {"symbol": "\\mathrm{softmax}", "name": "row normalizer", "meaning": "turns each row of scores into weights summing to 1"}
+  ]
+ },
+ {
+  "id": "attention-crossover",
+  "number": 4,
+  "title": "Where the quadratic term takes over",
+  "latex": "12\\,S\\,d^2 = 2\\,S^2 d \\;\\Rightarrow\\; S^{*} = 6d",
+  "caption": "Inside one transformer block the dense projections plus a 4x-width FFN cost 12·S·d^2 MACs while the two attention products cost 2·S^2·d. Setting them equal puts the crossover at six times the hidden width - about 9,600 tokens for a 1,600-wide model. Below it, ordinary GEMMs dominate; the quadratic is a long-context phenomenon.",
+  "symbols": [
+   {"symbol": "S", "name": "sequence length", "meaning": "tokens processed together; batch folded into the per-request view"},
+   {"symbol": "d", "name": "hidden width", "meaning": "model dimension d_model (1,600 for GPT-2 XL)"},
+   {"symbol": "12\\,S\\,d^2", "name": "dense work", "meaning": "QKV + output projections (4Sd^2) plus FFN (8Sd^2) per block"},
+   {"symbol": "2\\,S^2 d", "name": "attention work", "meaning": "score product QK^T (S^2d) plus the V mix (S^2d)"},
+   {"symbol": "S^{*}", "name": "crossover", "meaning": "context length where attention arithmetic equals dense arithmetic"}
+  ]
+ },
+ {
+  "id": "decode-intensity",
+  "number": 5,
+  "title": "Decode arithmetic intensity",
+  "latex": "I_{decode} = \\frac{2\\ \\mathrm{FLOPs}}{2\\ \\mathrm{bytes}} = 1.0\\ \\mathrm{FLOP/byte}",
+  "caption": "Autoregressive decode at batch one is a GEMV: each FP16 weight is read once and participates in one MAC (2 FLOPs) per emitted token. The ratio never rises with better kernels - only batching or weight reuse lifts it. A 70B model therefore streams over 100 GB of weights per token, and the weight read alone costs about a millisecond at HBM speeds.",
+  "symbols": [
+   {"symbol": "I_{decode}", "name": "decode intensity", "meaning": "FLOPs per byte of weight traffic during token generation"},
+   {"symbol": "2\\ \\mathrm{FLOPs}", "name": "MAC work", "meaning": "one multiply plus one add per weight per token"},
+   {"symbol": "2\\ \\mathrm{bytes}", "name": "weight read", "meaning": "FP16 weight size; FP32 halves the ratio to 0.5"}
+  ]
+ },
+ {
+  "id": "kv-cache",
+  "number": 6,
+  "title": "KV cache size per request",
+  "latex": "M_{KV} = L \\times 2 \\times d_{model} \\times S \\times \\mathrm{bytes}",
+  "caption": "Decode never recomputes past keys and values: each layer stores one K and one V per past token. GPT-2 XL (48 layers, width 1,600, FP16) burns about 307 KB per token, so the cache crosses the ~3 GB weight footprint near ten thousand tokens of context, then keeps growing linearly with context and concurrency.",
+  "symbols": [
+   {"symbol": "M_{KV}", "name": "cache bytes", "meaning": "resident memory one request's KV state occupies"},
+   {"symbol": "L", "name": "layer count", "meaning": "transformer blocks each holding their own K/V (48 for GPT-2 XL)"},
+   {"symbol": "2", "name": "K and V", "meaning": "two tensors per token per layer"},
+   {"symbol": "d_{model}", "name": "model width", "meaning": "hidden dimension each stored vector spans"},
+   {"symbol": "S", "name": "context length", "meaning": "past tokens retained; the linear-growth term"},
+   {"symbol": "\\mathrm{bytes}", "name": "element size", "meaning": "2 for FP16; quantization shrinks the cache linearly"}
+  ]
+ },
+ {
+  "id": "score-memory",
+  "number": 7,
+  "title": "Materialized score memory",
+  "latex": "M_{scores} = S^2 \\times \\mathrm{bytes}_{elem} \\times L",
+  "caption": "If the S x S score matrix is written out, storage grows quadratically: doubling context quadruples it, and 512 to 4096 tokens is a 64x blowup. Across all layers of a GPT-2 XL-shaped model, materialized scores would fill an 80 GB accelerator around 20-40K tokens - which is why tiled kernels stream the scores through registers instead of materializing them. The arithmetic stays quadratic; only the storage is optional.",
+  "symbols": [
+   {"symbol": "M_{scores}", "name": "score storage", "meaning": "bytes needed to hold all pairwise attention scores"},
+   {"symbol": "S^2", "name": "score count", "meaning": "one score per query-key pair; the quadratic driver"},
+   {"symbol": "\\mathrm{bytes}_{elem}", "name": "element size", "meaning": "bytes per stored score (2 FP16, 4 FP32)"},
+   {"symbol": "L", "name": "layer count", "meaning": "multiplies if every layer's scores are held at once"},
+   {"symbol": "S", "name": "sequence length", "meaning": "positions scored against each other"}
+  ]
+ },
+ {
+  "id": "train-state",
+  "number": 8,
+  "title": "Training state per parameter",
+  "latex": "M_{train} = P \\times 16\\ \\mathrm{bytes}",
+  "caption": "Holding a model for training costs four FP32-sized slots per parameter: weights, gradients, and Adam's two moments (momentum and variance). GPT-2 XL's ~24 GB of parameter state fits one accelerator; DLRM's embedding-heavy footprint does not - which is why table capacity, not compute, decides its cluster shape.",
+  "symbols": [
+   {"symbol": "M_{train}", "name": "training state", "meaning": "persistent optimizer plus gradient memory for the whole model"},
+   {"symbol": "P", "name": "parameter count", "meaning": "trainable weights; for DLRM the table rows dominate"},
+   {"symbol": "16\\ \\mathrm{bytes}", "name": "bytes per param", "meaning": "4B weights + 4B gradients + 8B Adam m and v"}
+  ]
+ }
+]

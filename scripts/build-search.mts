@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { createIndex, close } from 'pagefind'
@@ -24,9 +25,17 @@ export async function buildSearch(site = 'out') {
     const grounded = groundedSearchRecords()
     const records = [...studies, ...artwork, ...grounded]
     for (const record of records) check((await index.addCustomRecord(record)).errors, `Index ${record.url}`)
-    const written = await index.writeFiles({ outputPath: path.join(site, 'pagefind') })
-    check(written.errors, 'Write search index')
-    return { htmlFilesScanned: html.page_count, svgStudies: studies.length, pngArtwork: artwork.length, groundedArtwork: grounded.length, outputPath: written.outputPath }
+    // Own the disk writes. Closing the native service immediately after its
+    // writeFiles acknowledgement can leave empty files in the exported site.
+    const bundle = await index.getFiles()
+    check(bundle.errors, 'Generate search index')
+    const outputPath = path.join(site, 'pagefind')
+    for (const file of bundle.files) {
+      const target = path.join(outputPath, file.path)
+      await fs.mkdir(path.dirname(target), { recursive: true })
+      await fs.writeFile(target, file.content)
+    }
+    return { htmlFilesScanned: html.page_count, svgStudies: studies.length, pngArtwork: artwork.length, groundedArtwork: grounded.length, outputPath }
   } finally {
     await close()
   }

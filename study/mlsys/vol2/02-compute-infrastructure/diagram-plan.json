@@ -1,0 +1,55 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "Opening case carries the bandwidth-vs-FLOPs decision; the mechanisms get figures in their own sections."
+    },
+    "The Infrastructure Walls": {
+      "proseOnly": "The three walls are framed with numbers that each get a figure downstream (intensity growth → ridge-map, TDP → power-ladder, MTBF → node-mtbf eq)."
+    },
+    "The Accelerator and the Nameplate": {
+      "proseOnly": "Reticle/chiplet and precision-dial claims are carried by the precision-fit chart and the physics table."
+    },
+    "The Memory Wall": {
+      "figure": "::fig[ridge-map]",
+      "teaches": "The roofline landscape: ridge at ~295 FLOP/B, decode batch-1 at 1 FLOP/B (~0.34% of peak), prefill and training above the ridge. Whether the nameplate is reachable is decided before any tuning.",
+      "source": "Roofline model + the chapter's landscape points (decode b1/b32, CNN, prefill-512, training)."
+    },
+    "Sustained Compute and Precision": {
+      "proseOnly": "The 1,000→2,500 GPU-hour correction is the sustained-hours equation's worked example."
+    },
+    "The Node": {
+      "figure": "::fig[bandwidth-staircase]",
+      "teaches": "Four tiers, three ~7-9× drops: parallelism choices map onto the staircase (TP inside NVLink, PP across nodes, DP across the fabric).",
+      "source": "HBM3 3.35 TB/s → NVLink 900 GB/s → IB NDR 50 GB/s → storage 7 GB/s."
+    },
+    "The Rack": {
+      "figure": "::fig[power-ladder]",
+      "teaches": "Power compounds up the hierarchy: 700 W device → ~10 kW node → 33.5 kW rack → ~8 MW pod, with heat flux (~86 W/cm²) forcing liquid at the top.",
+      "source": "DGX H100 33.5 kW rack vs 12 kW traditional; 7-10 MW pod."
+    },
+    "The Pod": {
+      "figure": "::fig[state-budget]",
+      "teaches": "The job's ~2.1 TB static state vs 640 GiB node HBM: sharding is mandatory and the optimizer term dominates; pod time then layers failure/maintenance onto the compute floor.",
+      "source": "~12 B/param vs 8×80 GB node HBM; TP8×PP8×DP16; ~24 h compute → ~51 h maintained."
+    },
+    "Accelerator Selection": {
+      "proseOnly": "The selection matrix and the 5→3→2 device count live in the precision-fit chart and the decode-floor equation."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Each fallacy reuses a worked number from earlier sections."
+    },
+    "The physics": {
+      "proseOnly": "Reference table."
+    },
+    "Glossary": {
+      "proseOnly": "Term index feeding /study/concepts."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Transfer bridges."
+    },
+    "Open questions": {
+      "proseOnly": "Open threads into later chapters."
+    }
+  }
+}

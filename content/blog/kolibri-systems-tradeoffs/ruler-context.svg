@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 424" role="img" aria-labelledby="title desc">
+  <title id="title">RULER scores as context length doubles</title>
+  <desc id="desc">From 128k to 1M, Kolibri Base scores 67.9, 69.8, 65.5 and 63.2 percent. Nemotron 3 Nano Base scores 81.0, 72.1, 73.1 and 58.5. Qwen3.5 35B-A3B Base scores 89.9, 80.1, 72.2 and 57.5. The last two lengths exceed Kolibri's trained window.</desc>
+  <style>
+    text {font:22px system-ui,sans-serif;fill:#202d2c}
+    .title {font-size:26px;font-weight:700}
+    .small {font-size:20px;fill:#394e49}
+    .grid {stroke:#cbd7d4}
+    .kolibri {stroke:#1e715d;stroke-width:4;fill:none}
+    .nano {stroke:#6c5289;stroke-width:3;stroke-dasharray:8 6;fill:none}
+    .qwen {stroke:#89522d;stroke-width:3;stroke-linecap:round;stroke-dasharray:1 7;fill:none}
+    .value {fill:#185e50;font-weight:750}
+  </style>
+  <rect width="600" height="424" rx="12" fill="#f8faf9"/>
+  <text x="25" y="43" class="title">Long-context quality on RULER</text>
+  <path class="kolibri" d="M25 72h24"/>
+  <text x="59" y="79" class="small">Kolibri Base</text>
+  <path class="nano" d="M225 72h28"/>
+  <text x="263" y="79" class="small">Nemotron 3 Nano Base</text>
+  <path class="qwen" d="M25 101h24"/>
+  <text x="59" y="108" class="small">Qwen3.5 35B-A3B Base</text>
+  <rect x="236" y="150" width="322" height="168" fill="#eaf2ef"/>
+  <text x="68" y="139" class="small">Score (%)</text>
+  <text x="253" y="139" class="small">Beyond Kolibri training →</text>
+  <path class="grid" d="M68 150h490M68 183.6h490M68 217.2h490M68 250.8h490M68 284.4h490M68 318h490"/>
+  <path d="M68 150v168h490" stroke="#718680" fill="none"/>
+  <path d="M236 150v168" stroke="#718680" stroke-dasharray="3 5"/>
+  <g text-anchor="end" class="small">
+    <text x="57" y="157">100</text><text x="57" y="191">90</text><text x="57" y="224">80</text>
+    <text x="57" y="258">70</text><text x="57" y="291">60</text><text x="57" y="325">50</text>
+  </g>
+  <path class="qwen" d="M82 183.94L236 216.86L390 243.41L544 292.8"/>
+  <path class="nano" d="M82 213.84L236 243.74L390 240.38L544 289.44"/>
+  <path class="kolibri" d="M82 257.86L236 251.47L390 265.92L544 273.65"/>
+  <g fill="#1e715d">
+    <circle cx="82" cy="257.86" r="5"/><circle cx="236" cy="251.47" r="5"/>
+    <circle cx="390" cy="265.92" r="5"/><circle cx="544" cy="273.65" r="5"/>
+  </g>
+  <text x="533" y="262" text-anchor="end" class="value">63.2%</text>
+  <g class="small" text-anchor="middle">
+    <text x="82" y="348">128k</text><text x="236" y="348">256k</text>
+    <text x="390" y="348">512k</text><text x="544" y="348">1M</text>
+    <text x="316" y="381">Context length in tokens · doubles at each tick</text>
+  </g>
+  <text x="25" y="409" class="small">Source: Aleph Alpha technical report, Table 18</text>
+</svg>

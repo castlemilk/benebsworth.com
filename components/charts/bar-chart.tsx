@@ -390,6 +390,7 @@ const ChartCore = memo(function ChartCore({
       setIsLoaded(true);
     }, animationDuration + staggerMs);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- revealSignature captures the data; data.length only sizes the stagger
   }, [animationDuration, revealSignature, status]);
 
   useEffect(() => {

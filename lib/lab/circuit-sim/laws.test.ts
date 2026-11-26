@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { checkKCL, checkKVL, checkRCTransient, fuzzKCL } from './laws'
 import { circuit } from './validator'
-import { generateWires } from './wiring'
 
 describe('Kirchhoff Current Law (KCL)', () => {
   it('voltage divider satisfies KCL at all nodes', () => {

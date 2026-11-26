@@ -1,0 +1,30 @@
+[
+  {
+    "id": "attack-surface",
+    "file": "attack-surface.svg",
+    "title": "The attack surface is the lifecycle",
+    "caption": "Each lifecycle stage exposes a different objective and a first control: ingestion takes poisoning, training takes update attacks, the registry takes artifact theft, serving takes extraction and injection, and the edge takes compromised endpoints. No availability or accuracy signal moves when one succeeds.",
+    "alt": "Grid mapping five lifecycle stages to their primary attack class and first control"
+  },
+  {
+    "id": "extraction-budget",
+    "file": "extraction-budget.svg",
+    "title": "Two thefts, two budgets",
+    "caption": "Exact artifact theft needs a storage or registry compromise and is stopped by encryption, signing and access control. Behavioral theft needs only query access and is bounded by cumulative per-principal budgets and the output contract, because a daily rate limit slows collection without capping its total.",
+    "alt": "Two attack branches for model theft converging on different control boundaries"
+  },
+  {
+    "id": "defense-stack",
+    "file": "defense-stack.svg",
+    "title": "Defenses are a stack",
+    "caption": "Four tiers own four boundaries: hardware roots prove what is genuine, platform controls bound what runs beside what, model-level shaping bounds what responses teach, and data-level privacy bounds what the release reveals. Each tier spends a different axis of the Fleet Law.",
+    "alt": "Four stacked defense tiers from hardware to data with examples per tier"
+  },
+  {
+    "id": "privacy-budget-account",
+    "file": "privacy-budget-account.svg",
+    "title": "The privacy budget is an account",
+    "caption": "Ten releases at epsilon = 1 each compose to a basic bound of epsilon = 10. A mechanism-specific accountant tightens the bound below the naive sum, and post-processing a fixed release adds nothing because it never touches protected data again.",
+    "alt": "Bar showing ten epsilon=1 releases accumulating to epsilon=10 under basic composition, with a tighter accountant bound below"
+  }
+]

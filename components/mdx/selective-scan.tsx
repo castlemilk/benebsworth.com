@@ -188,7 +188,7 @@ export function SelectiveScan() {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [running, inView, scrubbing, n])
 
   // keep the imperative ref in sync with committed state

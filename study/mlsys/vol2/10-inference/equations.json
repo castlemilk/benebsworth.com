@@ -1,0 +1,196 @@
+[
+  {
+    "id": "serving-tax",
+    "number": "10.1",
+    "title": "End-to-end serving latency",
+    "latex": "T_{\\mathrm{req}}=T_{\\mathrm{inference}}+T_{\\mathrm{network}}+T_{\\mathrm{serialization}}+T_{\\mathrm{coordination}}+T_{\\mathrm{queueing}}",
+    "caption": "The serving tax is the exposed non-model work that consumes the same request budget as inference; concurrent work must not be counted twice.",
+    "symbols": [
+      {
+        "symbol": "T_{\\mathrm{req}}",
+        "name": "end-to-end request latency",
+        "meaning": "latency visible across the declared request boundary"
+      },
+      {
+        "symbol": "T_{\\mathrm{inference}}",
+        "name": "inference latency",
+        "meaning": "model execution time inside that boundary"
+      },
+      {
+        "symbol": "T_{\\mathrm{network}}",
+        "name": "network latency",
+        "meaning": "exposed transfer setup and payload time across machine dependencies"
+      },
+      {
+        "symbol": "T_{\\mathrm{serialization}}",
+        "name": "serialization latency",
+        "meaning": "host cost of converting payloads to and from wire representations"
+      },
+      {
+        "symbol": "T_{\\mathrm{coordination}}",
+        "name": "coordination latency",
+        "meaning": "routing, fan-out joining and dependent-service coordination on the critical path"
+      },
+      {
+        "symbol": "T_{\\mathrm{queueing}}",
+        "name": "queueing latency",
+        "meaning": "waiting for busy serving resources"
+      }
+    ]
+  },
+  {
+    "id": "lifetime-cost",
+    "number": "10.2",
+    "title": "Model lifetime cost",
+    "latex": "C_{\\mathrm{life}}=C_{\\mathrm{train}}+c_{\\mathrm{query}}\\,D\\,\\lambda",
+    "caption": "Training is paid once per model version; serving cost recurs with deployment duration and admitted traffic.",
+    "symbols": [
+      {
+        "symbol": "C_{\\mathrm{life}}",
+        "name": "lifetime cost",
+        "meaning": "total cost of one deployed model version over its lifetime"
+      },
+      {
+        "symbol": "C_{\\mathrm{train}}",
+        "name": "training cost",
+        "meaning": "one-time cost of producing the model version"
+      },
+      {
+        "symbol": "c_{\\mathrm{query}}",
+        "name": "serving cost per query",
+        "meaning": "fully bounded cost of one served query, including billed idle or reserved capacity"
+      },
+      {
+        "symbol": "D",
+        "name": "deployment duration",
+        "meaning": "time the model version remains in service"
+      },
+      {
+        "symbol": "\\lambda",
+        "name": "served query rate",
+        "meaning": "rate of admitted, served queries counted in the same boundary as unit cost"
+      }
+    ]
+  },
+  {
+    "id": "batch-efficiency",
+    "number": "10.3",
+    "title": "Batched service rate",
+    "latex": "\\mu(B)=\\frac{B}{\\alpha+B\\,\\beta}",
+    "caption": "Batch service time is fixed overhead plus batch size times marginal per-request cost; throughput rises toward one over the marginal cost as overhead is amortized.",
+    "symbols": [
+      {
+        "symbol": "B",
+        "name": "batch size",
+        "meaning": "number of requests served together"
+      },
+      {
+        "symbol": "\\alpha",
+        "name": "fixed batch cost",
+        "meaning": "batch-invariant setup and synchronization time"
+      },
+      {
+        "symbol": "\\beta",
+        "name": "marginal request cost",
+        "meaning": "incremental service time per additional request"
+      },
+      {
+        "symbol": "\\mu(B)",
+        "name": "batched service rate",
+        "meaning": "requests served per unit time once a batch begins execution"
+      }
+    ]
+  },
+  {
+    "id": "padding-waste",
+    "number": "10.4",
+    "title": "Static-batch padding waste",
+    "latex": "W=1-\\frac{\\mathbb{E}[L]}{L_{\\max}}",
+    "caption": "Under the chapter's simplified fixed-membership model, output-length dispersion becomes padded computation that continuous batching can reclaim.",
+    "symbols": [
+      {
+        "symbol": "W",
+        "name": "waste fraction",
+        "meaning": "share of compute spent on padding rather than useful output positions"
+      },
+      {
+        "symbol": "\\mathbb{E}[L]",
+        "name": "mean output length",
+        "meaning": "average completed response length in tokens"
+      },
+      {
+        "symbol": "L_{\\max}",
+        "name": "maximum output length",
+        "meaning": "length to which shorter responses are padded or batch width is held"
+      }
+    ]
+  },
+  {
+    "id": "kv-token-bytes",
+    "number": "10.5",
+    "title": "KV-cache bytes per token",
+    "latex": "M_{\\mathrm{KV/token}}=2\\,L\\,N_{\\mathrm{KV}}\\,d_{\\mathrm{head}}\\,b",
+    "caption": "Each cached token stores keys and values for every layer and KV head; the linear product makes context length an admission budget.",
+    "symbols": [
+      {
+        "symbol": "M_{\\mathrm{KV/token}}",
+        "name": "KV bytes per token",
+        "meaning": "bytes of accelerator memory required for one token of context"
+      },
+      {
+        "symbol": "L",
+        "name": "layer count",
+        "meaning": "number of transformer layers carrying cached state"
+      },
+      {
+        "symbol": "N_{\\mathrm{KV}}",
+        "name": "KV head count",
+        "meaning": "key-value heads per layer; grouped-query attention reduces this count"
+      },
+      {
+        "symbol": "d_{\\mathrm{head}}",
+        "name": "head dimension",
+        "meaning": "dimension of each attention head"
+      },
+      {
+        "symbol": "b",
+        "name": "bytes per element",
+        "meaning": "storage precision of each key or value element"
+      },
+      {
+        "symbol": "2",
+        "name": "keys and values",
+        "meaning": "one key tensor and one value tensor per token per layer"
+      }
+    ]
+  },
+  {
+    "id": "kv-handoff",
+    "number": "10.6",
+    "title": "Disaggregated KV handoff",
+    "latex": "T_{\\mathrm{handoff}}=\\alpha_{\\mathrm{net}}+\\frac{M_{\\mathrm{KV}}}{\\beta_{\\mathrm{net}}}",
+    "caption": "Separating prefill and decode converts cache locality into a network transfer with latency and bandwidth terms.",
+    "symbols": [
+      {
+        "symbol": "T_{\\mathrm{handoff}}",
+        "name": "handoff time",
+        "meaning": "time to move a request's KV cache from prefill to decode workers"
+      },
+      {
+        "symbol": "\\alpha_{\\mathrm{net}}",
+        "name": "network fixed latency",
+        "meaning": "setup, queueing and protocol latency independent of payload size"
+      },
+      {
+        "symbol": "M_{\\mathrm{KV}}",
+        "name": "KV payload",
+        "meaning": "bytes of key-value state that must cross the pool boundary"
+      },
+      {
+        "symbol": "\\beta_{\\mathrm{net}}",
+        "name": "effective bandwidth",
+        "meaning": "sustained transfer bandwidth available for the handoff"
+      }
+    ]
+  }
+]

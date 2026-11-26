@@ -10,6 +10,7 @@ import rehypeStringify from 'rehype-stringify'
 import katex from 'katex'
 import type { Element, ElementContent, Root, RootContent, Text } from 'hast'
 import type { EquationSymbol } from '@/lib/gen/study'
+import { rehypeBenchmarkTables } from '@/lib/rehype-benchmark-tables'
 
 /**
  * Plain-markdown pipeline for generated study packets — deliberately NOT MDX.
@@ -43,7 +44,7 @@ function isSkippable(node: HastNode): node is Element {
  */
 function collectGloss(firstText: string, siblings: RootContent[], from: number) {
   const inner: ElementContent[] = []
-  const tail = firstText.match(/^\{([\s\S]*?)\}(.*)$/)
+  const tail = firstText.match(/^\{([\s\S]*?)\}([\s\S]*)$/)
   if (tail) {
     if (tail[1]) inner.push({ type: 'text', value: tail[1] })
     return { inner, consumed: 0, rest: tail[2] }
@@ -125,7 +126,14 @@ function rehypeStudyMarks() {
               parts[i + 1] = gloss.rest
             }
           }
-          out.push({ type: 'element', tagName: 'mark', properties: { className: ['study-mark'] }, children: markChildren })
+          out.push({
+            type: 'element',
+            tagName: 'mark',
+            // tabIndex lets tap-to-focus reveal the gloss card on touch
+            // screens, where :hover never fires.
+            properties: { className: ['study-mark'], ...(markChildren.length > 1 ? { tabIndex: 0 } : {}) },
+            children: markChildren,
+          })
         }
       }
       parent.children = out as typeof parent.children
@@ -135,6 +143,9 @@ function rehypeStudyMarks() {
 }
 
 const NOTE_KINDS = new Set(['note', 'observation', 'caution', 'method', 'connection', 'question'])
+// Authors keep reaching for Obsidian-style names; map them onto the styled set
+// rather than letting the marker fall through as literal blockquote text.
+const NOTE_KIND_ALIASES: Record<string, string> = { warning: 'caution', tip: 'note', important: 'caution' }
 
 /** `> [!kind] Title` blockquotes → `.study-note` asides. */
 function rehypeStudyCallouts() {
@@ -150,9 +161,9 @@ function rehypeStudyCallouts() {
         const first = child.children.find((c): c is Element => c.type === 'element' && c.tagName === 'p')
         const t = first?.children.find((c): c is Text => c.type === 'text')
         if (!first || !t) return child
-        const m = t.value.match(/^\[!([a-z]+)\]\s*([^\n]*)\n?([\s\S]*)$/i)
+        const m = t.value.match(/^\[!([a-z]+)\][ \t]*([^\n]*)\n?([\s\S]*)$/i)
         if (!m) return child
-        const kind = m[1].toLowerCase()
+        const kind = NOTE_KIND_ALIASES[m[1].toLowerCase()] ?? m[1].toLowerCase()
         if (!NOTE_KINDS.has(kind)) return child
         const title = m[2].trim()
         const tIdx = first.children.indexOf(t)
@@ -179,6 +190,31 @@ function rehypeStudyCallouts() {
           ],
         } as Element
       })
+    }
+    walk(tree)
+  }
+}
+
+/** Decorative heading punctuation ('→ Ben's world') slugs to '-bens-world'; tidy ids post-slug, collision-safe. */
+function rehypeTidyHeadingIds() {
+  return (tree: Root) => {
+    const used = new Set<string>()
+    const collect = (el: Root | Element) => {
+      if (el.type === 'element' && typeof el.properties?.id === 'string') used.add(el.properties.id as string)
+      for (const c of el.children) if (c.type === 'element') collect(c)
+    }
+    collect(tree)
+    const walk = (el: Root | Element) => {
+      for (const c of el.children) if (c.type === 'element') walk(c)
+      if (el.type !== 'element') return
+      const id = el.properties?.id
+      if (typeof id !== 'string') return
+      const tidy = id.replace(/-+/g, '-').replace(/^-+|-+$/g, '')
+      if (tidy && tidy !== id && !used.has(tidy)) {
+        used.delete(id)
+        used.add(tidy)
+        el.properties.id = tidy
+      }
     }
     walk(tree)
   }
@@ -485,10 +521,12 @@ const processor = unified()
   .use(remarkMath)
   .use(remarkRehype)
   .use(rehypeSlug)
+  .use(rehypeTidyHeadingIds)
   .use(rehypeKatex, { strict: false, throwOnError: false })
   .use(rehypePrettyCode, { theme: 'github-dark' })
   .use(rehypeStudyCallouts)
   .use(rehypeStudyMarks)
+  .use(rehypeBenchmarkTables, { wrap: true })
   .use(rehypeStringify)
 
 export async function renderMarkdown(
@@ -508,10 +546,12 @@ export async function renderMarkdown(
     .use(remarkMath)
     .use(remarkRehype)
     .use(rehypeSlug)
+    .use(rehypeTidyHeadingIds)
     .use(rehypeKatex, { strict: false, throwOnError: false })
     .use(rehypePrettyCode, { theme: 'github-dark' })
     .use(rehypeStudyCallouts)
     .use(rehypeStudyMarks)
+    .use(rehypeBenchmarkTables, { wrap: true })
     .use(rehypeEquationExplainers, opts.equationSymbols ?? new Map())
     .use(rehypeInlineFigures, opts.inlineFigures ?? new Map(), opts.bookFigureIds ?? new Set(), opts.chartInfo ?? new Map(), opts.embeds)
     .use(rehypeStringify, { allowDangerousHtml: true })

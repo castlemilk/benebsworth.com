@@ -1,0 +1,449 @@
+--- 10-model-compression/packet/packet.md
++++ astra/10-model-compression/packet/packet.md
+@@ -9,129 +9,125 @@
+ ## Thesis
+ 
+-The compression change most likely to make a model fit and run well is the one that reduces the resource use that currently prevents deployment. Start by measuring the task and its bottleneck on the target device. Change the model structure when there is work the device could avoid, lower precision when fewer bits can reduce resident memory or data movement, and change execution when the runtime can avoid intermediate transfers or exploit the compressed representation. A candidate is ready when the exported artifact meets the device's memory, timing, and energy limits under representative conditions and preserves the quality users need, including on inputs the aggregate score can hide.
++Which compression change will make this model fit and run well on its target device while preserving the quality users need? Start with one result the device must deliver, such as a sorting decision before a parcel reaches a diverter. Measure where the current pipeline exceeds its budget. A smaller weight representation can relieve memory pressure, a narrower network can remove arithmetic, and a fused kernel can avoid moving an intermediate tensor. Each change makes a different prediction about what the device will do. Choose the change that addresses the measured limit, then test that prediction and the quality of the decision together on the exported model.
+ 
+ ## Guided notes
+ 
++### Find what holds up one decision
++
++A parcel sorter has until the parcel reaches the diverter to turn a camera exposure into a routing decision. That interval gives latency a concrete meaning. Start the timer at capture and stop it when the decision is available to the controller. Within that interval, use a device trace to locate waits, transfers and kernels on the critical path. A convolution can spend its time performing arithmetic, while a relatively simple normalization can spend its time reading and writing an entire feature map. Reducing either operator's cost matters to the deadline only to the extent that it advances the final decision.
++
++Fix the batch size and image resolution, then replay the arrival pattern the sorter must handle. Keep the capture timestamp attached to each frame as it moves through the queue. A burst can leave a frame waiting behind its neighbors even when its own inference takes the usual time. Run long enough to capture the clock speeds the device sustains over a shift. A short run from cold can miss delays that appear once the device heats up.
++
++Pick a late command and trace backward from delivery. If a transfer overlaps a kernel, only its ==exposed delay=={Shortening a transfer advances its consumer only until another required input becomes the last to arrive.} can move that consumer earlier. For a kernel on this path, compare arithmetic-unit utilization with bytes transferred per second. A convolution that keeps the arithmetic units busy is a candidate for reducing operations. A normalization that approaches sustainable memory bandwidth while those units sit mostly idle calls for reducing tensor traffic. Gaps between short kernels warrant checking dispatch overhead.
++
++Suppose, illustratively, that one frame encounters no queue and all three stages run in sequence. Preparation finishes 7 ms after capture, inference finishes at 7 + 15 = 22 ms, and command delivery finishes at 24 ms. Against a 20 ms deadline, halving the 2 ms delivery stage still leaves the command 3 ms late. Holding preparation and delivery fixed leaves 20 − 7 − 2 = 11 ms for inference. Use the trace to look for 4 ms recoverable there, then replay arrivals to see whether the modified path meets the deadline.
++
++::fig[trace-a-routing-decision]
++
++Read the four steps from left to right. The deadline sets the timer endpoints, the replay supplies the workload, and the last two steps connect a delay to its cause. Ranking layers by multiply-accumulates alone could send an engineer to a convolution while a feature-map pass holds up delivery. If the trace implicates that pass, try a fused kernel and check whether both transferred bytes and command latency fall. For cloud serving, run the comparison at the required tail latency and compare throughput per dollar. On a microcontroller, first check that the artifact fits storage and that peak live allocations fit working memory.
++
+ ### Count the entire resident footprint
+ 
+-A deployment budget puts a ceiling on the memory, time, and energy that a model can use. For a capacity limit, count the allocations that coexist at peak use, including weights, live activations, and runtime buffers. An artifact's file size answers a separate storage question. Once the model fits, timing depends on the deployment. A camera must deliver frames on time, a cloud service must handle its request load, and a microcontroller may need to fit its artifact in flash and its peak working set in SRAM.
++Memory capacity limits allocations that must coexist. Weights hold learned coefficients, while activations hold values produced for the current input. Compressing weights changes only one term if the runtime keeps the same activations live. For a first deployment-budget calculation, specify the memory pool, the allocations charged to it and the instant at which they coexist. Add their resident sizes and compare the sum with the capacity assigned to that pool. A model file answers a different accounting question because the runtime can unpack it or allocate temporary storage during execution.
+ 
+-Trace one inference through an allocation timeline: weights may persist throughout, while activations, scratch space, packed weight copies, and state have different lifetimes. Add only allocations that coexist, but include every allocation in the capacity being checked. For a decoder, repeat the accounting at the longest supported context because its key-value cache grows as tokens accumulate. ==Peak residency is a lifetime question=={Allocations that never coexist do not contribute together to the peak.}
++Follow a feature map from its producer to its last reader. If a convolution writes an output while its input is still live, count space for both at that instant. Once the last reader finishes, the allocator can give the input's space to a later tensor that fits. Draw each allocation as an interval and add the bytes along a vertical slice through those intervals. The largest sum gives the ==peak live bytes=={An allocator can reserve more memory than its live tensors occupy.} for the pool under examination.
+ 
+-Measure the baseline at production input sizes, batch or concurrency, and power mode. Pair allocation peaks and end-to-end timing with a runtime trace and hardware counters to investigate whether the hot path is limited by data transfers, arithmetic, or launch overhead.
++Use the same units throughout. One MiB is 1,048,576 bytes. Placement matters on a microcontroller that reads weights directly from flash. Charge the stored weights to flash and the live feature maps to SRAM. If the runtime copies weights into SRAM during initialization, include that copy for its actual lifetime.
+ 
+-For an illustrative device with a 48 MiB tensor budget, suppose 24 MiB of weights and 36 MiB of activations coexist. Their 60 MiB total exceeds capacity by 12 MiB. Reducing the weights to 8 MiB while holding activations fixed gives 44 MiB, leaving 4 MiB under the limit. The bar labels compare those two totals with capacity; this first calculation excludes all other allocations.
++Consider an illustrative 48 MiB pool assigned to simultaneous weights and activations. Exclude all other allocations for this calculation. The original 24 MiB of weights coexist with 36 MiB of activations, giving 60 MiB and a 12 MiB shortfall. Reducing resident weights to 8 MiB leaves the activation allocation intact. The candidate therefore uses 8 + 36 = 44 MiB, which passes this tensor budget with 4 MiB to spare.
+ 
+ ::fig[resident-footprint-versus-capacity]
+ 
+-The shorter compressed bar does not imply a threefold reduction in peak memory: activations remain at 36 MiB. Treating weight reduction as proportional peak reduction could lead to shipping a model that fails when other buffers coexist. Check the allocation trace at peak use, including runtime buffers, and recalculate against the applicable limit. Then measure timing and quality on the exported model. If the limiting resource remains computation rather than capacity, removing work from a hot layer is another candidate.
++Compare each footprint bar with the 48 MiB capacity bar. The 16 MiB drop between footprints accounts for every weight byte saved. Dividing the original 60 MiB by three would also shrink the activation allocation on paper and could lead to approving a device with too little memory. Trace initialization and steady-state inference at each supported input size. If the observed high-water mark exceeds the estimate, inspect allocator reservations and the scratch space requested by the kernel running at the peak. Recheck fit with those bytes included, then test latency and predictive quality separately.
+ 
+-### Remove work from a trained model
++### Remove work the device can actually skip
+ 
+-Structural compression changes the work in the inference graph. Channel pruning removes an output channel and the corresponding inputs of layers that consume it. The resulting smaller dense layers can use ordinary kernels and may also produce smaller activations. Low-rank factorization replaces a matrix with two thinner matrices when its useful behavior can be approximated in fewer dimensions. Both methods are most promising when the affected layers contribute substantially to the measured bottleneck and the resized operations map well to the target.
++A structural change pays off when it removes useful amounts of scheduled work at an acceptable quality cost. Pruning an output channel from a convolution removes a filter, a feature map and the corresponding input slice from consumers that can accept the narrower shape. Pruning individual coefficients produces a different opportunity. Their positions must be encoded and a kernel must exploit them to skip work. Low-rank factorization offers a third route when many outputs depend on the same few combinations of inputs. Two smaller dense maps can then approximate one large map using regular operations already available on the device.
+ 
+-When pruning a convolutional output channel, remove its corresponding inputs from every consumer. Follow residual paths and shared consumers as well: their tensor shapes must remain compatible. Try widths aligned with the target hardware’s tiles, then fine-tune each viable candidate and check task quality. Scattered zeros alone retain the original dense shape, so an ordinary dense kernel still processes those positions.
++Start with a convolution that the device spends appreciable time running. Rank its output channels by the sum of their absolute filter weights, or record how strongly each channel activates on representative parcels. Either ranking suggests a cut to try. A channel that rarely activates across the stream may still matter every time a particular destination appears. Remove a small group, keep the surviving channels in the same order throughout the graph, then fine-tune and check routing errors by destination. Trace each removed channel through every branch. At a residual addition, both operands must agree on which channels occupy the surviving positions. Matching widths alone can leave unrelated features being added together.
+ 
+-For an m-input, n-output linear layer, a rank-r approximation replaces m × n weights with r × (m + n). Its two operations create an intermediate tensor and may require a second launch. ==Fewer arithmetic operations are only a candidate speedup=={The exported operations must also execute efficiently on the target device.} Inspect approximation error and profile the exported graph.
++Choose the size of the cut with the compiled kernel in view. For an illustrative kernel that schedules output channels in tiles of 16, widths of 64 and 60 both occupy four tiles. A width of 48 occupies three. Crossing a ==tile boundary=={A smaller logical width can occupy the same number of scheduled tiles until an entire tile disappears.} can therefore change the work scheduled for each output location while the image size stays fixed. Removing a whole stage goes further by eliminating its operations, but the remaining stages must learn to compensate for the lost transformation.
+ 
+-Suppose an illustrative hot layer maps 1,024 inputs to 1,024 outputs and is approximated at rank 128, ignoring bias. The full matrix contains 1,024 × 1,024 = 1,048,576 weights. Its two factors contain 1,024 × 128 + 128 × 1,024 = 262,144 weights. For one input vector, dense multiply-accumulate counts have the same fourfold ratio. The bar labels compare these layer-level weight counts. Prototype the replacement, then keep it only if the exported pair improves the relevant device metric and passes the quality gate.
++Consider a bias-free projection in the sorter with 256 inputs and 128 outputs. Assume these dimensions and the proposed rank are illustrative. The dense bar counts one coefficient for every input-output pair, or 256 × 128 = 32,768. To read the rank-32 bar, follow one input vector through two linear maps. The first forms 32 intermediate values using 256 × 32 = 8,192 coefficients. The second mixes those values into the original 128 outputs using 32 × 128 = 4,096 more. Together they retain 12,288 coefficients, or 37.5% of the original count.
+ 
+-::fig[factorized-layer-weight-count]
++At equal weight precision that saves storage for 20,480 coefficients while preserving the consumer's input width. Check the approximation on held-out parcel images, including cases where the two most likely destinations score nearly alike. If routing quality holds, time both exports at batch one. The factorized path may write and reread 32 intermediate values and incur a second kernel launch. Use the measured decision time to decide whether the storage saving also helps meet the deadline.
+ 
+-The smaller bar represents thinner dense matrices, not merely zeros placed in the original matrix. Assuming scattered pruning produces the same dense-kernel saving could prompt an ineffective deployment. Inspect the exported tensor shapes and runtime trace: unchanged dimensions and similar kernel time indicate that ordinary dense execution has little work to skip. Try structural pruning or a supported sparse path, and verify the resulting quality and device performance.
++::fig[projection-coefficient-count]
+ 
+-### Train a smaller graph or vary work by input
++Both bars count coefficients in the exported projections. A filter mask can produce many zeros while leaving the dense bar at its original height. If a pruning run reports fewer active weights but device time stays flat, inspect the producer's output shape, each consumer's input shape and the kernel selected at export. Rebuild compatible narrower tensors if the mask left the shapes intact. If the shapes contracted, check tile counts before cutting more channels. When several such cuts cost too much routing accuracy, a student designed around supported widths offers another way to change the schedule.
+ 
+-When modifying an existing graph offers too little room, train a model designed around the target device. Distillation helps a compact student learn from the distribution of predictions made by a larger teacher, which conveys information about plausible alternatives to the labeled answer. A hardware-aware architecture uses operators and tensor shapes the target executes efficiently. Neural architecture search can explore those choices systematically. Adaptive computation tackles a different opportunity by giving easy inputs a short path and reserving deeper computation for inputs that need it.
++### Choose a smaller network and decide when it should run
+ 
+-A student processes each frame through its own graph; the teacher supplies training targets but need not run on the device. Select operators, channel widths and input resolution against the device’s latency and activation-memory limits, while holding the task and evaluation workload fixed. A search can use latency estimates to screen a bounded set of designs, then benchmark exported finalists: ==estimated latency is a filter=={Only measurements of the deployed graph establish whether a candidate meets the device budget.}
++Sometimes the expensive part is the architecture itself. A compact student can learn from both task labels and a larger teacher's output distribution. For a damaged label, the teacher's relative scores for two plausible destinations convey information that a single destination label omits. Distillation makes that training signal available to a student whose widths, operators and activation sizes suit the device. A further design choice is whether every parcel needs the full student. An early exit can finish easy inputs cheaply if its confidence predicts correctness and enough inputs take the shortcut to repay the cost of checking.
+ 
+-An early-exit policy instead routes each frame within a graph. Its confidence threshold trades the fraction returned early against the quality of those returned predictions; calibrate it on representative inputs and evaluate that subset separately.
++Use the stage timings to bound the architecture search. Try widths, depths and operators for which the runtime has kernels, and keep candidates within the device's memory budget. Include input resolution as a choice. A smaller crop can cut feature-map traffic at several stages, yet two destination codes may become indistinguishable once the camera's finest lettering has been resampled. Score that pair during the search. Use a latency estimator to narrow the candidates, then time the promising exports on the device. An unfamiliar width can select a different kernel and reverse the estimated ordering.
+ 
+-For an illustrative camera workload, suppose 80% of frames finish in 6 ms and the remaining 20% take 14 ms, with routing included. The mean is 0.8 × 6 + 0.2 × 14 = 7.6 ms. At the 95th percentile, the 6 ms group has covered only 80% of frames, so the latency is 14 ms. Reject the candidate against a 12 ms 95th-percentile limit before assessing prediction quality.
++For each training image, divide the teacher's logits by a temperature greater than one before computing probabilities. This leaves more probability on alternative destinations. Train the student to match those softened probabilities at the same temperature, and score its ordinary predictions against the known labels. The teacher can generate targets ahead of time. At deployment an intermediate head reads the student's own features and either returns a destination or passes the parcel to the remaining stages. Every parcel pays for that check. The ==exit threshold=={Changing the threshold changes which parcels contribute to the early path's error rate.} controls both the frequency of the shortcut and the evidence needed to trust it.
+ 
+-::fig[early-exit-decision]
++Consider an illustrative acceptance test in which at most 1% of creased labels may be misrouted. Fit the threshold on held-out labels, then freeze it. Replay the same clean and creased batches through the fixed-depth export and the adaptive export. Record the exit choice, destination and elapsed decision time per parcel. Suppose 50 of 100 creased labels exit early and two of those go to the wrong destination. Even with every full-path decision correct, the adaptive export misses the limit. Its early-exit error rate is 2/50, and its error rate across creased labels is 2/100. Retain the fixed-depth student if it meets the quality and timing budgets, even if clean parcels give the adaptive export a lower average time.
+ 
+-In the flow, the confidence check sends a frame either to a returned prediction or through the remaining layers. A lower mean can obscure deadline violations on the latter route, leading an engineer to approve the model too early. Record exit rates and per-frame latency under representative traffic; test clustered difficult inputs and batches whose paths diverge. If the tail misses its limit, revise the policy or graph and remeasure. Once the execution path is viable, precision offers another way to reduce its resource use.
++::fig[qualify-an-early-exit]
+ 
+-### Choose a precision the device can use
++The replay and difficult-run steps answer different questions. Per-parcel records reveal whether confidence predicts correctness. Preserving arrival times during a run of damaged labels reveals whether full-path decisions, each carrying the routing overhead, make the queue grow. Test the exported student with the teacher offline. Adding the teacher to replay would charge every parcel for a training signal the student already learned and could lead to rejecting a feasible design. Once the architecture and exit policy are settled, use their actual activation distributions to evaluate lower precision.
+ 
+-Quantization maps weights or activations to a smaller set of representable values. FP32 to INT8 divides the raw bytes per converted value by four. The total memory and traffic also include scales, packing, and tensors left at higher precision. Lower precision can help a bandwidth-limited stage by reducing bytes moved, often reducing off-chip transfer energy as well. For a compute-limited stage, speed depends on whether the target can execute the chosen format efficiently at the workload's shapes and batch size.
++### Spend precision where errors change decisions
+ 
+-Follow a weight block from memory into a kernel. A packed integer representation can reduce bytes crossing the bus, but an expansion to a wider temporary buffer adds traffic and conversion work. Inspect the accumulator type and floating-point fallbacks as well as the stored format. ==Packing must survive the path=={A small file alone does not establish that the deployed kernel moves fewer bytes.}
++Quantization represents a tensor using a limited set of values. With uniform integer quantization, a scale sets the distance between adjacent representable values and a zero point locates real zero on the integer grid. A wide range can preserve outliers while rounding distinct small signals to the same value. A narrow range can resolve those signals while clipping large ones. Floating-point formats use exponent bits to span magnitudes and fraction bits to distinguish nearby values. The choice therefore depends on the tensor's distribution, the decisions that depend on it and the formats the target can execute efficiently.
+ 
+-For floating point, exponent bits govern range and significand bits govern precision. For integers, the scale sets the spacing between codes and, with the available codes, their range. Check whether outliers clip and whether small values round away before accepting the format.
++Start post-training quantization with the trained weights fixed. Run calibration images through the inference graph and collect activation ranges at the tensors the exporter will quantize. Include parcels whose destinations differ by a faint stroke, as well as images with glare that produces large responses. If one channel has a large peak, a shared scale that accommodates it spends integer codes on magnitudes that a neighboring channel never reaches. Where the target operator supports per-channel activation scales, the exporter can give the quieter channel a finer grid while keeping both channels at eight bits. Check support for the particular tensor. A kernel that accepts per-channel weight scales can still require a single activation scale.
+ 
+-Use illustrative inputs for one weight read: 16 MiB of FP16 weights and a sustained 800 MiB/s transfer rate give 16 ÷ 800 = 0.020 s, or 20 ms. INT8 halves the raw payload to 8 MiB; adding 1 MiB of scales and metadata gives 9 ÷ 800 = 0.01125 s, or 11.25 ms. The bars label these two read-only estimates in milliseconds. Their difference is 8.75 ms. Prototype the conversion if the baseline trace places those reads on the critical path, then measure conversion and scheduling costs.
++If the export misses its quality target, replay the same failing images through both models. Compare reconstructed activations at successive operators and trace where a difference becomes large enough to change the winning destination. Restoring a suspect operator to higher precision and repeating the comparison tests its contribution. Inspect each ==precision boundary=={An extra conversion can require a full tensor read and write even when only one operator needs higher precision.} in the resulting device trace. If rounding and clipping affect several layers, quantization-aware training lets the optimizer adjust weights while simulated quantizers expose those errors during training. Export the result and repeat the decision test.
+ 
+-::fig[estimated-weight-transfer-time]
++Account separately for bytes and execution time. Each FP32 weight occupies four bytes and each INT8 weight occupies one, before scale metadata and alignment. Reading fewer bytes can shorten a bandwidth-limited operation and save energy on data movement. Compute time depends on which kernel consumes those bytes. At the binary extreme, a specialized kernel can compare packed signs from two vectors a word at a time. For entries restricted to −1 and +1, each matching pair contributes +1 to a dot product and each mismatch contributes −1. Counting matching bits supplies the sum once the vector length is known. Include packing costs in the timing and test whether discarding magnitude preserves the decisions.
+ 
+-The shorter INT8 bar accounts for metadata but excludes execution and conversion. Treating its difference as an end-to-end speedup could justify a deployment that gains little. Profile the exported kernel for expanded buffers, fallbacks and time spent waiting for memory; if those costs dominate, choose a supported path or revisit the format. Next, test whether the chosen range preserves the model’s output quality.
++Consider two illustrative label-image channels with a shared scale of 0.1 activation units per code, zero point 0 and nearest rounding. A faint stroke produces 0.04 units in the quieter channel. Dividing by 0.1 gives 0.4, which rounds to code 0 and reconstructs as 0. An absent stroke with value 0 gets the same code. Assume the runtime supports a scale of 0.02 for this channel. The same division now gives code 2, which reconstructs as 2 × 0.02 = 0.04 units. Keep the wider channel's scale fixed and test this export. The calculation establishes that the stroke survives encoding. Adoption also requires checking the quieter channel's peaks for clipping and comparing routing decisions on held-out images.
+ 
+-### Manage quantization error
++::fig[follow-a-quantized-feature]
+ 
+-Post-training quantization usually offers the quickest trial. It chooses scales after training, using representative data when activation ranges must be estimated. Wider ranges preserve large values but increase the spacing between representable values, so ordinary inputs can lose detail. When calibration and selective precision leave unacceptable errors, quantization-aware training simulates quantization during training so the model can adapt. Very low bit widths magnify the quality trade-off and require an execution path that makes the representation worthwhile.
++“Observe the range” and “Trace the decision” use different images for different purposes. Calibration on clear labels alone can yield a grid that looks adequate until glare drives responses to the end codes. Low contrast can instead push two distinguishable responses into the same interior bin. For parcels whose route changes after export, inspect both end-code counts and the codes assigned to the distinguishing stroke. Use those observations to revise calibration coverage or scale granularity, then verify quality and trace the cost of the chosen representation on the device.
+ 
+-Calibration spends the available integer codes across the activation values seen under intended operating conditions. For each sensor event, the quantizer maps an activation to a nearby code and the runtime reconstructs an approximate value; values outside the chosen range clip at its boundary. Hold the model and bit width fixed while comparing ranges, then inspect clipping and rounding error by tensor or channel. Per-channel weight scales can give channels with different ranges appropriate resolution. A sensitive operator can retain higher precision if the target kernels support it.
++### Follow compressed values through the runtime
+ 
+-Quantization-aware training changes the model by exposing it to simulated quantization errors during training. Check that the exported graph reproduces the numeric behavior evaluated there. At the extreme, sign-encoded binary weights and activations can replace scalar multiplication with XNOR, but ==packing and kernels matter=={A binary representation only saves execution work if the runtime can use it efficiently.}
++The runtime determines where compressed values travel and what arithmetic consumes them. A kernel can read packed weights, unpack a small tile close to the arithmetic unit and immediately use it. Expanding the whole tensor into global memory first introduces a write and another read. Fusion applies the same principle to intermediate results. For an inference convolution followed by batch normalization and an activation, a compiler can fold fixed normalization parameters into the convolution and apply the activation before writing the output. This removes launches and intermediate transfers where the shapes, precision and operator semantics permit it.
+ 
+-For an illustrative sensor activation, use symmetric INT8 codes from −127 to 127. A magnitude limit of 2 gives a step of 2 ÷ 127, or about 0.0157; an activation of 5 clips to 2. A limit of 5 preserves that activation but increases the step to about 0.0394. Calibrate using representative events, then evaluate both exports on separate held-out quiet and loud events. If neither meets detection quality on a deployment slice, test higher precision for the operation or quantization-aware training.
++Pick one camera frame and follow its activation tensor through the lowered graph, where each operation has a device assignment and a concrete layout. A convolution may leave its output in accelerator memory with channels arranged in blocks. If the next operator runs only on the CPU, the runtime may have to reorder the tensor, make it available to the CPU and wait for completion before launching the next accelerator kernel. On a device with separate memories, that detour can include a copy in each direction. Look for those dependencies on the frame's timeline. A short CPU kernel can hold up the frame for much longer than its arithmetic takes.
+ 
+-::fig[quantization-quality-loop]
++Apply the same reasoning to sparse weights. An irregular sparse representation carries positions alongside surviving values. A kernel must decode those positions to fetch the corresponding input elements. A patterned kernel can exploit a ==local sparsity requirement=={Eligibility can depend on the arrangement of weights within every group along the kernel's reduction dimension.} as well as constraints on tensor dimensions. Inspect the exported layout and the selected kernel at the deployed shape. A high overall zero count can coexist with a dense launch that executes all the multiplies.
+ 
+-The loop directs attention from calibration through export, held-out evaluation, failure inspection and adjustment. Choosing the wider range solely because it clips fewer values may sacrifice distinctions among common quiet events. Compare slice-level detection errors and tensor clipping and rounding statistics; if quiet-event quality fails, revise the scale or retain precision and repeat the loop. Next, check whether the runtime actually exploits the accepted representation.
++Suppose an illustrative sorter trace contains a quantized convolution, dequantization, floating-point batch normalization, requantization and an activation. The normalization uses frozen inference statistics. For one output channel, write the convolution as y = Wx + b and the frozen normalization as ay + c, where a and c are constants for that channel. Substitution gives (aW)x + (ab + c). Apply that transformation to each channel before quantization. Calibrate the folded graph, compile it with the activation and replay the same frames at the production batch size and image dimensions. Check whether the conversion launches disappear and whether the activation runs before the convolution output leaves the kernel. Prefer the candidate if routing quality passes and timing confirms a saving on the frame's critical path.
+ 
+-### Make the runtime realize the savings
++::fig[inspect-a-fused-block]
+ 
+-The compiler and runtime determine how much of a compressed model's theoretical gain reaches the device. Operator fusion can keep intermediate values in registers or on-chip memory and avoid some launches. In a convolution, batch normalization, and activation chain, inference-time batch normalization can often be folded into the convolution and the activation applied in the same kernel. Sparse execution likewise requires a matching representation and kernel. A dense kernel still reads and processes stored zeros.
++The first two steps establish why folding preserves the floating-point computation. The third matters because multiplying each filter by its own constant changes the range the quantizer must encode. The last step checks what actually ran. If conversions disappear but frame latency stays flat, inspect the timeline for a wait elsewhere before crediting fusion with a deadline improvement. Use the same test for two matrices with equal zero fractions. If only one selects the sparse kernel, inspect grouping and dimensions before choosing a pruning pattern. Fix the surviving channels and fold their normalization constants before collecting ranges for the final export.
+ 
+-A compressed tensor saves device resources only through the operations the runtime selects. Follow a convolution output: separate kernels may write it to global memory, read it for batch normalization, write that result, and read it again for activation. Folding inference-time normalization into the convolution and fusing the activation can keep intermediates on-chip. After pruning fixes the surviving channels, fold normalization before calibrating the folded weights.
++### Sequence changes around what calibration assumes
+ 
+-Inspect the lowered graph and device timeline for conversions, intermediate writes and device-to-host copies. A quantized kernel may unpack tiles inside its compute loop instead of materializing a full wider tensor. For sparse weights, ==zeros need a compatible kernel=={A dense kernel still processes stored zeros even when the checkpoint contains many of them.} A supported 2:4 layout, for example, limits each relevant group of four entries to two nonzeros. Compare its mask, alignment and packing costs with the dense path.
++Compression techniques interact through the tensors they change. Channel pruning changes the inputs received by downstream layers. Fine-tuning or distillation changes the surviving weights and can shift activation ranges again. Integer scales fitted to an earlier graph can therefore clip the final model even if each change passed in isolation. For a pruned student using post-training quantization, settle the topology, recover task quality, finalize inference transformations that alter ranges and then calibrate. Keep intermediate candidates so a regression can be traced to a particular change or combination.
+ 
+-Suppose each operation in an illustrative three-operation chain reads a 4 MiB tensor and writes a 4 MiB tensor to global memory. The three separate kernels move 3 × (4 + 4) = 24 MiB. If one fused kernel reads the input once, keeps both intermediates on-chip and writes the final output once, it moves 4 + 4 = 8 MiB. Both counts exclude weights. The bar lengths show how much traffic each execution path would generate under these assumptions.
++Trace a parcel image through the slowest convolution. If the device repeatedly fetches the same filters from memory and its arithmetic units wait for those reads, try a supported compact weight format at the current channel width. If dense multiply-accumulates occupy the units throughout the layer, compare widths that fill whole kernel tiles. Removing a few channels can leave the kernel executing the same number of tiles with the last one partly empty. After a material gain, profile the whole graph again. The next delay may be a tensor transfer between operators.
+ 
+-::fig[fusion-activation-traffic]
++Training code can use a teacher’s outputs to adjust the surviving weights or simulate integer rounding during recovery. The deployment compiler chooses the kernels that execute those operations. For post-training quantization, treat the scales as ==part of the checkpoint’s export=={Reusing scales after a range-changing edit can map distinct responses to the same limiting integer.} Save the checkpoint, preprocessing, calibration input list, scales and compiler settings together so another engineer can reconstruct the comparison.
+ 
+-The 16 MiB gap is a traffic opportunity, not a guaranteed latency reduction: tiling or spills can change actual transfers. If intermediate traffic is on the critical path, test fusion and compare device traffic and latency. Likewise, a zero-heavy checkpoint alone does not justify choosing sparse execution. Inspect the exported layout and selected kernel, then benchmark a supported sparse path against dense execution on the target shapes. These measurements feed the comparison of feasible candidates.
++Consider an illustrative sorter for which the recovered floating-point pruned model and an INT8 export of the original network each pass the damaged-label test. A pruned INT8 build using the original activation ranges fails. Keep the recovered weights fixed, fold batch normalization for inference, and verify the folded floating-point export on the same label images. Fit fresh scales on a separate representative calibration set. Then replay the label test through the freshly calibrated export and its floating-point counterpart with identical preprocessing.
+ 
+-### Sequence changes and compare feasible candidates
++Suppose several misroutes persist. At one convolution, distinct floating-point responses to broken strokes all exceed the upper endpoint in the integer export. Try a supported wider precision at that layer. Keep the candidate if it restores the required decisions and still meets the device limits after accounting for conversions at both ends of the layer.
+ 
+-Pick the first change by matching it to the violated budget and its cause. Smaller resident weights can address capacity or weight traffic. Channel pruning or a smaller student can address expensive dense layers when the target executes the resized graph efficiently. Fusion can address an expensive chain of intermediate transfers. Compare candidates on measured quality and system costs. A candidate is dominated when another matches or improves every relevant metric and does strictly better on at least one. The remaining trade-offs belong on the accuracy-efficiency frontier.
++::fig[sequence-a-pruned-student]
+ 
+-A structural edit changes the tensors that later quantization will represent. Prune channels or train a student, recover quality with fine-tuning, then fold batch normalization if the deployment toolchain requires it and fit numeric ranges on that settled graph. ==Calibration follows the final distributions=={A later change to weights or activations can make previously fitted ranges unsuitable.} Compile the candidate and inspect its kernels, conversions, and fallbacks; fewer stored values do not by themselves guarantee less execution time. Save each candidate and its profile so the next decision uses the current bottleneck.
++Read the flow from left to right when tracing the failure. The recovered checkpoint tells you whether the narrow model could distinguish the damaged labels before rounding. The calibration step tests the ranges of that particular model. Adding the losses from two independent trials skips that dependency and could lead you to discard a usable channel width. Record quality and device cost for each export, then remove candidates that miss a hard limit. Among the survivors, one candidate dominates another when it does at least as well on every chosen objective and better on one. Take the remaining trade-offs into a production-shaped replay.
+ 
+-For an illustrative 40 MiB FP32 weight payload, removing half the weights and storing the survivors at 8 rather than 32 bits gives 40 × 0.5 × 8 ÷ 32 = 5 MiB, before sparse metadata and quantization scales. Separately, suppose a 100 ms run spends 40 ms in the affected stage and 60 ms elsewhere. An eightfold improvement to that stage leaves 40 ÷ 8 + 60 = 65 ms. The hypothetical result misses a 60 ms deadline, so inspect and change work outside that stage too.
++### Accept the model on a full production-shaped run
+ 
+-::fig[compression-candidate-sequence]
++The acceptance test asks whether the delivered system makes a good enough decision in time under the conditions users encounter. Run the baseline and exported candidate on the target with the same preprocessing, input mix, arrival pattern and output handling. Record artifact size, peak resident memory, latency distribution, sustained throughput and energy per completed decision. Pair these measurements with task quality and confidence calibration on consequential slices. A candidate qualifies when the same deployed configuration meets all required limits. Results drawn from different batch sizes, devices or precision settings cannot establish that joint outcome.
+ 
+-Read the flow from locating the limit through setting structure, fitting ranges, compiling, and comparing candidates. Multiplying isolated speedups across the whole run would incorrectly predict that the deadline is met, while calibrating before pruning risks stale ranges. Compare stage traces and quality before and after compilation; unexpected fallback, conversion time, or a quality drop calls for investigating the artifact and recalibrating or retraining as needed. The surviving candidate still needs an end-to-end acceptance test.
++Follow one scan from the camera timestamp to the command issued at the diverter. Keep its input identifier alongside the predicted destination, confidence, final command and known destination. A low-confidence read may send the parcel to inspection. A confidently wrong read sends it down the wrong chute. Set limits for both outcomes before the replay, and tag scans by lighting and label condition. Within a confidence band, compare predicted confidence with the fraction of predictions that were correct. A change in confidence can move parcels across the inspection threshold even when their highest-scoring destinations stay the same.
+ 
+-### Run an end-to-end acceptance test
++Time cold initialization separately, then replay arrivals long enough for the device to reach its sustained operating temperature. Keep queueing time in the capture-to-command interval. Repeat the replay and report variation across trials so a short run at a high clock rate cannot stand in for an entire shift. For energy, use ==one accounting interval=={Energy and completed decisions must cover the same time window for their ratio to describe that workload.} State which components the meter covers, integrate their power over the interval and count the decisions completed within it.
+ 
+-Test the artifact that will ship against the baseline under equivalent workload and device conditions. Evaluate three dimensions together. The data must represent the production distribution and important user slices. The algorithm must preserve task performance and any confidence behavior the application relies on. The machine must stay within its storage, peak memory, latency, throughput, and energy budgets. Define the limits before comparing candidates, and collect enough observations to tell whether a narrow margin is repeatable.
++For an illustrative acceptance trial, set the capture-to-command p99 limit at 20 ms and the damaged-label misroute limit at 1% of all damaged-label cases. Replay the baseline and candidate with the production inspection threshold. Suppose the candidate’s p99 across the replay is 18 ms. That clears the timing limit by 2 ms. Now select the 1,000 damaged-label records and count commands that sent a parcel to an incorrect destination. With 18 such commands the observed rate is 18 / 1,000 = 1.8%. The contract allows at most 10 in this sample. Withhold acceptance and retain the identifiers of the 18 parcels for paired inspection.
+ 
+-Run each held-out input through the same preprocessing, exported model, and postprocessing used in production. Keep the cases, device conditions, batch size, and concurrency comparable between baseline and candidate. Record median and tail latency, peak runtime memory, energy, and sustained behavior long enough to expose thermal throttling; measure cold start when users experience it. ==A pass belongs to a specific artifact=={Changing the export, runtime, or device configuration can invalidate the measurements used for release.} Check confidence calibration separately when decisions depend on predicted probabilities.
++::fig[accept-a-sorter-release]
+ 
+-Suppose a camera release requires at most 48 MiB peak memory and 12 ms at the 95th percentile, plus at least 92% low-light recall. These inputs are illustrative. Candidate A uses 44 MiB and takes 10 ms but reaches only 89% recall; candidate B uses 47 MiB, takes 11 ms, and reaches 93% recall. Compare each number with its own limit: A fails its quality gate, while B passes all three. Release B only if it also meets every other gate and repeated trials support the margins.
+-
+-::fig[deployment-acceptance-test]
+-
+-The flow puts gate definition before the full workload and requires every threshold to pass before release. If aggregate accuracy conceals A's low-light loss, selecting the faster candidate would expose those users to missed detections. Report recall on the same held-out low-light cases for both models and repeat the device measurements; investigate the failing slice or revise the candidate before testing again. Record the artifact and environment so a failed gate can be traced to a reproducible cause.
+-
+-### Trace a failed gate to its cause
+-
+-A failed end-to-end test identifies a symptom. Align a candidate's device timeline with its graph to locate unexpected costs, and compare its outputs with the baseline on the same inputs to locate the first substantial error. A layer with few arithmetic operations can dominate runtime because it repeatedly streams a large activation. A quality drop can come from a saturated channel, pruning that removes a useful feature, or confidence scores that drift. Use a targeted intervention to test the suspected cause before changing the rest of the model.
+-
+-Follow an activation through the exported graph while inspecting the device timeline. Kernel names and operator boundaries reveal whether it stays in INT8 or is converted for a floating-point fallback. Memory traffic counters and intermediate allocation sizes distinguish a tensor-copy bottleneck from expensive arithmetic; many short kernels can instead indicate launch overhead. ==A cheap operator can hold the critical path=={Low arithmetic cost does not prevent an operator from consuming time through data movement or launches.}
+-
+-For a quality failure, compare baseline and candidate tensors on the same inputs. Plot error and saturation by tensor and input slice to find where divergence begins. For pruning, compare the mask with activation traces and test restoring a suspect channel; a filter's appearance alone does not establish its contribution.
+-
+-Consider an illustrative INT8 artifact that takes 13 ms against an 11 ms deadline. Its trace attributes 4 ms to a block that falls back to floating point, including surrounding conversions. Change only that block to a supported lowering, holding the workload and rest of the graph fixed. If the block takes 1.5 ms on rerun and everything else stays steady, the predicted total is 13 − 4 + 1.5 = 10.5 ms. A measured 10.5 ms supports the fallback diagnosis. Recheck quality on the revised artifact and repeat the sustained run before accepting it.
+-
+-::fig[failed-gate-diagnostic-loop]
+-
+-The loop moves from reproducing the missed deadline to locating the fallback, changing it and repeating acceptance. Optimizing the largest layer by parameter count could leave that fallback untouched and waste effort. A timeline containing floating-point kernels bracketed by conversions is a testable symptom; replace the lowering and check whether both block and end-to-end time fall as predicted. If they do, proceed to the remaining quality and sustained-operation gates.
++At “Check every limit,” the two results come from the same replay but use different populations. Averaging the damaged labels into a much larger set of clean scans could leave rounded accuracy unchanged and conceal the failed check. Start with parcels the baseline handled correctly. Compare floating-point and dequantized activations for values pinned to an endpoint. If the error already appears in the floating-point pruned model, inspect whether a removed channel responded to the damaged strokes. For a timing failure, align the slow scan’s timestamps with fallback kernels and device transfers. Use the observed divergence to choose the next change, then repeat the contract. Keep the artifact identifier, runtime version, device settings and replay description with the results so a compiler update can be evaluated under the same conditions.
+ 
+ ## The physics
+@@ -139,43 +135,39 @@
+ | Quantity | Value | Use |
+ | --- | --- | --- |
+-| Peak resident memory | Maximum over time of the sum of simultaneous resident allocations, in bytes | Compare the measured peak with the capacity available to those allocations. |
+-| Factorized linear-layer weight count | r × (m + n) weights, excluding bias, for an m-input, n-output layer of rank r | Compare with m × n to estimate parameter and per-vector dense multiply-accumulate savings. |
+-| Mean latency for two execution paths | p × early-path latency + (1 − p) × full-path latency, where p is the early-exit fraction | Estimate the mean when path fractions and per-path timings are representative. |
+-| Transfer time | bytes transferred ÷ sustained bandwidth; use matching byte units | Estimate the time for a specified transfer before conversion and scheduling costs. |
+-| Symmetric quantization step | Magnitude limit ÷ 127 for signed codes −127 through 127 | Compare resolution when choosing an activation range. |
+-| Idealized global-memory traffic | Separate chain: 3 × (4 + 4) = 24 MiB; fused chain: 4 + 4 = 8 MiB, excluding weights | Estimate avoidable intermediate traffic under the stated buffer assumptions. |
+-| Total latency after accelerating one stage | Tnew = Taffected / speedup + Tother, assuming all other time is unchanged | Bound the end-to-end benefit of a local optimization. |
+-| Recall | True positives ÷ (true positives + false negatives), for a specified set of cases | Measure the fraction of relevant cases detected within a required slice. |
+-| End-to-end latency after an isolated block change | T_new = T_old − T_block,old + T_block,new, assuming all other path times remain fixed | Predict the full-path change and compare it with the measured rerun. |
++| Inference time budget | 20 ms − 7 ms − 2 ms = 11 ms for serial stages with no queue | Subtract the fixed time on either side of inference from the capture-to-command deadline. |
++| Peak live tensor footprint in one pool | Maximum over time of the sum of simultaneously live tensor storage, counting shared bytes once, in MiB | Compare the peak with the capacity assigned to tensors in that pool. |
++| Weight storage for a factorized projection | br(n + m) bytes for two dense factors versus bmn bytes for one dense map | For n inputs, m outputs, rank r and b bytes per coefficient, compare bias-free weight payloads before padding or metadata. |
++| Mean device service time per parcel | p × t_early + (1 − p) × t_full, in milliseconds per parcel | Weight each path's mean service time, including the routing check, by its observed frequency. Here p is the fraction exiting early. Queueing delay is accounted for separately. |
++| Raw weight payload | For N weights, FP32 occupies 4N bytes and INT8 occupies N bytes, excluding metadata and padding. | Estimate the weight storage saved before measuring traffic and latency. |
++| Intermediate tensor traffic | 2S bytes for one write and one subsequent read of an S-byte intermediate. | Estimate traffic that fusion can remove at a kernel boundary. Actual DRAM savings depend on caching and spills. |
++| Output-channel tiles per group | ⌈C / T⌉ tiles for C output channels in a group and a fixed kernel tile width of T channels | For a kernel that executes full tiles, check whether a proposed width removes a tile or merely leaves more lanes idle. |
++| Energy per completed decision | ∫ P(t) dt / N, in J/decision, with power in watts, time in seconds and N > 0 completions in the interval | Compare sustained runs using the same meter boundary and arrival pattern. |
+ 
+ ## Glossary
+ 
+-- **Deployment budget**: Limits on the storage, working memory, timing, throughput, and energy available to an inference workload.
+-- **Resident footprint**: Bytes held in memory at the same time by live weights, activations, runtime buffers, and other state.
+-- **Activation**: A value or tensor produced by a model operation and used by another operation or returned as output.
+-- **Critical path**: The chain of dependent work that determines elapsed time for a result.
+-- **Structured pruning**: Removing groups such as channels or blocks to produce smaller tensors or a supported sparse layout.
+-- **Low-rank factorization**: Approximating a large weight matrix by multiplying smaller matrices through a lower-dimensional intermediate.
+-- **Knowledge distillation**: Training a student model with predictions or other signals from a trained teacher model.
+-- **Neural architecture search**: Using an automated search procedure to choose a model structure within a defined space of candidates.
+-- **Quantization**: Mapping values to a discrete representation with fewer levels, commonly using a scale and sometimes a zero point.
+-- **Quantization-aware training**: Training or fine-tuning with simulated quantization so the model can adapt to rounding and clipping.
+-- **Operator fusion**: Executing compatible operations together so intermediate values can remain local and fewer kernels may be launched.
+-- **Sparse execution**: Computing from a sparse layout with kernels that skip zero-valued work or avoid storing the corresponding entries.
+-- **Accuracy-efficiency frontier**: The measured candidates for which improving quality or one system cost requires accepting a worse result on another metric.
+-- **Confidence calibration**: The degree to which predicted confidence matches observed correctness across groups of predictions.
++- **Deployment budget**: The storage, working memory, time and energy a deployment can allocate while delivering its required service.
++- **Weights and activations**: Weights are learned coefficients reused across inputs. Activations are intermediate values produced while processing a particular input or batch.
++- **Memory capacity**: The maximum number of bytes available in a particular memory pool. Capacity must cover allocations that coexist in that pool.
++- **Memory bandwidth**: The rate at which bytes can cross a memory interface. A model can fit in memory and still wait on that interface on every request.
++- **Critical path**: The chain of dependent work and waits that determines when a result becomes available.
++- **Structured pruning**: Removing defined groups of parameters, such as whole channels, so the computation can use smaller tensor shapes or a supported sparse pattern.
++- **Low-rank factorization**: Approximating a linear map by composing two maps through a smaller intermediate dimension.
++- **Knowledge distillation**: Training a student model using a teacher's predictions or representations as learning targets.
++- **Quantization calibration**: Using representative data or tensor statistics to choose numerical ranges and scales for a quantized model.
++- **Confidence calibration**: Agreement between predicted confidence and observed correctness across comparable predictions.
++- **Kernel fusion**: Implementing adjacent operations in a combined kernel so intermediate values can stay close to the arithmetic units.
++- **Pareto frontier**: The measured candidates for which improving one selected objective requires giving up ground on another among the available choices.
+ 
+ ## → Ben's world
+ 
+-- Decide whether compressing weights alone can fit a model into an embedded device by checking artifact storage and peak working memory separately.
+-- Select camera model widths using measured batch-one latency and tile utilization, then verify that the chosen width preserves recall under low light and motion.
+-- Choose between weight quantization, kernel fusion, and a smaller graph for a decoder by profiling weight reads, cache growth, conversions, and sustained token latency at realistic context lengths.
+-- Build a release comparison that records the exact artifact, quality by slice, peak residency, latency percentiles, throughput, and energy per result under the same workload.
++- Extend the resident-memory case by making an additional 8 MiB runtime buffer simultaneously resident. Calculate the new footprint, name the allocations you counted and decide whether they fit the unchanged 48 MiB budget.
++- For a phone decoder that fits in memory but generates tokens slowly, measure weight traffic per token and time spent waiting on memory. Use those observations to decide whether to trial packed weights or a change to the compute graph.
++- For a microcontroller audio classifier, map the persistent model, feature extractor, live activations and scratch storage to their actual memory pools before choosing between smaller weights and shorter feature windows.
++- For a cloud inference service, compare a compact dense student with a sparse candidate at the same arrival rate and tail-latency requirement. Use measured quality and cost per completed request to choose between them.
+ 
+ ## Open questions
+ 
+-- Which allocations coexist at the actual memory peak on the constrained device, and how do input size and execution path change their lifetimes?
+-- At what batch sizes or context lengths does the target workload shift between limits imposed by data movement and arithmetic?
+-- Which layers and input slices account for quality loss after combined structural compression and quantization, and how much quality can selective precision recover?
+-- How do early-exit rates, tail latency, and prediction quality change during bursts of difficult inputs or after sustained operation heats the device?
+-- What measured sparsity and tensor shapes make the target's sparse kernels faster than dense kernels after metadata and packing costs are included?
++- Which damaged-label features disappear first as the sorter's projection rank decreases, and do those failures cluster by destination or printing process?
++- On the intended runtime, at what batch sizes and tensor shapes does reduced weight traffic repay the cost of unpacking the supported low-bit format?
++- How does a sustained run of difficult parcels change queue lengths and misroute rates for an early-exit student compared with a fixed-depth student?
++- How stable are the chosen activation ranges and confidence thresholds across cameras, seasonal lighting changes and later compiler releases?
+--- 10-model-compression/packet/quiz.md
++++ astra/10-model-compression/packet/quiz.md
+@@ -1,55 +1,51 @@
+ # Model Compression self-test
+ 
+-1. An inference device has a 48 MiB resident-memory budget. Compressed weights occupy 8 MiB, activations occupy 36 MiB, and an additional runtime buffer occupies 8 MiB. All three allocations coexist. What is the resident footprint, and does it fit?
++1. At capture, a camera controller starts a feature transfer and a convolution in parallel. They finish 6 ms and 10 ms after capture, respectively. Normalization waits for both outputs, then writes a tensor to memory. A decision head reads that tensor and issues the command. These last two kernels run in sequence and take 3 ms combined. The command is due 12 ms after capture. Assume each proposed change achieves its stated saving and leaves all other timings fixed. Which single change meets the deadline?
++   - A. Halve the feature transfer time to save 3 ms on the transfer branch.
++   - B. Fuse normalization and the decision head to save 1 ms by eliminating the tensor write and read.
++   - C. Trim convolution arithmetic to save 0.5 ms on the convolution branch.
++   - D. Use a faster normalization instruction to save 0.5 ms in the final kernel pair.
+ 
+-2. A convolution is slow on a device using ordinary dense kernels. Half its weights can be set to zero, or whole output channels can be removed while updating every consumer. Both candidates pass the same quality gate. Which should the engineer prototype first to reduce dense computation?
+-   - A. Zero scattered weights while retaining the original tensor shapes.
+-   - B. Remove whole output channels and update every consumer.
+-   - C. Store the unchanged dense layer in a smaller compressed file.
+-   - D. Keep all channels and increase the inference batch size.
++2. An inference device has a 48 MiB memory budget. Its compressed model keeps 8 MiB of weights and 36 MiB of activations resident in that pool at the same time. Now include the additional 8 MiB runtime buffer. Calculate the new resident footprint in MiB and state whether it fits the unchanged 48 MiB budget; explain which allocations you counted. Assume the buffer occupies separate space in the same pool at the peak and all other allocations are excluded.
+ 
+-3. A vision service calibrates an early-exit threshold on mostly clear images. In production, a burst of low-light images sends many frames through the full path. Explain why the service can miss its latency target even if its earlier test had a low mean, and describe what to measure before changing the threshold.
++3. A camera accelerator schedules dense convolutions in output tiles of eight channels. Two 32-channel branches feed an elementwise addition. An engineer zeros eight filters on the left branch and predicts one fewer tile per output location on that branch. The export still declares both outputs 32 channels wide. Explain the timing result you would expect and how to test a cut that preserves the meaning of the addition.
+ 
+-4. A deployed stage reads 24 MiB of FP16 weights from memory at a sustained 600 MiB/s. An INT8 version reads 12 MiB of weights plus 3 MiB of metadata at the same rate. A trace shows that this read is on the critical path, but conversion cost is unknown. What is the best next engineering decision?
+-   - A. Deploy INT8 immediately: its estimated read time falls from 40 ms to 25 ms, guaranteeing the same end-to-end saving.
+-   - B. Keep FP16: its estimated read time is 25 ms, so the INT8 metadata makes the alternative slower.
+-   - C. Prototype INT8: its estimated read time falls from 40 ms to 25 ms, then measure conversion and end-to-end latency.
+-   - D. Reject INT8: its estimated read time falls from 40 ms to 20 ms, but metadata makes any speedup impossible.
++4. A reader must classify at least 99% of smudged labels correctly and meet a decision deadline during bursts of those labels. Its distilled fixed-depth export passes both tests. An adaptive export passes the deadline and is faster on average, but its accuracy on smudged labels is 97%. Which export decision follows from these results?
++   - A. Ship the tested adaptive student with its current exit threshold.
++   - B. Ship the adaptive student with a higher, untested exit threshold.
++   - C. Ship the qualified fixed-depth student with its own output head.
++   - D. Ship the fixed-depth student with the teacher scoring each label.
+ 
+-5. A detector uses symmetric INT8 activation codes from −127 to 127. A revised calibration range includes rare large events but makes the step between codes much larger. Held-out common events now have worse detection quality, while rare events improve. Explain the likely cause and a practical next test.
++5. A label reader uses one fixed INT8 scale for an activation tensor. On a held-out set of faded labels, two stroke responses that the floating-point reader distinguishes both map to code 3. No responses reach either end code. A second channel needs the full calibrated range. An engineer proposes widening the shared range while keeping the bit width fixed. Explain the likely effect and design a test, assuming the device supports per-channel activation scales.
+ 
+-6. A target accelerator supports a 2:4 sparse kernel for a model's matrix shapes. An exported checkpoint contains many zeros but is stored densely, and profiling shows that its dense matrix kernel dominates latency. Which action best tests whether sparsity can reduce latency?
+-   - A. Keep the dense layout and infer sparse speed from the fraction of zero weights.
+-   - B. Convert to an arbitrary sparse layout and assume the accelerator will skip its zeros.
+-   - C. Measure checkpoint size alone and select the representation with fewer stored bytes.
+-   - D. Export a supported 2:4 layout and benchmark its sparse kernel against the dense kernel.
++6. A parcel reader meets its routing-quality target but misses its latency deadline. Its device trace shows two accelerator convolutions separated by a CPU layout conversion and two device copies, all on the critical path. The copies and conversion take longer together than both convolutions. The compiler supports a layout both convolutions can use on the accelerator. Which change should the engineer test first?
++   - A. Prune the slower convolution to reduce its multiply count and replay the deadline test.
++   - B. Pack both convolution weight tensors more tightly and replay the deadline test.
++   - C. Parallelize the CPU layout conversion across cores and replay the deadline test.
++   - D. Compile both convolutions with the shared accelerator layout and replay the deadline test.
+ 
+-7. A team calibrates an INT8 model, then prunes channels and fine-tunes it. The compiled candidate is faster but loses quality compared with the calibrated model. Explain why the earlier calibration may no longer be suitable and what you would check next.
++7. A compiler update folds batch normalization into a convolution. On the same inputs, the new floating-point output after the folded convolution matches the old output after batch normalization. An engineer copies the old pre-normalization convolution scale to the folded output. Why could the integer build now fail, and how would you test that explanation while holding the learned model fixed?
+ 
+-8. A release requires peak memory at or below 50 MiB, 95th-percentile end-to-end latency at or below 15 ms, and recall of at least 90% on night images. Repeated representative tests show candidate X at 46 MiB, 13 ms, and 88% recall; candidate Y at 49 MiB, 14 ms, and 92% recall. Both meet all other gates. What should the team do?
+-   - A. Release candidate Y because it passes all three specified gates.
+-   - B. Release candidate X because it has the lower memory and latency.
+-   - C. Release candidate X because its recall is close to the required floor.
+-   - D. Delay both candidates because Y uses more memory than X.
+-
+-9. An exported INT8 model misses its latency limit. A trace shows a normalization operator with few arithmetic operations taking substantial time while memory traffic is high. The largest matrix multiplication has most of the model's FLOPs but already uses an optimized INT8 kernel. What would you investigate and change first, and how would you test the diagnosis?
++8. A parcel sorter must sustain 40 arrivals/s for 30 minutes with capture-to-command p99 at most 25 ms and at most 2% of dim-light parcels sent for inspection. In a full target-device replay, the candidate records 23 ms p99 and sends 30 of 1,000 dim-light parcels for inspection. Overall destination accuracy matches the baseline. A separate low-load run at 10 arrivals/s passes both limits. Which release decision follows from the contract?
++   - A. Hold the candidate and inspect the dim-light confidence scores at production load.
++   - B. Approve the candidate using the full-load timing and the low-load inspection rate.
++   - C. Approve the candidate using unchanged destination accuracy across the full replay.
++   - D. Approve the candidate after confirming its full-load timing on a second device.
+ 
+ ## Answer key
+ 
+-1. Add the simultaneous allocations: 8 + 36 + 8 = 52 MiB. This exceeds the 48 MiB budget by 4 MiB, so it does not fit.
++1. B. Normalization starts at max(6 ms, 10 ms) = 10 ms. Fusion reduces the final pair to 2 ms, so the command arrives exactly at 12 ms. Halving the transfer saves the most time in isolation, but its output already arrives before the convolution finishes. That change leaves the command time at 13 ms. Either 0.5 ms saving brings it to 12.5 ms, past the deadline.
+ 
+-2. B. Removing channels shrinks dense tensor dimensions, giving ordinary kernels less work. Scattered zeros preserve those dimensions, so a standard dense kernel still processes their positions. Actual speedup still requires profiling.
++2. Count the compressed weights, live activations and runtime buffer together. Their footprint is 8 MiB + 36 MiB + 8 MiB = 52 MiB. The device is 4 MiB over budget, so this configuration does not fit.
+ 
+-3. Low-light frames may have lower confidence and therefore require the remaining layers more often. A burst can increase the fraction of slow frames and affect batching, raising tail latency even if the earlier workload had a low mean. Measure exit rates, per-frame and tail latency, and quality on the frames that exit early under representative low-light traffic. Then adjust the threshold or graph and validate both latency and quality again.
++3. The dense left kernel still schedules four output tiles per location because its declared width is 32. Zero coefficients alone give this kernel no reason to skip a tile. Select the same eight channel positions for removal on both branches, align the surviving positions at the addition and remove the corresponding input slices from its consumers. Verify that the compiled left kernel now schedules three tiles for 24 outputs. Fine-tune, check task quality and time the whole graph because the tile reduction only predicts a change in this part of the schedule.
+ 
+-4. C. The FP16 read takes 24 ÷ 600 = 0.040 s, or 40 ms. INT8 reads 15 MiB and takes 15 ÷ 600 = 0.025 s, or 25 ms. The strongest competing choice deploys immediately, but the 15 ms read estimate excludes conversion and other runtime costs; those must be measured.
++4. C. The fixed-depth export already satisfies both requirements independently. Raising the threshold could send some misclassified parcels through the remaining stages, but the resulting accuracy and burst latency both need to be tested. The adaptive model's average speed cannot resolve either question, and the deployed student already has the output head it needs.
+ 
+-5. The wider range reduces clipping of rare large activations, but its larger step increases rounding error for common activations and can erase distinctions needed for detection. Compare clipping and rounding errors and detection quality by slice, then test a narrower range or higher precision for the sensitive operation on separate held-out data.
++5. Widening the range increases the spacing between adjacent codes. A bin boundary might move between this particular pair, but the wider grid gives the stroke channel coarser resolution, and the observations give no evidence of clipping to remedy. Keep the second channel's range and fit a narrower range to representative stroke-channel activations. Replay the held-out labels and check whether the stroke responses receive distinct codes, whether larger stroke responses clip, and whether the exported reader recovers the correct labels.
+ 
+-6. D. A supported layout and kernel allow the runtime to skip the intended work, while a target-device benchmark accounts for packing and kernel overhead. Keeping the dense layout is the strongest alternative, but its dense kernel still processes stored zeros.
++6. D. A shared layout gives the compiler a way to remove the CPU detour and both copies. Check their disappearance in the trace and verify routing quality and latency. Parallelizing the conversion targets part of the observed delay, but the frame still has to cross the device boundary twice.
+ 
+-7. Pruning and fine-tuning can change weight and activation distributions, so ranges fitted before those changes may clip values or represent them poorly. Recalibrate the settled graph as the deployment toolchain expects, compile it again, and compare quality on the same evaluation cases. Inspect kernels, conversions, and fallback as well, because the new shapes can change execution.
++7. The fold incorporates a channel-dependent gain and offset into the convolution. The copied scale describes values upstream of that transformation. Floating-point agreement at the block exit therefore says little about how well the old grid represents the folded output. Freeze the folded graph and weights, fit a new output scale on representative inputs, and export both scale choices with the same settings. On held-out failures, compare each dequantized output with the folded floating-point output and check the resulting decisions. Reduced clipping or rounding error alongside recovered decisions supports the scale mismatch as the cause.
+ 
+-8. A. Y satisfies each required limit. The strongest competing choice, X, is faster and smaller but fails the night-image recall floor; resource savings cannot compensate for a required quality failure.
+-
+-9. Investigate normalization's activation reads and writes, allocations, and kernel launches, including any surrounding conversions. Its low arithmetic cost can coexist with high latency when it streams a large tensor. Test a supported implementation that reduces the observed traffic or overhead while keeping the workload fixed, then compare the operator and end-to-end timings. Recheck output quality and other acceptance gates on the revised artifact.
++8. A. At the required load, 30 / 1,000 = 3% of dim-light parcels went to inspection, above the 2% limit. Pairing the low-load inspection rate with full-load timing is tempting because each result passes its own check, but that pairing never demonstrates that the deployed configuration meets both limits at 40 arrivals/s.
+--- 10-model-compression/packet/diagrams.json
++++ astra/10-model-compression/packet/diagrams.json
+@@ -1,56 +1,50 @@
+ [
++  {
++    "id": "trace-a-routing-decision",
++    "title": "From a late parcel decision to a compression experiment",
++    "caption": "A trace narrows a missed deadline to a particular resource, giving the next model change a prediction that can be checked.",
++    "file": "trace-a-routing-decision.svg"
++  },
+   {
+     "id": "resident-footprint-versus-capacity",
+     "title": "Resident footprint versus capacity",
+-    "caption": "The compressed weights and unchanged activations total 44 MiB, leaving 4 MiB below the capacity limit before the extra buffer is included.",
++    "caption": "Adding the simultaneous weights and activations puts the original case above the 48 MiB limit. The compressed case uses 44 MiB in this first accounting.",
+     "file": "resident-footprint-versus-capacity.svg"
+   },
+   {
+-    "id": "factorized-layer-weight-count",
+-    "title": "Weight count for one linear layer",
+-    "caption": "At the assumed rank, the two factors contain one quarter as many weights. The bars quantify the change in parameters for this layer, while runtime depends on how the two operations execute.",
+-    "file": "factorized-layer-weight-count.svg"
++    "id": "projection-coefficient-count",
++    "title": "Coefficients in two candidate projections",
++    "caption": "Under the assumed dimensions, rank 32 removes 20,480 coefficients. The count establishes a storage opportunity at equal precision and leaves execution time and task quality to measurement.",
++    "file": "projection-coefficient-count.svg"
+   },
+   {
+-    "id": "early-exit-decision",
+-    "title": "How a frame takes an early exit",
+-    "caption": "A confidence policy determines how often the shorter route is used. Full-depth frames can still determine the tail of the latency distribution.",
+-    "file": "early-exit-decision.svg"
++    "id": "qualify-an-early-exit",
++    "title": "Qualifying an early exit for the sorter",
++    "caption": "An exit threshold determines both the work avoided and which parcels receive less computation. Its value depends on the errors and delays in both paths.",
++    "file": "qualify-an-early-exit.svg"
+   },
+   {
+-    "id": "estimated-weight-transfer-time",
+-    "title": "Estimated time to stream one weight block",
+-    "caption": "At the same assumed bandwidth, the smaller INT8 payload reduces transfer time even after metadata is counted. These estimates cover the weight reads alone.",
+-    "file": "estimated-weight-transfer-time.svg"
++    "id": "follow-a-quantized-feature",
++    "title": "Where a weak feature loses resolution",
++    "caption": "Following a feature through the integer grid shows how the chosen scale can erase a signal before a later layer has a chance to use it.",
++    "file": "follow-a-quantized-feature.svg"
+   },
+   {
+-    "id": "quantization-quality-loop",
+-    "title": "From calibration to a deployable precision",
+-    "caption": "Each pass tests whether a low-precision configuration preserves task quality with the kernels the device will actually run.",
+-    "file": "quantization-quality-loop.svg"
++    "id": "inspect-a-fused-block",
++    "title": "Checking a fused image-processing block",
++    "caption": "The exported graph predicts which intermediate transfers can disappear. Kernel and traffic traces reveal whether the runtime realizes that saving.",
++    "file": "inspect-a-fused-block.svg"
+   },
+   {
+-    "id": "fusion-activation-traffic",
+-    "title": "Idealized global-memory traffic for a chain",
+-    "caption": "Under the stated buffer assumptions, fusion eliminates 16 MiB of intermediate reads and writes. Tiling and spills affect how much of that saving appears on the device.",
+-    "file": "fusion-activation-traffic.svg"
++    "id": "sequence-a-pruned-student",
++    "title": "Preparing a pruned student for integer deployment",
++    "caption": "Each range-changing step precedes final calibration, so the integer scales describe the model that the compiler receives.",
++    "file": "sequence-a-pruned-student.svg"
+   },
+   {
+-    "id": "compression-candidate-sequence",
+-    "title": "Order of work for a combined candidate",
+-    "caption": "Structural changes precede final range fitting, and the benchmark follows runtime lowering so each decision uses the representation that will ship.",
+-    "file": "compression-candidate-sequence.svg"
+-  },
+-  {
+-    "id": "deployment-acceptance-test",
+-    "title": "Production acceptance gates",
+-    "caption": "The same exported candidate must meet the resource and quality limits. Passing the memory and timing gates cannot compensate for failing a required quality slice.",
+-    "file": "deployment-acceptance-test.svg"
+-  },
+-  {
+-    "id": "failed-gate-diagnostic-loop",
+-    "title": "From a failed metric to a targeted experiment",
+-    "caption": "Changing one suspected cause and rechecking the full workload helps distinguish a local improvement from a deployment gain.",
+-    "file": "failed-gate-diagnostic-loop.svg"
++    "id": "accept-a-sorter-release",
++    "title": "One acceptance test for the exported sorter",
++    "caption": "Pairing device measurements with decisions on the same replay exposes candidates that satisfy a timing limit while violating a user-facing quality requirement.",
++    "file": "accept-a-sorter-release.svg"
+   }
+ ]

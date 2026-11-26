@@ -1,0 +1,26 @@
+[
+  {
+    "id": "token-floor-ratio",
+    "kind": "BAR_STACKED",
+    "title": "One token, two floors — Llama 2 70B decode on 2×H100",
+    "caption": "Every generated token reads all 140 GB of weights once: the memory floor (20.9 ms) is 295.2× the compute floor (0.07 ms). Batch-one decode is bandwidth-bound — arithmetic investment at this batch buys nothing.",
+    "xLabel": "Lower bound",
+    "yLabel": "Milliseconds per token",
+    "xPoints": ["Compute floor (140 GFLOP ÷ 1,978 TFLOP/s)", "Memory floor (140 GB ÷ 6.70 TB/s)"],
+    "series": [
+      { "key": "ms", "label": "ms/token", "color": "var(--chart-3)", "values": [0.07, 20.9] }
+    ]
+  },
+  {
+    "id": "fleet-mtbf",
+    "kind": "BAR_STACKED",
+    "title": "Independent failures at fleet scale",
+    "caption": "The same failure rate that gives one GPU a ~5.7-year life gives a 1,024-accelerator pool a ~48.8-hour cluster MTBF — a failure about every two days.",
+    "xLabel": "Pool size",
+    "yLabel": "Hours between failures",
+    "xPoints": ["1 GPU (MTTF ≈ 5.7 yr)", "1,024-GPU pool"],
+    "series": [
+      { "key": "hours", "label": "MTBF (h)", "color": "var(--chart-3)", "values": [50000, 48.8] }
+    ]
+  }
+]

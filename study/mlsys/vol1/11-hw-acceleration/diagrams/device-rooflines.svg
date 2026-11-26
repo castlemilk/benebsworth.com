@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ha-device-rooflines" class="study-fig-fit" viewBox="0 0 420 414" role="img" aria-labelledby="ha-device-rooflines-title ha-device-rooflines-desc">
+  <title id="ha-device-rooflines-title">Two fictional rooflines and their crossover</title>
+  <desc id="ha-device-rooflines-desc">The horizontal axis is arithmetic intensity in FLOPs per byte and the vertical axis is the roofline ceiling in teraFLOPs per second. Device A rises by 0.5 teraFLOP per second for each FLOP per byte until its 200-FLOP-per-byte ridge and 100-teraFLOP-per-second peak. Device B rises by one teraFLOP per second for each FLOP per byte until its 50-FLOP-per-byte ridge and 50-teraFLOP-per-second peak. Their ceilings cross at 100 FLOPs per byte and 50 teraFLOPs per second. For positive intensity, device B has the higher ceiling below the crossover; A has the higher ceiling above it.</desc>
+  <style>
+    #ha-device-rooflines { font-family: system-ui, sans-serif; }
+    .dark #ha-device-rooflines [fill="#fbf7f0"] { fill: #201a17; }
+    .dark #ha-device-rooflines [fill="#29231e"] { fill: #f7eee3; }
+    .dark #ha-device-rooflines [fill="#6f6055"] { fill: #c8b8aa; }
+    .dark #ha-device-rooflines [fill="#9a3d1d"] { fill: #f2a276; }
+    .dark #ha-device-rooflines [stroke="#29231e"] { stroke: #f7eee3; }
+    .dark #ha-device-rooflines [stroke="#9a3d1d"] { stroke: #f2a276; }
+    .dark #ha-device-rooflines [stroke="#b8a89c"] { stroke: #72665c; }
+    .dark #ha-device-rooflines [stroke="#6f6055"] { stroke: #ad9d8f; }
+  </style>
+  <rect width="420" height="414" rx="12" fill="#fbf7f0"/>
+  <text x="22" y="34" fill="#29231e" font-size="22" font-weight="650">Two paths, one crossover</text>
+  <path d="M23 57H52" fill="none" stroke="#29231e" stroke-width="4"/>
+  <text x="60" y="63" fill="#29231e" font-size="16">A · compute</text>
+  <path d="M215 57H244" fill="none" stroke="#9a3d1d" stroke-width="4" stroke-dasharray="7 4"/>
+  <text x="252" y="63" fill="#9a3d1d" font-size="16">B · bandwidth</text>
+  <text x="22" y="90" fill="#6f6055" font-size="15">Ceiling (TFLOP/s)</text>
+  <g fill="none" stroke="#b8a89c" stroke-width="1">
+    <path d="M52 110H384 M52 152.5H384 M52 195H384 M52 237.5H384 M52 280H384"/>
+    <path d="M118.4 110V280 M184.8 110V280 M317.6 110V280" stroke-dasharray="3 5"/>
+  </g>
+  <path d="M52 110V280H384" fill="none" stroke="#6f6055" stroke-width="1.5"/>
+  <g fill="#6f6055" font-size="15" text-anchor="end">
+    <text x="45" y="285">0</text><text x="45" y="242.5">25</text><text x="45" y="200">50</text><text x="45" y="157.5">75</text><text x="45" y="115">100</text>
+  </g>
+  <g fill="#6f6055" font-size="15" text-anchor="middle">
+    <text x="52" y="303">0</text><text x="118.4" y="303">50</text><text x="184.8" y="303">100</text><text x="251.2" y="303">150</text><text x="317.6" y="303">200</text><text x="384" y="303">250</text>
+  </g>
+  <path d="M52 280L317.6 110H384" fill="none" stroke="#29231e" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M52 280L118.4 195H384" fill="none" stroke="#9a3d1d" stroke-width="4" stroke-linejoin="round" stroke-dasharray="7 4"/>
+  <circle cx="118.4" cy="195" r="5" fill="#9a3d1d"/>
+  <circle cx="184.8" cy="195" r="5" fill="#29231e"/>
+  <circle cx="317.6" cy="110" r="5" fill="#29231e"/>
+  <text x="210" y="332" fill="#29231e" font-size="16" text-anchor="middle">Arithmetic intensity (FLOP/byte)</text>
+  <text x="22" y="362" fill="#9a3d1d" font-size="16">B ridge 50</text>
+  <text x="210" y="362" fill="#29231e" font-size="16" text-anchor="middle">Tie 100</text>
+  <text x="398" y="362" fill="#29231e" font-size="16" text-anchor="end">A ridge 200</text>
+  <text x="210" y="392" fill="#6f6055" font-size="15" text-anchor="middle">For positive intensity: B below 100, A above.</text>
+</svg>

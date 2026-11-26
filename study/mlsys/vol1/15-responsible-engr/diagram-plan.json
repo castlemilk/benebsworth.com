@@ -1,0 +1,52 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "Opening case and the spec-completeness claim; the gap figure is in its own section."
+    },
+    "The Responsibility Gap": {
+      "figure": "::fig[responsibility-gap]",
+      "teaches": "Show satisfied objectives on one side and the unstated constraints carrying harm on the other.",
+      "source": "When optimization succeeds but systems fail: proxy objectives, subgroup blindness, feedback amplification."
+    },
+    "Specify: Requirements Before Training": {
+      "proseOnly": "Requirements lists and the proxy trap are enumerated constraints; the representation-cost equation carries the budget argument."
+    },
+    "Measure: Fairness Criteria Are a Choice": {
+      "figure": "::fig[criteria-conflict]",
+      "teaches": "Show the three criteria pulling in different directions — a choice, not a computation.",
+      "source": "Demographic parity, equalized odds, calibration + the impossibility result under unequal base rates."
+    },
+    "Explain and Operate": {
+      "proseOnly": "Explanation cost and loop-stability framing carry the section; no comparison needs a figure."
+    },
+    "Environmental and Cost Awareness": {
+      "figure": "::fig[carbon-ledger]",
+      "teaches": "Show GPU-hour carbon scaling to car-years, and training vs serving as the two ledger entries.",
+      "source": "0.16 kg/GPU-hour baseline, 1,287 MWh GPT-3-class run, TCO across the lifecycle."
+    },
+    "Data Governance and Compliance": {
+      "proseOnly": "Access control, DP, regulation-as-architecture, lineage and audit are listed machinery with the audit-volume equation."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Review scaffold."
+    },
+    "Summary": {
+      "figure": "::fig[lifecycle-duties]",
+      "teaches": "Close the loop: duties per stage make responsibility part of the lifecycle, not a bolt-on.",
+      "source": "Synthesis of the chapter's four duties."
+    },
+    "The physics": {
+      "proseOnly": "Reference table."
+    },
+    "Glossary": {
+      "proseOnly": "Definitions."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Project transfers."
+    },
+    "Open questions": {
+      "proseOnly": "Follow-up prompts."
+    }
+  }
+}

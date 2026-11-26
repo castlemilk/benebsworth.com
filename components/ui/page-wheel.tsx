@@ -97,7 +97,14 @@ function PageWheel({
     moved: boolean
   } | null>(null)
   const settle = React.useRef(0)
-  const latest = React.useRef({ page, commit: (_: number) => {} })
+  const latest = React.useRef({
+    page,
+    commit: (_: number) => {},
+    aim: (_: number) => {},
+    give: (p: number) => p,
+    clamp: (p: number) => p,
+    run: () => {},
+  })
 
   const clamp = (p: number) => Math.min(pageCount, Math.max(1, p))
   // Beyond the ends the drum still moves, but only a fraction as far.
@@ -108,7 +115,6 @@ function PageWheel({
     setStored(next)
     if (next !== latest.current.page) onPageChange?.(next)
   }
-  latest.current = { page, commit }
 
   // The teeth never change, so they're found once rather than queried every
   // frame. The numbers are re-rendered as the drum turns, so they're found
@@ -181,6 +187,11 @@ function PageWheel({
     commit(p)
   }
 
+  // Mount-once effects (page sync, wheel listener) call through `latest` so
+  // they always see this render's closures — including a changed pageCount —
+  // without re-subscribing every render.
+  latest.current = { page, commit, aim, give, clamp, run }
+
   // The keys repeat from where the drum is headed, which is current between
   // renders.
   const previousKey = React.useRef<HTMLButtonElement>(null)
@@ -195,7 +206,7 @@ function PageWheel({
   React.useLayoutEffect(paint)
 
   React.useEffect(() => {
-    if (!drag.current && motion.current.target !== page) aim(page)
+    if (!drag.current && motion.current.target !== page) latest.current.aim(page)
     // Only an outside change of page moves it.
   }, [page])
 
@@ -204,18 +215,18 @@ function PageWheel({
   // page from scrolling with it.
   React.useEffect(() => {
     const el = wheel.current!
+    const m = motion.current
     const onWheel = (event: WheelEvent) => {
       const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY
       if (!delta) return
       event.preventDefault()
-      const m = motion.current
-      m.target = give(m.target + delta / spacing / 1.5)
-      run()
+      m.target = latest.current.give(m.target + delta / spacing / 1.5)
+      latest.current.run()
       clearTimeout(settle.current)
       settle.current = window.setTimeout(() => {
-        const p = clamp(Math.round(motion.current.target))
-        motion.current.target = p
-        run()
+        const p = latest.current.clamp(Math.round(m.target))
+        m.target = p
+        latest.current.run()
         latest.current.commit(p)
       }, 120)
     }
@@ -223,7 +234,7 @@ function PageWheel({
     return () => {
       el.removeEventListener("wheel", onWheel)
       clearTimeout(settle.current)
-      cancelAnimationFrame(motion.current.frame)
+      cancelAnimationFrame(m.frame)
     }
   }, [])
 

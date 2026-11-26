@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="crit-conflict" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="crit-title crit-desc">
+  <title id="crit-title">Three criteria that can't all hold</title>
+  <desc id="crit-desc">Demographic parity, equalized odds and calibration each demand a different equality. Under unequal base rates with imperfect prediction, no model satisfies all three — the choice is a policy decision.</desc>
+  <style>
+    .dark #crit-conflict { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#crit-conflict { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="32" font-size="19" font-weight="650">Fairness is a choice, not a computation</text>
+    <text x="20" y="54" font-size="13.5">three defensible criteria; no model satisfies all three</text>
+
+    <g font-size="12.5">
+      <rect x="20" y="76" width="340" height="42" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="30" y="94" font-weight="650">Demographic parity</text>
+      <text x="30" y="110">equal selection rates — 55% vs 40% fails</text>
+      <rect x="20" y="126" width="340" height="42" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="30" y="144" font-weight="650">Equalized odds</text>
+      <text x="30" y="160">equal TPR and FPR — ~40% vs ~10% FNR fails</text>
+      <rect x="20" y="176" width="340" height="42" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="30" y="194" font-weight="650">Calibration</text>
+      <text x="30" y="210">score means the same in every group — can hold alone</text>
+    </g>
+
+    <path d="M190 222v14" stroke="var(--fig-rule, #b7b4a7)"/>
+    <rect x="60" y="240" width="260" height="34" rx="6" fill="var(--fig-mark, #a33c20)"/>
+    <text x="190" y="261" text-anchor="middle" font-size="12.5" fill="var(--fig-paper, #f7f3e9)" font-weight="600">unequal base rates ⇒ pick which error matters</text>
+    <text x="190" y="291" text-anchor="middle" font-size="12">COMPAS: calibrated by race, unequal error rates</text>
+  </g>
+</svg>

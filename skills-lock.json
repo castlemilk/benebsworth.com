@@ -1,6 +1,13 @@
 {
   "version": 2,
   "skills": {
+    "anatomy": {
+      "source": "wheresryan22/anatomy",
+      "commit": "1482e8469b0a9e0d8cc18ea2740a01423d29ae80",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "a9a04fcc6d8e5e8229657523b02779954821b31d630617cdb6457dfd34cd0993"
+    },
     "hallmark": {
       "source": "nutlope/hallmark",
       "sourceType": "github",
@@ -15,10 +22,10 @@
     },
     "ui-sdk": {
       "source": "vercel-labs/ui",
-      "commit": "e07158ce1bc6f843f501fa78c34cbdf5d74b7e88",
+      "commit": "855bc7fd4df3d61aee33d9d975dc3e4f71debc6c",
       "sourceType": "github",
       "skillPath": "packages/core/skills/ui-sdk/SKILL.md",
-      "computedHash": "7353586d36e12a3895bcec7d6d589ad26a18e7acff95b014ea63ccb12cfafc38"
+      "computedHash": "9a60caf01da3d47beedf627bf1505d922dccc93b04f294c6aa64edf01c46b3ba"
     }
   }
 }

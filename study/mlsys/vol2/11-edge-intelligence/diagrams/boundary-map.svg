@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="boundary-map" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="boundary-map-title boundary-map-desc">
+  <title id="boundary-map-title">What crosses the device boundary</title>
+  <desc id="boundary-map-desc">Comparison of local-only learning, centralized cloud learning and federated learning by which artifacts cross the device boundary.</desc>
+  <style>
+    .dark #boundary-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#boundary-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">What crosses the boundary?</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">local-only · centralized · federated</text>
+    <line x1="238" y1="58" x2="238" y2="260" stroke="var(--fig-mark, #b4571f)" stroke-width="1.4" stroke-dasharray="5 4"/>
+    <text x="238" y="295" font-size="9" text-anchor="middle" fill="var(--fig-mark, #b4571f)">device boundary</text>
+    <text x="112" y="70" font-size="10" font-weight="650" text-anchor="middle">inside device</text>
+    <text x="304" y="70" font-size="10" font-weight="650" text-anchor="middle">outside</text>
+    <g font-size="9">
+      <text x="24" y="96" font-weight="650">local-only</text>
+      <rect x="24" y="104" width="180" height="34" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="114" y="124" text-anchor="middle">data + training stay local</text>
+      <text x="282" y="124" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">nothing sent</text>
+      <text x="24" y="160" font-weight="650">centralized</text>
+      <rect x="24" y="168" width="180" height="34" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="114" y="188" text-anchor="middle">raw observations</text>
+      <line x1="184" y1="185" x2="326" y2="185" stroke="var(--fig-mark, #b4571f)" stroke-width="2"/>
+      <path d="M326 185 l-8 -4 v8 z" fill="var(--fig-mark, #b4571f)"/>
+      <text x="282" y="176" text-anchor="middle" fill="var(--fig-mark, #b4571f)">raw data</text>
+      <text x="24" y="224" font-weight="650">federated</text>
+      <rect x="24" y="232" width="180" height="34" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="114" y="252" text-anchor="middle">data stays; update leaves</text>
+      <line x1="326" y1="240" x2="196" y2="240" stroke="var(--fig-outline, #364c50)" stroke-width="2"/>
+      <path d="M196 240 l8 -4 v8 z" fill="var(--fig-outline, #364c50)"/>
+      <line x1="184" y1="254" x2="326" y2="254" stroke="var(--fig-mark, #b4571f)" stroke-width="2"/>
+      <path d="M326 254 l-8 -4 v8 z" fill="var(--fig-mark, #b4571f)"/>
+      <text x="286" y="232" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">model down</text>
+      <text x="286" y="269" text-anchor="middle" fill="var(--fig-mark, #b4571f)">update up</text>
+    </g>
+  </g>
+</svg>

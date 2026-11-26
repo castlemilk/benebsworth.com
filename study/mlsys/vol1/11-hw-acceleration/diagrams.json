@@ -1,0 +1,68 @@
+[
+  {
+    "id": "hardware-contract",
+    "file": "hardware-contract.svg",
+    "title": "When the matrix path is available",
+    "caption": "Illustrative contract: operation, precision, layout and available parallelism affect which path the compiler can select. An unmet condition can lead to another device kernel or a host fallback. Inspect the trace."
+  },
+  {
+    "id": "primitive-routing",
+    "file": "primitive-routing.svg",
+    "title": "A layer travels through several units",
+    "caption": "Illustrative routing of a projection, normalization and an exponential. Exact unit assignments differ across devices and kernels."
+  },
+  {
+    "id": "local-reuse",
+    "file": "local-reuse.svg",
+    "title": "A weight used twice without a second fetch",
+    "caption": "An illustrative weight of 3 is held locally as two input columns arrive. The first updates partial sum 1 to 7, and the second updates partial sum 5 to 17. This is one step of each dot product, not a full matrix multiplication."
+  },
+  {
+    "id": "traffic-boundaries",
+    "file": "traffic-boundaries.svg",
+    "title": "Where are the bytes counted?",
+    "caption": "The projection example counts the device-memory interface. Host-device transfers are a separate boundary. Local reuse can reduce how often a value crosses the device-memory boundary."
+  },
+  {
+    "id": "device-rooflines",
+    "file": "device-rooflines.svg",
+    "title": "Two device rooflines and their crossover",
+    "caption": "Illustrative dense FP16 paths. B reaches its 50 TFLOP/s ceiling at 50 FLOP/byte. A reaches 100 TFLOP/s at 200 FLOP/byte. Their ceilings cross at 100 FLOP/byte, which is neither ridge. For the one-pass projection, batch 105 gives 99.88 FLOP/byte and batch 106 gives 100.78. A ceiling is not a measured rate."
+  },
+  {
+    "id": "tile-budget",
+    "file": "tile-budget.svg",
+    "title": "Three live tiles and a second buffer",
+    "caption": "A 128 × 128 FP16 weight tile takes 32 KiB, a 128 × 64 FP16 input tile takes 16 KiB, and a 128 × 64 FP32 accumulator takes 32 KiB. All three need 80 KiB. Double buffering the inputs and weights adds 48 KiB, exceeding the fictional 96 KiB store."
+  },
+  {
+    "id": "stationary-choices",
+    "file": "stationary-choices.svg",
+    "title": "Choose which operand to keep",
+    "caption": "For Y[i,j] accumulated over k, reuse a weight across j, an input across i, or a partial output across k. The cheapest choice depends on shape, lifetime and memory capacity."
+  },
+  {
+    "id": "compile-path",
+    "file": "compile-path.svg",
+    "title": "Follow the graph into a trace",
+    "caption": "The compiler rewrites and lowers the graph, then chooses target kernels and schedules. The runtime dispatches work for actual shapes. A trace reveals placement and synchronization."
+  },
+  {
+    "id": "partition-boundary",
+    "file": "partition-boundary.svg",
+    "title": "Can saved compute pay for the link?",
+    "caption": "Toy critical path: one device takes 100 µs of compute. Two devices take 60 µs of compute plus 50 µs of exposed communication, for 110 µs. Perfect overlap would reduce that combined term to 60 µs."
+  },
+  {
+    "id": "soc-budget",
+    "file": "soc-budget.svg",
+    "title": "Shared memory and power on a phone",
+    "caption": "A fictional CPU, GPU and NPU share physical memory and the power envelope. Shared memory can avoid copies but not all layout conversion, cache coordination or contention."
+  },
+  {
+    "id": "diagnostic-order",
+    "file": "diagnostic-order.svg",
+    "title": "Start with the exposed work",
+    "caption": "Trace the full request, inspect actual placement, compare work with bytes at a named boundary, and remeasure a targeted change. The tight roofline ceiling is a bound, not proof of the bottleneck."
+  }
+]

@@ -4,7 +4,7 @@
 //   protoc               unknown
 // source: content.proto
 
-/* eslint-disable */
+ 
 
 export const protobufPackage = "content";
 

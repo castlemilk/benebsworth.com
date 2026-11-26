@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 487" role="img" aria-labelledby="study-svg-graph-to-device-trace-title" aria-describedby="study-svg-graph-to-device-trace-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-graph-to-device-trace-title">From graph optimization to a running request</title>
+  <desc id="study-svg-graph-to-device-trace-desc">The compiled plan describes available execution paths. The runtime trace shows which path a particular request took and where it waited. Optimize the graph: Rewrite tensor operations and identify legal fusion boundaries. Then Select kernels: Choose execution paths, layouts, and precision for the target. Then Plan memory: Assign buffers based on lifetimes and reserve kernel workspace. Then Schedule and generate: Order computation and transfers, then emit target code. Then Dispatch and trace: Observe the selected variant, allocations, launches, and waits.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Optimize the graph</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Rewrite tensor operations and</tspan>
+    <tspan x="19" y="64">identify legal fusion boundaries.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Select kernels</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Choose execution paths, layouts, and</tspan>
+    <tspan x="19" y="165">precision for the target.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Plan memory</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Assign buffers based on lifetimes</tspan>
+    <tspan x="19" y="266">and reserve kernel workspace.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Schedule and generate</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Order computation and transfers,</tspan>
+    <tspan x="19" y="367">then emit target code.</tspan></text>
+  <path d="M172 387v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="407" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="431" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Dispatch and trace</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="451">Observe the selected variant,</tspan>
+    <tspan x="19" y="468">allocations, launches, and waits.</tspan></text>
+  </g>
+</svg>

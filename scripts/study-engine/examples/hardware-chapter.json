@@ -1,0 +1,11 @@
+{
+  "id": "vol1/02_hardware_pilot",
+  "title": "Hardware Acceleration",
+  "question": "Which part of an accelerator limits this workload, and what evidence would justify changing the hardware or the mapping?",
+  "source": {
+    "file": "study/cs249r_book/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd",
+    "url": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd"
+  },
+  "focus": "Follow an operator from its arithmetic and memory traffic through tile mapping, runtime, and deployment. Include an illustrative tile working-set check, then show where chip-level reasoning stops predicting system behaviour.",
+  "seedBrief": "hardware-pilot.json"
+}

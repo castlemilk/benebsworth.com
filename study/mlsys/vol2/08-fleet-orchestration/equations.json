@@ -1,0 +1,166 @@
+[
+  {
+    "id": "queueing-wait",
+    "number": "8.1",
+    "title": "Mean queue wait",
+    "latex": "W = \\frac{\\rho}{1-\\rho}\\cdot\\frac{1+C_s^{2}}{2}\\cdot\\bar{S}",
+    "caption": "Mean queue wait under offered load $\\rho$ with service-time variability $C_s$ and mean service $\\bar{S}$. The load factor bends sharply upward near capacity; the variability factor multiplies it, so a mixed ML queue waits several times longer than a uniform one at the same offered load.",
+    "symbols": [
+      {
+        "symbol": "W",
+        "name": "mean wait",
+        "meaning": "Mean time a job spends queued before starting."
+      },
+      {
+        "symbol": "\\rho",
+        "name": "offered load",
+        "meaning": "Utilization as offered load over service capacity, 0 to 1."
+      },
+      {
+        "symbol": "C_s",
+        "name": "service-time variation coefficient",
+        "meaning": "Standard deviation over mean of job durations; about 3 for a mixed ML queue."
+      },
+      {
+        "symbol": "\\bar{S}",
+        "name": "mean service time",
+        "meaning": "Average job duration once running."
+      }
+    ]
+  },
+  {
+    "id": "dominant-share",
+    "number": "8.2",
+    "title": "Dominant share",
+    "latex": "s_i = \\max_{r}\\, a_{ir}\\, /\\, c_r",
+    "caption": "Tenant $i$'s dominant share is its largest allocation-to-capacity ratio across all resources. Dominant-resource fairness equalizes this one number, so every tenant is equally constrained relative to its own bottleneck resource.",
+    "symbols": [
+      {
+        "symbol": "s_i",
+        "name": "dominant share",
+        "meaning": "Tenant i's largest resource share; the comparable entitlement DRF equalizes."
+      },
+      {
+        "symbol": "a_{ir}",
+        "name": "allocation",
+        "meaning": "Tenant i's allocation of resource r."
+      },
+      {
+        "symbol": "c_r",
+        "name": "capacity",
+        "meaning": "Fleet capacity of resource r."
+      },
+      {
+        "symbol": "r",
+        "name": "resource index",
+        "meaning": "One dimension of the multi-resource bundle: GPUs, CPU cores, memory, network."
+      }
+    ]
+  },
+  {
+    "id": "scaling-efficiency",
+    "number": "8.3",
+    "title": "Scaling efficiency",
+    "latex": "E(n) = T(1)\\, /\\, n\\, T(n)",
+    "caption": "Efficiency at $n$ workers as ideal-over-actual step time. It falls through near-linear, sublinear and saturated regimes as fixed per-step costs (pipeline fill-and-drain, unhidden synchronization) rival the shrinking per-worker computation.",
+    "symbols": [
+      {
+        "symbol": "E(n)",
+        "name": "scaling efficiency",
+        "meaning": "Fraction of ideal linear speedup actually achieved at n workers."
+      },
+      {
+        "symbol": "T(1)",
+        "name": "single-worker step time",
+        "meaning": "Step time on one worker, the linear-scaling reference."
+      },
+      {
+        "symbol": "T(n)",
+        "name": "n-worker step time",
+        "meaning": "Step time with n workers sharing the same global batch."
+      },
+      {
+        "symbol": "n",
+        "name": "worker count",
+        "meaning": "Number of workers in the elastic allocation."
+      }
+    ]
+  },
+  {
+    "id": "effective-spot-cost",
+    "number": "8.4",
+    "title": "Effective spot cost",
+    "latex": "C_{\\mathrm{eff}} = p_{\\mathrm{spot}} \\times T_{\\mathrm{billed}}\\, /\\, T_{\\mathrm{retained}}",
+    "caption": "The real price of interruptible training: spot rate times billed allocation time over retained productive time. Interruptions bill checkpoint, restart and replay hours that produce no progress, so the effective cost rises above the spot price as interruption frequency grows.",
+    "symbols": [
+      {
+        "symbol": "C_{\\mathrm{eff}}",
+        "name": "effective cost",
+        "meaning": "Cost per unit of retained training progress, the honest comparison against on-demand."
+      },
+      {
+        "symbol": "p_{\\mathrm{spot}}",
+        "name": "spot price",
+        "meaning": "Hourly spot rate per GPU, typically 60-70% below on-demand."
+      },
+      {
+        "symbol": "T_{\\mathrm{billed}}",
+        "name": "billed time",
+        "meaning": "Allocated hours paid for, including checkpointing, recovery and replay."
+      },
+      {
+        "symbol": "T_{\\mathrm{retained}}",
+        "name": "retained time",
+        "meaning": "Equivalent training time represented by durable progress."
+      }
+    ]
+  },
+  {
+    "id": "statistical-goodput",
+    "number": "8.5",
+    "title": "Statistical goodput",
+    "latex": "G = \\Theta \\times \\eta",
+    "caption": "Pollux's objective: system throughput in examples per second times statistical efficiency, the optimization progress each example contributes at the current batch size. Past the critical batch size throughput can rise while goodput falls, so the product, not throughput, decides the allocation.",
+    "symbols": [
+      {
+        "symbol": "G",
+        "name": "statistical goodput",
+        "meaning": "Useful optimization progress per second at the current allocation and batch size."
+      },
+      {
+        "symbol": "\\Theta",
+        "name": "throughput",
+        "meaning": "Training examples processed per second."
+      },
+      {
+        "symbol": "\\eta",
+        "name": "statistical efficiency",
+        "meaning": "Progress per example relative to a reference batch size; falls past the critical batch."
+      }
+    ]
+  },
+  {
+    "id": "finish-time-fairness",
+    "number": "8.6",
+    "title": "Finish-time fairness",
+    "latex": "F_{\\mathrm{finish}} = T_{\\mathrm{shared}}\\, /\\, T_{\\mathrm{fair\\,share}}",
+    "caption": "Themis's fairness measure: completion time in the shared cluster over completion time on an isolated $1/N$ fair share. A ratio of one means the application finished no later than its fair share allowed; the scheduler minimizes the worst ratio across applications.",
+    "symbols": [
+      {
+        "symbol": "F_{\\mathrm{finish}}",
+        "name": "finish-time ratio",
+        "meaning": "Normalized completion delay; one is fair, larger is late relative to entitlement."
+      },
+      {
+        "symbol": "T_{\\mathrm{shared}}",
+        "name": "shared completion time",
+        "meaning": "Time to finish in the contended shared cluster."
+      },
+      {
+        "symbol": "T_{\\mathrm{fair\\,share}}",
+        "name": "fair-share completion time",
+        "meaning": "Time to finish on an isolated 1/N slice of the cluster."
+      }
+    ]
+  }
+]

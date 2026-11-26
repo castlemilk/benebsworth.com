@@ -1,0 +1,38 @@
+[
+  {
+    "id": "pruning-addresses",
+    "file": "pruning-addresses.svg",
+    "title": "What the dense consumer reads",
+    "caption": "Toy layer with 32 input channels and 16 output channels. Zeroing four output channels gives a dense projection with 512 weight slots. Removing four output channels changes the projection to 384 slots and requires the consumer to read 12 channels."
+  },
+  {
+    "id": "distillation-probabilities",
+    "file": "distillation-probabilities.svg",
+    "title": "Two training targets for one bicycle frame",
+    "caption": "Illustrative class probabilities. The hard label gives bicycle 100% and the other classes 0%. The softened teacher gives 85% to bicycle, 13% to motorcycle and 2% to bus, expressing more similarity to motorcycle."
+  },
+  {
+    "id": "calibration-grid",
+    "file": "calibration-grid.svg",
+    "title": "Eight codes spread over two ranges",
+    "caption": "Illustrative unsigned 3-bit quantizers on a common scale. Range 0–7 maps 3.1 to 3 and clips 9.2 to 7. Range 0–14 maps 3.1 to 4 and 9.2 to 10. Both ranges use eight codes."
+  },
+  {
+    "id": "dequantization-traffic",
+    "file": "dequantization-traffic.svg",
+    "title": "The off-chip cost of a separate unpacking pass",
+    "caption": "Illustrative traffic per decoded token. Both INT4 paths read 0.75 GB of weights and 0.30 GB of KV cache. Separate kernels write and read another 3 GB FP16 tensor, reaching 7.05 GB total. The fused path unpacks and consumes tiles on-chip and moves 1.05 GB under these assumptions."
+  },
+  {
+    "id": "camera-release-gates",
+    "file": "camera-release-gates.svg",
+    "title": "Which camera candidate clears both gates?",
+    "caption": "Fictional frame times and night-cyclist recall. FP32 CPU is late at 42 ms or more. INT8 PTQ is fast at 26 ms and misses the 95% night-recall floor at 93%. Mixed precision passes the 33.3 ms deadline and the recall floor with 30 ms and 96%."
+  },
+  {
+    "id": "sparse-storage-cost",
+    "file": "sparse-storage-cost.svg",
+    "title": "Half the weights can take more bytes",
+    "caption": "Toy CSR encoding for a 128 × 128 INT8 matrix. At 50% zeros, 8,192 weight bytes, 16,384 column-index bytes and 516 row-pointer bytes total 25,092 bytes. The dense encoding takes 16,384 bytes."
+  }
+]

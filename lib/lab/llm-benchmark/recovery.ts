@@ -42,7 +42,7 @@
  * `scripts/sweep-recovery.mjs`: this module never starts a process.
  */
 import { existsSync, readFileSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
-import { basename, join } from 'node:path'
+import { join } from 'node:path'
 
 import { quotaLockedModels, type QuotaLock } from './quota'
 import {

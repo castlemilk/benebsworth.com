@@ -1,0 +1,26 @@
+[
+ {
+  "id": "config-abcd",
+  "file": "config-abcd.svg",
+  "title": "Four layouts, one constraint",
+  "caption": "The four candidate partitions of the same 175B step on 1,024 GPUs, drawn as per-GPU state bars against the 80 GB HBM line. A's pure data parallelism would replicate 2.8 TB; B's tensor shard leaves ~350 GB; C reaches ~87.5 GB and crosses under the line only with ZeRO-1; D fits unsharded at ~43.8 GB. Communication differs by three efficiency points; memory decides."
+  },
+ {
+  "id": "zero-ladder",
+  "file": "zero-ladder.svg",
+  "title": "What each stage shards",
+  "caption": "Per-GPU static state for a 7B model under DDP and the three ZeRO stages: 112 GB replicated, ~29.3 GB with optimizer sharding, ~15.5 GB adding gradients, ~1.75 GB fully sharded. ZeRO-1 and 2 keep DDP's byte volume; ZeRO-3 pays 1.5x for near-linear memory scaling."
+ },
+ {
+  "id": "bubble-grid",
+  "file": "bubble-grid.svg",
+  "title": "The slots the pipe cannot fill",
+  "caption": "A pipeline schedule as a stage-by-slot grid: m + p - 1 slots deep, p - 1 of them idle while the pipe fills and drains. PP-16 at 32 microbatches idles ~32 percent; PP-4 at the same count wastes ~9 percent. Microbatches are the fill, and they push on the critical batch size."
+ },
+ {
+  "id": "tp-traffic",
+  "file": "tp-traffic.svg",
+  "title": "What tensor splitting ships",
+  "caption": "TP-8 traffic for one GPT-3 step: ~68 GB of forward collectives against ~4.2 GB per stage boundary, drawn as the exchange every layer pays for splitting its matmuls eight ways. The 2(t-1)/t ring factor is 1.75 at t=8. It fits under compute on NVLink and cannot on InfiniBand, which is why tensor parallelism lives inside the node."
+ }
+]

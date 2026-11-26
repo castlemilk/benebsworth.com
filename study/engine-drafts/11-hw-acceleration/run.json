@@ -1,0 +1,283 @@
+{
+  "id": "vol1/02_hardware_pilot",
+  "title": "Hardware Acceleration",
+  "profile": "chapter",
+  "command": "chapter",
+  "sourceUrl": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd",
+  "sourceHash": "ed96957a7d57264fafbd1b8ebd9f9d309697a5a59387b6bd2aeefbc45d94399b",
+  "specHash": "3af063304eb16d59f7e3858ba8bed40e38a4cf9e0c7be5f46838fdf747d6f088",
+  "status": "accepted",
+  "sections": [
+    {
+      "id": "why-specialize",
+      "heading": "Identify the work worth specializing",
+      "sourceHeadings": [
+        "Anatomy of an Accelerator",
+        "Hardware Specialization"
+      ]
+    },
+    {
+      "id": "operator-to-execution-unit",
+      "heading": "Follow an operator to its execution units",
+      "sourceHeadings": [
+        "Compute Primitives",
+        "Compute Units"
+      ]
+    },
+    {
+      "id": "memory-traffic",
+      "heading": "Find which interface carries the bytes",
+      "sourceHeadings": [
+        "Memory Systems"
+      ]
+    },
+    {
+      "id": "roofline-bounds",
+      "heading": "Predict whether compute or bandwidth limits a kernel",
+      "sourceHeadings": [
+        "Performance Bounds"
+      ]
+    },
+    {
+      "id": "tile-capacity",
+      "heading": "Fit operands and accumulators on chip",
+      "sourceHeadings": [
+        "Anatomy of an Accelerator",
+        "Hardware Mapping"
+      ]
+    },
+    {
+      "id": "mapping-and-reuse",
+      "heading": "Turn reuse in the equations into reuse on the chip",
+      "sourceHeadings": [
+        "Hardware Mapping"
+      ]
+    },
+    {
+      "id": "compiler-runtime-path",
+      "heading": "Verify the plan the compiler and runtime actually execute",
+      "sourceHeadings": [
+        "Compilers and Runtimes"
+      ]
+    },
+    {
+      "id": "communication-across-devices",
+      "heading": "Extend the bottleneck analysis across accelerators",
+      "sourceHeadings": [
+        "Beyond One Accelerator"
+      ]
+    },
+    {
+      "id": "heterogeneous-soc",
+      "heading": "Map the full pipeline under a sustained power budget",
+      "sourceHeadings": [
+        "Heterogeneous SoC Design"
+      ]
+    },
+    {
+      "id": "accelerator-choice",
+      "heading": "Choose hardware by useful work delivered",
+      "sourceHeadings": [
+        "Choosing an Accelerator",
+        "Fallacies and Pitfalls"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "why-specialize",
+        "operator-to-execution-unit"
+      ],
+      "promptBytes": 28300,
+      "cached": true,
+      "key": "d269a1e9cc08e655627e72171c1c364da22f70c20d5e63f3a136718c76ebe766",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 17230,
+        "cachedInput": 10624,
+        "output": 1039
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "memory-traffic",
+        "roofline-bounds"
+      ],
+      "promptBytes": 19513,
+      "cached": true,
+      "key": "9b71bdab547ddddf11ea8c80c583d1dee2492920066bbe3a1c8f2f5b204b0bb3",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 15872,
+        "cachedInput": 10624,
+        "output": 1167
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "tile-capacity",
+        "mapping-and-reuse"
+      ],
+      "promptBytes": 26215,
+      "cached": true,
+      "key": "928e4ad0e38ff08446d12192863a880763c9779e930acbab956d450a945111f1",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 17313,
+        "cachedInput": 10624,
+        "output": 1253
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "compiler-runtime-path",
+        "communication-across-devices"
+      ],
+      "promptBytes": 19034,
+      "cached": true,
+      "key": "6e99c21ebc05ee795e290a091ae1ef146a7f62853d9155159cee972ce28c034f",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 15484,
+        "cachedInput": 10624,
+        "output": 1065
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "heterogeneous-soc",
+        "accelerator-choice"
+      ],
+      "promptBytes": 24423,
+      "cached": true,
+      "key": "0c8861008a36750c74e89782aab5bab4288963881e5b79f9d93badf1d7dbc20e",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 16608,
+        "cachedInput": 10624,
+        "output": 1186
+      }
+    },
+    {
+      "role": "chapter-repair",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "@chapter"
+      ],
+      "promptBytes": 75476,
+      "cached": true,
+      "key": "6fced7954736280ef9f320a7c09cf75bfab8e81e9bcac5f2f865297ccf2419b0",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 26518,
+        "cachedInput": 10624,
+        "output": 239
+      }
+    },
+    {
+      "role": "chapter-reviewer",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "sections": [
+        "why-specialize",
+        "operator-to-execution-unit",
+        "memory-traffic",
+        "roofline-bounds",
+        "tile-capacity",
+        "mapping-and-reuse",
+        "compiler-runtime-path",
+        "communication-across-devices",
+        "heterogeneous-soc",
+        "accelerator-choice"
+      ],
+      "promptBytes": 119671,
+      "cached": true,
+      "key": "afe6860497867e41dc3d66b3e8ac683f4bbbaf22ab682851ca2595d9612b2581",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 34813,
+        "cachedInput": 2432,
+        "output": 398
+      }
+    }
+  ],
+  "maxCalls": 0,
+  "stopAfterTokens": null,
+  "liveCalls": 0,
+  "tokens": {
+    "input": 0,
+    "cachedInput": 0,
+    "output": 0,
+    "total": 0
+  },
+  "usageIncomplete": false,
+  "elapsedMs": 3733,
+  "outlineSource": "/Users/benebsworth/projects/benebsworth.com/.cache/study-engine/chapter-v1/hardware-outline/outline.json",
+  "reviews": [
+    {
+      "verdict": "revise",
+      "source": "transfer-check",
+      "issues": [
+        {
+          "id": "@chapter",
+          "change": "In openQuestions[0], the reader can see the changed-input result 88 KiB before answering the numeric transfer. Preserve the topic and inputs while withholding the result, its derived margin and the fit decision."
+        }
+      ]
+    },
+    {
+      "verdict": "pass",
+      "checks": {
+        "mechanism": "The packet’s operand-delivery argument is coherent: specialized matrix units raise arithmetic demand, and slow operand delivery can leave them idle. The batch-one sensor example makes the consequence concrete: reducing projection from 2 ms to zero lowers total time only from 10 ms to 8 ms, so gathering is the better initial target.",
+        "calculation": "For the roofline example, intensity is 8 GFLOP ÷ 2 GB = 4 FLOP/byte. The bandwidth ceiling is 1 TB/s × 4 FLOP/byte = 4 TFLOP/s, below the 16 TFLOP/s compute peak. Transfer time is 2 ms versus 0.5 ms for arithmetic, so the 2 ms lower bound is bandwidth limited; doubling bandwidth lowers it to 1 ms. For the quiz’s narrowed tile, allocations are 48 + 16 + 12 + 12 = 88 KiB, which fits in 96 KiB with 8 KiB remaining.",
+        "continuity": "The chapter carries the same diagnosis through successive decisions: phase timing identifies work to specialize; interface byte counts feed the roofline estimate; tile capacity and mapping determine whether reuse is feasible; compiler traces establish which plan ran; and cross-device or SoC timelines reveal exposed handoffs before hardware selection. The thesis question receives a coherent answer: change hardware or mapping only after profiling identifies the limiting resource and a measured full-workload comparison confirms improvement.",
+        "assessment": "The device-partition MCQ is solvable and has one correct answer: sharding gives 4 + 3 = 7 ms, below the 10 ms single-device latency. Replica scaling is a tempting distractor because it can raise throughput, but does not divide one request’s latency. The changed-input tile quiz withholds its answer, and its model answer independently gives the correct 88 KiB total and 8 KiB margin."
+      },
+      "issues": []
+    }
+  ]
+}

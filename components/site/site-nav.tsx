@@ -13,7 +13,7 @@ const navLinks = [
   { href: '/projects/', prefix: '/projects', label: 'Projects' },
   { href: '/blog/', prefix: '/blog', label: 'Blog' },
   { href: '/lab/', prefix: '/lab', label: 'Lab' },
-  { href: '/study/', prefix: '/study', label: 'Study' },
+  { href: '/learning/', prefix: '/learning', label: 'Learning' },
   { href: '/knowledge/', prefix: '/knowledge', label: 'Knowledge' },
   { href: '/vectors/', prefix: '/vectors', label: 'Vectors' },
   { href: '/hiking/', prefix: '/hiking', label: 'Hiking' },
@@ -98,7 +98,7 @@ export function SiteNav() {
         <div className={styles.actions}>
           <nav aria-label="Primary" data-desktop-nav="" className={styles.desktopNav}>
             {navLinks.map(({ href, label, prefix }) => {
-              const isActive = pathname === prefix || pathname.startsWith(`${prefix}/`)
+              const isActive = pathname === prefix || pathname.startsWith(`${prefix}/`) || (prefix === '/learning' && (pathname === '/study' || pathname.startsWith('/study/')))
               return (
                 <Link
                   key={href}
@@ -136,7 +136,7 @@ export function SiteNav() {
         >
           <ul className="flex flex-col">
             {navLinks.map(({ href, label, prefix }) => {
-              const isActive = pathname === prefix || pathname.startsWith(`${prefix}/`)
+              const isActive = pathname === prefix || pathname.startsWith(`${prefix}/`) || (prefix === '/learning' && (pathname === '/study' || pathname.startsWith('/study/')))
               return (
                 <li key={href}>
                   <Link

@@ -17,6 +17,15 @@
     inset 0 1px 0 rgb(255 255 255 / 0.7),
     inset 0 -2px 6px rgb(27 27 25 / 0.06),
     0 12px 32px rgb(27 27 25 / 0.12);
+
+  /* Fluid pieces wear the console palette: key-color accent, mono face. */
+  --fluid-accent: var(--key-color, #d4501f);
+  --fluid-on-accent: #fff;
+  --fluid-text: var(--ink, #1b1b19);
+  --fluid-text-2: rgb(27 27 25 / 0.22);
+  --fluid-focus: var(--key-color, #d4501f);
+  --fluid-font: var(--mono);
+  --fluid-radius: 10px;
 }
 
 /* Maker's plate: power LED + model + name, as the device chrome prints it. */
@@ -157,6 +166,13 @@
   padding: 2px;
 }
 
+/* The layer meter leads the deck: full-width segmented columns over the
+   switches they summarise. */
+.kg-rail [data-kit="bar-graph"] {
+  width: 100%;
+  margin-bottom: 2px;
+}
+
 .kg-rail-row {
   display: flex;
   flex-direction: column;
@@ -164,17 +180,73 @@
   gap: 4px;
 }
 
-/* The narrow rail has no room for the skin's on/off side labels — the
-   row label carries the state instead. */
-.kg-rail [data-kit="switch"]::before,
-.kg-rail [data-kit="switch"]::after {
-  display: none;
-}
-
-.kg-rail [data-kit="switch-row"] {
+/* The rail keeps the plate's engraved-label convention; the switch itself
+   stays at its touch size. (Turbopack names modules `File-module__hash__part`,
+   so the class suffix is the stable match.) */
+.kg-rail-row [class$="__root"] {
   flex-direction: column;
   align-items: flex-start;
-  gap: 5px;
+  gap: 4px;
+  min-height: 0;
+  padding: 0;
+}
+
+.kg-rail-row [class$="__label"] {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* Instrument language: the track is a dark slot, the thumb is the signal.
+   ON moves a machined thumb to the right and strikes it with the key
+   color, like an LED lamp — instead of flooding the whole track accent. */
+.kg-rail-row [class$="__track"] {
+  background: rgb(27 27 25 / 0.82);
+  box-shadow:
+    inset 0 1px 3px rgb(0 0 0 / 0.45),
+    inset 0 -1px 0 rgb(255 255 255 / 0.12);
+}
+
+.kg-rail-row [class$="__track"][data-on="true"] {
+  background: rgb(27 27 25 / 0.82);
+}
+
+.kg-rail-row [class$="__thumb"] {
+  background: linear-gradient(180deg, #f2f0e8, #d8d5ca);
+  box-shadow:
+    inset 0 -1px 2px rgb(0 0 0 / 0.2),
+    0 1px 2px rgb(0 0 0 / 0.35);
+}
+
+.kg-rail-row [class$="__track"][data-on="true"] [class$="__thumb"] {
+  background: var(--key-color, #d4501f);
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--key-color, #d4501f) 55%, transparent),
+    inset 0 -1px 2px rgb(0 0 0 / 0.3);
+}
+
+/* The mode pill is a depressed dark key, not an accent block — accent stays
+   a signal (LEDs, switch thumbs, focus rings), not a fill. */
+.kg-panel [role="radiogroup"] {
+  --fluid-accent: var(--ink, #1b1b19);
+}
+
+/* Option labels are icon+text pairs. The global svg{display:block} reset
+   makes the icon block-level — it wraps to its own line and anchors left,
+   which reads as broken centering. Flex the option so the pair centers. */
+.kg-panel [role="radiogroup"] [role="radio"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.kg-panel [role="radiogroup"] [role="radio"] svg {
+  display: inline;
+  flex-shrink: 0;
 }
 
 .kg-display {
@@ -259,9 +331,19 @@
 }
 
 .kg-sel-art {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
   border-radius: 50%;
   background: #ece5d3;
   flex-shrink: 0;
+  border: 1px solid rgba(30, 28, 22, 0.18);
+}
+
+.kg-sel-art[data-kind="blog"],
+.kg-sel-art[data-kind="lab"],
+.kg-sel-art[data-kind="study"] {
+  border-radius: 10px;
 }
 
 .kg-sel-title {
@@ -281,6 +363,17 @@
   overflow: hidden;
 }
 
+/* The open CTA is the one accent button in the panel — keep it a compact
+   instrument key, not a marketing block. (ui-sdk pins block-size:44px, so
+   min-height alone can't shrink it.) */
+.kg-selection [data-kit="button"] {
+  block-size: 28px;
+  min-height: 0;
+  padding: 0 12px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
 .kg-meta {
   font-size: 10px;
   opacity: 0.65;
@@ -289,7 +382,7 @@
 .kg-idle {
   font-size: 11px;
   line-height: 1.5;
-  opacity: 0.75;
+  opacity: 0.9;
   padding: 6px 0;
 }
 
@@ -304,11 +397,75 @@
   max-height: none;
   flex: 1;
   overflow: auto;
+  /* The tray is a bare grid: without a template its auto tracks stretch to
+     fill the height, inflating the 24px header into ~half the tray and
+     leaving dead space between header and first row on sparse lists. */
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .kg-neighbors [data-kind] {
   text-transform: lowercase;
-  opacity: 0.8;
+  opacity: 0.9;
+}
+
+/* Row markers mirror the canvas language on the light housing: art hubs get
+   their engraving disc, other hubs a kind-coloured disc, content a square.
+   Panel variants of the dark-screen palette, deepened for a light ground. */
+.kg-mark {
+  display: block;
+}
+
+.kg-mark[data-shape="disc"] {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  margin: 8px;
+}
+
+.kg-mark[data-shape="square"] {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin: 9px;
+}
+
+.kg-mark[data-kind="blog"] { background: #2f6bd8; }
+.kg-mark[data-kind="lab"] { background: #1e8a4a; }
+.kg-mark[data-kind="study"] { background: #c05a20; }
+.kg-mark[data-kind="tag"] { background: #76766d; }
+.kg-mark[data-kind="concept"] { background: #8a6d1a; }
+.kg-mark[data-kind="category"] { background: #5d6a78; }
+
+.kg-mark-art {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #ece5d3;
+  border: 1px solid rgba(30, 28, 22, 0.18);
+}
+
+/* Content marks mirror the canvas square thumbnails, not hub discs. */
+.kg-mark-art[data-kind="blog"],
+.kg-mark-art[data-kind="lab"],
+.kg-mark-art[data-kind="study"] {
+  border-radius: 6px;
+}
+
+.kg-row-sub {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  opacity: 0.55;
+  text-transform: lowercase;
+}
+
+.kg-links {
+  font-family: var(--mono);
+  font-size: 10px;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Bottom deck: pan | zoom | fit | reset ── */
@@ -358,6 +515,12 @@
 
   .kg-hint {
     display: none;
+  }
+
+  /* The 28px readout CTA is a desktop-leaning size; restore a real touch
+     target on the stacked layout. */
+  .kg-selection [data-kit="button"] {
+    block-size: 40px;
   }
 
   .kg-neighbors [data-kit='item-list'] {

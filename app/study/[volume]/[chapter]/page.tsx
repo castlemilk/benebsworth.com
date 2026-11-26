@@ -12,6 +12,7 @@ import { SvgFigure } from '@/components/study/svg-figure'
 import { VisitedMarker } from '@/components/study/visited-marker'
 import { PacketAnnotator } from '@/components/study/packet-annotations'
 import { TocNav } from '@/components/study/toc-nav'
+import { MicroScroller } from '@/components/study/micro-scroller'
 import { AudioOverview } from '@/components/mdx/audio-overview'
 import { QuizRunner, type PreparedQuiz } from '@/components/study/quiz-runner'
 import { EquationList } from '@/components/study/equation-list'
@@ -39,7 +40,12 @@ export async function generateMetadata({ params }: { params: Promise<{ volume: s
   return {
     title,
     description: `Study packet: ${loaded.chapter.title}. ${loaded.chapter.sections.slice(0, 3).map((s) => s.title).join('; ')}`,
-    alternates: { canonical: `/study/${volume}/${chapter}/` },
+    // rel="alternate" type="text/markdown" → LLM crawlers get the flattened
+    // packet (markers resolved, charts as tables) at /study/<vol>/<slug>/index.md.
+    alternates: {
+      canonical: `/study/${volume}/${chapter}/`,
+      ...(loaded.packetBody ? { types: { 'text/markdown': `/study/${volume}/${chapter}/index.md` } } : {}),
+    },
   }
 }
 
@@ -132,12 +138,13 @@ export default async function ChapterPage({ params }: { params: Promise<{ volume
   return (
     <>
       <SiteNav />
-      <main id="main-content" className="mx-auto w-full max-w-4xl px-6 pb-20 sm:px-8">
+      <main id="main-content" className="study-chapter mx-auto w-full max-w-4xl px-6 pb-20 sm:px-8">
         <Breadcrumb
           className="mb-8"
           items={[
             { label: 'Home', href: '/' },
-            { label: 'Study', href: '/study/' },
+            { label: 'Learning', href: '/learning/' },
+            { label: 'Machine Learning Systems', href: '/learning/ml-systems/' },
             { label: `Vol ${ROMAN_NUMERAL[vol.number] ?? vol.number}` },
             { label: ch.title },
           ]}
@@ -155,14 +162,22 @@ export default async function ChapterPage({ params }: { params: Promise<{ volume
             )}
           </div>
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{ch.title}</h1>
+          {loaded.openingQuestion && (
+            <p className="mt-3 max-w-[56ch] text-lg leading-snug text-foreground">{loaded.openingQuestion}</p>
+          )}
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-muted-foreground">
-            <span>{ch.sections.length} book sections</span>
             {packetHtml && <span>~{minutes} min packet</span>}
             {quiz && <span>{quiz.questions.length} self-test questions</span>}
-            {figures.length > 0 && <span>{figures.length} original figures</span>}
-            {bookFigures.length > 0 && <span>{bookFigures.length} book references</span>}
             {ch.equations.length > 0 && <span>{ch.equations.length} key equations</span>}
-            {ch.charts.length > 0 && <span>{ch.charts.length} charts</span>}
+            <span>
+              {[
+                figures.length > 0 ? `${figures.length} figures` : null,
+                ch.charts.length > 0 ? `${ch.charts.length} charts` : null,
+                bookFigures.length > 0 ? `${bookFigures.length} book ${bookFigures.length === 1 ? 'reference' : 'references'}` : null,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </span>
           </div>
           {packetHtml && (
             <div className="mt-4">
@@ -185,6 +200,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ volume
           <>
             <VisitedMarker chapterId={ch.id} />
             <TocNav packet={tocPacket} sections={tocSections} />
+            <MicroScroller items={[...tocPacket, ...tocSections]} />
             <PacketAnnotator chapterId={ch.id} chartSlots={chartSlots}>
               <article
                 className="prose dark:prose-invert max-w-none prose-pre:text-[#ececf0] prose-pre:rounded-xl prose-pre:px-5 prose-pre:py-4 prose-pre:overflow-x-auto [&_[data-rehype-pretty-code-figure]]:my-7 prose-code:bg-transparent prose-code:p-0 prose-code:font-normal prose-code:before:content-none prose-code:after:content-none"

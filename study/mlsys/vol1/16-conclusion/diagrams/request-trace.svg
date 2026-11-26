@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="req-trace" class="study-fig-fit" viewBox="0 0 380 340" role="img" aria-labelledby="req-trace-title req-trace-desc">
+  <title id="req-trace-title">One request, four limiting terms</title>
+  <desc id="req-trace-desc">The voice-assistant request traced through the lighthouses. Wake word: KWS, 200 KB INT8 in 1 MB flash, 20 MFLOP under a milliwatt — power-bound. Speech front end on the phone NPU: 600 MFLOP on 3.5 MB INT8 inside 5 W — compute-in-envelope. Ranking: DLRM's 100 GB of embeddings exceed one H100's 80 GB — capacity-bound. Response: GPT-2 decode reads 3 GB of FP16 per token, a 0.9 ms memory floor — bandwidth-bound.</desc>
+  <style>
+    .dark #req-trace { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#req-trace { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="340" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">"Hey — what's the weather?"</text>
+    <text x="20" y="50" font-size="12.5" fill="var(--fig-rule, #6e6a5b)">each stage of one request is bound by a different term</text>
+
+    <g font-size="11.5">
+      <rect x="20" y="64" width="340" height="58" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="32" y="84" font-weight="620">KWS on a microcontroller</text>
+      <rect x="250" y="72" width="98" height="18" rx="4" fill="var(--fig-mark, #a33c20)" opacity="0.14"/>
+      <text x="299" y="85" text-anchor="middle" font-size="10.5">power-bound</text>
+      <text x="32" y="102" font-size="11" fill="var(--fig-rule, #6e6a5b)">200 KB INT8 in 1 MB flash · 20 MFLOP · milliwatt</text>
+
+      <path d="M190 122 v 12" stroke="var(--fig-rule, #b8ad96)" stroke-width="1.4"/>
+
+      <rect x="20" y="134" width="340" height="58" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="32" y="154" font-weight="620">Speech front end on the phone NPU</text>
+      <rect x="250" y="142" width="98" height="18" rx="4" fill="var(--fig-mark, #a33c20)" opacity="0.14"/>
+      <text x="299" y="155" text-anchor="middle" font-size="10.5">compute / 5 W</text>
+      <text x="32" y="172" font-size="11" fill="var(--fig-rule, #6e6a5b)">600 MFLOP · 3.5 MB INT8 weights</text>
+
+      <path d="M190 192 v 12" stroke="var(--fig-rule, #b8ad96)" stroke-width="1.4"/>
+
+      <rect x="20" y="204" width="340" height="58" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="32" y="224" font-weight="620">DLRM ranks the retrieval</text>
+      <rect x="250" y="212" width="98" height="18" rx="4" fill="var(--fig-mark, #a33c20)" opacity="0.14"/>
+      <text x="299" y="225" text-anchor="middle" font-size="10.5">capacity-bound</text>
+      <text x="32" y="242" font-size="11" fill="var(--fig-rule, #6e6a5b)">100 GB embeddings &gt; one H100's 80 GB — shard first</text>
+
+      <path d="M190 262 v 12" stroke="var(--fig-rule, #b8ad96)" stroke-width="1.4"/>
+
+      <rect x="20" y="274" width="340" height="58" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="32" y="294" font-weight="620">GPT-2 writes the answer</text>
+      <rect x="250" y="282" width="98" height="18" rx="4" fill="var(--fig-mark, #a33c20)" opacity="0.14"/>
+      <text x="299" y="295" text-anchor="middle" font-size="10.5">bandwidth-bound</text>
+      <text x="32" y="312" font-size="11" fill="var(--fig-rule, #6e6a5b)">3 GB FP16 read per token → ~0.9 ms floor</text>
+    </g>
+  </g>
+</svg>

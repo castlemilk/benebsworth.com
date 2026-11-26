@@ -1,0 +1,76 @@
+[
+ {
+  "id": "series-composition",
+  "number": "7.1",
+  "title": "Series composition",
+  "latex": "\\lambda_{\\mathrm{GPU\\,total}} = \\lambda_{\\mathrm{gpu}} + \\lambda_{\\mathrm{pcie}} + \\lambda_{\\mathrm{power}} + \\lambda_{\\mathrm{net}}",
+  "caption": "Components in series add their failure rates. The prorated per-GPU share of node-level hardware divides a node-wide rate by the GPUs per node, and redundant supplies contribute zero until one failure alone can kill the node.",
+  "symbols": [
+   { "symbol": "\\lambda_{\\mathrm{gpu}}", "meaning": "GPU failure rate = 1/MTTF = 2.0 x 10^-5 per hour at 50,000 h" },
+   { "symbol": "\\lambda_{\\mathrm{pcie}}", "meaning": "PCIe link failure rate, comparable order" },
+   { "symbol": "\\lambda_{\\mathrm{power}}", "meaning": "per-GPU share of node power failures; 0 under 4+2 redundancy" },
+   { "symbol": "\\lambda_{\\mathrm{net}}", "meaning": "per-GPU share of NIC/cable failure rate (node rate / 8 GPUs)" }
+  ]
+ },
+ {
+  "id": "system-mtbf",
+  "number": "7.2",
+  "title": "System MTBF",
+  "latex": "\\mathrm{MTBF}_{\\mathrm{system}} = \\frac{1}{\\lambda_{\\mathrm{system}}} = \\frac{1}{N \\cdot \\lambda_{\\mathrm{GPU\\,total}}}",
+  "caption": "Fleet failure rate is the per-GPU total times the device count; the reciprocal is the mean time between failures. 10,000 GPUs at ~3.9e-5 per hour each give a failure every ~3.9 hours; the GPU-only simplification (50,000/10,000) gives 5 hours.",
+  "symbols": [
+   { "symbol": "N", "meaning": "accelerators in the cluster (10,000 in the running example)" },
+   { "symbol": "\\lambda_{\\mathrm{system}}", "meaning": "system failure rate, ~0.26 failures/hour for the cascade" },
+   { "symbol": "\\mathrm{MTBF}_{\\mathrm{system}}", "meaning": "expected hours between failures: ~3.9 h full-system, 5 h GPU-only" }
+  ]
+ },
+ {
+  "id": "young-daly",
+  "number": "7.3",
+  "title": "Young-Daly interval",
+  "latex": "\\tau^{*} = \\sqrt{2 \\cdot T_{\\mathrm{write}} \\cdot \\mathrm{MTBF}}",
+  "caption": "The checkpoint interval minimizing expected waste: save too often and write time dominates, too rarely and expected replay dominates. At the optimum the two terms are equal — 24.5 s write at 3.9 h MTBF gives ~14 minutes.",
+  "symbols": [
+   { "symbol": "\\tau^{*}", "meaning": "optimal checkpoint interval (~14 min here, ~15.7 min for the 175B archetype)" },
+   { "symbol": "T_{\\mathrm{write}}", "meaning": "time to durably write one checkpoint (~24.5 s at 100 GB/s for 2.45 TB)" },
+   { "symbol": "\\mathrm{MTBF}", "meaning": "the cluster MTBF the run actually experiences" }
+  ]
+ },
+ {
+  "id": "recovery-time",
+  "number": "7.4",
+  "title": "Recovery time decomposition",
+  "latex": "T_{\\mathrm{recovery}} = T_{\\mathrm{detect}} + T_{\\mathrm{restart}} + T_{\\mathrm{load}} + T_{\\mathrm{warmup}}",
+  "caption": "A failure's cost is the sum of noticing it, replacing the resource, reloading state, and refilling pipelines. The reference budget: ~30 s + ~4 min + ~24.5 s + ~2 min = ~6.6 min per incident.",
+  "symbols": [
+   { "symbol": "T_{\\mathrm{detect}}", "meaning": "physical fault to system classification (~30 s)" },
+   { "symbol": "T_{\\mathrm{restart}}", "meaning": "scheduler allocates + launches replacements + rendezvous (~4 min, the dominant term)" },
+   { "symbol": "T_{\\mathrm{load}}", "meaning": "aggregate checkpoint read into GPU memory (~24.5 s)" },
+   { "symbol": "T_{\\mathrm{warmup}}", "meaning": "pipeline refill, JIT compile, throughput stabilization (~2 min)" }
+  ]
+ },
+ {
+  "id": "replica-availability",
+  "number": "7.5",
+  "title": "Replica availability",
+  "latex": "A_{\\mathrm{service}} = 1 - (1 - A_{\\mathrm{replica}})^{R}",
+  "caption": "Parallel composition for serving: independent replicas compound availability exponentially. At 99% per replica the annual downtime falls 3.65 days -> 52.6 minutes -> 31.5 seconds for 1, 2, 3 replicas, but only if failures are independent and survivors can absorb the load.",
+  "symbols": [
+   { "symbol": "A_{\\mathrm{replica}}", "meaning": "single-replica availability (0.99 in the worked ladder)" },
+   { "symbol": "R", "meaning": "replica count in independent failure domains" },
+   { "symbol": "A_{\\mathrm{service}}", "meaning": "probability at least one replica is serving" }
+  ]
+ },
+ {
+  "id": "straggler-step",
+  "number": "7.6",
+  "title": "Straggler step time",
+  "latex": "T_{\\mathrm{step}}(N) = \\max_{i} T_{\\mathrm{compute},i} + T_{\\mathrm{comm}}(N)",
+  "caption": "In synchronous training the slowest rank sets the step for everyone. One half-speed GPU on a 1,024-GPU job halves total throughput (~\\$1,024/hour idle), while passing every liveness check — the straggler is invisible to heartbeat detection.",
+  "symbols": [
+   { "symbol": "T_{\\mathrm{compute},i}", "meaning": "rank i's compute contribution to the step" },
+   { "symbol": "T_{\\mathrm{comm}}(N)", "meaning": "collective time at N devices" },
+   { "symbol": "N", "meaning": "worker count" }
+  ]
+ }
+]

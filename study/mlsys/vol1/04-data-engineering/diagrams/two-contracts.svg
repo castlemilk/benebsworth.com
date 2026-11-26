@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 340" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#059669"]{fill:#34d399}
+    .dark [stroke="#059669"]{stroke:#34d399}
+    .dark [fill="#10b981"]{fill:#4ade80}
+    .dark [stroke="#10b981"]{stroke:#4ade80}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#3b82f6"]{fill:#7cb3f8}
+    .dark [stroke="#3b82f6"]{stroke:#7cb3f8}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#f59e0b"]{fill:#fbbf24}
+    .dark [stroke="#f59e0b"]{stroke:#fbbf24}
+  </style>
+
+  <!-- Two contracts: dataset at center keeps a statistical contract (D-A) and a physical contract (D-M) -->
+  <defs>
+    <marker id="arrT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <text x="350" y="26" text-anchor="middle" font-size="13" font-weight="600" fill="#374151">The dataset keeps two contracts at once</text>
+
+  <!-- left: statistical contract -->
+  <rect x="30" y="48" width="230" height="230" rx="8" fill="#3b82f6" fill-opacity="0.08" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="145" y="70" text-anchor="middle" font-size="12" font-weight="600" fill="#1d4ed8">STATISTICAL CONTRACT</text>
+  <text x="145" y="86" text-anchor="middle" font-size="10" fill="#6b7280">Data ↔ Algorithm · capability bound</text>
+  <g font-size="10.5" fill="#374151">
+    <text x="48" y="116">· coverage of the deployment dist.</text>
+    <text x="48" y="138">· labels are the specification</text>
+    <text x="48" y="160">· splits as trust boundaries</text>
+    <text x="48" y="182">· no leakage, bounded label error</text>
+    <text x="48" y="204">· release + lineage for diffs</text>
+  </g>
+  <text x="145" y="240" text-anchor="middle" font-size="10" fill="#1d4ed8">governs what the model can learn</text>
+  <text x="145" y="262" text-anchor="middle" font-size="10" fill="#b91c1c">break it → cascades, skew, drift losses</text>
+
+  <!-- center: dataset -->
+  <g>
+    <rect x="290" y="120" width="120" height="100" rx="10" fill="#f59e0b" fill-opacity="0.18" stroke="#d97706" stroke-width="1.6"/>
+    <text x="350" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">DATASET</text>
+    <text x="350" y="176" text-anchor="middle" font-size="10" fill="#6b7280">the system's build</text>
+    <text x="350" y="192" text-anchor="middle" font-size="10" fill="#6b7280">every retrain = rebuild</text>
+  </g>
+  <line x1="260" y1="170" x2="288" y2="170" stroke="#6b7280" stroke-width="1.4" marker-end="url(#arrT)"/>
+  <line x1="440" y1="170" x2="412" y2="170" stroke="#6b7280" stroke-width="1.4" marker-end="url(#arrT)"/>
+
+  <!-- right: physical contract -->
+  <rect x="440" y="48" width="230" height="230" rx="8" fill="#10b981" fill-opacity="0.08" stroke="#059669" stroke-width="1.4"/>
+  <text x="555" y="70" text-anchor="middle" font-size="12" font-weight="600" fill="#047857">PHYSICAL CONTRACT</text>
+  <text x="555" y="86" text-anchor="middle" font-size="10" fill="#6b7280">Data ↔ Machine · throughput bound</text>
+  <g font-size="10.5" fill="#374151">
+    <text x="458" y="116">· R_supply ≥ accelerator rate</text>
+    <text x="458" y="138">· format efficiency (Parquet ≫ CSV)</text>
+    <text x="458" y="160">· tier to access pattern</text>
+    <text x="458" y="182">· loader workers, prefetch, pin</text>
+    <text x="458" y="204">· data gravity pins compute to data</text>
+  </g>
+  <text x="555" y="240" text-anchor="middle" font-size="10" fill="#047857">governs how fast learning proceeds</text>
+  <text x="555" y="262" text-anchor="middle" font-size="10" fill="#b91c1c">break it → starved accelerator, blown budgets</text>
+
+  <!-- bottom: the iron law framing -->
+  <rect x="120" y="294" width="460" height="34" rx="6" fill="#6b7280" fill-opacity="0.08" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="350" y="315" text-anchor="middle" font-size="10.5" fill="#4b5563">iron law: D bounds Samples/Task (what it learns) and DataVolume/Bandwidth (how fast)</text>
+</svg>

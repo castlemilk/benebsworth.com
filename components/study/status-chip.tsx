@@ -22,8 +22,12 @@ const STATUS_CLASS: Record<ChapterStatus, string> = {
 
 export function StatusChip({ status, className }: { status: ChapterStatus; className?: string }) {
   return (
-    <Badge variant="outline" className={cn('font-mono uppercase tracking-wide', STATUS_CLASS[status], className)}>
-      {STATUS_LABEL[status]}
+    <Badge
+      variant="outline"
+      title="Packet progress in the author's study loop"
+      className={cn('font-mono uppercase tracking-wide', STATUS_CLASS[status], className)}
+    >
+      loop · {STATUS_LABEL[status]}
     </Badge>
   )
 }

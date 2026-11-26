@@ -1,0 +1,32 @@
+[
+ {
+  "file": "images/svg/fault_tolerance_mtbf_ladder.svg",
+  "title": "Fleet MTBF collapse",
+  "note": "Margin figure: 1 GPU at 50,000 h, 1,000 at 50 h, 10,000 at 5 h — the rate multiplication the whole chapter rests on."
+ },
+ {
+  "file": "images/svg/failure-types.svg",
+  "title": "Failure taxonomy",
+  "note": "Transient, fail-stop, Byzantine, correlated — sorted by what the surviving system can observe."
+ },
+ {
+  "file": "images/svg/distributed-checkpoint-architecture.svg",
+  "title": "Centralized vs distributed checkpoint writes",
+  "note": "Coordinator ingress bottleneck vs parallel local-NVMe writes with background drain — the 2.45 TB snapshot path."
+ },
+ {
+  "file": "images/svg/epoch-fencing.svg",
+  "title": "Epoch fencing during recovery",
+  "note": "Lease decides ownership; the fence at the store enforces it — token 7 writes rejected after epoch 8 advances."
+ },
+ {
+  "file": "images/svg/elastic-flow.svg",
+  "title": "Elastic training recovery",
+  "note": "4-node ring loses node 3: rendezvous + reload, contract to 3 nodes, +1 shard each, resume at 75%."
+ },
+ {
+  "file": "images/svg/serving-redundancy.svg",
+  "title": "Active-active vs active-passive",
+  "note": "Headroom spread over all replicas vs a warm standby that serves nothing while healthy."
+ }
+]

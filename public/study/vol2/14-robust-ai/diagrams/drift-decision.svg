@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Three-level drift decision framework from alert to response">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .box{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-edge,#999);stroke-width:1.2}
+    .lvl{font:600 11px var(--font-sans,sans-serif);fill:var(--diagram-accent,#3c64c8)}
+    .arr{stroke:var(--diagram-ink-soft,#5a5a60);stroke-width:1.4;fill:none;marker-end:url(#ah)}
+    .case{fill:var(--diagram-accent-soft,#e8eefb);stroke:var(--diagram-accent,#3c64c8);stroke-width:1}
+    .act{font:600 11.5px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+  </style>
+  <defs><marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="var(--diagram-ink-soft,#5a5a60)"/></marker></defs>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="34">A fired metric is not a retraining command</text>
+  <text class="sub" x="30" y="53">Alerts automate detection only; performance correlation decides; significance never commands.</text>
+  <!-- level 1 -->
+  <text class="lvl" x="30" y="88">LEVEL 1 — detection</text>
+  <rect class="box" x="30" y="96" width="700" height="52" rx="8"/>
+  <text class="lbl" x="48" y="118">calibrated triggers: PSI &gt; 0.1 on high-importance feature · KL &gt; 0.05 · KS at Bonferroni per-test α</text>
+  <text class="sm" x="48" y="136">crossing any threshold opens an investigation — it never triggers a training pipeline</text>
+  <line class="arr" x1="380" y1="148" x2="380" y2="170"/>
+  <!-- level 2: three cases -->
+  <text class="lvl" x="30" y="190">LEVEL 2 — performance correlation, three cases</text>
+  <rect class="case" x="30" y="198" width="222" height="76" rx="8"/>
+  <text class="act" x="46" y="220">drift + degradation</text>
+  <text class="sm" x="46" y="240">isolate affected slices; test</text>
+  <text class="sm" x="46" y="256">recalibrate, repair, or retrain</text>
+  <rect class="case" x="269" y="198" width="222" height="76" rx="8"/>
+  <text class="act" x="285" y="220">drift, stable performance</text>
+  <text class="sm" x="285" y="240">elevated monitoring; investigate</text>
+  <text class="sm" x="285" y="256">source — no model change yet</text>
+  <rect class="case" x="508" y="198" width="222" height="76" rx="8"/>
+  <text class="act" x="524" y="220">degradation, no feature drift</text>
+  <text class="sm" x="524" y="240">the dashboard cannot explain it:</text>
+  <text class="sm" x="524" y="256">concept drift, joints, or faults</text>
+  <line class="arr" x1="380" y1="274" x2="380" y2="296"/>
+  <!-- level 3 -->
+  <text class="lvl" x="30" y="316">LEVEL 3 — decision rules</text>
+  <rect class="box" x="30" y="324" width="222" height="72" rx="8"/>
+  <text class="act" x="46" y="346">update model</text>
+  <text class="sm" x="46" y="364">labels confirm + root cause +</text>
+  <text class="sm" x="46" y="380">offline and shadow gates clear</text>
+  <rect class="box" x="269" y="324" width="222" height="72" rx="8"/>
+  <text class="act" x="285" y="346">investigate first</text>
+  <text class="sm" x="285" y="364">alert fires, performance stable,</text>
+  <text class="sm" x="285" y="380">or seasonal event plausible</text>
+  <rect class="box" x="508" y="324" width="222" height="72" rx="8"/>
+  <text class="act" x="524" y="346">continue monitoring</text>
+  <text class="sm" x="524" y="364">statistics inside baseline and</text>
+  <text class="sm" x="524" y="380">performance within tolerance</text>
+</svg>

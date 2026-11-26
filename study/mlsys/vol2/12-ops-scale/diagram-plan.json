@@ -1,0 +1,68 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The thesis frames fleet operations as a control-plane and dependency-graph problem; prose carries the argument."
+    },
+    "One Model Is a Project; a Hundred Is a System": {
+      "figure": "::chart[shared-fleet-capacity]",
+      "teaches": "Statistical multiplexing of a shared fleet needs roughly half the provisioned GPUs of partitioned quotas for the same active workload.",
+      "source": "Book multi-tenant notebook: 30 GPU-equivalents at 0.30 versus 0.70 occupancy on a 1.75 million dollar budget."
+    },
+    "The Platform Has to Earn Its Keep": {
+      "figure": "::chart[platform-breakeven]",
+      "teaches": "Platform net benefit is linear in model count; break-even is an economic threshold, not a fleet-size count.",
+      "source": "Book platform ROI threshold figure and benefit-cost ratio scenarios: 1.25 at 50 models, 0.5 at 20."
+    },
+    "The Registry Is the Dependency Graph": {
+      "figure": "::fig[impact-set]",
+      "teaches": "A version bump is safe only through recorded edges: traverse, re-evaluate consumers, block until pass, roll out compatible states; unrecorded consumers fail silently.",
+      "source": "Book registry requirements, dependency traversal protocol and e-commerce consumer fan-out; redrawn as a traversal pipeline with the unrecorded edge."
+    },
+    "Feature Meaning Is a Versioned Contract": {
+      "proseOnly": "Freshness SLOs, the point-in-time join example and the 28 PB storage calculation are worked in prose and equations."
+    },
+    "A Release Is a Contract, Not a Deploy": {
+      "figure": "::fig[evaluation-contract]",
+      "teaches": "Five evidence planes bind to one versioned contract on the same artifact; invalidation returns to the owning gate.",
+      "source": "Book evaluation contract table; redrawn as converging planes into one contract and promotion gate."
+    },
+    "Exposure Is Priced Before Traffic Moves": {
+      "proseOnly": "Sample-size, multiple-testing, SUTVA and canary-duration equations carry the release-risk reasoning; charts would repeat the arithmetic."
+    },
+    "Monitoring Is a Hierarchy of Budgets": {
+      "figure": "::fig[slo-vector]",
+      "teaches": "Fleet health is the maximum budget consumption across dimensions, not the mean; the chapter's example hides a freshness breach at 1.30 behind a 0.70 average.",
+      "source": "Book SLO vector figure; redrawn as budget bars with the limit line."
+    },
+    "Incidents Are Attribution Problems": {
+      "proseOnly": "The staleness chain, cross-model failure patterns and runbook steps are diagnostic sequences carried by prose."
+    },
+    "The Platform Is a Product With an SLO": {
+      "proseOnly": "Abstraction levels, self-service invariants and MPG goodput are policy structure; prose carries them."
+    },
+    "Occupancy Is the Economic Invariant": {
+      "figure": "::fig[build-vs-buy]",
+      "teaches": "Ownership pays a capital step then a shallow slope while cloud grows linearly; the cumulative crossover near month 26 marks where sustained demand repays fixed cost.",
+      "source": "Book build-versus-buy cumulative cost figure for a 1,024-GPU cluster; redrawn as stepped versus linear curves."
+    },
+    "Case Studies: What the Platforms Actually Built": {
+      "proseOnly": "Five platform case studies are reference synthesis in prose."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Textual corrections of common misreadings."
+    },
+    "The physics": {
+      "proseOnly": "Quantity-value-use table is the quick-reference surface for the chapter's numbers."
+    },
+    "Glossary": {
+      "proseOnly": "Searchable term definitions; the concept index consumes them."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Connections to the author's stack are prose mappings."
+    },
+    "Open questions": {
+      "proseOnly": "Unresolved questions for review."
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "Introduce the decision that connects the worked sections."
+    },
+    "Count the entire resident footprint": {
+      "figure": "::fig[resident-footprint-versus-capacity]",
+      "teaches": "A deployment budget puts a ceiling on the memory, time, and energy that a model can use. For a capacity limit, count the allocations that coexist at peak use, including weights, live activations, and runtime buffers. An artifact's file size answers a separate storage question. Once the model fits, timing depends on the deployment. A camera must deliver frames on time, a cloud service must handle its request load, and a microcontroller may need to fit its artifact in flash and its peak working set in SRAM.",
+      "source": "Fitting the Deployment Budget, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L69-L556"
+    },
+    "Remove work from a trained model": {
+      "figure": "::fig[factorized-layer-weight-count]",
+      "teaches": "Structural compression changes the work in the inference graph. Channel pruning removes an output channel and the corresponding inputs of layers that consume it. The resulting smaller dense layers can use ordinary kernels and may also produce smaller activations. Low-rank factorization replaces a matrix with two thinner matrices when its useful behavior can be approximated in fewer dimensions. Both methods are most promising when the affected layers contribute substantially to the measured bottleneck and the resized operations map well to the target.",
+      "source": "Structural Optimization: Changing What the Model Computes, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L827-L843"
+    },
+    "Train a smaller graph or vary work by input": {
+      "figure": "::fig[early-exit-decision]",
+      "teaches": "When modifying an existing graph offers too little room, train a model designed around the target device. Distillation helps a compact student learn from the distribution of predictions made by a larger teacher, which conveys information about plausible alternatives to the labeled answer. A hardware-aware architecture uses operators and tensor shapes the target executes efficiently. Neural architecture search can explore those choices systematically. Adaptive computation tackles a different opportunity by giving easy inputs a short path and reserving deeper computation for inputs that need it.",
+      "source": "Structural Optimization: Changing What the Model Computes, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L638-L2807"
+    },
+    "Choose a precision the device can use": {
+      "figure": "::fig[estimated-weight-transfer-time]",
+      "teaches": "Quantization maps weights or activations to a smaller set of representable values. FP32 to INT8 divides the raw bytes per converted value by four. The total memory and traffic also include scales, packing, and tensors left at higher precision. Lower precision can help a bandwidth-limited stage by reducing bytes moved, often reducing off-chip transfer energy as well. For a compute-limited stage, speed depends on whether the target can execute the chosen format efficiently at the workload's shapes and batch size.",
+      "source": "Numerical Precision: Changing How Values Are Stored, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L3519-L5511"
+    },
+    "Manage quantization error": {
+      "figure": "::fig[quantization-quality-loop]",
+      "teaches": "Post-training quantization usually offers the quickest trial. It chooses scales after training, using representative data when activation ranges must be estimated. Wider ranges preserve large values but increase the spacing between representable values, so ordinary inputs can lose detail. When calibration and selective precision leave unacceptable errors, quantization-aware training simulates quantization during training so the model can adapt. Very low bit widths magnify the quality trade-off and require an execution path that makes the representation worthwhile.",
+      "source": "Numerical Precision: Changing How Values Are Stored, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L3523-L5367"
+    },
+    "Make the runtime realize the savings": {
+      "figure": "::fig[fusion-activation-traffic]",
+      "teaches": "The compiler and runtime determine how much of a compressed model's theoretical gain reaches the device. Operator fusion can keep intermediate values in registers or on-chip memory and avoid some launches. In a convolution, batch normalization, and activation chain, inference-time batch normalization can often be folded into the convolution and the activation applied in the same kernel. Sparse execution likewise requires a matching representation and kernel. A dense kernel still reads and processes stored zeros.",
+      "source": "Hardware Implementation: Changing How the Model Executes, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L5579-L5855"
+    },
+    "Sequence changes and compare feasible candidates": {
+      "figure": "::fig[compression-candidate-sequence]",
+      "teaches": "Pick the first change by matching it to the violated budget and its cause. Smaller resident weights can address capacity or weight traffic. Channel pruning or a smaller student can address expensive dense layers when the target executes the resized graph efficiently. Fusion can address an expensive chain of intermediate transfers. Compare candidates on measured quality and system costs. A candidate is dominated when another matches or improves every relevant metric and does strictly better on at least one. The remaining trade-offs belong on the accuracy-efficiency frontier.",
+      "source": "Choosing and Combining Techniques, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L6528-L7013; Fallacies and Pitfalls, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L7947-L8038"
+    },
+    "Run an end-to-end acceptance test": {
+      "figure": "::fig[deployment-acceptance-test]",
+      "teaches": "Test the artifact that will ship against the baseline under equivalent workload and device conditions. Evaluate three dimensions together. The data must represent the production distribution and important user slices. The algorithm must preserve task performance and any confidence behavior the application relies on. The machine must stay within its storage, peak memory, latency, throughput, and energy budgets. Define the limits before comparing candidates, and collect enough observations to tell whether a narrow margin is repeatable.",
+      "source": "Measuring Compression Gains, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L7075-L7865"
+    },
+    "Trace a failed gate to its cause": {
+      "figure": "::fig[failed-gate-diagnostic-loop]",
+      "teaches": "A failed end-to-end test identifies a symptom. Align a candidate's device timeline with its graph to locate unexpected costs, and compare its outputs with the baseline on the same inputs to locate the first substantial error. A layer with few arithmetic operations can dominate runtime because it repeatedly streams a large activation. A quality drop can come from a saturated channel, pruning that removes a useful feature, or confidence scores that drift. Use a targeted intervention to test the suspected cause before changing the rest of the model.",
+      "source": "Measuring Compression Gains, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L7075-L7857; Fallacies and Pitfalls, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L7873-L8038"
+    },
+    "The physics": {
+      "proseOnly": "Compare the quantities and conditions in a lookup table."
+    },
+    "Glossary": {
+      "proseOnly": "Look up a term encountered in the worked sections."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Apply the mechanisms to concrete engineering decisions."
+    },
+    "Open questions": {
+      "proseOnly": "Identify an experiment or evidence the chapter leaves open."
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "Introduce the decision that connects the worked sections."
+    },
+    "Why the same projection can need two different machines": {
+      "figure": "::fig[trace-one-weight]",
+      "teaches": "Consider a visual inspection service that projects each image's feature vectors into a new representation. Each output is a sum of products. A CPU can evaluate these sums with a short loop, but it still spends instruction and register bandwidth directing the work. A matrix engine can direct many products with one instruction and distribute an operand to several arithmetic units. The benefit depends on how much of that regular work the service presents at once. One feature vector and a batch of vectors use the same learned weights, yet they offer quite different opportunities to reuse a weight after fetching it.",
+      "source": "Anatomy of an Accelerator, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L115-L323; Hardware Specialization, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L720-L972"
+    },
+    "Find the unit that executes each instruction": {
+      "figure": "::fig[inspect-precision-path]",
+      "teaches": "A projection followed by normalization exercises several parts of a chip. A matrix instruction forms a tile of dot products. Vector lanes can add a bias or compare activation values, and a reciprocal square root can use a special-function path. On a GPU, groups of threads issue instructions together and may cooperate on one matrix tile. On a systolic array, neighboring processing elements pass operands along a regular route and accumulate products as values meet. Both organizations exploit regularity, but a short reduction, a partially filled tile, or an unsupported numerical format can leave much of the advertised arithmetic capacity unavailable.",
+      "source": "Compute Primitives, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L1134-L1331; Compute Units, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L1405-L1641"
+    },
+    "Count bytes at the boundary the operator crosses": {
+      "figure": "::fig[separate-memory-boundaries]",
+      "teaches": "The byte count for a projection depends on where the observer stands. A weight might cross the host link once at startup, cross from device memory into on-chip storage once per batch, and travel from local storage to arithmetic units many times. Each boundary has its own bandwidth and its own opportunities for reuse. Capacity determines whether data can stay at a level. Access order determines whether successive operations find it there and whether each memory transaction carries useful values. A plausible diagnosis names the tensor, the boundary, and the interval over which traffic is counted.",
+      "source": "Memory Systems, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L2664-L3119"
+    },
+    "Use the roofline to make a falsifiable prediction": {
+      "figure": "::fig[compare-kernel-time-floors]",
+      "teaches": "For a kernel doing F operations and moving D bytes across a chosen interface, arithmetic intensity is F/D. Let P be the compute ceiling for the instructions in use, and B the bandwidth ceiling at that interface. Arithmetic needs at least F/P seconds and transfer needs at least D/B seconds. Even with perfect overlap, the kernel takes at least the larger of those times. Equivalently, its throughput is bounded by min(P, B × F/D). The ceilings meet at intensity P/B, called the ridge point. A kernel far below both ceilings calls for another measurement before either resource can be blamed.",
+      "source": "Performance Bounds, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L3157-L3719"
+    },
+    "Fit operands and accumulators on chip": {
+      "figure": "::fig[baseline-tile-storage]",
+      "teaches": "A tile promises local reuse only if all values needed at the same time fit in the available on-chip storage. During a double-buffered matrix multiply, one input buffer can feed the current computation while another receives the next block. The weights can use the same arrangement. Meanwhile, the output's partial sums must survive until the reduction finishes, and the kernel may need separate workspace. A tile capacity check counts every simultaneously resident allocation, using its own element width and buffer count, before crediting the schedule with any traffic savings.",
+      "source": "Anatomy of an Accelerator, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L115-L485; Hardware Mapping, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L4535-L5121"
+    },
+    "Choose which values stay near the arithmetic": {
+      "figure": "::fig[evaluate-a-mapping]",
+      "teaches": "Two schedules for the same projection can execute identical arithmetic and generate different memory traffic. An output-stationary schedule assigns an output block to processing elements and holds its partial sums locally as successive blocks of the reduction dimension arrive. A weight-stationary schedule holds a weight block and brings it successive input rows. The choice shifts traffic among weights, inputs, and partial sums. Placement, layout, and fusion then determine how far values travel, how efficiently the machine accesses them, and whether the next operator can consume them before they leave the chip.",
+      "source": "Hardware Mapping, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L4531-L5158"
+    },
+    "Trace the compiled schedule through a real request": {
+      "figure": "::fig[follow-the-compiled-plan]",
+      "teaches": "A tensor compiler can see that one operator produces a value consumed immediately by the next. While that relationship is explicit, it can fuse operations, choose a matrix kernel, plan storage lifetimes, and schedule transfers. Code generation turns those choices into executable instructions. The runtime then dispatches work under the shapes, workspace limits, and concurrency of an actual request. A fast compiled variant helps only on requests that select it, and a fast device kernel can still be preceded by a long host-side wait.",
+      "source": "Compilers and Runtimes, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5294-L5377"
+    },
+    "Decide what has to cross a device boundary": {
+      "figure": "::fig[trace-a-split-reduction]",
+      "teaches": "A workload can outgrow one accelerator because its state exceeds device memory or because one device misses the throughput target. Those pressures lead to different partitions. Replicating the model lets devices handle independent inference requests, but each replica must fit. Splitting layers sends activations between stages. Splitting a matrix operation can require a collective exchange within the operator. Package-level chiplets, links between accelerators in a server, and links between servers impose different costs on these transfers. The single-chip roofline still applies to local kernels, but it cannot price the synchronization that joins them.",
+      "source": "Beyond One Accelerator, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5385-L5391"
+    },
+    "Follow an inspection frame across a heterogeneous chip": {
+      "figure": "::fig[trace-mobile-fallback]",
+      "teaches": "On a camera device, the projection shares a system-on-chip with image processing, control code, and rendering. A neural processing unit can execute supported dense layers, a DSP can process a sensor stream, and a CPU can handle irregular decisions. These blocks may share physical memory while using different layouts and synchronization protocols. Moving one operator to a faster block can therefore add waits and conversions at both ends. Sustained performance also depends on the power and heat generated by all active blocks in the enclosure.",
+      "source": "Heterogeneous SoC Design, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5395-L5421"
+    },
+    "Choose hardware using completed work at the required service level": {
+      "figure": "::fig[compare-energy-per-result]",
+      "teaches": "Hardware selection starts with a workload contract specifying input shapes, arrival patterns, accuracy, latency, and sustained throughput. Measure competing systems against that contract over the same interval. Useful throughput counts results that satisfy it. Dividing system energy and operating cost by that count connects a kernel-level improvement to a deployment decision. A credible case for new hardware identifies the saturated resource, shows how the candidate changes it, and verifies that the gain survives host work, communication, queueing, and sustained operation.",
+      "source": "Choosing an Accelerator, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5571-L5668; Fallacies and Pitfalls, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5725-L6073"
+    },
+    "The physics": {
+      "proseOnly": "Compare the quantities and conditions in a lookup table."
+    },
+    "Glossary": {
+      "proseOnly": "Look up a term encountered in the worked sections."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Apply the mechanisms to concrete engineering decisions."
+    },
+    "Open questions": {
+      "proseOnly": "Identify an experiment or evidence the chapter leaves open."
+    }
+  }
+}

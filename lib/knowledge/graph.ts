@@ -1,4 +1,7 @@
+import { existsSync } from 'node:fs'
+import path from 'node:path'
 import { getPublishedPosts } from '@/lib/content'
+import { labPosterFor } from '@/lib/lab/posters'
 import { CATEGORIES, LAB_EFFECTS } from '@/lib/lab/registry'
 import { getCourse, getGlossaryIndex } from '@/lib/study/load'
 import { CATEGORY_ART, TOPIC_ART } from './topic-art'
@@ -13,7 +16,7 @@ export type KGNode = {
   href?: string
   blurb?: string
   meta?: string
-  /** Category artwork path under /topics/artwork, when one exists for this hub. */
+  /** Category artwork under /topics/artwork for hubs; hero/poster/cover for content nodes. */
   art?: string
 }
 
@@ -57,6 +60,14 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
     })
   }
 
+  // Study covers live at study/mlsys/<vol>/<ch>/cover.webp and are mirrored to
+  // public/study/<vol>/<ch>/cover.webp — the node only points at a cover once
+  // the public copy exists.
+  const studyCover = (vol: string, slug: string) =>
+    existsSync(path.join(process.cwd(), 'public', 'study', vol, slug, 'cover.webp'))
+      ? `/study/${vol}/${slug}/cover.webp`
+      : undefined
+
   const course = getCourse()
   for (const vol of course.volumes) {
     for (const ch of vol.chapters) {
@@ -67,6 +78,7 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
         label: ch.title,
         href: `/study/${vol.id}/${ch.slug}/`,
         meta: `chapter ${ch.id.split('/')[1]?.split('_')[0] ?? ''}`,
+        art: studyCover(vol.id, ch.slug),
       })
     }
   }
@@ -83,6 +95,7 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
       href: `/blog/${p.slug}/`,
       blurb: p.description,
       meta: p.date?.slice(0, 7),
+      art: p.heroImage || undefined,
     })
     for (const raw of p.tags ?? []) {
       const key = norm(raw)
@@ -110,6 +123,7 @@ export function buildKnowledgeGraph(): KnowledgeGraph {
       href: `/lab/${fx.slug}/`,
       blurb: fx.blurb,
       meta: fx.category,
+      art: labPosterFor(fx.slug),
     })
     edges.push({ source: `lab:${fx.slug}`, target: `category:cat-${fx.category}`, kind: 'category', evidence: 'registry-category' })
     for (const raw of fx.tags ?? []) {

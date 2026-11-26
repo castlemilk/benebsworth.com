@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 420" role="img" aria-labelledby="study-svg-inspect-precision-path-title" aria-describedby="study-svg-inspect-precision-path-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-inspect-precision-path-title">Audit an INT8 projection</title>
+  <desc id="study-svg-inspect-precision-path-desc">The trace locates where compact weights survive into execution and where conversion work enters the timed path. Inspect operands: Record the stored types and quantization scheme for weights and activations. Then Locate conversions: Find any unpack, cast, or layout conversion before the matrix kernel. Then Identify instruction: Read the input and accumulator types of the emitted matrix operation. Then Check the result: Compare output quality and time the full projection, including conversions.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Inspect operands</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Record the stored types and</tspan>
+    <tspan x="19" y="64">quantization scheme for weights and</tspan>
+    <tspan x="19" y="81">activations.</tspan></text>
+  <path d="M172 101v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="121" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="145" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Locate conversions</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="165">Find any unpack, cast, or layout</tspan>
+    <tspan x="19" y="182">conversion before the matrix kernel.</tspan></text>
+  <path d="M172 202v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="222" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="246" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Identify instruction</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="266">Read the input and accumulator types</tspan>
+    <tspan x="19" y="283">of the emitted matrix operation.</tspan></text>
+  <path d="M172 303v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="323" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="347" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Check the result</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="367">Compare output quality and time the</tspan>
+    <tspan x="19" y="384">full projection, including</tspan>
+    <tspan x="19" y="401">conversions.</tspan></text>
+  </g>
+</svg>

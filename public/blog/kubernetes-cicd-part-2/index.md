@@ -6,6 +6,7 @@ description: >-
   An overview of the current kubernetes-native ci/cd ecosystem, With a
   demonstration of an end-to-end Tekton based workflow for build, test and
   deployment of a fullstack application
+heroImage: /blog/kubernetes-cicd-part-2/hero.webp
 labels: >-
   technology,CI/CD,GCP,kubernetes,kaniko,developer
   experience,istio,knative,tekton,skaffold

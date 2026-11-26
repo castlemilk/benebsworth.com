@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="mc-sparse-storage-cost" class="study-fig-fit" viewBox="0 0 408 303" role="img" aria-labelledby="mc-sparse-storage-title mc-sparse-storage-desc">
+  <title id="mc-sparse-storage-title">Dense versus 50-percent sparse INT8 storage</title>
+  <desc id="mc-sparse-storage-desc">A dense 128 by 128 INT8 matrix stores 16,384 bytes. At 50 percent sparsity the sparse row format stores 8,192 value bytes, 16,384 column-index bytes and 516 row-pointer bytes, for 25,092 bytes.</desc>
+  <style>
+    #mc-sparse-storage-cost { font-family: system-ui, sans-serif; }
+    .dark #mc-sparse-storage-cost [fill="#fbf7f0"] { fill: #201a17; }
+    .dark #mc-sparse-storage-cost [fill="#29231e"] { fill: #f7eee3; }
+    .dark #mc-sparse-storage-cost [fill="#6f6055"] { fill: #c8b8aa; }
+    .dark #mc-sparse-storage-cost [fill="#cfc1b2"] { fill: #8b7f73; }
+    .dark #mc-sparse-storage-cost [fill="#cf8359"] { fill: #d99066; }
+    .dark #mc-sparse-storage-cost [fill="#9a3d1d"] { fill: #f6c6a5; }
+    .dark #mc-sparse-storage-cost [stroke="#b8a89c"] { stroke: #72665c; }
+  </style>
+  <rect width="408" height="303" rx="12" fill="#fbf7f0"/>
+  <g fill="#29231e" font-size="22" font-weight="650">
+    <text x="24" y="41">Dense INT8</text>
+    <text x="384" y="41" text-anchor="end">16,384 B</text>
+    <text x="24" y="109">50% sparse CSR</text>
+    <text x="384" y="109" text-anchor="end">25,092 B</text>
+  </g>
+
+  <rect x="24" y="54" width="208" height="21" fill="#cfc1b2"/>
+  <path d="M232 76V152" fill="none" stroke="#b8a89c" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <rect x="24" y="122" width="104" height="21" fill="#cfc1b2"/>
+  <rect x="128" y="122" width="208" height="21" fill="#cf8359"/>
+  <rect x="336" y="122" width="6.55" height="21" fill="#9a3d1d"/>
+
+  <path d="M24 166H384" fill="none" stroke="#b8a89c"/>
+  <g fill="#29231e" font-size="19">
+    <rect x="24" y="184" width="12" height="12" rx="2" fill="#cfc1b2"/>
+    <text x="48" y="195">Retained values</text>
+    <text x="384" y="195" text-anchor="end">8,192 B</text>
+    <rect x="24" y="219" width="12" height="12" rx="2" fill="#cf8359"/>
+    <text x="48" y="230">Column indices</text>
+    <text x="384" y="230" text-anchor="end">16,384 B</text>
+    <rect x="24" y="254" width="12" height="12" rx="2" fill="#9a3d1d"/>
+    <text x="48" y="265">Row pointers</text>
+    <text x="384" y="265" text-anchor="end">516 B</text>
+  </g>
+  <text x="24" y="290" fill="#6f6055" font-size="18">Illustrative 128 × 128 matrix</text>
+</svg>

@@ -301,23 +301,6 @@ $$
    memory-bound by the chapter's account; is the +25.6-pt thinking gain
    really a latency/quality trade, or a scheduling one?
 
-## Figures to look at (in the book)
-
-Reference links appear alongside the discussion above; open the source book for
-the full figures, captions and surrounding prose.
-
-- [`images/fig-ai-timeline`](#fig-ai-timeline) (TikZ, publication-attention
-  curve w/ AI winters): the era structure at a glance.
-- [`images/fig-dam-axis-triad-intro`](#fig-dam-axis-triad): the D·A·M triangle
-  with migration edges; ours (`diagrams/dam-loop.svg`) distils the *loop*
-  instead of the triangle.
-- [`images/svg/vol1_introduction_margin_003.svg`](#fig-health-vs-recall):
-  their health-vs-recall divergence sketch; ours
-  (`diagrams/silent-degradation.svg`) adds the equation annotation +
-  monitoring gap.
-- [`images/svg/vol1_introduction_margin_004.svg`](#fig-amdahl-bars): their
-  Amdahl latency bars; ours (`diagrams/iron-law-budget.svg`) generalises to
-  the three-term budget.
 
 ## Essay candidates (for the POST phase)
 

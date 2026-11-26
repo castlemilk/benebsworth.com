@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Six principles paired with their governing questions and metrics">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .row{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-edge,#ccc);stroke-width:1}
+    .pt{font:600 11.5px var(--font-sans,sans-serif);fill:var(--diagram-accent,#3c64c8)}
+    .qt{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .mt{font:10px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .hh{font:600 10px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60);letter-spacing:.06em}
+  </style>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="32">Six principles, six questions</text>
+  <text class="sub" x="30" y="51">What the fleet's physical and institutional structure makes true, whatever the practice.</text>
+  <text class="hh" x="40" y="82">PRINCIPLE</text>
+  <text class="hh" x="320" y="82">GOVERNING QUESTION</text>
+  <text class="hh" x="520" y="82">METRIC THAT TESTS IT</text>
+  <!-- rows -->
+  <g>
+    <rect class="row" x="30" y="92" width="700" height="42" rx="6"/>
+    <text class="pt" x="40" y="118">1 · infrastructure determines capability</text>
+    <text class="qt" x="320" y="118">what is possible?</text>
+    <text class="mt" x="520" y="112">FLOP/s, memory, bisection</text>
+    <text class="mt" x="520" y="126">bandwidth, rack power</text>
+    <rect class="row" x="30" y="140" width="700" height="42" rx="6"/>
+    <text class="pt" x="40" y="166">2 · communication can dominate</text>
+    <text class="qt" x="320" y="166">what is the bottleneck?</text>
+    <text class="mt" x="520" y="160">exposed communication,</text>
+    <text class="mt" x="520" y="174">scaling efficiency</text>
+    <rect class="row" x="30" y="188" width="700" height="42" rx="6"/>
+    <text class="pt" x="40" y="214">3 · failure is routine</text>
+    <text class="qt" x="320" y="214">how do we recover?</text>
+    <text class="mt" x="520" y="208">MTBF ÷ N, checkpoint overhead,</text>
+    <text class="mt" x="520" y="222">rollback time</text>
+    <rect class="row" x="30" y="236" width="700" height="42" rx="6"/>
+    <text class="pt" x="40" y="262">4 · serving is bounded by its contract</text>
+    <text class="qt" x="320" y="262">what reaches the user in time?</text>
+    <text class="mt" x="520" y="256">goodput, p99 within SLO,</text>
+    <text class="mt" x="520" y="270">cost per request</text>
+    <rect class="row" x="30" y="284" width="700" height="42" rx="6"/>
+    <text class="pt" x="40" y="310">5 · responsibility constrains design</text>
+    <text class="qt" x="320" y="310">who is affected?</text>
+    <text class="mt" x="520" y="304">privacy budget, subgroup error</text>
+    <text class="mt" x="520" y="318">rates, audit trails</text>
+    <rect class="row" x="30" y="332" width="700" height="42" rx="6"/>
+    <text class="pt" x="40" y="358">6 · sustainability is a first-order cost</text>
+    <text class="qt" x="320" y="358">what is the cost?</text>
+    <text class="mt" x="520" y="352">kWh per training run, energy</text>
+    <text class="mt" x="520" y="366">per query, carbon</text>
+  </g>
+  <text class="sm" x="30" y="398">Practices respond to these truths; they do not create them.</text>
+  <text class="sm" x="30" y="414">Each principle explains why its practice is necessary rather than prudent.</text>
+</svg>

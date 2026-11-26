@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 403" role="img" aria-labelledby="study-svg-quantization-quality-loop-title" aria-describedby="study-svg-quantization-quality-loop-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-quantization-quality-loop-title">From calibration to a deployable precision</title>
+  <desc id="study-svg-quantization-quality-loop-desc">Each pass tests whether a low-precision configuration preserves task quality with the kernels the device will actually run. Calibrate ranges: Collect activation ranges across representative inputs. Then Export and evaluate: Run the target artifact on held-out data and inspect error by slice. Then Inspect failures: Find clipping, coarse rounding, or unsupported low-precision operators. Then Adjust and reevaluate: Revise scales, retain sensitive precision, or train with quantization.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Calibrate ranges</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Collect activation ranges across</tspan>
+    <tspan x="19" y="64">representative inputs.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Export and evaluate</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Run the target artifact on held-out</tspan>
+    <tspan x="19" y="165">data and inspect error by slice.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Inspect failures</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Find clipping, coarse rounding, or</tspan>
+    <tspan x="19" y="266">unsupported low-precision operators.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Adjust and reevaluate</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Revise scales, retain sensitive</tspan>
+    <tspan x="19" y="367">precision, or train with</tspan>
+    <tspan x="19" y="384">quantization.</tspan></text>
+  </g>
+</svg>

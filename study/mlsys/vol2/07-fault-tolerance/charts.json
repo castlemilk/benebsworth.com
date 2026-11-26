@@ -1,0 +1,42 @@
+[
+ {
+  "id": "mtbf-collapse",
+  "kind": "BAR_STACKED",
+  "title": "GPU-only MTBF vs fleet size",
+  "xLabel": "accelerators in the job",
+  "yLabel": "hours between GPU failures",
+  "caption": "The 50,000 h per-GPU MTTF divided by fleet size: a job's expected GPU-failure cadence halves with every doubling. The full-system cascade (PCIe, NIC, power shares) lands lower still — about 3.9 h at 10,000 — and measured production cadences sit near 3.1 h on 16,384 GPUs.",
+  "xPoints": ["1,000", "2,000", "4,000", "8,000", "10,000"],
+  "series": [
+   {
+    "key": "mtbf",
+    "label": "hours between GPU failures (50,000 h MTTF / N)",
+    "color": "var(--chart-1)",
+    "values": [50, 25, 12.5, 6.25, 5]
+   }
+  ]
+ },
+ {
+  "id": "interruption-causes",
+  "kind": "BAR_STACKED",
+  "title": "Llama 3: 419 interruptions by cause",
+  "xLabel": "cause group (54-day snapshot, 16,384 H100s)",
+  "yLabel": "interruptions",
+  "caption": "Meta's Llama 3 405B pretraining log, grouped from Table 5 of the run report. GPU components dominate (~64%); software bugs and failed dependencies, network, and host work share most of the rest. Silent data corruption appears only where detected (6).",
+  "xPoints": ["GPU components", "Software", "Network", "Host/infra", "Unattributed"],
+  "series": [
+   {
+    "key": "lead",
+    "label": "largest single cause in group",
+    "color": "var(--chart-1)",
+    "values": [148, 54, 35, 32, 7]
+   },
+   {
+    "key": "rest",
+    "label": "remaining causes in group",
+    "color": "var(--chart-2)",
+    "values": [120, 24, 0, 30, 0]
+   }
+  ]
+ }
+]

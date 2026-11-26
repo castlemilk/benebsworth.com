@@ -43,7 +43,6 @@ export function drawFlowParticles(
     const baseAlpha = 0.25 + maxBright * 0.65
 
   // Direction: +1 = conventional (positive to negative), -1 = electron
-  const dir = currentMa >= 0 ? 1 : -1
 
   for (const tRaw of particles) {
     const t = ((tRaw % 1) + 1) % 1 // normalize 0..1
@@ -68,7 +67,6 @@ export function drawFlowParticles(
     const r = currentMa >= 0 ? 255 : 100
     const g = currentMa >= 0 ? 180 : 180
     const b = currentMa >= 0 ? 60 : 255
-    const a = alpha
 
     // Larger, more visible particles
     ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`

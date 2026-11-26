@@ -1,4 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 330" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#059669"]{fill:#34d399}
+    .dark [stroke="#059669"]{stroke:#34d399}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b45309"]{fill:#fbbf24}
+    .dark [stroke="#b45309"]{stroke:#fbbf24}
+    .dark [fill="#f59e0b"]{fill:#fbbf24}
+    .dark [stroke="#f59e0b"]{stroke:#fbbf24}
+  </style>
+
   <!-- Iron law: sequential budget vs overlapped bound (worked numbers) -->
   <!-- scale: 4 px per ms, x0 = 150 -->
 
@@ -17,7 +32,7 @@
 
   <!-- ===== Row 2: overlapped bound ===== -->
   <text x="140" y="165" text-anchor="end" font-size="12" fill="#4b5563" font-weight="600">overlapped</text>
-  <text x="140" y="181" text-anchor="end" font-size="10.5" fill="#9ca3af">T ≥ max(mem, compute) + L</text>
+  <text x="140" y="181" text-anchor="end" font-size="10" fill="#9ca3af">T ≥ max(mem, comp) + L</text>
   <rect x="150" y="152" width="400" height="34" fill="#34d399" fill-opacity="0.2" stroke="#34d399"/>
   <rect x="150" y="159" width="100" height="20" fill="none" stroke="#f59e0b" stroke-dasharray="5 4"/>
   <text x="200" y="173" text-anchor="middle" font-size="10" fill="#b45309">mem hides</text>

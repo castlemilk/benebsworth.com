@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 355" role="img" aria-labelledby="title desc">
+  <title id="title">Three levels of parallelism in Kolibri pre-training</title>
+  <desc id="desc">Six data-parallel replicas see different batches. Each replica shards model and training state across 16 nodes, and each node partitions experts across eight B200 GPUs. Six times 16 times eight gives 768 GPUs.</desc>
+  <style>
+    text {font:22px system-ui,sans-serif; fill:#202d2c}
+    .label {font-weight:700}
+    .detail {fill:#394e49}
+  </style>
+  <rect width="600" height="355" rx="12" fill="#f8faf9"/>
+  <rect x="21" y="21" width="558" height="272" rx="10" fill="#e7eeeb" stroke="#849893"/>
+  <text x="39" y="53" class="label">6 replicas · data parallelism</text>
+  <text x="39" y="80" class="detail">Each replica sees a different batch.</text>
+  <rect x="39" y="96" width="522" height="181" rx="9" fill="#d4ece4" stroke="#629888"/>
+  <text x="57" y="128" class="label">16 nodes per replica · FSDP</text>
+  <text x="57" y="155" class="detail">Shard weights and training state across nodes.</text>
+  <rect x="57" y="172" width="486" height="87" rx="8" fill="#bce5d8" stroke="#257660"/>
+  <text x="75" y="207" class="label">8 B200s per node · expert parallelism</text>
+  <text x="75" y="235" class="detail">Send token activations to their experts.</text>
+  <text x="39" y="329" class="label">6 × 16 × 8 = 768 GPUs on 96 nodes</text>
+</svg>

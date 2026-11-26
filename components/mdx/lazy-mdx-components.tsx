@@ -25,6 +25,9 @@ export const SoftmaxLab = dynamic(() => import('./softmax-lab').then(m => ({ def
 export const TokenSampler = dynamic(() => import('./token-sampler').then(m => ({ default: m.TokenSampler })), { ssr: false, loading })
 export const MoEBlock = dynamic(() => import('./moe-block').then(m => ({ default: m.MoEBlock })), { ssr: false, loading })
 export const HashTableDemo = dynamic(() => import('./hash-table-demo').then(m => ({ default: m.HashTableDemo })), { ssr: false, loading })
+export const ConstraintCascadeDemo = dynamic(() => import('./constraint-cascade-demo').then(m => ({ default: m.ConstraintCascadeDemo })), { ssr: false, loading })
+export const DriftMonitorDemo = dynamic(() => import('./drift-monitor-demo').then(m => ({ default: m.DriftMonitorDemo })), { ssr: false, loading })
+export const LocalityBoundDemo = dynamic(() => import('./locality-bound-demo').then(m => ({ default: m.LocalityBoundDemo })), { ssr: false, loading })
 export const StorageEngineSim = dynamic(() => import('./storage-engine-sim').then(m => ({ default: m.StorageEngineSim })), { ssr: false, loading })
 
 export const ParallelismRace = dynamic(() => import('./parallelism-race').then(m => ({ default: m.ParallelismRace })), { ssr: false, loading })

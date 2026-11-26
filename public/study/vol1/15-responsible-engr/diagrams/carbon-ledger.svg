@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="carbon-ledger" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="carb-title carb-desc">
+  <title id="carb-title">The carbon ledger</title>
+  <desc id="carb-desc">A GPU-hour emits 0.16 kg CO2eq at the baseline assumptions. A GPT-3-class run at 1,287 megawatt-hours exceeds one hundred passenger-car-years. Serving at scale is the other ledger entry.</desc>
+  <style>
+    .dark #carbon-ledger { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#carbon-ledger { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="32" font-size="19" font-weight="650">Every stage has a carbon line item</text>
+    <text x="20" y="54" font-size="12.5">same accounting rigor as dollars — boundary attached</text>
+
+    <rect x="20" y="74" width="340" height="40" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+    <text x="30" y="91" font-size="13">one GPU-hour</text>
+    <text x="350" y="91" text-anchor="end" font-size="13" font-weight="650">0.16 kg CO₂eq</text>
+    <text x="30" y="106" font-size="11.5" opacity="0.8">0.4 kW × 1 h × 0.4 kg/kWh</text>
+
+    <rect x="20" y="126" width="340" height="40" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+    <text x="30" y="143" font-size="13">GPT-3-class training run</text>
+    <text x="350" y="143" text-anchor="end" font-size="13" font-weight="650">1,287 MWh</text>
+    <text x="30" y="158" font-size="11.5" opacity="0.8">≈ more than 100 passenger-car-years</text>
+
+    <rect x="20" y="178" width="340" height="40" rx="6" fill="var(--fig-mark, #a33c20)"/>
+    <text x="30" y="195" font-size="13" fill="var(--fig-paper, #f7f3e9)">serving at DLRM scale</text>
+    <text x="350" y="195" text-anchor="end" font-size="13" font-weight="650" fill="var(--fig-paper, #f7f3e9)">dominates the lifecycle</text>
+    <text x="30" y="210" font-size="11.5" fill="var(--fig-paper, #f7f3e9)">per-request inefficiency × millions of requests</text>
+
+    <path d="M20 232h340" stroke="var(--fig-rule, #b7b4a7)"/>
+    <text x="20" y="254" font-size="12.5">Strubell 2019 NAS ≈ 5 car lifetimes; Patterson 2021</text>
+    <text x="20" y="274" font-size="12.5">revised it down — the numbers are assumption-sensitive.</text>
+    <text x="20" y="293" font-size="12.5" font-weight="600">record the measurement boundary, then the number.</text>
+  </g>
+</svg>

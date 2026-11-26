@@ -59,7 +59,7 @@ export function TrailFigure({ src, caption, alt, meta, accent, wide, credit, wid
         className={`group relative block overflow-hidden rounded-[0.625rem] border border-[var(--color-border)] bg-surface p-0 leading-[0] transition-[border-color] duration-200 hover:border-[color-mix(in_srgb,var(--accent)_45%,var(--color-border))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] ${noZoom ? 'cursor-default' : 'cursor-zoom-in'} ${wide ? 'w-full' : ''}`}
         disabled={noZoom}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+        { }
         <img
           src={src}
           alt={altText}
@@ -138,7 +138,7 @@ function FigureZoom({
         <button type="button" className="rounded-full bg-white/10 px-3 py-1.5 font-mono text-xs text-white transition-colors hover:bg-white/20" onClick={onClose} aria-label="Close">esc ✕</button>
       </div>
       <div className="flex min-h-0 flex-1 items-center justify-center px-2 pb-2 sm:px-4" onClick={(e) => e.stopPropagation()}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+        { }
         <img src={src} alt={alt} className="max-h-full max-w-full rounded-lg object-contain" style={{ animation: 'jm-fade 0.28s ease-out' }} />
       </div>
       {(caption || meta || credit) && (

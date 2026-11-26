@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-soc-pipeline-evaluation-title" aria-describedby="study-svg-soc-pipeline-evaluation-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-soc-pipeline-evaluation-title">Evaluate a heterogeneous pipeline in steady operation</title>
+  <desc id="study-svg-soc-pipeline-evaluation-desc">Engine support and handoff costs determine the executable mapping, while a sustained run reveals whether it keeps meeting the deadline. Assign pipeline stages: Match each stage to engines that support its operations and formats. Then Locate fallback: Find graph splits, data conversions, and synchronization points. Then Run the full pipeline: Include input processing and output handling at the real duty cycle. Then Check thermal behavior: Track latency, power, and clocks as the device warms.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Assign pipeline stages</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Match each stage to engines that</tspan>
+    <tspan x="19" y="64">support its operations and formats.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Locate fallback</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Find graph splits, data conversions,</tspan>
+    <tspan x="19" y="165">and synchronization points.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Run the full pipeline</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Include input processing and output</tspan>
+    <tspan x="19" y="266">handling at the real duty cycle.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Check thermal behavior</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Track latency, power, and clocks as</tspan>
+    <tspan x="19" y="367">the device warms.</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Three diagnostic signals separating software faults from drift and attacks">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lens{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-accent,#3c64c8);stroke-width:1.2}
+    .lt{font:600 12px var(--font-sans,sans-serif);fill:var(--diagram-accent,#3c64c8)}
+    .sym{fill:var(--diagram-accent-soft,#e8eefb);stroke:var(--diagram-warn,#c85a3c);stroke-width:1.2}
+    .verd{font:600 11px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .arr{stroke:var(--diagram-ink-soft,#5a5a60);stroke-width:1.4;fill:none;marker-end:url(#ah2)}
+  </style>
+  <defs><marker id="ah2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="var(--diagram-ink-soft,#5a5a60)"/></marker></defs>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="34">Three signals separate the masquerade</text>
+  <text class="sub" x="30" y="53">Detectors fire on the symptom, not the cause — each pillar implies a different intervention.</text>
+  <!-- symptom -->
+  <rect class="sym" x="260" y="70" width="240" height="44" rx="22"/>
+  <text class="verd" x="380" y="88" text-anchor="middle">symptom: accuracy falling,</text>
+  <text class="verd" x="380" y="103" text-anchor="middle">health green, retries succeed</text>
+  <!-- three lenses -->
+  <g>
+    <rect class="lens" x="30" y="150" width="222" height="150" rx="8"/>
+    <text class="lt" x="46" y="174">1 · timing boundary</text>
+    <text class="sm" x="46" y="196">change synchronized with a</text>
+    <text class="sm" x="46" y="212">deploy, dependency bump, or</text>
+    <text class="sm" x="46" y="228">schema migration?</text>
+    <text class="sm" x="46" y="252">multiple features moving together</text>
+    <text class="sm" x="46" y="268">in unphysical directions raises</text>
+    <text class="sm" x="46" y="284">the pipeline-fault hypothesis</text>
+  </g>
+  <g>
+    <rect class="lens" x="269" y="150" width="222" height="150" rx="8"/>
+    <text class="lt" x="285" y="174">2 · fixed-input replay</text>
+    <text class="sm" x="285" y="196">deterministic defect: same stage</text>
+    <text class="sm" x="285" y="212">fails on every replay</text>
+    <text class="sm" x="285" y="236">transient upset: vanishes; resident</text>
+    <text class="sm" x="285" y="252">corruption: reproduces on the same</text>
+    <text class="sm" x="285" y="268">replica, disappears after reload</text>
+    <text class="sm" x="285" y="288">— but shifted inputs also reproduce</text>
+  </g>
+  <g>
+    <rect class="lens" x="508" y="150" width="222" height="150" rx="8"/>
+    <text class="lt" x="524" y="174">3 · cross-layer telemetry</text>
+    <text class="sm" x="524" y="196">deploy events, ECC counters,</text>
+    <text class="sm" x="524" y="212">memory pressure → fault</text>
+    <text class="sm" x="524" y="236">query-rate spikes, unusual input</text>
+    <text class="sm" x="524" y="252">patterns → attack</text>
+    <text class="sm" x="524" y="274">neither necessary nor sufficient:</text>
+    <text class="sm" x="524" y="290">correlation guides the next test</text>
+  </g>
+  <line class="arr" x1="330" y1="114" x2="160" y2="150"/>
+  <line class="arr" x1="380" y1="114" x2="380" y2="150"/>
+  <line class="arr" x1="430" y1="114" x2="600" y2="150"/>
+  <!-- verdict -->
+  <rect class="lens" x="30" y="326" width="700" height="70" rx="8"/>
+  <text class="verd" x="48" y="350">credit-risk case: three income features alert the morning after a dependency update — replay shows tensors off by a constant factor</text>
+  <text class="sm" x="48" y="370">verdict: software fault disguised as covariate shift. Retraining would have taught the model the bug.</text>
+  <text class="sm" x="48" y="387">recovery completes only when replayed outputs pass the model's acceptance tests again.</text>
+</svg>

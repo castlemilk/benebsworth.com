@@ -8,6 +8,7 @@ description: >-
   headline result: a model that scored a perfect 100 on the platformer task
   under the old scorer scored 30 under the new one, five iterations in a row,
   because the Space key never actually jumped.
+heroImage: /blog/benchmarking-agy-frontier/hero.webp
 labels: 'software,machine-learning,llm,benchmarking,scoring,playwright'
 release: true
 takeaways:

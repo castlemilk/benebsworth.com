@@ -1,0 +1,66 @@
+[
+  {
+    "id": "goodput-product",
+    "number": "9.1",
+    "title": "ML goodput product",
+    "latex": "\\mathrm{MPG} = S \\times R \\times P",
+    "caption": "Useful fleet output as a share of held capacity: scheduling, runtime and program goodput multiply.",
+    "symbols": [
+      {"symbol": "\\mathrm{MPG}", "name": "ML productivity goodput", "meaning": "share of held fleet capacity that became training progress"},
+      {"symbol": "S", "name": "scheduling goodput", "meaning": "share of fleet capacity held by complete allocations"},
+      {"symbol": "R", "name": "runtime goodput", "meaning": "share of allocated time producing checkpoint-retained steps at fault-free rate"},
+      {"symbol": "P", "name": "program goodput", "meaning": "retained step rate against a named hardware ideal; equals MFU"}
+    ]
+  },
+  {
+    "id": "loss-shares",
+    "number": "9.2",
+    "title": "Loss-share decomposition",
+    "latex": "1 - SRP = (1-S) + S(1-R) + SR(1-P)",
+    "caption": "Every lost device-hour is charged at exactly one boundary, in chronological order: scheduling first, then runtime, then program.",
+    "symbols": [
+      {"symbol": "1-S", "name": "scheduling loss share", "meaning": "capacity never held by a complete allocation"},
+      {"symbol": "S(1-R)", "name": "runtime loss share", "meaning": "allocated time not producing retained steps, in units that survived scheduling"},
+      {"symbol": "SR(1-P)", "name": "program loss share", "meaning": "retained-step deficit below the hardware ideal, in units that survived both prior boundaries"}
+    ]
+  },
+  {
+    "id": "program-mfu",
+    "number": "9.3",
+    "title": "Program goodput as MFU",
+    "latex": "P = \\frac{\\mathrm{FLOPs}_{\\mathrm{useful}}/(N \\cdot R_{\\mathrm{peak}})}{T_{\\mathrm{step}}} = \\mathrm{MFU}",
+    "caption": "Program goodput pins the business number to a hardware number: useful model FLOPs per device per step, divided by distributed step time, against a named peak.",
+    "symbols": [
+      {"symbol": "\\mathrm{FLOPs}_{\\mathrm{useful}}", "name": "useful model FLOPs", "meaning": "model FLOPs one step mathematically requires, no recomputation or padding"},
+      {"symbol": "N", "name": "device count", "meaning": "accelerators in the job's allocation"},
+      {"symbol": "R_{\\mathrm{peak}}", "name": "peak rate", "meaning": "the named hardware ideal, dense or sparse — the choice is part of the measurement"},
+      {"symbol": "T_{\\mathrm{step}}", "name": "step time", "meaning": "distributed wall-clock time per training step"}
+    ]
+  },
+  {
+    "id": "runtime-loss",
+    "number": "9.4",
+    "title": "Runtime loss composition",
+    "latex": "1 - R \\approx \\frac{T_{\\mathrm{start}}}{T_{\\mathrm{alloc}}} + f_{\\mathrm{stall}} + f_{\\mathrm{ckpt}} + \\frac{T_{\\mathrm{recover}}}{\\mathrm{MTBF}} + \\lambda_{\\mathrm{preempt}} T_{\\mathrm{tax}}",
+    "caption": "Five additive terms, five owners: startup, data stalls, checkpoint waste, failure recovery and preemption tax.",
+    "symbols": [
+      {"symbol": "T_{\\mathrm{start}}/T_{\\mathrm{alloc}}", "name": "startup share", "meaning": "fixed job-start cost amortized over allocated wall time"},
+      {"symbol": "f_{\\mathrm{stall}}", "name": "data stall fraction", "meaning": "share of step time devices wait on input"},
+      {"symbol": "f_{\\mathrm{ckpt}}", "name": "checkpoint waste fraction", "meaning": "write cost plus discarded work since last checkpoint"},
+      {"symbol": "T_{\\mathrm{recover}}/\\mathrm{MTBF}", "name": "failure term", "meaning": "recovery time per mean time between failures"},
+      {"symbol": "\\lambda_{\\mathrm{preempt}} T_{\\mathrm{tax}}", "name": "preemption term", "meaning": "preemption rate times per-event tax"}
+    ]
+  },
+  {
+    "id": "roofline-ai",
+    "number": "9.5",
+    "title": "Arithmetic intensity",
+    "latex": "\\mathrm{AI} = \\frac{\\mathrm{FLOPs}}{\\mathrm{bytes\\ moved}}",
+    "caption": "The roofline's x-axis. Batch-one decode on the 70B replica sits near 1.8 FLOPs per byte, far below any modern accelerator's ridge point.",
+    "symbols": [
+      {"symbol": "\\mathrm{AI}", "name": "arithmetic intensity", "meaning": "FLOPs per byte of memory traffic; fixes whether compute or bandwidth bounds the kernel"},
+      {"symbol": "\\mathrm{FLOPs}", "name": "compute work", "meaning": "floating-point operations the kernel performs"},
+      {"symbol": "\\mathrm{bytes\\ moved}", "name": "memory traffic", "meaning": "bytes read and written to HBM, including every weight at batch one"}
+    ]
+  }
+]

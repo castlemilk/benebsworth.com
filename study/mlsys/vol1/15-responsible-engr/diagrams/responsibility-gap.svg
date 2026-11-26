@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="resp-gap" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="resp-gap-title resp-gap-desc">
+  <title id="resp-gap-title">Correct optimization, wrong objective</title>
+  <desc id="resp-gap-desc">Left: objectives the spec stated — latency, uptime, aggregate accuracy — all green. Right: constraints the spec omitted — subgroup error, lifetime cost, contestability, evidence — carrying the harm. The gap between them is the responsibility gap.</desc>
+  <style>
+    .dark #resp-gap { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#resp-gap { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="32" font-size="19" font-weight="650">The gap is in the spec, not the code</text>
+    <text x="20" y="54" font-size="12.5">the left column is all green; the right was never asked</text>
+
+    <text x="20" y="86" font-size="13" font-weight="650">STATED</text>
+    <g font-size="12.5">
+      <rect x="20" y="96" width="160" height="30" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="100" y="115" text-anchor="middle">p99 ≤ budget ✓</text>
+      <rect x="20" y="134" width="160" height="30" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="100" y="153" text-anchor="middle">uptime 99.99% ✓</text>
+      <rect x="20" y="172" width="160" height="30" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="100" y="191" text-anchor="middle">aggregate accuracy ✓</text>
+    </g>
+
+    <text x="210" y="86" font-size="13" font-weight="650" fill="var(--fig-mark, #a33c20)">UNSTATED</text>
+    <g font-size="12.5" fill="var(--fig-mark, #a33c20)">
+      <rect x="210" y="96" width="150" height="30" rx="6" fill="none" stroke="var(--fig-mark, #a33c20)" stroke-dasharray="4 3"/>
+      <text x="285" y="115" text-anchor="middle">subgroup error?</text>
+      <rect x="210" y="134" width="150" height="30" rx="6" fill="none" stroke="var(--fig-mark, #a33c20)" stroke-dasharray="4 3"/>
+      <text x="285" y="153" text-anchor="middle">lifetime cost?</text>
+      <rect x="210" y="172" width="150" height="30" rx="6" fill="none" stroke="var(--fig-mark, #a33c20)" stroke-dasharray="4 3"/>
+      <text x="285" y="191" text-anchor="middle">contestable? provable?</text>
+    </g>
+
+    <path d="M185 149h20" stroke="var(--fig-rule, #b7b4a7)" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <text x="190" y="240" text-anchor="middle" font-size="13">harm accumulates in the unmeasured column</text>
+    <text x="190" y="264" text-anchor="middle" font-size="12.5">while every health check stays green</text>
+    <text x="190" y="288" text-anchor="middle" font-size="12.5" font-weight="600">the fix is a wider specification, not a better model</text>
+  </g>
+</svg>

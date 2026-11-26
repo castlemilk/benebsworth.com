@@ -1,0 +1,72 @@
+[
+  {
+    "id": "camera-frame-time",
+    "kind": "BAR_STACKED",
+    "title": "Frame time on the phone",
+    "caption": "Fictional serial timing at fixed stage times. FP32 on CPU fails the 33.3 ms deadline at 42 ms; full INT8 clears it at 26 ms and mixed INT8/FP16 at 30 ms. Queued FP32 frames take longer.",
+    "xLabel": "Camera candidate",
+    "yLabel": "milliseconds per frame",
+    "xPoints": [
+      "FP32 CPU",
+      "INT8 PTQ",
+      "Mixed"
+    ],
+    "series": [
+      {
+        "key": "model",
+        "label": "Model",
+        "color": "var(--chart-2)",
+        "values": [
+          32,
+          16,
+          20
+        ]
+      },
+      {
+        "key": "other",
+        "label": "Other frame work",
+        "color": "var(--chart-1)",
+        "values": [
+          10,
+          10,
+          10
+        ]
+      }
+    ]
+  },
+  {
+    "id": "request-time-ceiling",
+    "kind": "BAR_STACKED",
+    "title": "A twofold model speedup saves 4 ms per request",
+    "caption": "Illustrative serial request. Model time falls from 8 ms to 4 ms while the other work takes 32 ms, so the request improves from 40 ms to 36 ms (about 1.11×). Even instantaneous inference leaves 32 ms (1.25×).",
+    "xLabel": "Model speed",
+    "yLabel": "milliseconds per request",
+    "xPoints": [
+      "Baseline",
+      "2× model speed",
+      "Zero model time"
+    ],
+    "series": [
+      {
+        "key": "model",
+        "label": "Model",
+        "color": "var(--chart-2)",
+        "values": [
+          8,
+          4,
+          0
+        ]
+      },
+      {
+        "key": "other",
+        "label": "Other request work",
+        "color": "var(--chart-1)",
+        "values": [
+          32,
+          32,
+          32
+        ]
+      }
+    ]
+  }
+]

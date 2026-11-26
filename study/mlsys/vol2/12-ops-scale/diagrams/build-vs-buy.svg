@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="build-vs-buy" class="study-fig-fit" viewBox="0 0 380 310" role="img" aria-labelledby="build-vs-buy-title build-vs-buy-desc">
+  <title id="build-vs-buy-title">Owned fleet cost crosses cloud cost near month 26</title>
+  <desc id="build-vs-buy-desc">Cumulative cost over a 30-month horizon for a 1024-GPU cluster. On-premises ownership pays a large upfront capital step then a shallow operating slope; cloud rental grows linearly from month zero. Under the chapter's plotted assumptions the lines cross near month 26, and the break-even occupancy sits below the plotted occupancy.</desc>
+  <style>
+    .dark #build-vs-buy { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094; --fig-danger:#e88f8f }
+    @media (prefers-color-scheme: dark) { svg:root#build-vs-buy { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094; --fig-danger:#e88f8f } }
+  </style>
+  <rect width="380" height="310" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Cumulative cost, 1,024 GPUs</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">owned = CapEx step + shallow OpEx · cloud = linear rental</text>
+
+    <line x1="60" y1="250" x2="360" y2="250" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1"/>
+    <line x1="60" y1="60" x2="60" y2="250" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1"/>
+
+    <polyline points="60,242 360,92" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="2"/>
+    <text x="330" y="82" font-size="10" text-anchor="end" fill="var(--fig-outline, #364c50)">cloud rental</text>
+
+    <polyline points="60,242 76,118 360,158" fill="none" stroke="var(--fig-mark, #b4571f)" stroke-width="2"/>
+    <text x="120" y="106" font-size="9" fill="var(--fig-rule, #6e6a5b)">CapEx step, then shallow OpEx</text>
+
+    <circle cx="272" cy="141" r="4" fill="var(--fig-danger, #b4571f)"/>
+    <line x1="272" y1="60" x2="272" y2="250" stroke="var(--fig-danger, #b4571f)" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="264" y="66" font-size="10" text-anchor="end" fill="var(--fig-danger, #b4571f)">cross ~month 26</text>
+
+    <text x="60" y="268" font-size="10">month 0</text>
+    <text x="200" y="268" font-size="10" text-anchor="middle">month 15</text>
+    <text x="356" y="268" font-size="10" text-anchor="end">month 30</text>
+    <text x="70" y="62" font-size="9" fill="var(--fig-rule, #6e6a5b)">cumulative cost →</text>
+
+    <text x="210" y="296" font-size="10" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">below break-even, renting wins · above it, owning wins</text>
+  </g>
+</svg>

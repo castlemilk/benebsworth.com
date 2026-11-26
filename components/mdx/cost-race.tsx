@@ -186,7 +186,7 @@ export function CostRace() {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [running, inView])
 
   const onPlay = () => {

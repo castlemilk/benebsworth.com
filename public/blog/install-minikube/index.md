@@ -6,6 +6,7 @@ description: >-
   Instructions for the installation, upgrade and other customization of a
   Minikube install on MacOS. As well as a basic example of deploying a service
   and exposing it for local access
+heroImage: /blog/install-minikube/hero.webp
 labels: 'technology,kubernetes,developer experience'
 keywords: >-
   kubernetes,local development,minikube,docker,docker

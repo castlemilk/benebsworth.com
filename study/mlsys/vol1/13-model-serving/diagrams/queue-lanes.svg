@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="sv-queue" class="study-fig-fit" viewBox="0 0 408 300" role="img" aria-labelledby="sv-q-title sv-q-desc">
+  <title id="sv-q-title">Little's Law in one picture</title>
+  <desc id="sv-q-desc">At 1,000 arrivals per second and 50 ms in system, about 50 requests live inside the service at once. Memory and buffers are sized by that resident population.</desc>
+  <style>
+    #sv-queue { font-family: system-ui, sans-serif; }
+    .dark #sv-queue [fill="#fbf7f0"] { fill: #201a17; }
+    .dark #sv-queue [fill="#29231e"] { fill: #f7eee3; }
+    .dark #sv-queue [fill="#6f6055"] { fill: #c8b8aa; }
+    .dark #sv-queue [fill="#cfc1b2"] { fill: #8b7f73; }
+    .dark #sv-queue [fill="#cf8359"] { fill: #d99066; }
+    .dark #sv-queue [stroke="#b8a89c"] { stroke: #72665c; }
+  </style>
+  <rect width="408" height="300" rx="12" fill="#fbf7f0"/>
+  <text x="24" y="38" fill="#29231e" font-size="20" font-weight="650">Little's Law sizes the resident population</text>
+  <text x="24" y="59" fill="#6f6055" font-size="13">L = λW — arrival rate × mean time in system</text>
+
+  <text x="24" y="96" fill="#29231e" font-size="13">arrivals: 1,000 /s</text>
+  <path d="M150 100h40" stroke="#b8a89c" stroke-width="2" marker-end="url(#arr)"/>
+  <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="#b8a89c"/></marker></defs>
+
+  <rect x="196" y="80" width="188" height="88" rx="10" fill="#cfc1b2"/>
+  <g fill="#cf8359">
+    <circle cx="212" cy="96" r="4"/><circle cx="228" cy="96" r="4"/><circle cx="244" cy="96" r="4"/><circle cx="260" cy="96" r="4"/><circle cx="276" cy="96" r="4"/><circle cx="292" cy="96" r="4"/><circle cx="308" cy="96" r="4"/><circle cx="324" cy="96" r="4"/><circle cx="340" cy="96" r="4"/><circle cx="356" cy="96" r="4"/>
+    <circle cx="212" cy="112" r="4"/><circle cx="228" cy="112" r="4"/><circle cx="244" cy="112" r="4"/><circle cx="260" cy="112" r="4"/><circle cx="276" cy="112" r="4"/><circle cx="292" cy="112" r="4"/><circle cx="308" cy="112" r="4"/><circle cx="324" cy="112" r="4"/><circle cx="340" cy="112" r="4"/><circle cx="356" cy="112" r="4"/>
+    <circle cx="212" cy="128" r="4"/><circle cx="228" cy="128" r="4"/><circle cx="244" cy="128" r="4"/><circle cx="260" cy="128" r="4"/><circle cx="276" cy="128" r="4"/><circle cx="292" cy="128" r="4"/><circle cx="308" cy="128" r="4"/><circle cx="324" cy="128" r="4"/><circle cx="340" cy="128" r="4"/><circle cx="356" cy="128" r="4"/>
+    <circle cx="212" cy="144" r="4"/><circle cx="228" cy="144" r="4"/><circle cx="244" cy="144" r="4"/><circle cx="260" cy="144" r="4"/><circle cx="276" cy="144" r="4"/><circle cx="292" cy="144" r="4"/><circle cx="308" cy="144" r="4"/><circle cx="324" cy="144" r="4"/><circle cx="340" cy="144" r="4"/><circle cx="356" cy="144" r="4"/>
+    <circle cx="212" cy="160" r="4"/><circle cx="228" cy="160" r="4"/><circle cx="244" cy="160" r="4"/><circle cx="260" cy="160" r="4"/><circle cx="276" cy="160" r="4"/><circle cx="292" cy="160" r="4"/><circle cx="308" cy="160" r="4"/><circle cx="324" cy="160" r="4"/><circle cx="340" cy="160" r="4"/><circle cx="356" cy="160" r="4"/>
+  </g>
+  <text x="290" y="186" text-anchor="middle" fill="#29231e" font-size="12.5">≈50 resident requests</text>
+
+  <g font-size="12.5" fill="#6f6055">
+    <text x="24" y="216">buffers · threads · accelerator memory are sized by L</text>
+    <text x="24" y="238">underestimate L → arrivals drop or queue unboundedly</text>
+    <text x="24" y="260">a KV cache per conversation consumes the same budget</text>
+  </g>
+  <text x="210" y="284" text-anchor="middle" fill="#cf8359" font-size="12.5" font-weight="600">W = 50 ms · L = 1,000 × 0.05 = 50</text>
+</svg>

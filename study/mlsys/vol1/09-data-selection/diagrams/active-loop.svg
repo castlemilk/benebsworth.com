@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 380" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#bfdbfe"]{fill:#1e3a5f}
+    .dark [fill="#dbeafe"]{fill:#1e3a5f}
+    .dark [fill="#d1fae5"]{fill:#123a2b}
+    .dark [fill="#fef3c7"]{fill:#453007}
+    .dark [fill="#fee2e2"]{fill:#451a1a}
+    .dark [fill="#f3f4f6"]{fill:#1f2937}
+    .dark [fill="#ffffff"]{fill:#161a22}
+    .dark rect.bg{fill:#0f1115}
+    .dark [fill="none"]{fill:none}
+  </style>
+  <rect class="bg" x="0" y="0" width="700" height="380" fill="#ffffff"/>
+  <defs>
+    <marker id="al" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#4b5563"/></marker>
+    <marker id="alA" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#92400e"/></marker>
+  </defs>
+
+  <text x="28" y="38" font-size="16" fill="#374151" font-weight="600">active learning: the selection inequality paid in dollars</text>
+  <text x="28" y="60" font-size="11" fill="#6b7280">the oracle is the scarce resource — every round must beat a budget-matched random draw</text>
+
+  <!-- pool -->
+  <rect x="46" y="150" width="130" height="74" fill="#f3f4f6" stroke="#4b5563" stroke-width="1.5"/>
+  <text x="111" y="178" font-size="11" fill="#374151" text-anchor="middle" font-weight="600">unlabeled pool</text>
+  <text x="111" y="196" font-size="10" fill="#6b7280" text-anchor="middle">1,000,000 scans</text>
+  <text x="111" y="210" font-size="9" fill="#6b7280" text-anchor="middle">naive: $5M &#8594; 10x over</text>
+
+  <!-- scorer -->
+  <rect x="240" y="150" width="120" height="74" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="300" y="178" font-size="11" fill="#1d4ed8" text-anchor="middle" font-weight="600">score pool</text>
+  <text x="300" y="196" font-size="10" fill="#6b7280" text-anchor="middle">uncertainty / margin</text>
+  <text x="300" y="210" font-size="9" fill="#6b7280" text-anchor="middle">~$50 / round</text>
+
+  <!-- oracle -->
+  <rect x="424" y="150" width="120" height="74" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="484" y="178" font-size="11" fill="#92400e" text-anchor="middle" font-weight="600">oracle labels</text>
+  <text x="484" y="196" font-size="10" fill="#92400e" text-anchor="middle">top-k, $5 each</text>
+  <text x="484" y="210" font-size="9" fill="#92400e" text-anchor="middle">the label bill lives here</text>
+
+  <!-- train+expand -->
+  <rect x="594" y="150" width="88" height="74" fill="#d1fae5" stroke="#047857" stroke-width="1.5"/>
+  <text x="638" y="178" font-size="11" fill="#047857" text-anchor="middle" font-weight="600">retrain</text>
+  <text x="638" y="196" font-size="10" fill="#047857" text-anchor="middle">add labels</text>
+  <text x="638" y="210" font-size="9" fill="#047857" text-anchor="middle">rescore next</text>
+
+  <path d="M176 187 L238 187" stroke="#4b5563" stroke-width="1.5" marker-end="url(#al)"/>
+  <path d="M360 187 L422 187" stroke="#92400e" stroke-width="1.5" marker-end="url(#alA)"/>
+  <path d="M544 187 L592 187" stroke="#4b5563" stroke-width="1.5" marker-end="url(#al)"/>
+  <path d="M638 224 C638 256 510 274 380 274 C250 274 148 260 118 230" stroke="#4b5563" stroke-width="1.5" fill="none" stroke-dasharray="5 4" marker-end="url(#al)"/>
+  <text x="380" y="292" font-size="10" fill="#6b7280" text-anchor="middle">repeat until the label budget or the accuracy target says stop</text>
+
+  <!-- worked outcome -->
+  <rect x="46" y="314" width="636" height="44" fill="#d1fae5" stroke="#047857"/>
+  <text x="64" y="341" font-size="11" fill="#047857" font-weight="600">worked ROI: 50,000 labels @ $5 = $250k — inside the $500k budget; ~4.6x label gap at 90%</text>
+</svg>

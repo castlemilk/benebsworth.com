@@ -1,0 +1,99 @@
+[
+  {
+    "id": "icr",
+    "number": 1,
+    "title": "Information-compute ratio",
+    "latex": "\\mathrm{ICR} = \\frac{\\text{learning signal gained}}{\\text{training compute spent}}",
+    "caption": "Sample value priced in compute: gain per unit of training FLOPs. Turns 'is this example useful' into 'is it worth the FLOPs it burns' — the selection counterpart of the training chapter's time accounting.",
+    "symbols": [
+      { "symbol": "\\mathrm{ICR}", "name": "information-compute ratio", "meaning": "learning signal per unit of training compute" },
+      { "symbol": "\\text{learning signal gained}", "name": "measured gain", "meaning": "accuracy points or loss drop attributable to the data" },
+      { "symbol": "\\text{training compute spent}", "name": "compute bill", "meaning": "FLOPs spent processing those examples" }
+    ]
+  },
+  {
+    "id": "icr-decay",
+    "number": 2,
+    "title": "Marginal ICR decay",
+    "latex": "\\mathrm{ICR}_{\\mathrm{marg}} \\propto \\frac{1}{O_{\\mathrm{sample}} \\cdot D}",
+    "caption": "The chapter's illustrative model: as the dataset doubles, the next FLOP's learning yield halves. Explains why adding data buys less each pass — the ICR frontier bends down.",
+    "symbols": [
+      { "symbol": "\\mathrm{ICR}_{\\mathrm{marg}}", "name": "marginal ICR", "meaning": "learning value of the next unit of data at the margin" },
+      { "symbol": "O_{\\mathrm{sample}}", "name": "per-sample compute", "meaning": "forward + backward + update cost for one example" },
+      { "symbol": "D", "name": "dataset size", "meaning": "corpus size already consumed — repeats count against it" }
+    ]
+  },
+  {
+    "id": "selection-inequality",
+    "number": 3,
+    "title": "The selection inequality",
+    "latex": "T_{\\mathrm{select}} + T_{\\mathrm{train}}(D_{\\mathrm{sub}}) < T_{\\mathrm{train}}(D_{\\mathrm{full}})",
+    "caption": "The chapter's break-even law: selection counts as an optimization only when scoring plus subset training beats full training at matched quality and coverage. Scorer cost and refresh rate decide — not the retained fraction.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{select}}", "name": "selection time", "meaning": "wall-clock cost of the selection pass (scoring, hashing, coordination)" },
+      { "symbol": "T_{\\mathrm{train}}(D_{\\mathrm{sub}})", "name": "subset training time", "meaning": "training time on the retained subset at matched quality" },
+      { "symbol": "T_{\\mathrm{train}}(D_{\\mathrm{full}})", "name": "full training time", "meaning": "training time on the unpruned corpus at the same quality" }
+    ]
+  },
+  {
+    "id": "dcr",
+    "number": 4,
+    "title": "Data compression ratio",
+    "latex": "\\mathrm{DCR} = \\frac{D_{\\mathrm{full}}}{D_{\\mathrm{sub}}} \\;\\bigg|_{\\mathrm{Acc}_{\\mathrm{target}}}",
+    "caption": "How much smaller the selected set is at a target accuracy — a compression claim, not a quality claim. DCR 5 means the coreset hits target on 20% of the data; coverage must be validated separately.",
+    "symbols": [
+      { "symbol": "\\mathrm{DCR}", "name": "data compression ratio", "meaning": "compression achieved by the subset at target accuracy" },
+      { "symbol": "D_{\\mathrm{full}}", "name": "full size", "meaning": "full dataset size" },
+      { "symbol": "D_{\\mathrm{sub}}", "name": "subset size", "meaning": "selected subset size at the target accuracy" }
+    ]
+  },
+  {
+    "id": "coverage-budget",
+    "number": 5,
+    "title": "Constrained coreset budget",
+    "latex": "B \\;\\geq\\; \\sum_{c} F_c, \\qquad \\text{else infeasible}",
+    "caption": "Per-class/slice coverage floors are applied before spending the score budget. If summed floors exceed the budget, no ranking can fix it — the selection plan itself must change.",
+    "symbols": [
+      { "symbol": "B", "name": "budget", "meaning": "total examples the subset may hold" },
+      { "symbol": "F_c", "name": "floor of class c", "meaning": "minimum keep for class or slice c, whatever its score" }
+    ]
+  },
+  {
+    "id": "foundation-breakeven",
+    "number": 6,
+    "title": "Foundation-model break-even",
+    "latex": "C_{\\mathrm{pretrain}} + N \\cdot C_{\\mathrm{finetune}} \\le N \\cdot C_{\\mathrm{scratch}} \\;\\Rightarrow\\; N \\ge \\frac{C_{\\mathrm{pretrain}}}{C_{\\mathrm{scratch}} - C_{\\mathrm{finetune}}}",
+    "caption": "The amortization law for one shared pretrained run: 10,000 + 50N <= 1,000N GPU-hours gives N >= 11 tasks in the book's worked scenario. Below that task count, self-supervision is the more expensive option.",
+    "symbols": [
+      { "symbol": "C_{\\mathrm{pretrain}}", "name": "pretraining cost", "meaning": "one-time self-supervised run — 10,000 GPU-hours" },
+      { "symbol": "C_{\\mathrm{finetune}}", "name": "fine-tune cost", "meaning": "per-task fine-tuning — 50 GPU-hours" },
+      { "symbol": "C_{\\mathrm{scratch}}", "name": "scratch cost", "meaning": "per-task training from scratch — 1,000 GPU-hours" },
+      { "symbol": "N", "name": "task count", "meaning": "downstream tasks sharing the pretraining" }
+    ]
+  },
+  {
+    "id": "amortized-roi",
+    "number": 7,
+    "title": "Amortized selection ROI",
+    "latex": "\\mathrm{ROI} = \\frac{R \\cdot S_{\\mathrm{run}} - C_{\\mathrm{setup}}}{C_{\\mathrm{setup}}}",
+    "caption": "Fixed curation cost spread across every run in the campaign. The book's worked dedup pipeline: -82% ROI at one run, break-even near five, +809% by fifty — the same fixed bill divided differently.",
+    "symbols": [
+      { "symbol": "R", "name": "run count", "meaning": "training runs reusing the selection pipeline" },
+      { "symbol": "S_{\\mathrm{run}}", "name": "per-run saving", "meaning": "savings per run from the retained subset" },
+      { "symbol": "C_{\\mathrm{setup}}", "name": "setup cost", "meaning": "one-time pipeline engineering + preprocessing cost" }
+    ]
+  },
+  {
+    "id": "echo-factor",
+    "number": 8,
+    "title": "Data echoing fill",
+    "latex": "e^{*} \\approx \\frac{T_{\\mathrm{pipeline}}}{T_{\\mathrm{GPU}}} = R, \\qquad R > 1 \\;\\text{only}",
+    "caption": "Reuse a prepared batch e times to recover accelerator cycles the slow host strands. The useful factor is the pipeline ratio itself — echo only exists when the host is the slow stage (R > 1); below that it recovers nothing.",
+    "symbols": [
+      { "symbol": "e^{*}", "name": "echo factor", "meaning": "batch re-uses before the host must produce the next" },
+      { "symbol": "T_{\\mathrm{pipeline}}", "name": "pipeline time", "meaning": "host preparation per batch (decode + augment)" },
+      { "symbol": "T_{\\mathrm{GPU}}", "name": "step time", "meaning": "accelerator step time per batch" },
+      { "symbol": "R", "name": "pipeline ratio", "meaning": "echo has headroom only above 1" }
+    ]
+  }
+]

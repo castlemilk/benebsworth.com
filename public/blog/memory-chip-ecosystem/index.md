@@ -6,6 +6,7 @@ description: >-
   for them. This is a tour of the memory ecosystem: the history, fabrication,
   architectures, HBM versus GDDR stacking, 2026 supply pressure, AI workloads,
   and the breakthroughs trying to move or shrink the bottleneck.
+heroImage: /blog/memory-chip-ecosystem/hero.webp
 labels: 'hardware,semiconductors,memory,ai,systems'
 release: true
 author: Ben Ebsworth

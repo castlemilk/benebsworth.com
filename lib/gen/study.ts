@@ -4,7 +4,7 @@
 //   protoc               unknown
 // source: study.proto
 
-/* eslint-disable */
+ 
 
 export const protobufPackage = "study";
 
@@ -194,6 +194,28 @@ export interface TranscriptEquation {
 }
 
 /**
+ * One word inside a transcript segment, with absolute seconds in the joined
+ * .m4a as measured by whisper alignment (scripts/study-align.py). Optional —
+ * the karaoke sweep interpolates across characters when absent.
+ */
+export interface TranscriptWord {
+  /** the spoken word as transcribed */
+  text: string;
+  /** seconds */
+  start: number;
+  /** seconds */
+  end: number;
+}
+
+/** Still image displayed from this turn until the next visual or equation cue. */
+export interface TranscriptVisual {
+  /** site-root URL of the published image */
+  src: string;
+  title: string;
+  alt: string;
+}
+
+/**
  * One utterance in the audio-overview transcript. start/end are seconds in
  * the joined .m4a; the generator measures them from each segment's WAV.
  */
@@ -207,7 +229,12 @@ export interface TranscriptSegment {
   /** seconds */
   end: number;
   /** set when the utterance names an equation */
-  eq: TranscriptEquation | undefined;
+  eq:
+    | TranscriptEquation
+    | undefined;
+  /** aligned word timings when study-align ran */
+  words: TranscriptWord[];
+  visual?: TranscriptVisual | undefined;
 }
 
 /**

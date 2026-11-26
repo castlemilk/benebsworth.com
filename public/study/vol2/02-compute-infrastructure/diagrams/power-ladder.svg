@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="power-ladder" class="study-fig-fit" viewBox="0 0 380 288" role="img" aria-labelledby="pl-title pl-desc">
+  <title id="pl-title">Power compounds up the hierarchy</title>
+  <desc id="pl-desc">A four-rung ladder on a log scale: 700 watts at the die, about 10 kilowatts at the node, 33.5 kilowatts at the rack, about 8 megawatts at the pod, with the discipline each rung belongs to named on the right.</desc>
+  <style>
+    .dark #power-ladder { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#power-ladder { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="288" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">Every level is a different job</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">IT power draw · log scale</text>
+
+    <g font-size="9.5" fill="var(--fig-rule, #6e6a5b)">
+      <text x="46" y="70">100 W</text><text x="120" y="70">10 kW</text>
+      <text x="196" y="70">1 MW</text><text x="272" y="70">100 MW</text>
+    </g>
+    <g stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.5" opacity="0.5">
+      <line x1="120" y1="76" x2="120" y2="232"/><line x1="196" y1="76" x2="196" y2="232"/>
+      <line x1="272" y1="76" x2="272" y2="232"/>
+    </g>
+
+    <rect x="61" y="92" width="26" height="22" rx="4" fill="var(--fig-mark, #b45a2d)"/>
+    <text x="97" y="108" font-size="11.5">die · 700 W · transistor + package</text>
+
+    <rect x="46" y="136" width="77" height="22" rx="4" fill="var(--fig-outline, #364c50)"/>
+    <text x="133" y="152" font-size="11.5">node · ~10 kW · chassis + rails</text>
+
+    <rect x="46" y="180" width="113" height="22" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.8"/>
+    <text x="169" y="196" font-size="11.5">rack · 33.5 kW · coolant loop</text>
+
+    <rect x="46" y="224" width="224" height="22" rx="4" fill="var(--fig-rule, #6e6a5b)"/>
+    <text x="280" y="240" font-size="11.5">pod · ~8 MW · facility</text>
+
+    <text x="20" y="270" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">700 W over ~814 mm² is ~86 W/cm² — past air's reach;</text>
+    <text x="20" y="283" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">a GB200-class rack wants ~170 L/min at a 10 K rise.</text>
+  </g>
+</svg>

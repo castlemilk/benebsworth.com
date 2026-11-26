@@ -1,0 +1,55 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The thesis is the feasibility-before-fairness argument plus the paradox framing; both are developed fully in prose."
+    },
+    "The Paradox of the Idle Fleet": {
+      "proseOnly": "The paradox is arithmetic carried by the job-mix chart and queueing equation; the two-team narrative stays as prose because it is a scenario, not a system."
+    },
+    "Feasibility Before Fairness": {
+      "proseOnly": "The DRF worked allocation is a fill sequence best followed as prose arithmetic (1/8 steps alternating toward 0.50); the numbers table in The physics carries the reference."
+    },
+    "The Gang and the Deadlock": {
+      "figure": "::fig[hold-and-wait]",
+      "teaches": "The deadlock cycle: two jobs each holding half their gang with wait arrows forming a cycle, beside the atomic alternative where one job holds all-or-nothing. The cycle shape, not the devices, is the lesson.",
+      "source": "Book's gang-deadlock.svg (two panels: partial allocation deadlock vs atomic gang); redrawn as the wait-for cycle the chapter's detection argument references."
+    },
+    "Packing Jobs onto Machines": {
+      "proseOnly": "Fragmentation and the topology speedup are single quantitative facts (25% stranded, 120/40/25 ms); the packet carries them as prose."
+    },
+    "Two Control Philosophies": {
+      "proseOnly": "Slurm-vs-Kubernetes is a contract comparison; the ownership-boundary argument is prose."
+    },
+    "Elasticity Is a Contract": {
+      "figure": "::fig[elastic-efficiency]",
+      "teaches": "The scaling-efficiency curve across worker count with the three regimes (near-linear, sublinear, saturated) marked, efficiency falling while throughput still rises; the pipeline bubble identified as the growing term.",
+      "source": "Book's fig-fleet-orchestration-scaling-efficiency-curve panel a (efficiency vs worker count with policy window) + margin throughput-saturation figure."
+    },
+    "Interruption Economics": {
+      "proseOnly": "The spot-cost relation is carried by its equation and the interruption-tax chart."
+    },
+    "Signals that Schedule": {
+      "proseOnly": "The four-scheduler comparison is a matching argument; the comparison table form is prose-plus-equations."
+    },
+    "Serving Shares the Fleet": {
+      "proseOnly": "Sharing economics are two numbers (180 vs 130, 65% vs 50%) best held as prose arithmetic."
+    },
+    "Quotas and the Three Tiers": {
+      "figure": "::fig[usage-tiers]",
+      "teaches": "The three narrowing tiers 500 allocated / 350 active / 280 productive as horizontal bars, each inter-tier gap labeled with its owner and cause class.",
+      "source": "Book's vol2_fleet_orchestration_margin_004.svg (three narrowing orange bars); extended with the per-gap ownership labels the debugging section assigns."
+    },
+    "Reservations, Backfill, and the Release Path": {
+      "figure": "::fig[backfill-window]",
+      "teaches": "The reservation timeline: a large gang's reservation draining toward its start time, idle capacity ahead of it, and a 128-GPU 2-hour backfill job fitting inside the window only because its release completes before the reservation needs the GPUs.",
+      "source": "Book's backfill-reservation.svg (reservation with backfill candidates); redrawn as a time-axis window diagram emphasizing the release-contract deadline."
+    },
+    "What the Chapter Says to Carry": { "proseOnly": "Summary list." },
+    "Fallacies and Pitfalls": { "proseOnly": "Pitfall list." },
+    "The physics": { "proseOnly": "Number table." },
+    "Glossary": { "proseOnly": "Term list." },
+    "→ Ben's world": { "proseOnly": "Cross-domain applications." },
+    "Open questions": { "proseOnly": "Open questions." }
+  }
+}

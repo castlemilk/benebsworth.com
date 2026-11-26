@@ -13,6 +13,19 @@ export type TocItem = { id: string; text: string; depth: 2 | 3 }
 export function TocNav({ packet, sections }: { packet: TocItem[]; sections: TocItem[] }) {
   const ids = useMemo(() => [...packet, ...sections].map((i) => i.id), [packet, sections])
   const [active, setActive] = useState<string>('')
+  const [pastEnd, setPastEnd] = useState(false)
+
+  // The rail is position:fixed — without this it floats over the site footer
+  // at page bottom. Hide it once the footer scrolls into view.
+  useEffect(() => {
+    const footer = document.querySelector('footer')
+    if (!footer) return
+    // Positive bottom margin fires ~80px before the footer enters, so the
+    // rail's fade finishes before an overlap is ever visible.
+    const io = new IntersectionObserver(([e]) => setPastEnd(e.isIntersecting), { rootMargin: '0px 0px 80px 0px' })
+    io.observe(footer)
+    return () => io.disconnect()
+  }, [])
 
   useEffect(() => {
     if (!ids.length) return
@@ -87,7 +100,7 @@ export function TocNav({ packet, sections }: { packet: TocItem[]; sections: TocI
 
   return (
     <>
-      <aside className="study-toc-rail">{body}</aside>
+      <aside className="study-toc-rail" data-hidden={pastEnd || undefined} aria-hidden={pastEnd || undefined}>{body}</aside>
       <details className="study-toc-mobile">
         <summary>Contents</summary>
         <div className="study-toc-mobile-body">{body}</div>

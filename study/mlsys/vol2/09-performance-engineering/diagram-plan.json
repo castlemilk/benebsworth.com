@@ -1,0 +1,58 @@
+{
+ "source": "packet.md",
+ "sections": {
+  "Thesis": {
+   "proseOnly": "The thesis is the boundary-accounting argument itself, developed fully in prose with the Llama 3 opening numbers."
+  },
+  "Where Fleet Capacity Goes": {
+   "figure": "::fig[capacity-waterfall]",
+   "teaches": "The waterfall shape: a full capacity bar draining at each boundary, with the dedicated cluster's scheduling loss at zero and the program boundary taking more than half. The lesson is the proportions, not the devices.",
+   "source": "Book's fleet-boundaries waterfall for the running example; redrawn for the published Llama 3 split where scheduling vanishes and the program loss dominates."
+  },
+  "The Goodput Product": {
+   "proseOnly": "The product and loss-share algebra carry the mechanism; the waterfall already shows the split."
+  },
+  "Measuring Goodput": {
+   "proseOnly": "The software-gains chart carries the measurement-contract evidence."
+  },
+  "Scheduling Goodput": {
+   "proseOnly": "Input-wait dominance is a ranking argument clearer in prose than geometry."
+  },
+  "Runtime Goodput": {
+   "figure": "::fig[runtime-loss-split]",
+   "teaches": "The ranked order of the five runtime terms at 128 GPUs: input waits largest, failure terms small. The inversion of small-cluster intuition is the lesson.",
+   "source": "Book's runtime-loss sweep over device count; redrawn as a fixed-scale ranking because the crossover ordering at one size is the decision-relevant fact."
+  },
+  "Program Goodput": {
+   "figure": "::fig[roofline-decode]",
+   "teaches": "The roofline geometry with the batch-one decode point pinned far left at arithmetic intensity 1.8, under the bandwidth roof and far below the ridge. Decode as a bandwidth purchase is the lesson.",
+   "source": "Book's roofline placement of a profiled LayerNorm kernel; redrawn with the decode case because its intensity is architectural, not kernel-specific."
+  },
+  "Recovering Program Goodput": {
+   "proseOnly": "Compilation amortization is a payback argument carried by the numbers."
+  },
+  "The Whole Fleet": {
+   "proseOnly": "The fleet-loss-shares chart carries the composition."
+  },
+  "Trading Between Factors": {
+   "figure": "::fig[goodput-frontier]",
+   "teaches": "The factor-product framing: levers move factors against each other, worth ranked P then S then R for the example, and the elastic strategies as trades rather than free wins.",
+   "source": "Original composition for the trading section; the book's frontier discussion is prose-only."
+  },
+  "Fallacies and Pitfalls": {
+   "proseOnly": "Fallacies are textual corrections of misreadings."
+  },
+  "The physics": {
+   "proseOnly": "Reference table."
+  },
+  "Glossary": {
+   "proseOnly": "Definitions."
+  },
+  "\u2192 Ben's world": {
+   "proseOnly": "Connections."
+  },
+  "Open questions": {
+   "proseOnly": "Unresolved items."
+  }
+ }
+}

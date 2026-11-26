@@ -1,0 +1,40 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "Opening case and the system-is-the-model claim; the causal chain gets its own figure in the first section."
+    },
+    "The System Is the Model": {
+      "figure": "::fig[interface-failure]",
+      "teaches": "Show the three teams each green on a local metric, then the calibration choice surfacing as a cohort accuracy drop three stages downstream.",
+      "source": "Composite fleet failure: INT8 clipping ranges + firmware preprocessing + aggregate-only accuracy monitoring."
+    },
+    "Lighthouse Models: Constraint Propagation": {
+      "figure": "::fig[lighthouse-trace]",
+      "teaches": "Five lighthouses as five limiting terms: each rewards the lever aimed at its bound and wastes the other.",
+      "source": "ResNet-50 compute, GPT-2/Llama decode bandwidth, DLRM capacity, MobileNetV2 compute-in-envelope, KWS power."
+    },
+    "Thirteen Quantitative Principles": {
+      "figure": "::fig[principle-map]",
+      "teaches": "Sort the thirteen tools by the three questions — predictions, execution, evidence — and mark which are bounds, decompositions, fitted models, policies and heuristics.",
+      "source": "Principle taxonomy table + the conservation-of-complexity meta-principle."
+    },
+    "The Dual Mandate Revisited": {
+      "proseOnly": "The two worked numbers carry the section: the 295.2x decode floor (chart + equation) and the 40x TTFT tail in prose."
+    },
+    "Future Directions": {
+      "proseOnly": "Critical path and fleet MTBF are quantitative claims already carried by the fleet-mtbf chart and equations."
+    },
+    "The Engineering Responsibility and Pitfalls": {
+      "proseOnly": "Degradation machinery and the Amdahl arithmetic carry the section."
+    },
+    "The Request, Retraced": {
+      "figure": "::fig[request-trace]",
+      "teaches": "One request, four limiting terms in turn: KWS power, front-end compute envelope, DLRM capacity, GPT-2 bandwidth.",
+      "source": "Closing voice-assistant trace assembled from the lighthouses."
+    },
+    "Physics table": {
+      "proseOnly": "Reference table."
+    }
+  }
+}

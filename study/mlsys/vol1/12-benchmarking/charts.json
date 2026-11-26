@@ -1,0 +1,41 @@
+[
+  {
+    "id": "mfu-gap",
+    "kind": "BAR_STACKED",
+    "title": "Peak rate vs sustained model arithmetic",
+    "caption": "The H100's dense FP16 peak is 989 TFLOP/s; ResNet-50 training at MLPerf's ~5,000 images/s per accelerator sustains ~123 TFLOP/s of model work — an MFU of about 12.4%. The rest goes to memory-bound layers, the input pipeline, and launch overhead.",
+    "xLabel": "Rate",
+    "yLabel": "TFLOP/s",
+    "xPoints": ["FP16 peak", "Model work"],
+    "series": [
+      { "key": "rate", "label": "TFLOP/s", "color": "var(--chart-2)", "values": [989, 123] }
+    ]
+  },
+  {
+    "id": "pipeline-dilution",
+    "kind": "BAR_STACKED",
+    "title": "A 5× inference speedup lands as 1.8× end to end",
+    "caption": "Fictional serial pipeline at fixed stage times: 8 ms preprocessing plus 10 ms inference. Inference at 5× gives 18 → 10 ms total (1.8×); infinitely fast inference still leaves the 8 ms the optimization never touched (2.25× ceiling).",
+    "xLabel": "Pipeline variant",
+    "yLabel": "milliseconds per request",
+    "xPoints": ["Baseline", "Inference 5×", "Inference instant"],
+    "series": [
+      { "key": "preprocess", "label": "Preprocessing", "color": "var(--chart-1)", "values": [8, 8, 8] },
+      { "key": "inference", "label": "Inference", "color": "var(--chart-2)", "values": [10, 2, 0] }
+    ]
+  },
+  {
+    "id": "energy-boundary",
+    "kind": "BAR_STACKED",
+    "title": "The boundary moves the measured energy",
+    "caption": "One median text prompt: 0.10 Wh at the accelerators alone; 0.24 Wh counting everything the service draws — 58% active accelerators, 25% host CPUs and DRAM, 17% idle reserve and overhead. Same prompt, same machines; only the meter boundary changed.",
+    "xLabel": "Measurement boundary",
+    "yLabel": "Wh per prompt",
+    "xPoints": ["Accelerators only", "Full stack"],
+    "series": [
+      { "key": "accelerators", "label": "Accelerators", "color": "var(--chart-2)", "values": [0.10, 0.14] },
+      { "key": "host", "label": "Host CPUs + DRAM", "color": "var(--chart-1)", "values": [0, 0.06] },
+      { "key": "idle", "label": "Idle reserve + overhead", "color": "var(--chart-3)", "values": [0, 0.041] }
+    ]
+  }
+]

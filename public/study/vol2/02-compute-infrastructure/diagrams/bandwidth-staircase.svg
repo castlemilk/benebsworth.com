@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="bw-stairs" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="bs-title bs-desc">
+  <title id="bs-title">Four tiers, three falls</title>
+  <desc id="bs-desc">A descending staircase of per-GPU bandwidth: HBM3 3.35 terabytes per second, NVLink 900 gigabytes per second (7.4 times down), InfiniBand NDR 50 gigabytes per second (9 times), storage 7 gigabytes per second (7.1 times). Latency rises at each step; parallelism types are labeled on the tiers they can live on.</desc>
+  <style>
+    .dark #bw-stairs { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#bw-stairs { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">The bandwidth staircase</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">Per-GPU bandwidth · each boundary ~7–9× down, latency up</text>
+
+    <rect x="20" y="66" width="340" height="44" rx="6" fill="var(--fig-mark, #b45a2d)"/>
+    <text x="30" y="84" font-size="12" font-weight="650" fill="var(--fig-paper, #f7f3e9)">HBM3 · 3,350 GB/s</text>
+    <text x="30" y="100" font-size="10.5" fill="var(--fig-paper, #f7f3e9)">on-package · sub-µs · where all operands want to live</text>
+
+    <rect x="20" y="122" width="252" height="44" rx="6" fill="var(--fig-outline, #364c50)"/>
+    <text x="30" y="140" font-size="12" font-weight="650" fill="var(--fig-paper, #f7f3e9)">NVLink · 900 GB/s</text>
+    <text x="30" y="156" font-size="10.5" fill="var(--fig-paper, #f7f3e9)">in-chassis · TP's sub-ms exchanges live here</text>
+    <text x="272" y="146" font-size="11" fill="var(--fig-rule, #6e6a5b)">−7.4×</text>
+
+    <rect x="20" y="178" width="168" height="44" rx="6" fill="var(--fig-rule, #6e6a5b)" opacity="0.85"/>
+    <text x="30" y="196" font-size="12" font-weight="650" fill="var(--fig-paper, #f7f3e9)">IB NDR · 50 GB/s</text>
+    <text x="30" y="212" font-size="10.5" fill="var(--fig-paper, #f7f3e9)">fabric · PP sends + DP all-reduce</text>
+    <text x="188" y="204" font-size="11" fill="var(--fig-rule, #6e6a5b)">−9.0×</text>
+
+    <rect x="20" y="234" width="88" height="44" rx="6" fill="var(--fig-rule, #6e6a5b)" opacity="0.55"/>
+    <text x="30" y="252" font-size="12" font-weight="650" fill="var(--fig-paper, #f7f3e9)">Storage · 7 GB/s</text>
+    <text x="30" y="268" font-size="10.5" fill="var(--fig-paper, #f7f3e9)">checkpoints + data</text>
+    <text x="108" y="260" font-size="11" fill="var(--fig-rule, #6e6a5b)">−7.1×</text>
+
+    <text x="140" y="246" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">latency climbs each step:</text>
+    <text x="140" y="261" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">NVLink &lt; PCIe &lt; IB &lt; network</text>
+    <text x="20" y="293" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">TP lives on step 2, PP crosses to 3, DP tolerates 3.</text>
+  </g>
+</svg>

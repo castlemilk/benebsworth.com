@@ -1,0 +1,60 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "Introduce the decision that connects the worked sections."
+    },
+    "Find what holds up one decision": {
+      "figure": "::fig[trace-a-routing-decision]",
+      "teaches": "A parcel sorter has until the parcel reaches the diverter to turn a camera exposure into a routing decision. That interval gives latency a concrete meaning. Start the timer at capture and stop it when the decision is available to the controller. Within that interval, use a device trace to locate waits, transfers and kernels on the critical path. A convolution can spend its time performing arithmetic, while a relatively simple normalization can spend its time reading and writing an entire feature map. Reducing either operator's cost matters to the deadline only to the extent that it advances the final decision.",
+      "source": "Fitting the Deployment Budget, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L69-L554; Measuring Compression Gains, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L7079-L7271"
+    },
+    "Count the entire resident footprint": {
+      "figure": "::fig[resident-footprint-versus-capacity]",
+      "teaches": "Memory capacity limits allocations that must coexist. Weights hold learned coefficients, while activations hold values produced for the current input. Compressing weights changes only one term if the runtime keeps the same activations live. For a first deployment-budget calculation, specify the memory pool, the allocations charged to it and the instant at which they coexist. Add their resident sizes and compare the sum with the capacity assigned to that pool. A model file answers a different accounting question because the runtime can unpack it or allocate temporary storage during execution.",
+      "source": "Fitting the Deployment Budget, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L69-L490"
+    },
+    "Remove work the device can actually skip": {
+      "figure": "::fig[projection-coefficient-count]",
+      "teaches": "A structural change pays off when it removes useful amounts of scheduled work at an acceptable quality cost. Pruning an output channel from a convolution removes a filter, a feature map and the corresponding input slice from consumers that can accept the narrower shape. Pruning individual coefficients produces a different opportunity. Their positions must be encoded and a kernel must exploit them to skip work. Low-rank factorization offers a third route when many outputs depend on the same few combinations of inputs. Two smaller dense maps can then approximate one large map using regular operations already available on the device.",
+      "source": "Structural Optimization: Changing What the Model Computes, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L827-L3487"
+    },
+    "Choose a smaller network and decide when it should run": {
+      "figure": "::fig[qualify-an-early-exit]",
+      "teaches": "Sometimes the expensive part is the architecture itself. A compact student can learn from both task labels and a larger teacher's output distribution. For a damaged label, the teacher's relative scores for two plausible destinations convey information that a single destination label omits. Distillation makes that training signal available to a student whose widths, operators and activation sizes suit the device. A further design choice is whether every parcel needs the full student. An early exit can finish easy inputs cheaply if its confidence predicts correctness and enough inputs take the shortcut to repay the cost of checking.",
+      "source": "Structural Optimization: Changing What the Model Computes, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L2501-L2706"
+    },
+    "Spend precision where errors change decisions": {
+      "figure": "::fig[follow-a-quantized-feature]",
+      "teaches": "Quantization represents a tensor using a limited set of values. With uniform integer quantization, a scale sets the distance between adjacent representable values and a zero point locates real zero on the integer grid. A wide range can preserve outliers while rounding distinct small signals to the same value. A narrow range can resolve those signals while clipping large ones. Floating-point formats use exponent bits to span magnitudes and fraction bits to distinguish nearby values. The choice therefore depends on the tensor's distribution, the decisions that depend on it and the formats the target can execute efficiently.",
+      "source": "Numerical Precision: Changing How Values Are Stored, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L3716-L4634"
+    },
+    "Follow compressed values through the runtime": {
+      "figure": "::fig[inspect-a-fused-block]",
+      "teaches": "The runtime determines where compressed values travel and what arithmetic consumes them. A kernel can read packed weights, unpack a small tile close to the arithmetic unit and immediately use it. Expanding the whole tensor into global memory first introduces a write and another read. Fusion applies the same principle to intermediate results. For an inference convolution followed by batch normalization and an activation, a compiler can fold fixed normalization parameters into the convolution and apply the activation before writing the output. This removes launches and intermediate transfers where the shapes, precision and operator semantics permit it.",
+      "source": "Hardware Implementation: Changing How the Model Executes, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L5579-L5591"
+    },
+    "Sequence changes around what calibration assumes": {
+      "figure": "::fig[sequence-a-pruned-student]",
+      "teaches": "Compression techniques interact through the tensors they change. Channel pruning changes the inputs received by downstream layers. Fine-tuning or distillation changes the surviving weights and can shift activation ranges again. Integer scales fitted to an earlier graph can therefore clip the final model even if each change passed in isolation. For a pruned student using post-training quantization, settle the topology, recover task quality, finalize inference transformations that alter ranges and then calibrate. Keep intermediate candidates so a regression can be traced to a particular change or combination.",
+      "source": "Choosing and Combining Techniques, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L6546-L7033; Fallacies and Pitfalls, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L7873-L7981"
+    },
+    "Accept the model on a full production-shaped run": {
+      "figure": "::fig[accept-a-sorter-release]",
+      "teaches": "The acceptance test asks whether the delivered system makes a good enough decision in time under the conditions users encounter. Run the baseline and exported candidate on the target with the same preprocessing, input mix, arrival pattern and output handling. Record artifact size, peak resident memory, latency distribution, sustained throughput and energy per completed decision. Pair these measurements with task quality and confidence calibration on consequential slices. A candidate qualifies when the same deployed configuration meets all required limits. Results drawn from different batch sizes, devices or precision settings cannot establish that joint outcome.",
+      "source": "Measuring Compression Gains, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L7143-L7865; Fallacies and Pitfalls, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd#L7873-L8038"
+    },
+    "The physics": {
+      "proseOnly": "Compare the quantities and conditions in a lookup table."
+    },
+    "Glossary": {
+      "proseOnly": "Look up a term encountered in the worked sections."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Apply the mechanisms to concrete engineering decisions."
+    },
+    "Open questions": {
+      "proseOnly": "Identify an experiment or evidence the chapter leaves open."
+    }
+  }
+}

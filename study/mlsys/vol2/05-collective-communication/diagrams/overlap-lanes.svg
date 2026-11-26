@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="overlap-lanes" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="ol-title ol-desc">
+  <title id="ol-title">What overlap can and cannot hide</title>
+  <desc id="ol-desc">Two timeline lanes. The compute lane shows backward passes for layers four through one, each ending in a thin processor-overhead slice, then an idle gap, then the optimizer step. The network lane shows AllReduce transfers for layers four through two running beneath the next backward pass, while layer one's transfer sits exposed beneath the idle gap. A bracket marks the first three transfers as hidden; a shaded band marks the exposed tail.</desc>
+  <style>
+    .dark #overlap-lanes { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#overlap-lanes { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">What overlap can and cannot hide</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">LogP: transit L hides under compute · overhead o never does</text>
+
+    <!-- lanes -->
+    <text x="14" y="86" font-size="9.5" font-weight="650">compute</text>
+    <text x="14" y="150" font-size="9.5" font-weight="650">network</text>
+
+    <!-- compute lane: backward blocks + o slices -->
+    <g font-size="8.5" font-family="ui-monospace, monospace" text-anchor="middle">
+      <rect x="60" y="70" width="56" height="20" rx="3" fill="var(--fig-outline, #364c50)" opacity="0.30"/><text x="88" y="84">bwd L4</text>
+      <rect x="116" y="70" width="10" height="20" rx="2" fill="var(--fig-mark, #b4571f)"/><text x="121" y="63" font-size="7.5" fill="var(--fig-mark, #b4571f)">o</text>
+      <rect x="130" y="70" width="56" height="20" rx="3" fill="var(--fig-outline, #364c50)" opacity="0.30"/><text x="158" y="84">bwd L3</text>
+      <rect x="186" y="70" width="10" height="20" rx="2" fill="var(--fig-mark, #b4571f)"/><text x="191" y="63" font-size="7.5" fill="var(--fig-mark, #b4571f)">o</text>
+      <rect x="200" y="70" width="56" height="20" rx="3" fill="var(--fig-outline, #364c50)" opacity="0.30"/><text x="228" y="84">bwd L2</text>
+      <rect x="256" y="70" width="10" height="20" rx="2" fill="var(--fig-mark, #b4571f)"/><text x="261" y="63" font-size="7.5" fill="var(--fig-mark, #b4571f)">o</text>
+      <rect x="270" y="70" width="56" height="20" rx="3" fill="var(--fig-outline, #364c50)" opacity="0.30"/><text x="298" y="84">bwd L1</text>
+      <rect x="326" y="70" width="10" height="20" rx="2" fill="var(--fig-mark, #b4571f)"/><text x="331" y="63" font-size="7.5" fill="var(--fig-mark, #b4571f)">o</text>
+      <rect x="336" y="70" width="24" height="20" rx="3" fill="var(--fig-ink, #252923)" opacity="0.85"/><text x="348" y="84" fill="var(--fig-paper, #f7f3e9)" font-size="7.5">opt</text>
+    </g>
+
+    <!-- network lane: transfers under later compute -->
+    <g font-size="8" font-family="ui-monospace, monospace" text-anchor="middle">
+      <rect x="126" y="134" width="70" height="16" rx="3" fill="none" stroke="var(--fig-outline, #364c50)" stroke-dasharray="3 2"/><text x="161" y="145">AllReduce L4</text>
+      <rect x="196" y="134" width="70" height="16" rx="3" fill="none" stroke="var(--fig-outline, #364c50)" stroke-dasharray="3 2"/><text x="231" y="145">AllReduce L3</text>
+      <rect x="266" y="134" width="70" height="16" rx="3" fill="none" stroke="var(--fig-outline, #364c50)" stroke-dasharray="3 2"/><text x="301" y="145">AllReduce L2</text>
+      <!-- exposed L1 -->
+      <rect x="336" y="134" width="24" height="16" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.35"/><text x="348" y="145" font-size="7">AR L1</text>
+    </g>
+
+    <!-- hidden bracket -->
+    <path d="M126 158 V166 M336 158 V166 M126 166 H336" stroke="var(--fig-outline, #364c50)" stroke-width="1.1" fill="none"/>
+    <text x="231" y="178" font-size="8.5" text-anchor="middle" fill="var(--fig-outline, #364c50)">hidden beneath later backward compute</text>
+
+    <!-- exposed band -->
+    <rect x="336" y="66" width="24" height="92" fill="var(--fig-mark, #b4571f)" opacity="0.12"/>
+    <text x="348" y="196" font-size="8.5" text-anchor="middle" fill="var(--fig-mark, #b4571f)">exposed:</text>
+    <text x="348" y="207" font-size="8" text-anchor="middle" fill="var(--fig-mark, #b4571f)">last bucket</text>
+    <text x="348" y="218" font-size="8" text-anchor="middle" fill="var(--fig-mark, #b4571f)">has nothing</text>
+    <text x="348" y="229" font-size="8" text-anchor="middle" fill="var(--fig-mark, #b4571f)">left to hide</text>
+    <text x="348" y="240" font-size="8" text-anchor="middle" fill="var(--fig-mark, #b4571f)">behind</text>
+
+    <!-- LogP worked numbers -->
+    <g>
+      <rect x="60" y="188" width="236" height="52" rx="5" fill="none" stroke="var(--fig-rule, #6e6a5b)" stroke-dasharray="3 3"/>
+      <text x="70" y="205" font-size="9">toy budget: L = 100 μs transit hides under 500 μs compute</text>
+      <text x="70" y="219" font-size="9">2o = 100 μs stays exposed on the execution resource</text>
+      <text x="70" y="233" font-size="9.5" font-weight="650">T_eff = 2o + max(compute, L) = 600 μs</text>
+    </g>
+
+    <text x="190" y="272" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">async_op=True yields the CPU · only the network side is hidable</text>
+    <text x="190" y="286" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">kernel bypass + GPUDirect shrink o · bandwidth alone does not</text>
+  </g>
+</svg>

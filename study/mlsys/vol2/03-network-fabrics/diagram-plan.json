@@ -1,0 +1,61 @@
+{
+ "source": "packet.md",
+ "sections": {
+  "Thesis": {
+   "proseOnly": "The opening incast case carries the synchronization-over-bandwidth claim; the cliff and alpha-beta map get figures in their own sections and are forward-linked from the thesis."
+  },
+  "The Synchronization Backbone": {
+   "figure": "::fig[bandwidth-cliff]",
+   "teaches": "The ~9x per-direction drop at the node boundary (450 to 50 GB/s) that everything downstream is designed around; the cliff has held since 2016.",
+   "source": "interconnect_generations.csv (NVLink 4 = 450 GB/s/dir, NDR port = 50 GB/s/dir) and the chapter's bandwidth-hierarchy notebook."
+  },
+  "The Workload Inversion": {
+   "proseOnly": "The five-level model is structural scaffolding; each level's mechanism gets its own figure or equation. The book's five-level-model.svg covers the overview."
+  },
+  "Level 1: Wire and Link": {
+   "proseOnly": "PAM4/FEC latency and the reach ladder are physics detail carried by book figures (pam4-vs-nrz, physical-reach-ladder) plus the 400 kW optics number in the physics table."
+  },
+  "Level 2: Transport and the Alpha-Beta Model": {
+   "figure": "::fig[alpha-beta-map]",
+   "teaches": "T = alpha + n/beta as a two-regime map: flat below the ~75 KB crossover, sloped above; 4 KB at 1.58 us vs 350 MB at 7.0 ms.",
+   "source": "AlphaBetaNdrRoce scenario: alpha 1.5/5.0 us, beta 50/12.5 GB/s, 4 KB and 350 MB messages; NCCL measured floor ~17 us."
+  },
+  "Level 3: Switch and Topology": {
+   "figure": "::fig[fattree-cut]",
+   "teaches": "What the oversubscription ratio actually buys: 1:1 bisection 25.6 TB/s vs 6.4 at 4:1; ring AllReduce 0.20 to 0.80 s; $142.1M waste; radix-vs-rate dial.",
+   "source": "k=64 fat-tree (2,048 two-tier / 65,536 three-tier hosts), 2:1 = -23.1%, 4:1 = 4x, torus 512 vs fat-tree 2,048 cut links."
+  },
+  "Level 4: Congestion, PFC, and Incast": {
+   "figure": "::fig[incast-cascade]",
+   "teaches": "Why buffers cannot absorb a synchronized burst: 12.8 TB/s into 50 GB/s, 32 MB dies in <5 us, before a 5 us feedback loop can return.",
+   "source": "IncastSuperPodUnit: 256 senders x 50 GB/s, 32 MB buffer, 5 us feedback RTT, BDP 250 KB."
+  },
+  "Level 5: Cluster Design": {
+   "proseOnly": "SuperPOD SU count and Grand Teton A/B are organizational facts; the gradient-bus claim is already drawn by bandwidth-cliff."
+  },
+  "Virtualization": {
+   "proseOnly": "SR-IOV and the 2 s checkpoint window are queueing facts, no figure needed."
+  },
+  "Monitoring and Debugging": {
+   "proseOnly": "The day-3 half-rate diagnosis (4.2 to 4.8 s, 92 to 85%) and the silent-tax equation carry the section."
+  },
+  "What Moves the Ceiling": {
+   "proseOnly": "XDR/1.6TbE rates and the CPO 1.28 kW dividend are roadmap facts in the physics table."
+  },
+  "Fallacies and Pitfalls": {
+   "proseOnly": "Each fallacy re-cites a number already figured above."
+  },
+  "The physics": {
+   "proseOnly": "The table is the figure."
+  },
+  "Glossary": {
+   "proseOnly": "Term definitions only."
+  },
+  "→ Ben's world": {
+   "proseOnly": "Personal transfer notes only."
+  },
+  "Open questions": {
+   "proseOnly": "Reflection prompts only."
+  }
+ }
+}

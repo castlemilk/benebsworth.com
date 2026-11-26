@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 167" role="img" aria-labelledby="study-svg-compare-energy-per-result-title" aria-describedby="study-svg-compare-energy-per-result-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-compare-energy-per-result-title">Energy per accepted inspection result</title>
+  <desc id="study-svg-compare-energy-per-result-desc">Under the assumed 60-second workload, server B draws more power but completes enough additional accepted results to use 3 fewer joules per result. Server A: 15 J per useful result. Server B: 12 J per useful result.</desc>
+  <rect x="0" y="0" width="344" height="167" rx="8" fill="var(--surface, #fbf7f0)"/>
+  <g fill="var(--fg, #31251d)" font-family="ui-monospace, monospace">
+  <text x="328" y="22" font-size="13.5" text-anchor="end">J per useful result</text>
+  <text x="16" y="43" font-size="15">Server A</text>
+  <text x="328" y="81" font-size="14" text-anchor="end">15</text>
+  <rect x="16" y="51" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="51" width="312" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="50" y2="64" stroke="var(--fg, #4b3a2d)"/>
+  <text x="16" y="109" font-size="15">Server B</text>
+  <text x="328" y="147" font-size="14" text-anchor="end">12</text>
+  <rect x="16" y="117" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="117" width="250" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="116" y2="130" stroke="var(--fg, #4b3a2d)"/>
+  </g>
+</svg>

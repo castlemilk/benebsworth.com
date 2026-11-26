@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 504" role="img" aria-labelledby="study-svg-device-partition-critical-path-title" aria-describedby="study-svg-device-partition-critical-path-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-device-partition-critical-path-title">Evaluate a partition across devices</title>
+  <desc id="study-svg-device-partition-critical-path-desc">A partition improves request latency only when the computation it removes from the critical path outweighs the communication and waiting it adds there. Choose the partition: Assign batches, layers, or tensor shards according to the goal. Then Check per-device fit: Include weights, runtime state, and workspace on each device. Then Trace messages: Identify which tensors cross links and how often they cross. Then Find exposed waits: Measure transfers and synchronization on the critical path. Then Compare outcomes: Check achieved capacity, throughput, and latency against the goal.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Choose the partition</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Assign batches, layers, or tensor</tspan>
+    <tspan x="19" y="64">shards according to the goal.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Check per-device fit</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Include weights, runtime state, and</tspan>
+    <tspan x="19" y="165">workspace on each device.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Trace messages</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Identify which tensors cross links</tspan>
+    <tspan x="19" y="266">and how often they cross.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Find exposed waits</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Measure transfers and</tspan>
+    <tspan x="19" y="367">synchronization on the critical</tspan>
+    <tspan x="19" y="384">path.</tspan></text>
+  <path d="M172 404v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="424" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="448" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Compare outcomes</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="468">Check achieved capacity, throughput,</tspan>
+    <tspan x="19" y="485">and latency against the goal.</tspan></text>
+  </g>
+</svg>

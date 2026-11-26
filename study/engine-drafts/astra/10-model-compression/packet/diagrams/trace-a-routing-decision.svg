@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 420" role="img" aria-labelledby="study-svg-trace-a-routing-decision-title" aria-describedby="study-svg-trace-a-routing-decision-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-trace-a-routing-decision-title">From a late parcel decision to a compression experiment</title>
+  <desc id="study-svg-trace-a-routing-decision-desc">A trace narrows a missed deadline to a particular resource, giving the next model change a prediction that can be checked. Define the deadline: Time the interval from camera exposure to an available routing command. Then Replay arrivals: Run production-shaped requests long enough to capture queues and heat. Then Locate the delay: Find the work or wait that postpones delivery of the command. Then Identify the resource: Check whether arithmetic, data movement or launch overhead explains the time.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Define the deadline</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Time the interval from camera</tspan>
+    <tspan x="19" y="64">exposure to an available routing</tspan>
+    <tspan x="19" y="81">command.</tspan></text>
+  <path d="M172 101v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="121" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="145" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Replay arrivals</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="165">Run production-shaped requests long</tspan>
+    <tspan x="19" y="182">enough to capture queues and heat.</tspan></text>
+  <path d="M172 202v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="222" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="246" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Locate the delay</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="266">Find the work or wait that postpones</tspan>
+    <tspan x="19" y="283">delivery of the command.</tspan></text>
+  <path d="M172 303v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="323" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="347" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Identify the resource</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="367">Check whether arithmetic, data</tspan>
+    <tspan x="19" y="384">movement or launch overhead explains</tspan>
+    <tspan x="19" y="401">the time.</tspan></text>
+  </g>
+</svg>

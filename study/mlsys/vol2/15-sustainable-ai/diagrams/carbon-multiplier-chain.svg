@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" role="img" aria-label="Multiplicative mitigation chain from algorithmic work to lifecycle carbon">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .tier{fill:var(--diagram-accent-soft,#e8eefb);stroke:var(--diagram-accent,#3c64c8);stroke-width:1.2}
+    .tt{font:600 11.5px var(--font-sans,sans-serif);fill:var(--diagram-accent,#3c64c8)}
+    .arr{stroke:var(--diagram-ink-soft,#5a5a60);stroke-width:1.6;fill:none;marker-end:url(#ah3)}
+    .mult{font:600 14px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .add{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-warn,#c85a3c);stroke-width:1.4}
+    .at{font:600 11.5px var(--font-sans,sans-serif);fill:var(--diagram-warn,#c85a3c)}
+  </style>
+  <defs><marker id="ah3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="var(--diagram-ink-soft,#5a5a60)"/></marker></defs>
+  <rect class="bg" width="760" height="400"/>
+  <text class="title" x="30" y="32">Every mitigation tier multiplies, except one</text>
+  <text class="sub" x="30" y="51">Tier savings compound only when measured in the combined configuration on the same fixed useful work.</text>
+  <!-- chain -->
+  <rect class="tier" x="26" y="90" width="150" height="92" rx="8"/>
+  <text class="tt" x="42" y="114">work reduction</text>
+  <text class="sm" x="42" y="136">fewer FLOPs at fixed</text>
+  <text class="sm" x="42" y="150">quality: pruning that</text>
+  <text class="sm" x="42" y="164">skips, distillation</text>
+  <text class="mult" x="182" y="140">x</text>
+  <rect class="tier" x="198" y="90" width="150" height="92" rx="8"/>
+  <text class="tt" x="214" y="114">execution efficiency</text>
+  <text class="sm" x="214" y="136">realized work per joule:</text>
+  <text class="sm" x="214" y="150">batching, utilization,</text>
+  <text class="sm" x="214" y="164">less data movement</text>
+  <text class="mult" x="354" y="140">x</text>
+  <rect class="tier" x="370" y="90" width="130" height="92" rx="8"/>
+  <text class="tt" x="386" y="114">PUE</text>
+  <text class="sm" x="386" y="136">facility overhead:</text>
+  <text class="sm" x="386" y="150">cooling, delivery</text>
+  <text class="sm" x="386" y="164">losses upstream</text>
+  <text class="mult" x="506" y="140">x</text>
+  <rect class="tier" x="522" y="90" width="130" height="92" rx="8"/>
+  <text class="tt" x="538" y="114">grid intensity</text>
+  <text class="sm" x="538" y="136">average for inventory,</text>
+  <text class="sm" x="538" y="150">marginal for scheduling</text>
+  <text class="sm" x="538" y="164">decisions</text>
+  <line class="arr" x1="652" y1="136" x2="700" y2="136"/>
+  <rect class="add" x="26" y="216" width="300" height="96" rx="8"/>
+  <text class="at" x="42" y="240">+ embodied carbon (additive)</text>
+  <text class="sm" x="42" y="262">manufacturing, transport, disposal at</text>
+  <text class="sm" x="42" y="276">its own boundary; amortized over service</text>
+  <text class="sm" x="42" y="290">life, never multiplied by the chain</text>
+  <line class="arr" x1="326" y1="264" x2="700" y2="160"/>
+  <!-- result -->
+  <rect x="654" y="100" width="90" height="72" rx="8" fill="var(--diagram-panel,#f6f6f4)" stroke="var(--diagram-edge,#999)"/>
+  <text class="tt" x="699" y="128" text-anchor="middle">lifecycle</text>
+  <text class="tt" x="699" y="146" text-anchor="middle">carbon</text>
+  <!-- warnings -->
+  <text class="lbl" x="26" y="348">Cutting IT energy can itself change PUE: re-measure the combination.</text>
+  <text class="sm" x="26" y="370">Isolated percentages from different workloads cannot multiply into one composite saving. Rebound can cancel a reduction at any tier.</text>
+</svg>

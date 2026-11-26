@@ -1,0 +1,44 @@
+[
+ {
+  "id": "book-context-memory",
+  "file": "fig-context-memory (tikz, generated)",
+  "title": "Three memory regimes of a long context",
+  "caption": "The book's log-log plot of weights, per-request KV cache, and one layer's materialized scores against context length - the quantitative version of our prefill-decode sketch. Ours shows the two-phase mechanism; theirs shows where the three curves actually cross (~10K and ~41K tokens)."
+ },
+ {
+  "id": "book-workload-profiles",
+  "file": "tbl-nn-architectures-machine-demands",
+  "title": "Architecture workload profiles table",
+  "caption": "The table this whole packet compresses into the signature cards: per-family persistent state, per-request activations, intensity regime, parallel axis, and limiting iron-law term. Read the transformer's two rows - same weights, different bottleneck."
+ },
+ {
+  "id": "book-arithmetic-intensity",
+  "file": "nn_architectures_arithmetic_intensity.png",
+  "title": "Arithmetic intensity across workloads",
+  "caption": "The lighthouse models placed on one intensity axis with machine-balance ridges - the ~160x ResNet/GPT-2-decode gap our chart approximates qualitatively. Theirs is the measured version; check where each lighthouse sits relative to the roofline knee."
+ },
+ {
+  "id": "book-decision-framework",
+  "file": "fig-dnn-fm-framework (tikz flowchart)",
+  "title": "Architecture selection flowchart",
+  "caption": "The triage tree the packet calls 'selection as elimination': data type picks candidate families, then memory, compute, latency, accuracy, and deployment diamonds filter - with recommendation workloads routed to the sparse family first. The packet's D·A·M reading is this chart's one-line summary."
+ },
+ {
+  "id": "book-attention-memory-wall",
+  "file": "nn_architectures_attention_memory_wall.svg",
+  "title": "Attention memory wall (margin)",
+  "caption": "The book's margin sketch of quadratic score memory versus linear KV growth - compare with our prefill-decode strip. Theirs motivates tiled attention kernels; ours motivates why decode serving is the bill."
+ },
+ {
+  "id": "book-inductive-bias",
+  "file": "nn_architectures_inductive_bias.svg",
+  "title": "Inductive bias spectrum (margin)",
+  "caption": "The book's ordering of families by assumption strength. The packet adds RNNs between CNN and transformer (recurrence fixes order but not which positions matter) - check whether you agree with the placement."
+ },
+ {
+  "id": "book-capacity-wall",
+  "file": "nn_architectures_capacity_wall.svg",
+  "title": "Capacity wall (margin)",
+  "caption": "The book's version of our capacity-wall sketch. Compare escapes: theirs frames it as an HBM/DRAM/NVLink placement ladder, ours as three explicit trade-offs (shrink/move/partition)."
+ }
+]

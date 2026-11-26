@@ -1,5 +1,4 @@
 import type { Circuit, CircuitComponent } from './types'
-import { GRID_SIZE } from './types'
 import { getTerminalPositions, getAllTerminals, terminalForNode, gridSnap } from './draw'
 import { computeManhattanPath } from './wiring'
 

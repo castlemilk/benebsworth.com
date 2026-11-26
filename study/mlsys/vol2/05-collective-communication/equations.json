@@ -1,0 +1,74 @@
+[
+ {
+  "id": "bandwidth-lower-bound",
+  "number": "5.1",
+  "title": "The per-rank byte floor",
+  "latex": "T_{bw} = \\frac{2(N-1)}{N} \\cdot \\frac{M}{\\beta}",
+  "caption": "Reducing N contributions and returning the result needs at least 2(N-1) item transfers in aggregate: N-1 to combine, N-1 to distribute. A balanced schedule gives every rank the average share, so the per-rank sent volume approaches 2M as N grows. This is the floor every AllReduce schedule is judged against.",
+  "symbols": [
+   {"symbol": "N", "meaning": "rank count in the process group"},
+   {"symbol": "M", "meaning": "tensor bytes per rank (e.g. 1 GB buffer, 140 GB 70B gradient)"},
+   {"symbol": "\\beta", "meaning": "per-link bandwidth (50 GB/s NDR in the reference model)"}
+  ]
+ },
+ {
+  "id": "ring-allreduce",
+  "number": "5.2",
+  "title": "Ring AllReduce cost",
+  "latex": "T_{ring} = 2(N-1)\\,\\alpha + \\frac{2(N-1)}{N}\\cdot\\frac{M}{\\beta}",
+  "caption": "The ring hits the byte floor and pays for it with rounds: 2(N-1) steps of M/N chunks, each charged one startup alpha. On the chapter's 64-GPU, 1 GB, 50 GB/s case the byte term is ~39.4 ms against a simple tree's ~240 ms, but the latency column grows linearly with N.",
+  "symbols": [
+   {"symbol": "\\alpha", "meaning": "per-message startup cost (effective ~1-3 us on NDR)"},
+   {"symbol": "2(N-1)", "meaning": "round count: N-1 scatter-reduce steps + N-1 all-gather steps"},
+   {"symbol": "M/N", "meaning": "per-round chunk size; the regime each step sits in is set by the chunk, not the tensor"}
+  ]
+ },
+ {
+  "id": "algorithm-crossover",
+  "number": "5.3",
+  "title": "The ring-tree crossover",
+  "latex": "M^{*} \\approx \\frac{N\\,\\alpha\\,\\beta}{\\log_2 N}",
+  "caption": "Ring's excess startup (~N alpha) balances tree's excess byte time (~log2 N x M/beta) at this message size. At 256 GPUs on a 200 Gbps fabric with alpha = 1 us the crossover sits near 1 MB: tree schedules win small collectives, ring wins large ones. The boundary moves with group size and fabric.",
+  "symbols": [
+   {"symbol": "M^{*}", "meaning": "payload at which the two schedule families break even"},
+   {"symbol": "\\alpha\\,\\beta", "meaning": "n*, the fabric's latency-bandwidth crossover (~75 KB on NDR, >500 KB on NVLink)"},
+   {"symbol": "\\log_2 N", "meaning": "tree depth; rounds the tree saves relative to the ring's 2(N-1)"}
+  ]
+ },
+ {
+  "id": "hierarchical-allreduce",
+  "number": "5.4",
+  "title": "Three-phase hierarchical cost",
+  "latex": "T_{hier} = T_{intra} + T_{inter} + T_{bcast}",
+  "caption": "Exploits the bandwidth cliff instead of paying it: reduce inside each node over fast NVLink, ring per-shard across the slow inter-node ports in parallel, broadcast the shard result back inside the node. On 128 nodes x 8 GPUs with a 350 GB gradient the modeled gain is ~4-5x over the flat bound; the inter-node phase alone runs ~4.4 ms.",
+  "symbols": [
+   {"symbol": "T_{intra}", "meaning": "intra-node reduce at NVLink rates (~450 GB/s/direction)"},
+   {"symbol": "T_{inter}", "meaning": "inter-node ring over independent NDR ports, payload per port cut 8x"},
+   {"symbol": "T_{bcast}", "meaning": "intra-node broadcast of the reduced shard"}
+  ]
+ },
+ {
+  "id": "logp-overlap",
+  "number": "5.5",
+  "title": "What overlap can hide",
+  "latex": "T_{eff} = 2o + \\max\\!\\left(T_{compute},\\, L\\right)",
+  "caption": "LogP separates network transit (L, overlappable beneath independent computation) from processor overhead (o per side, never overlappable because it occupies the execution resource). In the worked toy: 100 us of L hides under 500 us of compute, but 100 us of 2o stays exposed, giving 600 us effective. This is why kernel-bypass and GPUDirect matter more to hiding than raw link bandwidth.",
+  "symbols": [
+   {"symbol": "L", "meaning": "network latency; time data is in flight while the processor works"},
+   {"symbol": "o", "meaning": "per-side processor overhead: dispatch, kernel launch, memory registration, runtime progress"},
+   {"symbol": "T_{compute}", "meaning": "independent computation available to overlap (the next layer's backward)"}
+  ]
+ },
+ {
+  "id": "error-feedback",
+  "number": "5.6",
+  "title": "The residual accumulator",
+  "latex": "e_{t+1} = (g_t + e_t) - v_t",
+  "caption": "The correction that turns a biased compressor into a convergent method: add the residual to the new gradient, compress and transmit the corrected vector, keep the untransmitted difference. In the book's trace the naive run transmits 0 of a true 1.6 while error feedback transmits 2 and holds -0.4 in residual. A finite run ends with residual still untransmitted, but the telescope prevents systematic loss.",
+  "symbols": [
+   {"symbol": "g_t", "meaning": "this step's raw gradient"},
+   {"symbol": "e_t", "meaning": "residual: compression error carried from prior steps"},
+   {"symbol": "v_t", "meaning": "the compressed update actually transmitted"}
+  ]
+ }
+]

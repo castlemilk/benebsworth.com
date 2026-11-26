@@ -1,4 +1,4 @@
-import { fetchGammaAssets, gammaBrief, gammaStylesheet, type GammaAssets } from './gamma'
+import { gammaBrief, gammaStylesheet, type GammaAssets } from './gamma'
 
 /**
  * Gamma recipes → self-contained SVG.
@@ -140,7 +140,7 @@ export function renderBackgroundSvg(
     `<defs>${chain}${filters}<linearGradient id="th-base" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${stops}"/></linearGradient>${meshStops}</defs>`,
     `<g${filterRefs ? ` filter="${filterRefs}"` : ''}>`,
     `<rect width="${String(width)}" height="${String(height)}" fill="url(#th-base)"/>`,
-    ...(terraced ? [terraced] : []),
+    bands,
     ...palette.map(
       (_, i) =>
         `<rect width="${String(width)}" height="${String(height)}" fill="url(#th-mesh-${String(i)})" style="mix-blend-mode:${i % 2 === 0 ? 'screen' : 'overlay'}"/>`
@@ -188,7 +188,7 @@ export function renderEffectCss(effectName: string, props: Record<string, unknow
  * variables, the rendered background, and any finish filters. Returned whole so
  * the loop driver can inject it in one place.
  */
-export function gammaVisualStylesheet(assets: GammaAssets, finishes: string[] = []): string {
+export function gammaVisualStylesheet(assets: GammaAssets, _finishes: string[] = []): string {
   const base = gammaStylesheet(assets)
   if (!base) return ''
   return base

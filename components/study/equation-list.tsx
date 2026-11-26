@@ -37,12 +37,13 @@ export async function EquationList({ equations }: { equations: StudyEquation[] }
           }))}
           caption={
             <span
+              key="caption"
               className="[&_p]:inline"
               dangerouslySetInnerHTML={{ __html: captionHtml }}
             />
           }
         >
-          <div dangerouslySetInnerHTML={{ __html: mathHtml }} />
+          <div key="formula" dangerouslySetInnerHTML={{ __html: mathHtml }} />
         </Equation>
       ))}
     </>

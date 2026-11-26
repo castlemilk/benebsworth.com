@@ -1,0 +1,60 @@
+[
+  {
+    "id": "serving-cost-first-year",
+    "kind": "BAR_STACKED",
+    "title": "Training is once; serving is continuous",
+    "caption": "The book's illustrative 70B deployment: about 2 million dollars of training cost versus about 18.25 million dollars of first-year serving spend, roughly 9.1x. Values depend on traffic and unit-cost assumptions; the shape is the lesson.",
+    "xLabel": "Cost category",
+    "yLabel": "Cost (millions USD)",
+    "xPoints": [
+      "70B deployment, first year"
+    ],
+    "series": [
+      {
+        "key": "training",
+        "label": "Training, one time",
+        "color": "var(--chart-1)",
+        "values": [
+          2.0
+        ]
+      },
+      {
+        "key": "serving",
+        "label": "Serving, recurring",
+        "color": "var(--chart-3)",
+        "values": [
+          18.25
+        ]
+      }
+    ]
+  },
+  {
+    "id": "continuous-batching-recovery",
+    "kind": "BAR_STACKED",
+    "title": "Continuous batching recovers padded capacity",
+    "caption": "Illustrative workload-specific speedups from the book's continuous-batching scenario table. Waste is derived as 1 \u2212 1/speedup; these are scenario values, not universal measurements.",
+    "xLabel": "Workload mix",
+    "yLabel": "Illustrative speedup (x)",
+    "xPoints": [
+      "Code",
+      "Chat",
+      "Text",
+      "Creative",
+      "RAG"
+    ],
+    "series": [
+      {
+        "key": "speedup",
+        "label": "Continuous-batching speedup",
+        "color": "var(--chart-2)",
+        "values": [
+          1.2,
+          1.5,
+          2.0,
+          2.8,
+          3.5
+        ]
+      }
+    ]
+  }
+]

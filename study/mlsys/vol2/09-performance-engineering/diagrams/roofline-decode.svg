@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="roofline-decode" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="rd-title rd-desc">
+  <title id="rd-title">Batch-one decode on the roofline</title>
+  <desc id="rd-desc">Log-log roofline: bandwidth roof rising to the ridge, compute ceiling flat after it. The batch-one decode point sits at arithmetic intensity 1.8, far left under the bandwidth roof, at well under one percent of peak FP16 compute.</desc>
+  <style>
+    .dark #roofline-decode { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#roofline-decode { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Decode lives under the roof</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">log-log roofline · batch-one decode, 70B replica · H100</text>
+
+    <!-- axes -->
+    <line x1="48" y1="240" x2="360" y2="240" stroke="var(--fig-ink, #252923)" stroke-width="1.2"/>
+    <line x1="48" y1="240" x2="48" y2="62" stroke="var(--fig-ink, #252923)" stroke-width="1.2"/>
+    <text x="146" y="258" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">arithmetic intensity (FLOPs / byte)</text>
+    <text x="30" y="150" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)" transform="rotate(-90 30 150)">attainable FLOP/s</text>
+
+    <!-- bandwidth roof: rising diagonal to ridge at x~250 -->
+    <line x1="48" y1="232" x2="250" y2="90" stroke="var(--fig-outline, #364c50)" stroke-width="2"/>
+    <!-- compute ceiling: flat after ridge -->
+    <line x1="250" y1="90" x2="356" y2="90" stroke="var(--fig-outline, #364c50)" stroke-width="2"/>
+    <text x="300" y="82" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">peak FP16 compute</text>
+    <text x="112" y="160" font-size="8.5" fill="var(--fig-rule, #6e6a5b)" transform="rotate(35 112 160)">memory bandwidth roof</text>
+
+    <!-- ridge marker -->
+    <line x1="250" y1="90" x2="250" y2="240" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8" stroke-dasharray="3 3"/>
+    <text x="250" y="252" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">ridge</text>
+
+    <!-- decode point: AI 1.8 far left -->
+    <line x1="86" y1="212" x2="86" y2="240" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8" stroke-dasharray="2 2"/>
+    <circle cx="86" cy="212" r="5" fill="var(--fig-mark, #b4571f)"/>
+    <text x="96" y="209" font-size="9" font-weight="650" fill="var(--fig-mark, #b4571f)">batch-1 decode, AI ~1.8</text>
+    <text x="96" y="221" font-size="8" fill="var(--fig-rule, #6e6a5b)">under 1% of peak, even at 84% of bandwidth</text>
+
+    <text x="24" y="284" font-size="9" fill="var(--fig-rule, #6e6a5b)">every weight is read once per token: intensity is pinned</text>
+    <text x="24" y="297" font-size="9" fill="var(--fig-rule, #6e6a5b)">near 1.8 regardless of kernel quality — decode buys bandwidth.</text>
+  </g>
+</svg>

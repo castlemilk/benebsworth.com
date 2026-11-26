@@ -1,0 +1,32 @@
+[
+  {
+    "id": "drift-threshold-knee",
+    "file": "images/svg/ml_ops_drift_threshold_knee.svg",
+    "title": "Drift threshold knee",
+    "caption": "Sample size vs detection threshold: monitors over millions of requests flag shifts far below practical significance — thresholds must mix statistical and business significance."
+  },
+  {
+    "id": "margin-001",
+    "file": "images/svg/vol1_ml_ops_margin_001.svg",
+    "title": "ML Ops margin study I",
+    "caption": "Margin study from the chapter's margins — the operations loop and its controls."
+  },
+  {
+    "id": "margin-002",
+    "file": "images/svg/vol1_ml_ops_margin_002.svg",
+    "title": "ML Ops margin study II",
+    "caption": "Margin study from the chapter's margins — debt patterns and where coupling hides."
+  },
+  {
+    "id": "margin-003",
+    "file": "images/svg/vol1_ml_ops_margin_003.svg",
+    "title": "ML Ops margin study III",
+    "caption": "Margin study from the chapter's margins — release strategies and monitoring layers."
+  },
+  {
+    "id": "margin-004",
+    "file": "images/svg/vol1_ml_ops_margin_004.svg",
+    "title": "ML Ops margin study IV",
+    "caption": "Margin study from the chapter's margins — retraining economics and operational maturity."
+  }
+]

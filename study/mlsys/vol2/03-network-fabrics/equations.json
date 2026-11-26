@@ -1,0 +1,132 @@
+[
+  {
+    "id": "alpha-beta",
+    "number": 1,
+    "title": "Alpha-beta message time",
+    "latex": "T(n) = \\alpha + \\frac{n}{\\beta}",
+    "caption": "Message transfer time splits into a fixed startup (protocol, queuing, FEC, software stack) and a size-over-rate term. Doubling the link rate attacks only the second term: a 4 KB handoff barely notices while a 350 MB shard halves. Collectives pay alpha once per communication round, so the fixed cost grows with participant count even on short physical paths.",
+    "symbols": [
+      {
+        "symbol": "T(n)",
+        "meaning": "end-to-end time for one message"
+      },
+      {
+        "symbol": "n",
+        "meaning": "message size in bytes"
+      },
+      {
+        "symbol": "\\alpha",
+        "meaning": "fixed startup latency (~1.5 us NDR, ~5 us RoCE; effective 1-3 / 5-10 us on real stacks)"
+      },
+      {
+        "symbol": "\\beta",
+        "meaning": "sustained link bandwidth (50 GB/s NDR, 12.5 GB/s 100G Ethernet)"
+      }
+    ]
+  },
+  {
+    "id": "crossover",
+    "number": 2,
+    "title": "Crossover size",
+    "latex": "n^{*} = \\alpha \\cdot \\beta \\approx 75\\ \\mathrm{KB\\ (NDR)}",
+    "caption": "The message size where the transfer term equals the startup term. Below n* the link rate is nearly irrelevant: 4 KB on NDR spends ~95% of its 1.58 us in startup. Above it, bandwidth dominates: a 350 MB shard spends 99.98% in transfer. The crossover is the dividing line between buying latency and buying bandwidth.",
+    "symbols": [
+      {
+        "symbol": "n^{*}",
+        "meaning": "message size where alpha equals the transfer term"
+      },
+      {
+        "symbol": "\\alpha",
+        "meaning": "fixed startup latency"
+      },
+      {
+        "symbol": "\\beta",
+        "meaning": "sustained link bandwidth"
+      }
+    ]
+  },
+  {
+    "id": "fattree-hosts",
+    "number": 3,
+    "title": "Fat-tree host capacity",
+    "latex": "H_{2} = \\frac{k^{2}}{2}, \\qquad H_{3} = \\frac{k^{3}}{4}",
+    "caption": "A folded Clos built from k-port switches reaches k^2/2 hosts in two tiers (half each leaf's ports face down, half up) and k^3/4 in three. At radix 64 (Quantum-2 class): 2,048 and 65,536 hosts. Spending next-generation port capacity on radix instead of per-port rate is what removes a whole switching tier.",
+    "symbols": [
+      {
+        "symbol": "H_{2}, H_{3}",
+        "meaning": "host capacity of a two-tier / three-tier fat-tree"
+      },
+      {
+        "symbol": "k",
+        "meaning": "switch radix (ports per switch)"
+      }
+    ]
+  },
+  {
+    "id": "oversubscription",
+    "number": 4,
+    "title": "Oversubscription tax",
+    "latex": "T_{comm}(r) \\approx r \\cdot T_{comm}(1{:}1)",
+    "caption": "When crossing traffic fills the bisection, time scales with the oversubscription ratio: a ring AllReduce with every ring edge cut runs 0.80 s on a 4:1 spine vs 0.20 s at 1:1, and 2:1 still surrenders 23.1% of throughput. At 30% of the step communicating, the book prices the 4:1 design at ~\\$142.1M of waste on a \\$300M cluster.",
+    "symbols": [
+      {
+        "symbol": "r",
+        "meaning": "oversubscription ratio (downlink demand / uplink capacity)"
+      },
+      {
+        "symbol": "T_{comm}",
+        "meaning": "collective communication time for worst-case crossing traffic"
+      }
+    ]
+  },
+  {
+    "id": "incast-overflow",
+    "number": 5,
+    "title": "Incast buffer survival",
+    "latex": "t_{hold} = \\frac{B_{buf}}{BW_{egress}} \\ll t_{rtt}",
+    "caption": "A 32 MB egress buffer at 50 GB/s holds 640 us of steady backlog, but 256 synchronized senders arrive at 12.8 TB/s: the buffer overflows in under 5 us, before a congestion signal could return. Buffers buy microseconds; only scheduling and rate control buy safety.",
+    "symbols": [
+      {
+        "symbol": "t_{hold}",
+        "meaning": "time the egress buffer can absorb excess arrivals"
+      },
+      {
+        "symbol": "B_{buf}",
+        "meaning": "switch egress buffer capacity (32 MB)"
+      },
+      {
+        "symbol": "BW_{egress}",
+        "meaning": "egress port drain rate (50 GB/s)"
+      },
+      {
+        "symbol": "t_{rtt}",
+        "meaning": "congestion-feedback round trip (~5 us)"
+      }
+    ]
+  },
+  {
+    "id": "silent-tax",
+    "number": 6,
+    "title": "Silent-degradation tax",
+    "latex": "W = N \\cdot T_{run} \\cdot f_{slow} \\cdot r_{gpu}",
+    "caption": "A single degraded link slows the synchronous step: 10% link loss becomes a 2-3% step tax after overlap. On 737,280 GPU-hours (1,024 x 30 days) that is tens of thousands of dollars, with no alarm because every dashboard reads the aggregate, not the link.",
+    "symbols": [
+      {
+        "symbol": "N",
+        "meaning": "accelerator count (1,024)"
+      },
+      {
+        "symbol": "T_{run}",
+        "meaning": "run duration (30 days)"
+      },
+      {
+        "symbol": "f_{slow}",
+        "meaning": "per-step slowdown from the degraded link (2-3%)"
+      },
+      {
+        "symbol": "r_{gpu}",
+        "meaning": "GPU-hour rate at fleet scale"
+      }
+    ]
+  }
+]

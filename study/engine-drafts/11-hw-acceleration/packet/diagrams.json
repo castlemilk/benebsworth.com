@@ -1,0 +1,62 @@
+[
+  {
+    "id": "specialization-diagnosis",
+    "title": "From workload shape to a hardware hypothesis",
+    "caption": "The operation mix identifies candidate execution units, and the operand path determines whether those units can stay busy.",
+    "file": "specialization-diagnosis.svg"
+  },
+  {
+    "id": "projection-softmax-path",
+    "title": "Execution paths in a projection and softmax",
+    "caption": "Time spent in reductions, exponentials, and normalization can dominate even when the projection keeps the matrix engine busy.",
+    "file": "projection-softmax-path.svg"
+  },
+  {
+    "id": "tensor-interface-path",
+    "title": "Follow a tensor across memory interfaces",
+    "caption": "Each crossing has its own byte count and bandwidth, so a saturated host link and a saturated device-memory interface call for different changes.",
+    "file": "tensor-interface-path.svg"
+  },
+  {
+    "id": "roofline-upgrade-comparison",
+    "title": "Modeled ceilings for the same kernel",
+    "caption": "At the assumed intensity of 4 FLOP/byte, doubling bandwidth raises the roofline ceiling while doubling only the arithmetic peak leaves it unchanged.",
+    "file": "roofline-upgrade-comparison.svg"
+  },
+  {
+    "id": "baseline-tile-storage",
+    "title": "Baseline tile storage",
+    "caption": "The four allocations sum to 116 KiB. The baseline exceeds the 96 KiB SRAM limit by 20 KiB, even though its operand buffers fit by themselves.",
+    "file": "baseline-tile-storage.svg"
+  },
+  {
+    "id": "mapping-candidate-selection",
+    "title": "Compare schedules for the same tensor operation",
+    "caption": "Capacity establishes which schedules can run. Traffic estimates and profiling reveal whether their reuse improves elapsed time.",
+    "file": "mapping-candidate-selection.svg"
+  },
+  {
+    "id": "graph-to-device-trace",
+    "title": "From graph optimization to a running request",
+    "caption": "The compiled plan describes available execution paths. The runtime trace shows which path a particular request took and where it waited.",
+    "file": "graph-to-device-trace.svg"
+  },
+  {
+    "id": "device-partition-critical-path",
+    "title": "Evaluate a partition across devices",
+    "caption": "A partition improves request latency only when the computation it removes from the critical path outweighs the communication and waiting it adds there.",
+    "file": "device-partition-critical-path.svg"
+  },
+  {
+    "id": "soc-pipeline-evaluation",
+    "title": "Evaluate a heterogeneous pipeline in steady operation",
+    "caption": "Engine support and handoff costs determine the executable mapping, while a sustained run reveals whether it keeps meeting the deadline.",
+    "file": "soc-pipeline-evaluation.svg"
+  },
+  {
+    "id": "accelerator-evaluation-sequence",
+    "title": "From workload requirements to procurement",
+    "caption": "Reject candidates that miss service requirements before ranking the feasible platforms by the cost and energy of delivering useful work.",
+    "file": "accelerator-evaluation-sequence.svg"
+  }
+]

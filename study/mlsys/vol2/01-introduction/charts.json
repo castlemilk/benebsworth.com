@@ -1,0 +1,68 @@
+[
+  {
+    "id": "compute-orders",
+    "kind": "LINE",
+    "title": "Seven orders of compute in eleven years",
+    "caption": "log10 FLOPs of landmark training runs: AlexNet ~10^18, BERT-Large ~10^20, GPT-3 ~3×10^23, PaLM ~10^24, GPT-4-class ~10^25. Roughly half the growth is fleet size and duration rather than per-device speed.",
+    "xLabel": "Year",
+    "yLabel": "Training compute (log10 FLOPs)",
+    "xPoints": [
+      "2012-01-01",
+      "2018-01-01",
+      "2020-01-01",
+      "2022-01-01",
+      "2023-01-01"
+    ],
+    "series": [
+      {
+        "key": "flops",
+        "label": "log10 training FLOPs",
+        "color": "var(--chart-1)",
+        "values": [
+          18,
+          20,
+          23.5,
+          24,
+          25
+        ]
+      }
+    ]
+  },
+  {
+    "id": "step-overhead",
+    "kind": "BAR_STACKED",
+    "title": "Inside the 8.71-second step — 1,024-GPU reference job",
+    "caption": "Only 7.25 s of the measured step does arithmetic. The 0.53 s pipeline bubble and 0.93 s gradient exchange (~17% combined) are the terms fleet growth taxes first — and they do not shrink linearly when you add GPUs.",
+    "xLabel": "Step term",
+    "yLabel": "Seconds per step",
+    "xPoints": [
+      "1,024-GPU synchronous step"
+    ],
+    "series": [
+      {
+        "key": "compute",
+        "label": "Local compute (7.25 s)",
+        "color": "var(--chart-1)",
+        "values": [
+          7.25
+        ]
+      },
+      {
+        "key": "bubble",
+        "label": "Pipeline bubble (0.53 s)",
+        "color": "var(--chart-4)",
+        "values": [
+          0.53
+        ]
+      },
+      {
+        "key": "exchange",
+        "label": "Gradient exchange (0.93 s)",
+        "color": "var(--chart-2)",
+        "values": [
+          0.93
+        ]
+      }
+    ]
+  }
+]

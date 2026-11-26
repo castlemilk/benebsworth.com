@@ -1,0 +1,55 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The thesis frames edge learning as admission control and population design; prose carries the argument."
+    },
+    "Local Prediction Is Not Local Learning": {
+      "figure": "::fig[boundary-map]",
+      "teaches": "The three learning architectures differ by what crosses the device boundary: nothing, raw data, or model updates. The figure makes data locality distinct from privacy.",
+      "source": "Book architecture comparison of local-only, centralized-cloud and federated learning; redrawn as boundary-crossing lanes."
+    },
+    "Training Is a Different Machine Than Inference": {
+      "figure": "::fig[memory-amplifier]",
+      "teaches": "A 40 MB inference-weight footprint becomes a 360 MB training working set under the chapter assumptions, exceeding a 200-300 MB background allowance.",
+      "source": "Book training-memory-amplifier example; redrawn as a stacked memory budget against the background allowance."
+    },
+    "Background Learning Needs an Admission Envelope": {
+      "proseOnly": "The three-way admission equation and battery example carry the mechanism."
+    },
+    "Shrink the Update, Not the Ambition": {
+      "figure": "::fig[lora-slimming]",
+      "teaches": "Low-rank adaptation reduces trainable parameters while leaving backward traversal, activations and optimizer state in the budget.",
+      "source": "Book LoRA parameter example and adapter-storage notebook; redrawn as a large frozen matrix beside a thin trainable path."
+    },
+    "Scarce Local Evidence Is a Budget Too": {
+      "proseOnly": "Sensor-volume counts and privacy cautions are compact enough in prose."
+    },
+    "Federated Averaging Is a Population Protocol": {
+      "proseOnly": "FedAvg, local-work and time-to-target equations carry the protocol reasoning."
+    },
+    "Federation Moves the Boundary, Not the Cost": {
+      "figure": "::fig[participation-funnel]",
+      "teaches": "Eligibility, selection and completion filter the deployed fleet into a biased aggregate; coverage ratio measures the skew.",
+      "source": "Book deployed-fleet-to-aggregate figure and client-scheduling analysis; redrawn as a cohort funnel."
+    },
+    "Learning After Release Is an Operations Problem": {
+      "proseOnly": "Release-bundle, shadow-gate and rollback controls are policy arguments carried by prose."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Textual corrections of common misreadings."
+    },
+    "The physics": {
+      "proseOnly": "Reference table."
+    },
+    "Glossary": {
+      "proseOnly": "Definitions."
+    },
+    "\u2192 Ben's world": {
+      "proseOnly": "Connections."
+    },
+    "Open questions": {
+      "proseOnly": "Unresolved items."
+    }
+  }
+}

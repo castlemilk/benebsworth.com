@@ -1,0 +1,333 @@
+{
+ "title": "Sustainable AI \u2014 self-test",
+ "questions": [
+  {
+   "id": "q1-power-ceiling-capital",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A hyperscaler plans a 500 MW campus for a new foundation model cluster, but the local utility interconnect approval is capped at 320 MW for the next three years. The organization's capital reserves could cover the electricity cost multiple times over. Which framing best captures why sustainable AI treats energy as a first-class engineering constraint rather than a financial or reporting concern?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Carbon accounting frameworks mandate disclosing total planned capacity upfront, creating an administrative filing hurdle before training can start."
+    },
+    {
+     "id": "b",
+     "label": "Electricity price fluctuations create budget volatility over the run, so the primary engineering intervention is financial hedging of contracts."
+    },
+    {
+     "id": "c",
+     "label": "Corporate sustainability reporting requires purchasing voluntary offsets for the unapproved megawatts of capacity, adding a recurring financial cost to the project without altering any physical infrastructure or delivery timeline."
+    },
+    {
+     "id": "d",
+     "label": "Power delivery and grid interconnect capacity impose a hard physical ceiling that capital cannot bypass on deployment timescales, making power an operational constraint that model architectures and cluster sizing must fit within."
+    }
+   ],
+   "correctOptionId": "d",
+   "explanation": "The ceiling is physical, not financial. Money cannot accelerate transmission reinforcement or substation construction on deployment timescales, so power becomes an operational constraint that architectures and cluster sizing must respect, exactly like memory or bandwidth."
+  },
+  {
+   "id": "q2-grid-factor-isolation",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A 2,000 MWh training run can be placed at a site whose annual-average grid factor is 400 g CO2 per kWh or at one whose factor is 20 g CO2 per kWh, with facility electricity held equal. Which conclusion follows?",
+   "options": [
+    {
+     "id": "a",
+     "label": "The cleaner site also cuts the run's total energy twentyfold, because low-carbon grids deliver electricity more efficiently to the facility."
+    },
+    {
+     "id": "b",
+     "label": "Attributed emissions fall from about 800 tonnes to about 40 tonnes, a twentyfold difference that isolates the grid factor at equal facility energy."
+    },
+    {
+     "id": "c",
+     "label": "This comparison alone ranks placement against an algorithmic change, because both interventions reduce measured emissions."
+    },
+    {
+     "id": "d",
+     "label": "Waiting for cleaner hours at the cleaner site would multiply the saving by a further twentyfold on top of the spatial gain."
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Emissions equal facility energy times grid factor: 2,000,000 kWh gives 800 tonnes at 400 g and 40 tonnes at 20 g. The comparison isolates placement but cannot rank it against algorithmic change, and the temporal scheduling lever cannot simply be multiplied onto the spatial one."
+  },
+  {
+   "id": "q3-fleet-energy-identity",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "An inference optimization cuts energy per task by a factor of 4, and the lower cost raises task volume by a factor of 20, with the workload mix unchanged. What happens to fleet energy?",
+   "options": [
+    {
+     "id": "a",
+     "label": "It falls by a factor of 4, because per-task efficiency alone sets the fleet's total energy consumption."
+    },
+    {
+     "id": "b",
+     "label": "It stays the same, because the efficiency improvement and the demand growth cancel each other exactly."
+    },
+    {
+     "id": "c",
+     "label": "It rises by a factor of 5, because fleet energy is energy per task multiplied by the number of tasks."
+    },
+    {
+     "id": "d",
+     "label": "It rises by a factor of 80, because the efficiency gain and the demand growth compound multiplicatively."
+    }
+   ],
+   "correctOptionId": "c",
+   "explanation": "Fleet energy is per-task energy times volume: one quarter times twenty equals five. The rebound arithmetic is why efficiency per task and absolute demand must be tracked as separate variables."
+  },
+  {
+   "id": "q4-power-vs-energy",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A team plans a three-day run that needs 120 MW of accelerator power at once in a facility with an 80 MW grid feed. They argue the run fits because its total energy is less than the facility uses in a month. What is wrong with the argument?",
+   "options": [
+    {
+     "id": "a",
+     "label": "The power limit is instantaneous, so the feed caps how many servers can be active at once regardless of run length; the plan must lower concurrency and accept a longer run, or secure more deliverable power."
+    },
+    {
+     "id": "b",
+     "label": "Nothing is wrong, because over the span of a month an energy budget and a power cap are fully interchangeable quantities."
+    },
+    {
+     "id": "c",
+     "label": "The run fails only on cost grounds, because energy drawn above the feed level is billed at a punitive peak tariff rate."
+    },
+    {
+     "id": "d",
+     "label": "The only error is omitting PUE from the calculation; adding the facility overhead multiplier to the estimate would show that the run's total energy consumption exceeds what the monthly budget allows."
+    }
+   ],
+   "correctOptionId": "a",
+   "explanation": "Power is an instantaneous constraint while energy is cumulative. The feed limits active servers at every instant whatever the duration, so feasibility requires lower concurrency over a longer window or more deliverable power."
+  },
+  {
+   "id": "q5-arithmetic-intensity",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "An attention kernel has an arithmetic intensity of 3 FLOP/byte. An illustrative chip-and-memory energy model assigns 10 pJ per FLOP and 160 pJ per byte moved from DRAM, excluding static and facility energy. Which intervention directly targets the larger modeled energy contribution?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Replacing the accelerator with one offering double the peak TFLOP/s while retaining the same memory bandwidth and memory technology."
+    },
+    {
+     "id": "b",
+     "label": "Increasing arithmetic precision from FP16 to FP32 so that more FLOPs execute per memory transaction on the kernel."
+    },
+    {
+     "id": "c",
+     "label": "Fusing normalization and attention operators and tiling intermediate activations to keep data in on-chip SRAM, reducing DRAM traffic."
+    },
+    {
+     "id": "d",
+     "label": "Lowering facility PUE from 1.5 to 1.1 so that memory stall cycles are eliminated from the critical path of the kernel."
+    }
+   ],
+   "correctOptionId": "c",
+   "explanation": "The energy crossover is 16 FLOP/byte (160/10), so at 3 FLOP/byte memory movement dominates. Fusing and tiling attack DRAM traffic directly; more peak arithmetic does nothing when data movement is the binding cost."
+  },
+  {
+   "id": "q6-ghg-scopes",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "An engineering team is auditing greenhouse gas emissions of an AI platform. Which option correctly maps these sources to GHG Protocol scopes: S1 diesel burned by backup generators at an owned facility; S2 grid electricity purchased to power an owned GPU cluster; S3 grid electricity consumed by cooling chillers in the same owned facility; S4 embodied carbon from manufacturing GPUs at an external foundry; S5 electrical energy consumed by end-user smartphones running the deployed app?",
+   "options": [
+    {
+     "id": "a",
+     "label": "S1: Scope 1; S2: Scope 2; S3: Scope 2; S4: Scope 3; S5: Scope 3."
+    },
+    {
+     "id": "b",
+     "label": "S1: Scope 2; S2: Scope 1; S3: Scope 2; S4: Scope 3; S5: Scope 3."
+    },
+    {
+     "id": "c",
+     "label": "S1: Scope 1; S2: Scope 2; S3: Scope 1; S4: Scope 2; S5: Scope 3."
+    },
+    {
+     "id": "d",
+     "label": "S1: Scope 3; S2: Scope 2; S3: Scope 2; S4: Scope 1; S5: Scope 1."
+    }
+   ],
+   "correctOptionId": "a",
+   "explanation": "Scope 1 covers direct combustion at owned facilities, Scope 2 purchased electricity regardless of which equipment consumes it, and Scope 3 the value chain: upstream manufacturing and downstream use. Lifecycle phases are a different view of the same inventory and must never be added to scope totals."
+  },
+  {
+   "id": "q7-inference-crossover",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A production language model consumed 1,200 MWh during its one-time training run. In production it serves 8 million requests per day, consuming 0.0005 kWh per request. After how many days of continuous serving will cumulative inference energy reach the one-time training energy?",
+   "options": [
+    {
+     "id": "a",
+     "label": "120 days."
+    },
+    {
+     "id": "b",
+     "label": "300 days."
+    },
+    {
+     "id": "c",
+     "label": "600 days."
+    },
+    {
+     "id": "d",
+     "label": "1,200 days."
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Daily inference energy is 8,000,000 times 0.0005 kWh, which is 4,000 kWh or 4 MWh per day. Reaching 1,200 MWh takes 1,200/4 = 300 days. The crossover moves with query volume, per-query energy, and grid intensity."
+  },
+  {
+   "id": "q8-pue-conversion-losses",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A facility audit lists conversion losses in five places: the utility transformer, the online UPS, the facility power distribution units, the server power supplies, and the baseboard voltage regulators. Which losses raise the facility's PUE?",
+   "options": [
+    {
+     "id": "a",
+     "label": "All five losses raise PUE in equal measure, because every conversion loss turns delivered electrical power into heat that the facility's cooling system must ultimately remove from the building envelope."
+    },
+    {
+     "id": "b",
+     "label": "Only the server power supplies and voltage regulators raise PUE, because they sit closest to the accelerators performing the useful computational work."
+    },
+    {
+     "id": "c",
+     "label": "None of them raise PUE, because PUE measures cooling overhead and conversion losses are electrical in nature rather than thermal."
+    },
+    {
+     "id": "d",
+     "label": "The transformer, UPS, and facility distribution losses, because they lie upstream of the IT boundary; server power supplies and voltage regulators sit inside the measured IT load."
+    }
+   ],
+   "correctOptionId": "d",
+   "explanation": "PUE divides facility energy by IT energy, so only losses outside the IT boundary inflate the numerator relative to the denominator. Equipment-side conversion losses are already inside measured IT load, and their heat is removed by the same cooling plant either way."
+  },
+  {
+   "id": "q9-training-inference-shape",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "Which systems analogy and operational reality best explains why inference often dominates total lifecycle energy for widely deployed foundation models?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Inference requires far higher instantaneous wattage per accelerator than training ever does at scale, because real-time serving constraints completely disable dynamic voltage and frequency scaling on production accelerator parts across the fleet."
+    },
+    {
+     "id": "b",
+     "label": "Training is like a one-time rocket launch that burns concentrated energy over several weeks, whereas inference is like operating a commercial airline fleet that burns energy continuously across billions of recurring user interactions over years."
+    },
+    {
+     "id": "c",
+     "label": "Inference models must perform a full backward pass on every user query to maintain prediction accuracy over time, doubling their computational cost relative to the forward-only training phase."
+    },
+    {
+     "id": "d",
+     "label": "Inference cannot run on specialized accelerators, which forces cloud operators to serve production traffic on energy-inefficient legacy CPUs."
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Training concentrates energy in a bounded interval while serving repeats for the product's lifetime at scale. Meta's production data shows the split is workload-specific: roughly even for recommendation models, inference-dominated for the language-model account."
+  },
+  {
+   "id": "q10-decode-bandwidth",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "Profiling an autoregressive LLM serving pipeline shows the prefill phase achieves 55 percent MFU, while the decode phase achieves only 6 percent MFU with high HBM bandwidth occupancy. What is the physical mechanism causing decode energy inefficiency?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Decode executes in FP32 precision while prefill executes in INT4 precision on the same hardware generation, so each generated decode token costs roughly sixteen times the arithmetic energy of a prefill token in the pipeline."
+    },
+    {
+     "id": "b",
+     "label": "Prefill bypasses high-bandwidth memory entirely by storing all model weights in CPU host RAM during the prompt processing phase."
+    },
+    {
+     "id": "c",
+     "label": "Decode requires running a partial backpropagation step to generate the key-value cache embeddings for each new token in the sequence, which triples its arithmetic workload relative to prefill."
+    },
+    {
+     "id": "d",
+     "label": "Decode is memory-bandwidth bound: each generated token requires reading all model weights from HBM with low arithmetic intensity, leaving tensor execution units idling while drawing static leakage and clock distribution power."
+    }
+   ],
+   "correctOptionId": "d",
+   "explanation": "At batch size one, each FP16 parameter costs two bytes of traffic for two FLOPs: one FLOP per byte, far below the energy crossover. Batching is the first lever because it reuses each weight load across sequences, bounded by KV-cache memory and latency."
+  },
+  {
+   "id": "q11-lifespan-amortization",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "For a fixed inventoried manufacturing footprint, what happens to annualized embodied carbon when useful hardware life extends from three years to five years, before considering changes in operational energy?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Older accelerators automatically consume 40 percent less electrical power per FLOP as their silicon pathways break in over years of operation."
+    },
+    {
+     "id": "b",
+     "label": "Extending accelerator lifespans from three to five years eliminates the electronic waste problem almost entirely, because modern server hardware decomposes harmlessly in conventional recycling streams after five years."
+    },
+    {
+     "id": "c",
+     "label": "The fixed manufacturing footprint is amortized over five years rather than three, reducing its annualized allocation by 40 percent; total lifecycle savings still depend on operational energy and the inventory boundary."
+    },
+    {
+     "id": "d",
+     "label": "Data center PUE automatically drops toward 1.0 after servers have operated for more than four years within the same facility envelope."
+    }
+   ],
+   "correctOptionId": "c",
+   "explanation": "Dividing the same manufacturing burden by five years instead of three cuts the annual allocation by 40 percent. The lifecycle verdict still needs the operational comparison: older hardware can cost more joules per unit of work, so the break-even depends on occupancy and grid intensity."
+  },
+  {
+   "id": "q12-jevons-outcome",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "An AI company deploys quantization and knowledge distillation, reducing the energy cost per user query by 50 percent. Over the following year, total data center electricity consumption increases by 75 percent as lower per-query costs enable new product features and attract 3.5 times more queries. Which phenomenon explains this outcome?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Amdahl's law, which states that sequential execution fractions limit achievable parallel speedup on fixed problem sizes."
+    },
+    {
+     "id": "b",
+     "label": "Dennard scaling breakdown, where transistor power density increases as process scaling continues below the voltage floor."
+    },
+    {
+     "id": "c",
+     "label": "Jevons paradox, where technological efficiency improvements lower the effective cost of a resource, stimulating increased demand that outweighs per-unit efficiency gains."
+    },
+    {
+     "id": "d",
+     "label": "The memory wall, where DRAM bandwidth fails to keep pace with arithmetic throughput improvements across successive hardware generations, forcing accelerators to idle while they wait for data."
+    }
+   ],
+   "correctOptionId": "c",
+   "explanation": "Halving per-query energy while volume grows 3.5-fold nets 1.75 times the total energy. Efficiency creates room inside a resource budget and demand consumes it, which is why rate efficiency needs an absolute budget companion."
+  },
+  {
+   "id": "q13-crossover-arithmetic",
+   "kind": "NUMERIC",
+   "source": "ORIGINAL",
+   "prompt": "A model's one-time training run consumed 600 MWh of facility electricity. In production it serves 10 million requests per day at 0.0004 kWh per request. After how many days does cumulative serving energy equal the training energy?",
+   "modelAnswer": "Daily serving energy is 10,000,000 times 0.0004 kWh, which is 4,000 kWh or 4 MWh per day. The crossover is 600/4 = 150 days. After five months the deployment has consumed more than the entire training run, which is why serving efficiency dominates the lifecycle priority for high-volume models.",
+   "explanation": "Daily serving energy is 10,000,000 times 0.0004 kWh, which is 4,000 kWh or 4 MWh per day. The crossover is 600/4 = 150 days. After five months the deployment has consumed more than the entire training run, which is why serving efficiency dominates the lifecycle priority for high-volume models."
+  },
+  {
+   "id": "q14-pruning-lifecycle-feynman",
+   "kind": "FEYNMAN",
+   "source": "ORIGINAL",
+   "prompt": "A colleague celebrates cutting training FLOPs by 60 percent with unstructured pruning, and plans to serve the sparse model on custom-fabricated accelerators that need double the serving iterations to reach quality parity. Explain in plain language why this can be a lifecycle loss rather than a win, and walk through what a proper evaluation would compare.",
+   "modelAnswer": "The win was measured at one boundary and the costs live at others. Training FLOPs fell, but the sparse representation adds indexing and execution overhead that can consume the arithmetic saving. Serving now needs twice the iterations, so the operational energy per query rises and multiplies across every query for the product's lifetime. Custom fabrication adds manufacturing emissions for new hardware, which must be amortized over its service life. A proper evaluation fixes the same useful service at the same quality and compares the full lifecycle account: development and training energy, serving energy over expected volume, embodied carbon of the new hardware against the hardware it replaces, the grid boundary, and the observation period. The 60 percent figure answered a component question; the deployment decision is a lifecycle question.",
+   "explanation": "The win was measured at one boundary and the costs live at others. Training FLOPs fell, but the sparse representation adds indexing and execution overhead that can consume the arithmetic saving. Serving now needs twice the iterations, so the operational energy per query rises and multiplies across every query for the product's lifetime. Custom fabrication adds manufacturing emissions for new hardware, which must be amortized over its service life. A proper evaluation fixes the same useful service at the same quality and compares the full lifecycle account: development and training energy, serving energy over expected volume, embodied carbon of the new hardware against the hardware it replaces, the grid boundary, and the observation period. The 60 percent figure answered a component question; the deployment decision is a lifecycle question."
+  }
+ ]
+}

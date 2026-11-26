@@ -1,0 +1,59 @@
+{
+ "source": "packet.md",
+ "sections": {
+  "Thesis": {
+   "proseOnly": "The thesis names the read/write inversion (6 TB read vs 10.6 PB written); the dominance chart and the tier ladder carry it and are forward-linked from the fuel-line section."
+  },
+  "The Fuel Line": {
+   "figure": "::fig[tier-ladder]",
+   "teaches": "The ~479x HBM-to-NVMe gap and the six-tier ladder that exists to hide it at a price; scope column (per-accelerator / per-node / shared) is the unit the bandwidth figure refers to.",
+   "source": "StorageFuelLineContext: 3.35 TB/s HBM vs ~7 GB/s NVMe (479x); six tiers T0 HBM through T5 archive."
+  },
+  "The Workload Inversion": {
+   "proseOnly": "The three inversions (sequential not random, shard+buffer shuffle, immutable reads/bursty writes) and the I/O-wall normalized example (16x compute buys 4x) are mechanism prose; the stall frontier figure carries the quantitative version."
+  },
+  "The Storage Hierarchy": {
+   "proseOnly": "The tier table is the section's content; two subtleties (HBM latency loses to host DRAM, RAID-0 x4 beats per-node PFS share ~7x) are gloss marks."
+  },
+  "The Pipeline Equation": {
+   "figure": "::fig[stall-frontier]",
+   "teaches": "Active fraction = min(1, supply/demand) as a knee curve: starved below, fed above; text job ~6000x headroom vs image job ~3.3x, and prefetch moves neither knee.",
+   "source": "data-stall-frontier: notebook pipeline stalled at 0.8, image job 3.3x headroom, text job ~6000x; multi-worker mean ~1/6 of all-hot rate."
+  },
+  "GPUDirect Storage": {
+   "proseOnly": "The path comparison (buffered bounce vs direct DMA) is covered by the book's gds-path figure; the packet carries the 4x CPU-service / 75% latency numbers."
+  },
+  "Checkpoint Storage": {
+   "figure": "::fig[ckpt-staging]",
+   "teaches": "Two-phase staging as a lane timeline: 0.34 s local pause vs 2.45 s async PFS copy; between local write and manifest the generation is staged-not-restorable.",
+   "source": "Two-phase checkpoint staging: local stripe ~0.34 s pause, ~2.45 s async copy, manifest publish last; pause = 22% of step, 0.17% of interval."
+  },
+  "Versioned Data and Commit Boundaries": {
+   "proseOnly": "The e42 acknowledgment gap is a two-panel story the book's commit-boundary figure already draws; the packet carries the stable-key fix and the 20x synthetic-payload number."
+  },
+  "Storage Economics": {
+   "proseOnly": "The price list ($240k rent vs $900k egress, $1.5M HBM, $144k/$282k savings, 4.7-7.8 yr break-evens) is a table of facts, no figure needed."
+  },
+  "Storage for Serving": {
+   "proseOnly": "The 35 TB / 35 s rollout and the 6.1 TB vector index are serving-side repetitions of the fuel-line and hierarchy claims already drawn."
+  },
+  "What Moves the Tiers": {
+   "proseOnly": "CXL/DPU/computational-storage boundary shifts are forward-looking prose."
+  },
+  "Fallacies and Pitfalls": {
+   "proseOnly": "The audit list restates corrections the figures and equations already made."
+  },
+  "The physics": {
+   "proseOnly": "The number table is the summary contract; no figure."
+  },
+  "Glossary": {
+   "proseOnly": "Terms only."
+  },
+  "→ Ben's world": {
+   "proseOnly": "Transfer notes, no figure."
+  },
+  "Open questions": {
+   "proseOnly": "Open threads, no figure."
+  }
+ }
+}

@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import matter from 'gray-matter'
 import { cache } from 'react'
 import { progressKey } from './shared'
 import {
@@ -36,7 +37,8 @@ import {
  * discovered from the chapter directory it points at.
  */
 
-const STUDY_DIR = path.join(process.cwd(), 'study', 'mlsys')
+const previewRoot = process.env.NODE_ENV === 'development' ? process.env.MLSYS_PREVIEW_ROOT : undefined
+const STUDY_DIR = previewRoot ? path.resolve(previewRoot) : path.join(process.cwd(), 'study', 'mlsys')
 const CURRICULUM_MD = path.join(STUDY_DIR, 'curriculum.md')
 const PROGRESS_MD = path.join(STUDY_DIR, 'progress.md')
 
@@ -176,7 +178,16 @@ function validateChart(c: StudyChart, file: string) {
   if (!c.xPoints?.length || !c.series?.length) {
     throw new Error(`${file}: chart ${c.id} needs xPoints + series`)
   }
+  // LINE x-points feed `new Date(x)` on the client; anything that doesn't
+  // parse crashes hydration post-SSR. Fail the build instead.
+  if (c.kind === ChartKind.LINE) {
+    const bad = c.xPoints.filter((x) => !/^\d{4}-\d{2}-\d{2}/.test(x) || Number.isNaN(Date.parse(x)))
+    if (bad.length) throw new Error(`${file}: chart ${c.id} LINE xPoints must be ISO dates, got ${bad.join(', ')}`)
+  }
   for (const s of c.series) {
+    // Missing key binds every Bar to dataKey=undefined — rects render at
+    // height 0 and nothing throws (ch8 shipped three empty charts this way).
+    if (!s.key) throw new Error(`${file}: chart ${c.id} series "${s.label}" is missing key`)
     if (s.values?.length !== c.xPoints.length) {
       throw new Error(`${file}: chart ${c.id} series "${s.key}" has ${s.values?.length ?? 0} values for ${c.xPoints.length} x points`)
     }
@@ -230,6 +241,7 @@ export type LoadedChapter = {
   chapter: StudyChapter
   volume: StudyVolume
   packetBody: string | null
+  openingQuestion?: string
   quiz: StudyQuiz | null
   figures: LoadedFigure[]
   bookFigures: LoadedFigure[]
@@ -255,7 +267,7 @@ export const getChapter = cache(function getChapter(volumeParam: string, chapter
   const dir = chapterDir(chapter)
   const packetPath = path.join(dir, 'packet.md')
   const quizPath = path.join(dir, 'quiz.json')
-  const packetBody = fs.existsSync(packetPath) ? fs.readFileSync(packetPath, 'utf8') : null
+  const packet = fs.existsSync(packetPath) ? matter(fs.readFileSync(packetPath, 'utf8')) : null
   const quiz = fs.existsSync(quizPath) ? parseQuizJson(fs.readFileSync(quizPath, 'utf8'), chapter.id) : null
   const figures: LoadedFigure[] = chapter.diagrams.map((d) => {
     const svgPath = path.join(dir, 'diagrams', d.file)
@@ -267,7 +279,7 @@ export const getChapter = cache(function getChapter(volumeParam: string, chapter
   }))
 
   const audioFile = path.join(process.cwd(), 'public', 'study-audio', volume.id, `${chapter.slug}.m4a`)
-  const audioUrl = fs.existsSync(audioFile) ? `/study-audio/${volume.id}/${chapter.slug}.m4a` : null
+  const audioUrl = !previewRoot && fs.existsSync(audioFile) ? `/study-audio/${volume.id}/${chapter.slug}.m4a` : null
   const transcript = readTranscript(dir)
 
   const flat = course.volumes.flatMap((v) => v.chapters)
@@ -276,7 +288,8 @@ export const getChapter = cache(function getChapter(volumeParam: string, chapter
   return {
     chapter,
     volume,
-    packetBody,
+    packetBody: packet?.content ?? null,
+    openingQuestion: typeof packet?.data.openingQuestion === 'string' ? packet.data.openingQuestion.trim() : undefined,
     quiz,
     figures,
     bookFigures,
@@ -314,11 +327,23 @@ function readTranscript(dir: string): { segments: TranscriptSegment[]; hosts: Re
     const data = JSON.parse(fs.readFileSync(p, 'utf8')) as StudyTranscript
     return {
       hosts: data.hosts ?? {},
-      segments: (data.segments ?? []).filter(
-        (s): s is TranscriptSegment =>
-          typeof s?.speaker === 'string' && typeof s?.text === 'string' &&
-          typeof s?.start === 'number' && typeof s?.end === 'number' && s.end > s.start,
-      ),
+      segments: (data.segments ?? [])
+        .filter(
+          (s): s is TranscriptSegment =>
+            typeof s?.speaker === 'string' && typeof s?.text === 'string' &&
+            typeof s?.start === 'number' && typeof s?.end === 'number' && s.end > s.start,
+        )
+        .map((s) => {
+          // Malformed words drop the whole array to the interpolation
+          // fallback — a partial zip would skew every word's timing (a stray
+          // {end:0} would pin earlier words "done").
+          const words = (s.words ?? []).filter(
+            (w) =>
+              typeof w?.text === 'string' && typeof w?.start === 'number' &&
+              typeof w?.end === 'number' && w.end >= w.start,
+          )
+          return { ...s, words: words.length === (s.words ?? []).length ? words : [] }
+        }),
     }
   } catch {
     return empty

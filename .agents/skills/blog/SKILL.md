@@ -39,6 +39,7 @@ Return a compact working brief containing:
 - Relevant skills/context and why each applies; bounded research questions and proposed primary sources.
 - Outline, provisional taxonomy from the actual loader/topic rules, and exact proposed output paths.
 - Style + theme + topic image brief, reuse candidates, draft alt text and provenance.
+- For a technical or science explainer, map substantive sections to learning goals and diagrams using [interactive-study-diagrams](../interactive-study-diagrams/SKILL.md). Keep the map in the working brief during dry runs.
 - Checks to run, plus unavailable capabilities or essential questions.
 
 For `--dry-run`, stop after that brief and one composed image prompt (or a reuse/no-image decision). Read local context as needed, but do not write files, fetch external sources, generate images, draft full articles, run a build, upload or publish. Identify sources as proposed and image QA as pending. This mode tests planning, not completion.
@@ -50,7 +51,7 @@ For `--dry-run`, stop after that brief and one composed image prompt (or a reuse
 | Technical deep dive | The relevant code/specification and nearby technical post. Use an available domain skill only if its scope matches, such as cloud architecture for cloud design. Use CI-fix skills only for an actual CI investigation, not merely an article mentioning CI. |
 | Personal essay | Supplied observations and the early first-person voice. Separate what Ben did from what a vendor advertises. If observations are absent, use an explicitly provisional outline or opinion framing; never invent lived experience or measured savings. |
 | Science/maths explainer | A primary source or authoritative reference, existing MDX/lab components and the actual model. Use the circuit-simulator skill for circuit-specific work when relevant. Verify the relationship and maths; generated artwork is not scientific evidence. |
-| New interactive figure/UI | Inspect the registered MDX palette first. Use relevant available frontend/design guidance and browser QA only when new implementation is needed. No bespoke component merely to use another skill. |
+| New interactive figure/UI | Follow [interactive-study-diagrams](../interactive-study-diagrams/SKILL.md) and inspect the registered MDX palette before implementing. |
 | Artwork | Read [style + theme + topic](../../../.claude/skills/writing-blog-posts/references/blog-image-composition.md) and the available/requested imagegen skill. Keep art theme, site taxonomy and authorship independent. |
 | Current OpenAI claims | Use available official OpenAI documentation tools/guidance. Check current capabilities against official sources; label predictions as opinions, not roadmaps. |
 
@@ -61,6 +62,8 @@ Discover available capabilities as needed. Missing optional tools should reduce 
 Bound research by the brief: start with two to four questions and a small set of primary sources, usually three to five. Follow supplied links and relevant code first. Expand only for an unresolved claim or material contradiction. Record URLs, checked dates and the claims they support in review notes. Do not invent verification, timings, coverage or personal reactions. User observations can support first-person passages; sources support public facts; future expectations stay qualified. Keep private client names, credentials, runtime inventory and internal processes out of the article.
 
 Build the article around the claim, concrete examples, trade-offs and remaining uncertainty. Follow the editorial skill's voice, Australian spelling and MDX conventions. Use existing components when they aid understanding. Do not force equations into an essay or arbitrary word counts/callouts into a short post.
+
+For a technical or science explainer, write the `diagram-plan.json` beside the MDX. Place each diagram next to the idea it teaches and reread the later sections for gaps.
 
 Use actual `lib/content.ts`, `lib/topics.ts` and nearby frontmatter for metadata. New source goes to `content/blog/<slug>/index.mdx`, explicitly with `release: false` and `draft: true`. The user's request is a draft task even if a referenced runbook contains deploy commands. Never enable publication in the working checkout to make a preview appear.
 
@@ -73,6 +76,7 @@ Record text provenance, artwork provenance and review state separately. Planned 
 Use the existing Task workflows and scripts, reading their summaries for current arguments:
 
 - Gate affected prose with `node scripts/lint-prose.mjs --files content/blog/<slug>/index.mdx --ci`; compile MDX and check required metadata, image mirrors and descriptive alt text.
+- Run `task lint:diagrams` for a post with a diagram plan. Check supporting figures and any worked examples in the browser.
 - Regenerate Markdown siblings through `task build:gen:md`; confirm the draft is excluded and no public draft sibling remains.
 - Run `task build` for a completed site draft. Because native draft routes are excluded, validate the actual rendered article in a disposable preview copy when needed. Temporarily enable only that copy, restore it afterward, and keep the authoring draft flags unchanged. Protect concurrent work from generated-file changes by using an isolated validation copy when appropriate.
 - Run relevant existing tests. Use `task test:unit` for the unit suite; for a narrow existing test, invoke its installed runner with a specific file. New UI/components require their appropriate type, interaction and browser checks. Do not claim build/test coverage from a prose-only dry run.

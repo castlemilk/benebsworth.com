@@ -20,7 +20,6 @@
 import { useState } from 'react'
 
 const GREEN = '#34d399'
-const AMBER = '#f5a623'
 const RED = '#f87171'
 const BLUE = '#60a5fa'
 const MUTED = 'var(--color-muted)'

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="iteration-admission" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="iteration-admission-title iteration-admission-desc">
+  <title id="iteration-admission-title">Iteration-level admission</title>
+  <desc id="iteration-admission-desc">Comparison of static batching, where completed rows remain padded until the longest sequence ends, with continuous batching, where new work is admitted into freed slots at iteration boundaries.</desc>
+  <style>
+    .dark #iteration-admission { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#iteration-admission { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Admission at iteration boundaries</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">fixed-width static batch versus continuous replacement</text>
+
+    <!-- static rows -->
+    <text x="24" y="70" font-size="10" font-weight="650">static membership</text>
+    <line x1="116" y1="66" x2="352" y2="66" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <g font-size="8">
+      <text x="24" y="91">seq A</text><rect x="58" y="80" width="180" height="15" fill="var(--fig-outline, #364c50)"/><rect x="238" y="80" width="112" height="15" fill="var(--fig-outline, #364c50)" opacity="0.18"/>
+      <text x="24" y="113">seq B</text><rect x="58" y="102" width="74" height="15" fill="var(--fig-outline, #364c50)"/><rect x="132" y="102" width="218" height="15" fill="var(--fig-outline, #364c50)" opacity="0.18"/>
+      <text x="24" y="135">seq C</text><rect x="58" y="124" width="126" height="15" fill="var(--fig-outline, #364c50)"/><rect x="184" y="124" width="166" height="15" fill="var(--fig-outline, #364c50)" opacity="0.18"/>
+    </g>
+    <text x="286" y="91" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">padded idle work</text>
+    <text x="238" y="113" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">idle</text>
+
+    <!-- continuous rows -->
+    <text x="24" y="170" font-size="10" font-weight="650">continuous batching</text>
+    <line x1="136" y1="166" x2="352" y2="166" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <g font-size="8">
+      <text x="24" y="191">seq A</text><rect x="58" y="180" width="180" height="15" fill="var(--fig-outline, #364c50)"/><rect x="238" y="180" width="72" height="15" fill="var(--fig-mark, #b4571f)"/>
+      <text x="24" y="213">seq B</text><rect x="58" y="202" width="74" height="15" fill="var(--fig-outline, #364c50)"/><rect x="132" y="202" width="82" height="15" fill="var(--fig-mark, #b4571f)"/><rect x="214" y="202" width="72" height="15" fill="var(--fig-mark, #b4571f)" opacity="0.72"/>
+      <text x="24" y="235">seq C</text><rect x="58" y="224" width="126" height="15" fill="var(--fig-outline, #364c50)"/><rect x="184" y="224" width="98" height="15" fill="var(--fig-mark, #b4571f)" opacity="0.55"/>
+    </g>
+    <text x="314" y="191" font-size="8.5" fill="var(--fig-mark, #b4571f)">new work</text>
+    <text x="292" y="213" font-size="8.5" fill="var(--fig-mark, #b4571f)">admitted</text>
+    <text x="288" y="235" font-size="8.5" fill="var(--fig-mark, #b4571f)">at completion</text>
+
+    <line x1="58" y1="74" x2="58" y2="244" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.7" stroke-dasharray="3 3"/>
+    <text x="24" y="273" font-size="9" fill="var(--fig-rule, #6e6a5b)">Colored replacement work reclaims slots that static membership holds open.</text>
+    <text x="24" y="287" font-size="9" fill="var(--fig-rule, #6e6a5b)">The gain still depends on waiting requests, KV admission and prefill scheduling.</text>
+  </g>
+</svg>

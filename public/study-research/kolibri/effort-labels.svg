@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 334" role="img" aria-labelledby="title desc">
+  <title id="title">How reasoning lengths become training labels</title>
+  <desc id="desc">Within one dataset and difficulty group, the 30th and 70th percentiles of reasoning length mark the approximate boundaries between low, medium and high effort. Direct answers get a separate none label.</desc>
+  <style>
+    text {font:22px system-ui,sans-serif; fill:#202d2c}
+    .label {font-weight:700}
+    .detail {fill:#394e49}
+    .range {stroke:#257660; stroke-width:1.5}
+  </style>
+  <rect width="600" height="334" rx="12" fill="#f8faf9"/>
+  <text x="28" y="44" class="label">Compare within one dataset and difficulty</text>
+  <text x="28" y="79" class="detail">Reasoning length percentile in that group</text>
+  <rect x="28" y="131" width="163" height="60" rx="5" fill="#e7eeeb" class="range"/>
+  <rect x="191" y="131" width="218" height="60" fill="#cde9df" class="range"/>
+  <rect x="409" y="131" width="163" height="60" rx="5" fill="#a8dccb" class="range"/>
+  <path d="M191 121v78m218-78v78" stroke="#1e6253" stroke-width="2" stroke-dasharray="4 3"/>
+  <text x="191" y="117" text-anchor="middle">30th</text>
+  <text x="409" y="117" text-anchor="middle">70th</text>
+  <text x="109" y="168" text-anchor="middle" class="label">Low</text>
+  <text x="300" y="168" text-anchor="middle" class="label">Medium</text>
+  <text x="490" y="168" text-anchor="middle" class="label">High</text>
+  <text x="28" y="229" class="detail">Assignments soften near each cutoff.</text>
+  <rect x="28" y="251" width="544" height="55" rx="8" fill="#e7eeeb" stroke="#849893"/>
+  <text x="47" y="285"><tspan class="label">None</tspan><tspan> · direct answer with no reasoning trace</tspan></text>
+</svg>

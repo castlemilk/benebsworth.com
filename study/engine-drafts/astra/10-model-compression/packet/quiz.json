@@ -1,0 +1,138 @@
+{
+  "chapterId": "vol1/01_compression_pilot",
+  "title": "Model Compression self-test",
+  "questions": [
+    {
+      "id": "locate-the-binding-constraint-check",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "At capture, a camera controller starts a feature transfer and a convolution in parallel. They finish 6 ms and 10 ms after capture, respectively. Normalization waits for both outputs, then writes a tensor to memory. A decision head reads that tensor and issues the command. These last two kernels run in sequence and take 3 ms combined. The command is due 12 ms after capture. Assume each proposed change achieves its stated saving and leaves all other timings fixed. Which single change meets the deadline?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Halve the feature transfer time to save 3 ms on the transfer branch."
+        },
+        {
+          "id": "b",
+          "label": "Fuse normalization and the decision head to save 1 ms by eliminating the tensor write and read."
+        },
+        {
+          "id": "c",
+          "label": "Trim convolution arithmetic to save 0.5 ms on the convolution branch."
+        },
+        {
+          "id": "d",
+          "label": "Use a faster normalization instruction to save 0.5 ms in the final kernel pair."
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Normalization starts at max(6 ms, 10 ms) = 10 ms. Fusion reduces the final pair to 2 ms, so the command arrives exactly at 12 ms. Halving the transfer saves the most time in isolation, but its output already arrives before the convolution finishes. That change leaves the command time at 13 ms. Either 0.5 ms saving brings it to 12.5 ms, past the deadline."
+    },
+    {
+      "id": "count-the-resident-footprint-check",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "An inference device has a 48 MiB memory budget. Its compressed model keeps 8 MiB of weights and 36 MiB of activations resident in that pool at the same time. Now include the additional 8 MiB runtime buffer. Calculate the new resident footprint in MiB and state whether it fits the unchanged 48 MiB budget; explain which allocations you counted. Assume the buffer occupies separate space in the same pool at the peak and all other allocations are excluded.",
+      "modelAnswer": "Count the compressed weights, live activations and runtime buffer together. Their footprint is 8 MiB + 36 MiB + 8 MiB = 52 MiB. The device is 4 MiB over budget, so this configuration does not fit."
+    },
+    {
+      "id": "reshape-expensive-layers-check",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "A camera accelerator schedules dense convolutions in output tiles of eight channels. Two 32-channel branches feed an elementwise addition. An engineer zeros eight filters on the left branch and predicts one fewer tile per output location on that branch. The export still declares both outputs 32 channels wide. Explain the timing result you would expect and how to test a cut that preserves the meaning of the addition.",
+      "modelAnswer": "The dense left kernel still schedules four output tiles per location because its declared width is 32. Zero coefficients alone give this kernel no reason to skip a tile. Select the same eight channel positions for removal on both branches, align the surviving positions at the addition and remove the corresponding input slices from its consumers. Verify that the compiled left kernel now schedules three tiles for 24 outputs. Fine-tune, check task quality and time the whole graph because the tile reduction only predicts a change in this part of the schedule."
+    },
+    {
+      "id": "design-a-deployable-student-check",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "A reader must classify at least 99% of smudged labels correctly and meet a decision deadline during bursts of those labels. Its distilled fixed-depth export passes both tests. An adaptive export passes the deadline and is faster on average, but its accuracy on smudged labels is 97%. Which export decision follows from these results?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Ship the tested adaptive student with its current exit threshold."
+        },
+        {
+          "id": "b",
+          "label": "Ship the adaptive student with a higher, untested exit threshold."
+        },
+        {
+          "id": "c",
+          "label": "Ship the qualified fixed-depth student with its own output head."
+        },
+        {
+          "id": "d",
+          "label": "Ship the fixed-depth student with the teacher scoring each label."
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The fixed-depth export already satisfies both requirements independently. Raising the threshold could send some misclassified parcels through the remaining stages, but the resulting accuracy and burst latency both need to be tested. The adaptive model's average speed cannot resolve either question, and the deployed student already has the output head it needs."
+    },
+    {
+      "id": "choose-precision-and-ranges-check",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "A label reader uses one fixed INT8 scale for an activation tensor. On a held-out set of faded labels, two stroke responses that the floating-point reader distinguishes both map to code 3. No responses reach either end code. A second channel needs the full calibrated range. An engineer proposes widening the shared range while keeping the bit width fixed. Explain the likely effect and design a test, assuming the device supports per-channel activation scales.",
+      "modelAnswer": "Widening the range increases the spacing between adjacent codes. A bin boundary might move between this particular pair, but the wider grid gives the stroke channel coarser resolution, and the observations give no evidence of clipping to remedy. Keep the second channel's range and fit a narrower range to representative stroke-channel activations. Replay the held-out labels and check whether the stroke responses receive distinct codes, whether larger stroke responses clip, and whether the exported reader recovers the correct labels."
+    },
+    {
+      "id": "inspect-the-execution-path-check",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "A parcel reader meets its routing-quality target but misses its latency deadline. Its device trace shows two accelerator convolutions separated by a CPU layout conversion and two device copies, all on the critical path. The copies and conversion take longer together than both convolutions. The compiler supports a layout both convolutions can use on the accelerator. Which change should the engineer test first?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Prune the slower convolution to reduce its multiply count and replay the deadline test."
+        },
+        {
+          "id": "b",
+          "label": "Pack both convolution weight tensors more tightly and replay the deadline test."
+        },
+        {
+          "id": "c",
+          "label": "Parallelize the CPU layout conversion across cores and replay the deadline test."
+        },
+        {
+          "id": "d",
+          "label": "Compile both convolutions with the shared accelerator layout and replay the deadline test."
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "A shared layout gives the compiler a way to remove the CPU detour and both copies. Check their disappearance in the trace and verify routing quality and latency. Parallelizing the conversion targets part of the observed delay, but the frame still has to cross the device boundary twice."
+    },
+    {
+      "id": "combine-changes-in-order-check",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "A compiler update folds batch normalization into a convolution. On the same inputs, the new floating-point output after the folded convolution matches the old output after batch normalization. An engineer copies the old pre-normalization convolution scale to the folded output. Why could the integer build now fail, and how would you test that explanation while holding the learned model fixed?",
+      "modelAnswer": "The fold incorporates a channel-dependent gain and offset into the convolution. The copied scale describes values upstream of that transformation. Floating-point agreement at the block exit therefore says little about how well the old grid represents the folded output. Freeze the folded graph and weights, fit a new output scale on representative inputs, and export both scale choices with the same settings. On held-out failures, compare each dequantized output with the folded floating-point output and check the resulting decisions. Reduced clipping or rounding error alongside recovered decisions supports the scale mismatch as the cause."
+    },
+    {
+      "id": "accept-the-deployed-model-check",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "A parcel sorter must sustain 40 arrivals/s for 30 minutes with capture-to-command p99 at most 25 ms and at most 2% of dim-light parcels sent for inspection. In a full target-device replay, the candidate records 23 ms p99 and sends 30 of 1,000 dim-light parcels for inspection. Overall destination accuracy matches the baseline. A separate low-load run at 10 arrivals/s passes both limits. Which release decision follows from the contract?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Hold the candidate and inspect the dim-light confidence scores at production load."
+        },
+        {
+          "id": "b",
+          "label": "Approve the candidate using the full-load timing and the low-load inspection rate."
+        },
+        {
+          "id": "c",
+          "label": "Approve the candidate using unchanged destination accuracy across the full replay."
+        },
+        {
+          "id": "d",
+          "label": "Approve the candidate after confirming its full-load timing on a second device."
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "At the required load, 30 / 1,000 = 3% of dim-light parcels went to inspection, above the 2% limit. Pairing the low-load inspection rate with full-load timing is tempting because each result passes its own check, but that pairing never demonstrates that the deployed configuration meets both limits at 40 arrivals/s."
+    }
+  ]
+}

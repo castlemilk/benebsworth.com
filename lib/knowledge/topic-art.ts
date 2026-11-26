@@ -1,6 +1,9 @@
-/** Parchment-style category artwork, 256px, keyed by normalized topic slug. */
+/** Parchment-style category artwork, 256px, keyed by normalized topic slug.
+ *  The second block aliases tag slugs to the closest existing piece — a tag
+ *  hub with no bespoke plate still gets a family-matched disc. */
 export const TOPIC_ART: Readonly<Record<string, string>> = {
   'acoustics': '/topics/artwork/acoustics.png',
+  'algorithms': '/topics/artwork/algorithms.png',
   'astronomy': '/topics/artwork/astronomy.png',
   'biotechnology': '/topics/artwork/biotechnology.png',
   'chemistry': '/topics/artwork/chemistry.png',
@@ -50,6 +53,51 @@ export const TOPIC_ART: Readonly<Record<string, string>> = {
   'testing': '/topics/artwork/testing.png',
   'thermodynamics': '/topics/artwork/thermodynamics.png',
   'topology': '/topics/artwork/topology.png',
+  '3d': '/topics/artwork/3d.png',
+  'chaos': '/topics/artwork/chaos.png',
+  'general-relativity': '/topics/artwork/general-relativity.png',
+  'interactive': '/topics/artwork/interactive.png',
+  'machine-learning': '/topics/artwork/machine-learning.png',
+  'physics': '/topics/artwork/physics.png',
+  'quantum': '/topics/artwork/quantum.png',
+  'software': '/topics/artwork/software.png',
+  'technology': '/topics/artwork/technology.png',
+
+  // Tag aliases → the closest existing plate.
+  'ai': '/topics/artwork/neuroscience.png',
+  'astrophysics': '/topics/artwork/astronomy.png',
+  'benchmarking': '/topics/artwork/testing.png',
+  'biology': '/topics/artwork/life-sciences.png',
+  'black-holes': '/topics/artwork/general-relativity.png',
+  'circuits': '/topics/artwork/engineering.png',
+  'communications': '/topics/artwork/networking.png',
+  'complex-analysis': '/topics/artwork/mathematics.png',
+  'control': '/topics/artwork/control-theory.png',
+  'cosmology': '/topics/artwork/astronomy.png',
+  'deep-learning': '/topics/artwork/machine-learning.png',
+  'developer-experience': '/topics/artwork/local-dev.png',
+  'dynamical-systems': '/topics/artwork/chaos.png',
+  'dsp': '/topics/artwork/signal-processing.png',
+  'earth': '/topics/artwork/earth-space.png',
+  'electrical-engineering': '/topics/artwork/engineering.png',
+  'electromagnetism': '/topics/artwork/physics.png',
+  'gcp': '/topics/artwork/google-cloud.png',
+  'grid': '/topics/artwork/topology.png',
+  'hardware': '/topics/artwork/engineering.png',
+  'llm': '/topics/artwork/machine-learning.png',
+  'maths': '/topics/artwork/mathematics.png',
+  'mechanics': '/topics/artwork/physics.png',
+  'modulation': '/topics/artwork/signal-processing.png',
+  'neural-networks': '/topics/artwork/machine-learning.png',
+  'noise': '/topics/artwork/signal-processing.png',
+  'ode': '/topics/artwork/mathematics.png',
+  'pattern-formation': '/topics/artwork/topology.png',
+  'relativity': '/topics/artwork/general-relativity.png',
+  'rf': '/topics/artwork/signal-processing.png',
+  'solid-state': '/topics/artwork/materials-science.png',
+  'statistical-mechanics': '/topics/artwork/thermodynamics.png',
+  'systems': '/topics/artwork/distributed-systems.png',
+  'waves': '/topics/artwork/acoustics.png',
 } as const
 
 /** The nine lab categories → an artwork slug (different vocab than topic slugs). */

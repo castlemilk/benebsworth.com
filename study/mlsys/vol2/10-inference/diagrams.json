@@ -1,0 +1,30 @@
+[
+  {
+    "id": "kv-admission",
+    "file": "kv-admission.svg",
+    "title": "KV cache as an admission budget",
+    "caption": "The book\u2019s long-context admission example: an eight-H100 node serving a 70B-class GQA model reserves 141.2 GB for FP16 weights and 20 GB for system state, leaving a 526 GB KV pool. Each 128K-token request costs 42.9 GB at 327,680 bytes per token, so twelve such requests exhaust the pool.",
+    "alt": "Memory budget on an eight-H100 node showing weights, reserve, a 526 GB KV pool, and twelve 128K-token requests filling that pool"
+  },
+  {
+    "id": "iteration-admission",
+    "file": "iteration-admission.svg",
+    "title": "Admission moves to the iteration boundary",
+    "caption": "Static membership pads completed rows until the longest sequence finishes; continuous batching admits replacement work into freed slots at iteration boundaries, subject to queueing, KV capacity and prefill scheduling.",
+    "alt": "Rows of sequence work showing idle padding in static batching and replacement work filling those slots in continuous batching"
+  },
+  {
+    "id": "phase-lanes",
+    "file": "phase-lanes.svg",
+    "title": "Prefill and decode lanes",
+    "caption": "Prefill is one wide compute-bound pass that sets TTFT; decode is a serial chain of bandwidth-bound steps that sets TPOT. Disaggregation scales them independently but pays queueing plus the alpha-plus-bytes-over-beta KV handoff.",
+    "alt": "Wide prefill block handing a KV cache to many narrow decode steps"
+  },
+  {
+    "id": "fanout-tail",
+    "file": "fanout-tail.svg",
+    "title": "Fan-out inherits the slowest leaf",
+    "caption": "With 100 independent leaves that are each slow one percent of the time, about 63 percent of requests meet at least one slow leaf. Holding request-level p99 pushes each leaf toward roughly p99.99.",
+    "alt": "One request fanning out to many leaves, with the slowest leaf controlling completion"
+  }
+]

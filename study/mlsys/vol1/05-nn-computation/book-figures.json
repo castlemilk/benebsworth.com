@@ -1,0 +1,44 @@
+[
+ {
+  "id": "mnist-roofline",
+  "file": "fig-mnist-roofline (generated)",
+  "title": "fig-mnist-roofline: the running network on two rooflines",
+  "caption": "Attainable FP32 rate vs arithmetic intensity for a desktop CPU and a data-center accelerator, with the running network marked at batch 1 (~0.5 FLOP/byte) and batch 32 (~12). Both points sit left of both ridge points (~20), the cleanest statement that this workload is bandwidth-bound and batching climbs the slope."
+ },
+ {
+  "id": "forward-backward",
+  "file": "_forward_backward_propagation.png",
+  "title": "The two coupled passes",
+  "caption": "Forward pass recording activations, backward pass consuming them in reverse; the turnaround is where saved-activation memory peaks. Our four-states.svg prices the same picture per term."
+ },
+ {
+  "id": "usps-pipeline",
+  "file": "_inference_pipeline.png",
+  "title": "The composite USPS inference pipeline",
+  "caption": "The book's six-stage composite shared by ZIP-code research and check readers: acquisition, preprocessing, neural scoring, thresholding, decision, review. Our reject-gate.svg abstracts the same shape around the threshold."
+ },
+ {
+  "id": "usps-digits",
+  "file": "fig-usps-digit-examples (CEDAR CD-ROM 1)",
+  "title": "Handwritten address variability",
+  "caption": "Real envelope city names and ZIP codes from the USPS database: cursive slant, uneven stroke width, broken loops, textured backgrounds. The variability preprocessing had to absorb before any network saw a digit."
+ },
+ {
+  "id": "matmul-dominance",
+  "file": "nn_computation_matmul_dominance.svg",
+  "title": "Matmul share of the forward pass",
+  "caption": "The book's margin figure on matrix multiplication's dominance: bias, activation, and softmax terms contribute a negligible fraction next to the matmul rows, which is why 'count the matmuls' is the whole cost model."
+ },
+ {
+  "id": "memory-budget",
+  "file": "tbl-nn-computation-mnist-memory-budget (generated)",
+  "title": "Training vs inference memory budget table",
+  "caption": "The per-term byte table behind the ~3x ratio at batch 32: persistent parameters vs gradients, optimizer state, and saved activations. Worth auditing line by line against the four-state equation."
+ },
+ {
+  "id": "usps-numbers",
+  "file": "tbl-usps-numbers",
+  "title": "Early ZIP-code recognition results",
+  "caption": "The 1989 measured point: 1% classification error on accepted digits after rejecting 12.1%, and the throughput drop from >30 to 10-12 classifications/s once acquisition is included. One point on the risk-coverage curve."
+ }
+]

@@ -1,0 +1,27 @@
+[
+ {
+  "id": "schedule-cost-split",
+  "kind": "BAR_STACKED",
+  "title": "Where the time goes, by schedule",
+  "xLabel": "schedule (64 GPUs, 1 GB buffer, 50 GB/s NDR)",
+  "yLabel": "modeled time (ms)",
+  "caption": "Startup versus byte-transfer terms on the chapter's reference collective. The ring spends nearly nothing on latency at this size but the term is O(N) — at 1,024 ranks it dominates. The simple tree inverts the profile: few rounds, full-message hops. Hierarchical pays a middle path by keeping the slow hop parallel.",
+  "xPoints": ["Ring", "Simple tree", "Hierarchical (inter phase)"],
+  "series": [
+   {"key": "latency", "label": "startup term 2(N-1)·alpha / log-depth", "color": "var(--chart-1)", "values": [0.2, 0.12, 0.05]},
+   {"key": "bytes", "label": "byte-transfer term", "color": "var(--chart-2)", "values": [39.4, 240.0, 4.4]}
+  ]
+ },
+ {
+  "id": "compression-effective",
+  "kind": "BAR_STACKED",
+  "title": "Advertised versus effective compression",
+  "xLabel": "method (ratios quoted against FP32)",
+  "yLabel": "payload reduction (×)",
+  "caption": "Headline ratios discounted by what actually ships. Top-k 0.1% advertises 1,000× and delivers ~500× once index bytes count; INT8 with block-128 scales reaches 3.88× of its 4× ceiling; 1-bit Adam's end-to-end gain is ~5× because warmup runs uncompressed. Against a BF16 baseline every ratio halves.",
+  "xPoints": ["INT8 + block-128", "1-bit + error FB", "Top-k 1% + error FB", "Top-k 0.1%", "1-bit Adam (e2e)"],
+  "series": [
+   {"key": "ratio", "label": "effective reduction (×)", "color": "var(--chart-1)", "values": [3.88, 32, 50, 500, 5]}
+  ]
+ }
+]

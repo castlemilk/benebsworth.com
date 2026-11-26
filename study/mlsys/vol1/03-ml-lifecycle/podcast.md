@@ -1,6 +1,7 @@
 # hosts: Marcus | Iris
 
 A: Welcome back to the study room, I'm Marcus.
+::fig[lifecycle-loop]
 
 B: And I'm Iris. Today is chapter three: the machine learning lifecycle, and the pitch is simple. Deployment is not the end of the pipeline. It is where the loop closes.
 
@@ -23,6 +24,7 @@ B: Twenty-one percent. So one in five patients effectively unscreened, because o
 A: That's the lab-to-field gap in one number. Lab accuracy is evidence about curated inputs. It says nothing about the field.
 
 B: Okay, so now the failure story the whole chapter pivots on. Day one hundred fifty-three.
+::fig[day-153-cascade]
 
 A: The team spends five months building. Data curated, model trained, sensitivity validated, climbing from ninety-two to ninety-four percent. And on day one hundred fifty-three, during deployment, someone discovers the model needs four gigabytes of memory.
 
@@ -37,6 +39,7 @@ B: And the rework bill is every affected artifact, revised, repeated, and re-val
 A: The deeper point is organizational. Deployment found the defect, but deployment didn't own it. Walk back the chain: evaluation measured sensitivity, contract met. Model development never received a memory budget. Problem definition never wrote the five hundred megabytes down. So the fix starts at problem definition, the earliest boundary whose contract never stated the condition.
 
 B: That walk-back is why stage interface contracts matter. Every stage has an input contract, an output contract, and a quality invariant, meaning what must hold for the stage to count as done.
+::fig[contract-audit]
 
 A: And each stage owns a term of the iron law from chapter one. Data sets the volume moved. Model development sets the operation count. Deployment sets the machine's rate and overheads. The contract table is literally the time equation written as an org chart.
 
@@ -71,6 +74,7 @@ B: And here's the trap I loved: routine care only grades referred patients. The 
 ::eq[specificity]
 
 A: Which brings it full circle, the camera upgrade scenario. A clinic swaps fundus cameras, the color profile shifts, a drift alert fires within hours, but the sensitivity loss stays unconfirmed until labels arrive. And the fix re-enters the lifecycle at whichever stage owns the defect and leaves through the same release checks.
+::fig[lifecycle-loop]
 
 B: Rollback can't even save you cleanly, the old binary doesn't restore the old data distribution. It's containment, not a restore point.
 

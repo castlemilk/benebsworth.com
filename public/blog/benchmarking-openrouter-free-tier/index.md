@@ -8,6 +8,7 @@ description: >-
   models with full metadata, and ran a fair 5-iteration sweep across all of
   them. Ling 3.0 Tiny, Laguna XS 2.1 and Gemma 4 26B posted averages above 98 on
   a board that Kimi K3 leads at 90.5 — and the entire run cost us nothing.
+heroImage: /blog/benchmarking-openrouter-free-tier/hero.webp
 labels: 'software,machine-learning,llm,benchmarking,openrouter'
 release: true
 takeaways:

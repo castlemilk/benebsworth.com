@@ -1,0 +1,118 @@
+{
+ "chapterId": "vol1/05-nn-computation",
+ "title": "Neural Computation self-test",
+ "questions": [
+  {
+   "id": "a1",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A team stacks 20 linear layers with no activations, arguing depth adds capacity. What does the math actually give them?",
+   "options": [
+    {"id": "a", "label": "A network 20x as expensive to train but equivalently expressive to one layer"},
+    {"id": "b", "label": "A single linear map: composing linear maps is a linear map, so the extra layers add cost without expressiveness"},
+    {"id": "c", "label": "A network that cannot train because gradients vanish without activations"},
+    {"id": "d", "label": "A valid deep network as long as the layers are wide enough"}
+   ],
+   "correctOptionId": "b",
+   "explanation": "Composing linear transformations produces a linear transformation, so the stack collapses to one matrix product. The activation is what makes depth meaningful; without it, extra layers buy sequential cost and nothing else."
+  },
+  {
+   "id": "a2",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "Why does the backward pass through a dense layer cost roughly twice the forward pass?",
+   "options": [
+    {"id": "a", "label": "Gradients require second derivatives, which double the work"},
+    {"id": "b", "label": "It runs two matrix products of forward size: A^T dZ for the weight gradient and dZ W^T for the input gradient"},
+    {"id": "c", "label": "Every weight must be updated twice per step by the optimizer"},
+    {"id": "d", "label": "The loss is evaluated once per parameter"}
+   ],
+   "correctOptionId": "b",
+   "explanation": "The chain rule at a dense layer needs a weight gradient and an input gradient, each a forward-size matmul, hence ~2x backward and ~3x for a full step. The first layer skips its input gradient, which is why the running network lands near 2.08x."
+  },
+  {
+   "id": "a3",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "Compared to a training step, what does inference memory retain?",
+   "options": [
+    {"id": "a", "label": "Weights, gradients, and a rolling activation buffer"},
+    {"id": "b", "label": "Weights plus all saved activations, but no optimizer state"},
+    {"id": "c", "label": "The weights plus the largest adjacent pair of activation buffers"},
+    {"id": "d", "label": "Exactly one quarter of the training footprint"}
+   ],
+   "correctOptionId": "c",
+   "explanation": "Training holds four kinds of state: W, G, O, and saved activations. Inference keeps only the weights and reuses buffers, each layer's activations die once the next layer finishes, so peak is the largest adjacent pair. For the running network that is ~3x less memory."
+  },
+  {
+   "id": "a4",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "The fused softmax + cross-entropy gradient at a logit simplifies to what?",
+   "options": [
+    {"id": "a", "label": "p_j times y_j: the product of prediction and target"},
+    {"id": "b", "label": "negative log p_j: the negative log of predicted mass"},
+    {"id": "c", "label": "p_j minus y_j: predicted mass minus the one-hot target"},
+    {"id": "d", "label": "y_j over p_j: the importance-weighted error"}
+   ],
+   "correctOptionId": "c",
+   "explanation": "Each wrong-class logit gets pushed down by its predicted mass p_j; the correct class is pushed up by p_j - 1. In the seven-as-three example: +0.6 on 'three', -0.9 on 'seven'."
+  },
+  {
+   "id": "a5",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "ReLU displaced sigmoid in most hidden layers partly for a hardware reason. Which?",
+   "options": [
+    {"id": "a", "label": "ReLU needs no exponent datapath: a comparator is ~50x cheaper in transistor area, and its positive-branch gradient is 1 (no saturation)"},
+    {"id": "b", "label": "ReLU uses half the memory of sigmoid activations"},
+    {"id": "c", "label": "ReLU can be fused into the matmul kernel; sigmoid cannot"},
+    {"id": "d", "label": "Sigmoid requires FP64 to avoid underflow"}
+   ],
+   "correctOptionId": "a",
+   "explanation": "Sigmoid and tanh need an exponential datapath and saturate (gradient ~0 for |z|>5). ReLU is a comparator, roughly 50x cheaper in transistor area, and passes gradient 1 on the positive branch, at the cost of dead neurons."
+  },
+  {
+   "id": "a6",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "The 1989 USPS digit reader reported 1% classification error. What made that number achievable?",
+   "options": [
+    {"id": "a", "label": "A convolutional architecture larger than any network trained before it"},
+    {"id": "b", "label": "Doubling the training set with synthetic distortions"},
+    {"id": "c", "label": "Running the classifier three times and voting"},
+    {"id": "d", "label": "Rejecting 12.1% of digits for human review: the error was measured only on the accepted fraction"}
+   ],
+   "correctOptionId": "d",
+   "explanation": "The 1% is an error rate on accepted items, bought by sending 12.1% of traffic to humans. Operational numbers must be read as a point on the risk-coverage curve, never as a bare accuracy."
+  },
+  {
+   "id": "b1",
+   "kind": "FEYNMAN",
+   "source": "ORIGINAL",
+   "prompt": "Explain to a skeptical firmware engineer why 'the network is a budget before it is a program.' Use the running MNIST network: show that parameter count, per-example FLOPs, and activation memory are decided by layer shapes alone, and explain why the first layer holds 91.9% of the arithmetic.",
+   "modelAnswer": "A dense layer is xW + b followed by an element-wise f, so its parameters are (n_in + 1) x n_out, its work is one MAC per weight per example (2 FLOPs), and its retained activation memory is proportional to B x n_out, all functions of the widths alone. For 784-128-64-10 that is 109,386 params and 109,184 MACs with no code written. The first layer dominates because cost is a product of the two widths it joins: 784 x 128 = 100,352 of the 109,184 MACs, 91.9%. So changing any shape (input resolution, hidden width, depth) is a budget decision first and a modeling decision second."
+  },
+  {
+   "id": "b2",
+   "kind": "FEYNMAN",
+   "source": "ORIGINAL",
+   "prompt": "A colleague says 'backpropagation is how the network learns.' Correct the statement: separate the gradient-computation algorithm from the update rule, and explain which creates the saved-activation term and which creates the optimizer-state term.",
+   "modelAnswer": "Backpropagation computes the gradient of the loss with respect to every parameter by applying the chain rule in reverse; gradient descent (or Adam) performs the actual update using that gradient. The confusion matters because each half owns a different memory term: backprop's chain rule needs every forward activation still live until the backward pass reaches it, the saved-activation term that scales with batch x depth x width, while the update rule's running statistics (momentum, Adam's moments) are the optimizer-state term, one or two extra buffers per parameter. Inference runs neither half, which is why it keeps only weights plus a rolling buffer pair."
+  },
+  {
+   "id": "c1",
+   "kind": "NUMERIC",
+   "source": "ORIGINAL",
+   "prompt": "A fully connected network is 512-256-10. Compute the parameter count, MACs per example, FLOPs per example, and the FP32 persistent weight footprint.",
+   "modelAnswer": "Params: (512+1)*256 + (256+1)*10 = 131,328 + 2,570 = 133,898. MACs: 512*256 + 256*10 = 131,072 + 2,560 = 133,632. FLOPs: 2 * 133,632 = 267,264. Weights at FP32: 133,898 * 4B ~ 535.6 KB."
+  },
+  {
+   "id": "c2",
+   "kind": "NUMERIC",
+   "source": "ORIGINAL",
+   "prompt": "A 110M-parameter model trains with Adam (two moment buffers) in FP32. Estimate static training memory before activations, then state how much room remains under a 2 GB device budget for activations and workspace.",
+   "modelAnswer": "Weights 440 MB + gradients 440 MB + optimizer state 880 MB = 1,760 MB ~ 1.72 GB. Roughly 270 MB remains for activations and framework workspace, reached quickly since activations scale as B x sum of layer widths x 4 bytes. This is the four-state budget that makes activation checkpointing or sharding mandatory at scale."
+  }
+ ]
+}

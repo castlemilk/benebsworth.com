@@ -1,0 +1,104 @@
+[
+  {
+    "id": "fleet-sdc-probability",
+    "number": 1,
+    "title": "Fleet silent-corruption probability",
+    "latex": "\\Pr(\\geq 1)=1-(1-p)^{N}\\approx 0.63\\qquad(p=10^{-4},\\;N=10^{4})",
+    "caption": "With $\\DeviceCount$ independent devices each carrying residual error probability $p$ per interval, at least one silent error somewhere in the fleet is a routine event, not a tail case. A per-device reliability number becomes a coordination cost.",
+    "symbols": [
+      {"symbol": "p", "name": "per-device SDC probability", "meaning": "Residual silent-corruption probability for one device over the interval"},
+      {"symbol": "N", "name": "device count", "meaning": "Number of independent devices in the fleet"},
+      {"symbol": "\\Pr(\\geq 1)", "name": "fleet incidence", "meaning": "Probability at least one device experiences a silent error in the interval"}
+    ]
+  },
+  {
+    "id": "psi",
+    "number": 2,
+    "title": "Population stability index",
+    "latex": "\\mathrm{PSI}=\\sum_{i=1}^{B}(c_{i}-r_{i})\\ln\\frac{c_{i}}{r_{i}}",
+    "caption": "Each bin contributes a nonnegative term, so PSI decomposes per bin and shows which feature range moved. The fleet convention bands are monitoring conventions, calibrated per service, not universal statistical thresholds.",
+    "symbols": [
+      {"symbol": "c_{i}", "name": "current proportion", "meaning": "Share of current traffic in bin i"},
+      {"symbol": "r_{i}", "name": "reference proportion", "meaning": "Share of the baseline reference in bin i"},
+      {"symbol": "B", "name": "bin count", "meaning": "Number of value-range bins cut on the reference sample"},
+      {"symbol": "\\mathrm{PSI}", "name": "population stability index", "meaning": "Aggregate divergence score across the bins"}
+    ]
+  },
+  {
+    "id": "selective-risk",
+    "number": 3,
+    "title": "Coverage and selective risk",
+    "latex": "\\mathrm{coverage}(\\tau)=\\Pr(X\\in A),\\qquad \\mathrm{risk}(\\tau)=\\mathbb{E}[\\ell\\,|\\,X\\in A]",
+    "caption": "Raising the acceptance threshold $\\tau$ reduces coverage; it lowers accepted-request risk only when the score orders requests by error risk well enough, measured on the deployment population. Rejected traffic does not disappear: it prices the fallback path.",
+    "symbols": [
+      {"symbol": "\\tau", "name": "acceptance threshold", "meaning": "Minimum acceptance score for answering directly"},
+      {"symbol": "A", "name": "accepted set", "meaning": "Inputs whose acceptance score meets the threshold"},
+      {"symbol": "\\ell", "name": "loss", "meaning": "Loss of the prediction against the observed outcome"},
+      {"symbol": "X", "name": "input", "meaning": "A serving request drawn from the deployment population"}
+    ]
+  },
+  {
+    "id": "conformal-coverage",
+    "number": 4,
+    "title": "Conformal finite-sample coverage",
+    "latex": "C(X)=\\{y:s(X,y)\\leq q\\},\\qquad \\Pr(Y\\in C(X))\\geq 1-\\alpha",
+    "caption": "With $q$ at rank $\\lceil(n{+}1)(1{-}\\alpha)\\rceil$ of $n$ calibration nonconformity scores, coverage is a finite-sample marginal guarantee under exchangeability. It is not conditional on subgroup: a rare slice can be poorly covered while the aggregate holds.",
+    "symbols": [
+      {"symbol": "s(X,y)", "name": "nonconformity score", "meaning": "How poorly candidate outcome y agrees with input X; larger means less conforming"},
+      {"symbol": "q", "name": "score quantile", "meaning": "Calibration cutoff at the corrected rank"},
+      {"symbol": "\\alpha", "name": "miscoverage rate", "meaning": "Target fraction of requests allowed outside the prediction set"},
+      {"symbol": "n", "name": "calibration size", "meaning": "Number of held-out calibration examples"},
+      {"symbol": "C(X)", "name": "prediction set", "meaning": "Set of candidate labels retained for input X"}
+    ]
+  },
+  {
+    "id": "fgsm",
+    "number": 5,
+    "title": "Fast gradient sign method",
+    "latex": "x'=x+\\epsilon\\cdot\\mathrm{sign}(\\nabla_{x}\\ell(\\theta,x,y))",
+    "caption": "One backward pass, one step to a corner of the $\\ell_\\infty$ budget cube. At $\\epsilon=0.007$ it flips GoogLeNet from panda at 57.7 percent confidence to gibbon at 99.3 percent. A single step need not maximize the nonlinear loss or cause misclassification.",
+    "symbols": [
+      {"symbol": "x'", "name": "adversarial example", "meaning": "Perturbed input after the single step"},
+      {"symbol": "\\epsilon", "name": "perturbation budget", "meaning": "Maximum per-coordinate change under the l-infinity norm"},
+      {"symbol": "\\nabla_{x}\\ell", "name": "input gradient", "meaning": "Local sensitivity of the loss to each input coordinate"},
+      {"symbol": "\\theta", "name": "model parameters", "meaning": "Trained weights, fixed during the attack"}
+    ]
+  },
+  {
+    "id": "kl-gaussian",
+    "number": 6,
+    "title": "Gaussian KL divergence",
+    "latex": "D_{\\mathrm{KL}}=\\ln\\frac{\\sigma_{c}}{\\sigma_{r}}+\\frac{\\sigma_{r}^{2}+(\\mu_{r}-\\mu_{c})^{2}}{2\\sigma_{c}^{2}}-\\frac{1}{2}",
+    "caption": "Closed form for fitted Gaussian baseline and current densities. Exact for the density models; its fidelity to the transaction populations depends on the fit. Moderate values warrant investigation, not automatic retraining.",
+    "symbols": [
+      {"symbol": "\\mu_{r},\\sigma_{r}", "name": "baseline fit", "meaning": "Mean and standard deviation fitted to the reference window"},
+      {"symbol": "\\mu_{c},\\sigma_{c}", "name": "current fit", "meaning": "Mean and standard deviation fitted to the current window"},
+      {"symbol": "D_{\\mathrm{KL}}", "name": "KL divergence", "meaning": "Divergence of the current density from the baseline"}
+    ]
+  },
+  {
+    "id": "huber-loss",
+    "number": 7,
+    "title": "Huber loss",
+    "latex": "L_{\\delta}(a)=\\begin{cases}\\tfrac{1}{2}a^{2}&|a|\\leq\\delta\\\\ \\delta(|a|-\\tfrac{1}{2}\\delta)&|a|>\\delta\\end{cases}",
+    "caption": "Quadratic inside the threshold, linear beyond it, so a surviving poisoned outlier grows linearly where squared error keeps squaring. At 100 times the normal residual, squared loss pays 10,000 times while Huber pays about 100.",
+    "symbols": [
+      {"symbol": "a", "name": "residual", "meaning": "Prediction error of one training example"},
+      {"symbol": "\\delta", "name": "threshold", "meaning": "Residual scale where the loss transitions from quadratic to linear"},
+      {"symbol": "L_{\\delta}", "name": "Huber loss", "meaning": "Robust loss bounding the influence of extreme residuals"}
+    ]
+  },
+  {
+    "id": "influence-function",
+    "number": 8,
+    "title": "Influence of a training point",
+    "latex": "I(z,z_{t})\\approx-\\nabla_{\\theta}\\ell(z_{t})^{T}\\,H^{-1}\\nabla_{\\theta}\\ell(z)",
+    "caption": "Approximates how upweighting training point $z$ moves the test loss at $z_t$ without retraining, using inverse-Hessian-vector products. Approximate in deep nonconvex networks; validate against the architecture before treating it as attribution.",
+    "symbols": [
+      {"symbol": "z", "name": "training point", "meaning": "Candidate training example whose weight is perturbed"},
+      {"symbol": "z_{t}", "name": "test point", "meaning": "Example whose loss change is approximated"},
+      {"symbol": "H", "name": "Hessian", "meaning": "Curvature matrix of the average training loss at the fitted parameters"},
+      {"symbol": "\\nabla_{\\theta}\\ell", "name": "loss gradient", "meaning": "Gradient of the point loss with respect to the parameters"}
+    ]
+  }
+]

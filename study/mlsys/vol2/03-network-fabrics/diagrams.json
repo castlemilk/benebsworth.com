@@ -1,0 +1,26 @@
+[
+  {
+    "id": "bandwidth-cliff",
+    "file": "bandwidth-cliff.svg",
+    "title": "Nine times narrower at the node boundary",
+    "caption": "The per-direction budget on each side of the node edge: 8 GPUs at 450 GB/s each inside the NVLink domain, a 50 GB/s NDR port at the first hop off the node. The ~9x cliff has persisted since NVLink's first product year in 2016; placement, deciding what may cross, is the design response."
+  },
+  {
+    "id": "alpha-beta-map",
+    "file": "alpha-beta-map.svg",
+    "title": "Two regimes, one line",
+    "caption": "Message time T(n) = alpha + n/beta on log axes: the alpha floor rules below the crossover (75 KB on NDR), the beta slope rules above. The 4 KB control message lives on the flat part at 1.58 us; the 350 MB shard lives on the slope at 7.0 ms. Doubling beta halves the slope and leaves the floor untouched."
+  },
+  {
+    "id": "fattree-cut",
+    "file": "fattree-cut.svg",
+    "title": "Oversubscription prices the cut",
+    "caption": "A two-tier fat-tree at radix 64 reaching 2,048 hosts at 1:1 (bisection 25.6 TB/s) versus the same leaves oversubscribed 4:1 (6.4 TB/s). Worst-case ring AllReduce crossing the cut: 0.20 s vs 0.80 s. The 2:1 middle still costs 23.1% of throughput and, on the book's \\$300M cluster, the 4:1 choice burns ~\\$142.1M."
+  },
+  {
+    "id": "incast-cascade",
+    "file": "incast-cascade.svg",
+    "title": "256 senders, one port, five microseconds",
+    "caption": "One SuperPOD scalable unit worth of senders converging on a single 50 GB/s egress: 12.8 TB/s offered, a 32 MB buffer that nominally holds 640 us of backlog, overflow in under 5 us. The bandwidth-delay product at a 5 us feedback RTT is only 250 KB, so reaction always arrives late; scheduling, not buffering, is the fix."
+  }
+]

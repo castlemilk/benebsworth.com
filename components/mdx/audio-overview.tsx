@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { TranscriptEquation, TranscriptSegment } from '@/lib/gen/study'
+import type { TranscriptEquation, TranscriptSegment, TranscriptWord } from '@/lib/gen/study'
 
 export interface AudioOverviewProps {
   /** Audio file URL, e.g. /study-audio/vol1/01-introduction.m4a */
@@ -29,6 +29,48 @@ function fmt(t: number): string {
 }
 
 const SPEEDS = [1, 1.25, 1.5, 2]
+
+type WordView = { text: string; start: number; end: number }
+
+/** Timed word list for one segment. When the transcript carries aligned
+ *  words (study-align.py), the authored text is kept for display and zipped
+ *  over whisper's timings by position — a count mismatch degrades to a
+ *  proportional index rather than dropping timing. Without aligned words the
+ *  fallback interpolates across the segment weighted by word characters plus
+ *  a punctuation pause bonus (uniform-rate assumption, ~word accuracy). */
+export function wordViews(seg: TranscriptSegment): WordView[] {
+  const display = seg.text.split(/\s+/)
+  const aligned = seg.words ?? []
+  if (aligned.length) {
+    const m = aligned.length
+    return display.map((text, i) => {
+      const w: TranscriptWord = aligned[Math.min(m - 1, Math.floor((i * m) / display.length))]
+      return { text, start: w.start, end: w.end }
+    })
+  }
+  const weights = display.map((w) => w.length + (/[.!?…]$/.test(w) ? 5 : /[,;:—–-]$/.test(w) ? 2.5 : 0))
+  const total = weights.reduce((a, b) => a + b, 0) || 1
+  const span = Math.max(seg.end - seg.start, 0.01)
+  let acc = 0
+  return display.map((text, i) => {
+    const start = seg.start + (acc / total) * span
+    acc += weights[i]
+    return { text, start, end: seg.start + (acc / total) * span }
+  })
+}
+
+/** Index of the word whose [start,end) window holds t (last word if past end). */
+export function wordIndexAt(words: WordView[], t: number): number {
+  let lo = 0
+  let hi = words.length - 1
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1
+    if (t < words[mid].start) hi = mid - 1
+    else if (t >= words[mid].end) lo = mid + 1
+    else return mid
+  }
+  return Math.min(words.length - 1, Math.max(0, lo - 1))
+}
 
 /** KaTeX-rendered equation chip inside a transcript bubble. Lazy-loads katex
  *  so transcripts without equations cost nothing. */
@@ -108,6 +150,11 @@ function AudioOverviewSession({ src, segments: initial, hosts: hostsProp, transc
     [segments, time],
   )
 
+  const slides = useMemo(() => segments.filter(seg => seg.visual?.src || seg.eq?.latex), [segments])
+  const nextSlide = slides.findIndex(seg => seg.start > time)
+  const slideIndex = (nextSlide < 0 ? slides.length : nextSlide) - 1
+  const slide = slides[slideIndex]
+
   // Auto-scroll: keep the active segment centred inside the transcript's own
   // scroll box (never scrolls the page; disabled in full-height mode).
   useEffect(() => {
@@ -116,54 +163,68 @@ function AudioOverviewSession({ src, segments: initial, hosts: hostsProp, transc
     const el = list?.children[active] as HTMLElement | undefined
     if (!list || !el) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const top = el.offsetTop - list.clientHeight / 2 + el.clientHeight / 2
+    const top = list.scrollTop + el.getBoundingClientRect().top - list.getBoundingClientRect().top
+      - list.clientHeight / 2 + el.clientHeight / 2
     list.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' })
   }, [active, open, full])
 
-  // Karaoke line-sweep, split into measure + paint: getComputedStyle and
-  // clientHeight are layout reads, so they're re-measured only when the
-  // segment or its wrapping changes (resize / font load / new active) — never
-  // on the ~4Hz timeupdate path, which only writes the three CSS vars.
+  // Karaoke word-sweep: the active segment renders one span per word and the
+  // paint loop marks them done/current. It runs on rAF reading
+  // audio.currentTime directly — the ~4Hz `timeupdate` event would leave the
+  // sweep up to ~250ms stale between ticks. No layout reads on the paint
+  // path: fills are per-word background gradients, so wrapping changes need
+  // no re-measure at all.
   const textRefs = useRef<(HTMLElement | null)[]>([])
-  const karaokeMetrics = useRef({ lh: 24, lines: 1 })
-
-  const measureKaraoke = useCallback(() => {
-    if (active < 0 || !open) return
-    const el = textRefs.current[active]
-    if (!el) return
-    const lh = parseFloat(getComputedStyle(el).lineHeight) || 24
-    karaokeMetrics.current = { lh, lines: Math.max(1, Math.round(el.clientHeight / lh)) }
-  }, [active, open])
+  const lastWordIdx = useRef(-2)
+  const paintedSeg = useRef(-1)
+  const words = useMemo(() => (active >= 0 ? wordViews(segments[active]) : []), [segments, active])
 
   const paintKaraoke = useCallback(() => {
-    if (active < 0 || !open) return
     const el = textRefs.current[active]
-    const seg = segments[active]
-    if (!el || !seg) return
-    const { lh, lines } = karaokeMetrics.current
-    const p = Math.min(1, Math.max(0, (time - seg.start) / Math.max(seg.end - seg.start, 0.01)))
-    const sweep = p * lines
-    const done = Math.min(Math.floor(sweep), lines - 1)
-    const frac = Math.max(0, Math.min(100, (sweep - done) * 100))
-    el.style.setProperty('--ao-done', `${done * lh}px`)
-    el.style.setProperty('--ao-lh', `${lh}px`)
-    el.style.setProperty('--ao-frac', `${frac}%`)
-  }, [active, time, segments, open])
-
-  useEffect(() => {
-    measureKaraoke()
-    paintKaraoke()
-  }, [measureKaraoke, paintKaraoke])
-
-  useEffect(() => {
-    const remeasure = () => {
-      measureKaraoke()
-      paintKaraoke()
+    const spans = el?.children
+    if (active < 0 || !el || !spans?.length) {
+      lastWordIdx.current = -2
+      paintedSeg.current = -1
+      return
     }
-    window.addEventListener('resize', remeasure)
-    document.fonts?.ready.then(remeasure).catch(() => {})
-    return () => window.removeEventListener('resize', remeasure)
-  }, [measureKaraoke, paintKaraoke])
+    if (paintedSeg.current !== active) {
+      lastWordIdx.current = -2
+      paintedSeg.current = active
+    }
+    const t = audioRef.current?.currentTime ?? time
+    const idx = wordIndexAt(words, t)
+    if (idx !== lastWordIdx.current) {
+      for (let k = 0; k < spans.length; k++) {
+        const s = spans[k] as HTMLElement
+        s.className = k < idx ? 'ao-w ao-done' : k === idx ? 'ao-w ao-cur' : 'ao-w'
+        if (k !== idx) s.style.removeProperty('--ao-frac')
+      }
+      lastWordIdx.current = idx
+    }
+    if (idx >= 0 && idx < spans.length) {
+      const w = words[idx]
+      const frac = Math.max(0, Math.min(100, ((t - w.start) / Math.max(w.end - w.start, 0.01)) * 100))
+      ;(spans[idx] as HTMLElement).style.setProperty('--ao-frac', `${frac}%`)
+    }
+  }, [active, time, words])
+
+  // Drive the sweep at frame rate while playing; repaint once on seeks,
+  // pauses, segment flips, and transcript open. When the rAF clock crosses a
+  // segment boundary we also push it into React `time` so `active` flips at
+  // the true boundary instead of the next 4Hz timeupdate.
+  useEffect(() => {
+    if (!open) return
+    let raf = 0
+    const tick = () => {
+      const t = audioRef.current?.currentTime ?? 0
+      const idx = segments.findIndex((s) => t >= s.start && t < s.end)
+      if (idx !== active && (audioRef.current ? !audioRef.current.paused : false)) setTime(t)
+      paintKaraoke()
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [open, active, segments, paintKaraoke])
 
   const toggle = () => {
     const a = audioRef.current
@@ -172,12 +233,12 @@ function AudioOverviewSession({ src, segments: initial, hosts: hostsProp, transc
     else a.pause()
   }
 
-  const seek = (t: number) => {
+  const seek = (t: number, play = true) => {
     const a = audioRef.current
     if (!a) return
     a.currentTime = t
     setTime(t)
-    if (a.paused) void a.play()
+    if (play && a.paused) void a.play()
   }
 
   const total = duration || segments.at(-1)?.end || 0
@@ -240,11 +301,35 @@ function AudioOverviewSession({ src, segments: initial, hosts: hostsProp, transc
       </div>
 
       {segments.length > 0 && (
-        <div className="ao-transcript-wrap">
+        <div className="ao-transcript-wrap" data-slides={open && slide ? '' : undefined}>
           {open && (
             <button type="button" className="ao-expand" onClick={() => setFull((f) => !f)} aria-pressed={full}>
-              {full ? 'scroll box' : 'expand full'}
+              {full ? 'Collapse transcript' : 'Expand transcript'}
             </button>
+          )}
+          {open && slide && (
+            <figure className="ao-slide" aria-label="Current slide">
+              <div className="ao-slide-nav">
+                <span>Slide {slideIndex + 1} / {slides.length}</span>
+                <div>
+                  <button type="button" aria-label="Previous slide" disabled={slideIndex === 0}
+                    onClick={() => seek(slides[slideIndex - 1].start, false)}>←</button>
+                  <button type="button" aria-label="Next slide" disabled={slideIndex + 1 === slides.length}
+                    onClick={() => seek(slides[slideIndex + 1].start, false)}>→</button>
+                </div>
+              </div>
+              <div className="ao-slide-frame">
+                {slide.visual ? (
+                  <a href={slide.visual.src} target="_blank" rel="noreferrer" aria-label={`Open full-size image: ${slide.visual.title}`}>
+                    {/* Use the published still at its original aspect ratio, including SVG diagrams. */}
+                    <img key={slide.visual.src} src={slide.visual.src} alt={slide.visual.alt} />
+                  </a>
+                ) : slide.eq && (
+                  <SegmentEquation key={slide.eq.latex} eq={slide.eq} href={eqAnchorPrefix ? `#${eqAnchorPrefix}${slide.eq.id}` : undefined} />
+                )}
+              </div>
+              {slide.visual && <figcaption className="ao-slide-title">{slide.visual.title}</figcaption>}
+            </figure>
           )}
           <ol className={`ao-transcript${full ? ' ao-transcript--full' : ''}`} ref={listRef} hidden={!open}>
             {segments.map((seg, i) => {
@@ -274,9 +359,15 @@ function AudioOverviewSession({ src, segments: initial, hosts: hostsProp, transc
                           textRefs.current[i] = el
                         }}
                       >
-                        {seg.text}
+                        {on
+                          ? words.map((w, k) => (
+                              <span key={k} className="ao-w">
+                                {w.text}{' '}
+                              </span>
+                            ))
+                          : seg.text}
                       </span>
-                      {seg.eq && (
+                      {seg.eq && (full || !open || !slide) && (
                         <SegmentEquation eq={seg.eq} href={eqAnchorPrefix ? `#${eqAnchorPrefix}${seg.eq.id}` : undefined} />
                       )}
                     </span>
@@ -295,6 +386,7 @@ function AudioOverviewSession({ src, segments: initial, hosts: hostsProp, transc
         preload="metadata"
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
         onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
+        onSeeked={(e) => setTime(e.currentTarget.currentTime)}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)}

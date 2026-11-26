@@ -1,0 +1,391 @@
+{
+  "id": "vol1/01_compression_pilot",
+  "sourceHash": "34b0e7eabed0900072c65cc00778cf22e32cafc56e30ae540878c66f564f35cd",
+  "specHash": "4473768e7b39e650ac73d370a8696f482546e4597aad55a98a8a253cefee03e0",
+  "plan": {
+    "thesis": "Which compression change will make this model fit and run well on its target device while preserving the quality users need? Start with one result the device must deliver, such as a sorting decision before a parcel reaches a diverter. Measure where the current pipeline exceeds its budget. A smaller weight representation can relieve memory pressure, a narrower network can remove arithmetic, and a fused kernel can avoid moving an intermediate tensor. Each change makes a different prediction about what the device will do. Choose the change that addresses the measured limit, then test that prediction and the quality of the decision together on the exported model.",
+    "sections": [
+      {
+        "id": "locate-the-binding-constraint",
+        "heading": "Find what holds up one decision",
+        "sourceHeadings": [
+          "Fitting the Deployment Budget",
+          "Measuring Compression Gains"
+        ],
+        "targetWords": 410,
+        "core": "A parcel sorter has until the parcel reaches the diverter to turn a camera exposure into a routing decision. That interval gives latency a concrete meaning. Start the timer at capture and stop it when the decision is available to the controller. Within that interval, use a device trace to locate waits, transfers and kernels on the critical path. A convolution can spend its time performing arithmetic, while a relatively simple normalization can spend its time reading and writing an entire feature map. Reducing either operator's cost matters to the deadline only to the extent that it advances the final decision.",
+        "beats": [
+          "Specify the workload before profiling. Batch size, image resolution, arrival rate and the duration of a production shift affect queueing, memory use and the speed the device can sustain.",
+          "Use kernel timings to find an expensive stage, then examine memory traffic and arithmetic-unit utilization to distinguish a bandwidth limit from a compute limit. Account for overlap when attributing end-to-end time.",
+          "Translate the same procedure across targets. A cloud service may have a throughput-per-dollar objective at a specified tail latency, while a microcontroller must first pass separate checks for model storage and peak working memory."
+        ],
+        "example": "Assume an illustrative serial pipeline takes 7 ms to prepare a frame, 15 ms for inference and 2 ms to deliver the command, against a 20 ms deadline. It takes 24 ms in total. Halving the 2 ms command stage saves 1 ms. An inference change that takes 15 ms down to 11 ms would reach 20 ms under these assumptions, so profile inference for a recoverable 4 ms and check the prediction over real arrivals.",
+        "misconception": "The layer with the most multiply-accumulates must offer the largest latency saving. An operator with few arithmetic instructions can occupy more of the critical path if it repeatedly streams a large tensor.",
+        "visual": {
+          "id": "trace-a-routing-decision",
+          "title": "From a late parcel decision to a compression experiment",
+          "caption": "A trace narrows a missed deadline to a particular resource, giving the next model change a prediction that can be checked.",
+          "kind": "flow",
+          "steps": [
+            {
+              "label": "Define the deadline",
+              "detail": "Time the interval from camera exposure to an available routing command."
+            },
+            {
+              "label": "Replay arrivals",
+              "detail": "Run production-shaped requests long enough to capture queues and heat."
+            },
+            {
+              "label": "Locate the delay",
+              "detail": "Find the work or wait that postpones delivery of the command."
+            },
+            {
+              "label": "Identify the resource",
+              "detail": "Check whether arithmetic, data movement or launch overhead explains the time."
+            }
+          ]
+        }
+      },
+      {
+        "id": "count-the-resident-footprint",
+        "heading": "Count the entire resident footprint",
+        "sourceHeadings": [
+          "Fitting the Deployment Budget"
+        ],
+        "targetWords": 350,
+        "core": "Memory capacity limits allocations that must coexist. Weights hold learned coefficients, while activations hold values produced for the current input. Compressing weights changes only one term if the runtime keeps the same activations live. For a first deployment-budget calculation, specify the memory pool, the allocations charged to it and the instant at which they coexist. Add their resident sizes and compare the sum with the capacity assigned to that pool. A model file answers a different accounting question because the runtime can unpack it or allocate temporary storage during execution.",
+        "beats": [
+          "Sketch allocation lifetimes for one inference. Tensors whose lifetimes overlap must fit together. Storage reused after an operator finishes can serve a later tensor without adding both sizes to the peak.",
+          "Check the unit and the pool. One MiB is 1,048,576 bytes. On a device that reads persistent weights directly from flash, charge flash and SRAM separately according to where the runtime actually places each allocation.",
+          "For a deployment measurement, trace initialization and steady-state inference at the supported input sizes. Reconcile the observed high-water mark with tensor lifetimes, allocator reservations and kernel workspaces."
+        ],
+        "example": "Assume weights and activations are simultaneously resident, the device allocates 48 MiB to these tensors, and this first account excludes all other memory. Originally, 24 MiB of weights plus 36 MiB of activations totals 60 MiB, exceeding capacity by 12 MiB. With the weights reduced to 8 MiB and activations unchanged, the total is 8 + 36 = 44 MiB. The compressed candidate passes this tensor budget. Latency and predictive quality still require their own tests.",
+        "misconception": "Reducing weights to one-third of their size reduces the whole resident footprint to one-third. The 36 MiB activation allocation persists in both cases.",
+        "visual": {
+          "id": "resident-footprint-versus-capacity",
+          "title": "Resident footprint versus capacity",
+          "caption": "Adding the simultaneous weights and activations puts the original case above the 48 MiB limit. The compressed case uses 44 MiB in this first accounting.",
+          "kind": "bars",
+          "unit": "MiB",
+          "rows": [
+            {
+              "label": "Original footprint",
+              "value": 60
+            },
+            {
+              "label": "Compressed footprint",
+              "value": 44
+            },
+            {
+              "label": "Capacity limit",
+              "value": 48
+            }
+          ]
+        }
+      },
+      {
+        "id": "reshape-expensive-layers",
+        "heading": "Remove work the device can actually skip",
+        "sourceHeadings": [
+          "Structural Optimization: Changing What the Model Computes"
+        ],
+        "targetWords": 520,
+        "core": "A structural change pays off when it removes useful amounts of scheduled work at an acceptable quality cost. Pruning an output channel from a convolution removes a filter, a feature map and the corresponding input slice from consumers that can accept the narrower shape. Pruning individual coefficients produces a different opportunity. Their positions must be encoded and a kernel must exploit them to skip work. Low-rank factorization offers a third route when many outputs depend on the same few combinations of inputs. Two smaller dense maps can then approximate one large map using regular operations already available on the device.",
+        "beats": [
+          "Rank candidate channels using weight or activation evidence, prune a small group and fine-tune. Inspect branch joins and residual connections because every consumer must still receive a compatible shape.",
+          "Choose candidate widths with the accelerator's tile size in mind. Removing a few channels can leave the same number of padded tiles, while removing a whole tile can reduce scheduled work.",
+          "For a dense map with n inputs and m outputs, a rank-r approximation uses r(n + m) coefficients in place of mn. Check approximation error, the intermediate activation and the cost of running two kernels when selecting r."
+        ],
+        "example": "Assume a sorter uses a bias-free 256-input, 128-output projection. The dense map contains 256 × 128 = 32,768 coefficients. With an assumed rank of 32, the two factors contain 256 × 32 + 32 × 128 = 12,288. That is 37.5% of the original coefficient count. If held-out parcel images retain enough information at this rank, export both variants and time them at batch one. The extra kernel launch could matter at that batch size.",
+        "misconception": "Setting a filter slice to zero automatically shrinks its consumers. To realize a dense shape reduction, the exported graph must remove the channel and adjust the layers that read it.",
+        "visual": {
+          "id": "projection-coefficient-count",
+          "title": "Coefficients in two candidate projections",
+          "caption": "Under the assumed dimensions, rank 32 removes 20,480 coefficients. The count establishes a storage opportunity at equal precision and leaves execution time and task quality to measurement.",
+          "kind": "bars",
+          "unit": "coefficients",
+          "rows": [
+            {
+              "label": "Dense projection",
+              "value": 32768
+            },
+            {
+              "label": "Rank-32 factors",
+              "value": 12288
+            }
+          ]
+        }
+      },
+      {
+        "id": "design-a-deployable-student",
+        "heading": "Choose a smaller network and decide when it should run",
+        "sourceHeadings": [
+          "Structural Optimization: Changing What the Model Computes"
+        ],
+        "targetWords": 470,
+        "core": "Sometimes the expensive part is the architecture itself. A compact student can learn from both task labels and a larger teacher's output distribution. For a damaged label, the teacher's relative scores for two plausible destinations convey information that a single destination label omits. Distillation makes that training signal available to a student whose widths, operators and activation sizes suit the device. A further design choice is whether every parcel needs the full student. An early exit can finish easy inputs cheaply if its confidence predicts correctness and enough inputs take the shortcut to repay the cost of checking.",
+        "beats": [
+          "Select an architecture using supported operators and measured stage costs. Reducing input resolution may save feature-map traffic yet erase fine print that distinguishes two destinations.",
+          "Use neural architecture search to compare a bounded set of widths, depths and operators subject to quality and device budgets. Confirm promising designs on the target because a latency estimator can misrank unfamiliar shapes.",
+          "For an adaptive model, measure exit frequency, routing overhead, errors among early exits and latency for inputs that take the full path. A stream of difficult parcels can change all-day throughput and queue lengths."
+        ],
+        "example": "Suppose the sorter usually sees clean barcodes but occasionally receives a batch of creased labels. Train a compact dense student, then compare it with a version that has an intermediate exit. Replay clean and creased batches separately. If confidently misrouted creased labels exceed the allowed error rate, retain the fixed-depth student even if the early-exit version has the better average time.",
+        "misconception": "The teacher must run beside the deployed student. Its output distribution supplies a training target, so the exported student can produce routing decisions independently.",
+        "visual": {
+          "id": "qualify-an-early-exit",
+          "title": "Qualifying an early exit for the sorter",
+          "caption": "An exit threshold determines both the work avoided and which parcels receive less computation. Its value depends on the errors and delays in both paths.",
+          "kind": "flow",
+          "steps": [
+            {
+              "label": "Train the student",
+              "detail": "Fit a compact model to labels and teacher outputs."
+            },
+            {
+              "label": "Fit the early exit",
+              "detail": "Use held-out inputs to select a confidence threshold."
+            },
+            {
+              "label": "Replay mixed batches",
+              "detail": "Record exit choice, correctness and decision time for each parcel."
+            },
+            {
+              "label": "Test difficult runs",
+              "detail": "Check errors and queues when damaged labels arrive close together."
+            }
+          ]
+        }
+      },
+      {
+        "id": "choose-precision-and-ranges",
+        "heading": "Spend precision where errors change decisions",
+        "sourceHeadings": [
+          "Numerical Precision: Changing How Values Are Stored"
+        ],
+        "targetWords": 590,
+        "core": "Quantization represents a tensor using a limited set of values. With uniform integer quantization, a scale sets the distance between adjacent representable values and a zero point locates real zero on the integer grid. A wide range can preserve outliers while rounding distinct small signals to the same value. A narrow range can resolve those signals while clipping large ones. Floating-point formats use exponent bits to span magnitudes and fraction bits to distinguish nearby values. The choice therefore depends on the tensor's distribution, the decisions that depend on it and the formats the target can execute efficiently.",
+        "beats": [
+          "Start with post-training quantization using representative calibration inputs. Compare per-tensor and supported per-channel scales where one unusually large channel would otherwise set the grid for its neighbors.",
+          "If the exported candidate misses quality targets, localize the error. Keep a sensitive operator at higher precision or use quantization-aware training, which simulates deployment rounding and clipping during optimization. Check the resulting conversion boundaries on the target.",
+          "Separate the payload calculation from the performance claim. FP32 uses four bytes per value and INT8 uses one. Lower traffic can help a bandwidth-limited workload and reduce energy spent moving data, while compute savings depend on the available kernels.",
+          "Extreme quantization changes the required execution path again. Packed binary sign values can use bitwise agreement counts for dot products. Packing, specialized kernels and validation of lost numerical detail become part of the design."
+        ],
+        "example": "Assume two label-image channels use a shared integer scale of 0.1, zero point 0 and nearest rounding. A feature value of 0.04 maps to integer 0 and reconstructs as 0. With an assumed supported channel scale of 0.02 it maps to integer 2 and reconstructs as 0.04. This makes per-channel scaling worth testing if the weak feature distinguishes similar destinations. Validate the full channel range and the routing error before adopting it.",
+        "misconception": "A calibration set containing only clear labels suffices because the model weights are fixed. Activations depend on the input, so glare or low contrast can expose clipping and rounding errors the calibration set missed.",
+        "visual": {
+          "id": "follow-a-quantized-feature",
+          "title": "Where a weak feature loses resolution",
+          "caption": "Following a feature through the integer grid shows how the chosen scale can erase a signal before a later layer has a chance to use it.",
+          "kind": "flow",
+          "steps": [
+            {
+              "label": "Observe the range",
+              "detail": "Collect activations across representative lighting and label conditions."
+            },
+            {
+              "label": "Choose a grid",
+              "detail": "Fit a supported scale and zero point for the tensor or channel."
+            },
+            {
+              "label": "Encode the feature",
+              "detail": "Divide by scale, round, add the zero point and clip to the integer range."
+            },
+            {
+              "label": "Trace the decision",
+              "detail": "Compare reconstructed features and routing errors on held-out parcels."
+            }
+          ]
+        }
+      },
+      {
+        "id": "inspect-the-execution-path",
+        "heading": "Follow compressed values through the runtime",
+        "sourceHeadings": [
+          "Hardware Implementation: Changing How the Model Executes"
+        ],
+        "targetWords": 490,
+        "core": "The runtime determines where compressed values travel and what arithmetic consumes them. A kernel can read packed weights, unpack a small tile close to the arithmetic unit and immediately use it. Expanding the whole tensor into global memory first introduces a write and another read. Fusion applies the same principle to intermediate results. For an inference convolution followed by batch normalization and an activation, a compiler can fold fixed normalization parameters into the convolution and apply the activation before writing the output. This removes launches and intermediate transfers where the shapes, precision and operator semantics permit it.",
+        "beats": [
+          "Inspect the lowered graph for device assignments, tensor layouts and conversions. One unsupported operator between two accelerator kernels can introduce device transfers that dominate its arithmetic.",
+          "Check sparsity as a storage and execution contract. An irregular sparse layout stores positions as well as values. A patterned sparse kernel may require a particular arrangement of zeros in every group and specific dimensions.",
+          "Trace the candidate at its deployed shapes. Look for fewer launches, lower off-chip traffic or skipped arithmetic according to the proposed mechanism, then confirm that the saving reaches the critical path."
+        ],
+        "example": "Suppose the sorter exports a quantized convolution, a floating-point normalization and a quantized activation. A runtime trace shows conversion kernels on either side of normalization. Try an export with inference normalization folded into the convolution, calibrate the folded graph and check the emitted kernels. Prefer the fused candidate only if its predictions pass quality checks and the device trace confirms a deployment benefit.",
+        "misconception": "Any two weight matrices with the same fraction of zeros run equally fast. One may fit the accelerator's sparse pattern while the other requires indexed loads or a dense fallback.",
+        "visual": {
+          "id": "inspect-a-fused-block",
+          "title": "Checking a fused image-processing block",
+          "caption": "The exported graph predicts which intermediate transfers can disappear. Kernel and traffic traces reveal whether the runtime realizes that saving.",
+          "kind": "flow",
+          "steps": [
+            {
+              "label": "Freeze normalization",
+              "detail": "Use the fixed inference statistics and learned channel parameters."
+            },
+            {
+              "label": "Fold into convolution",
+              "detail": "Absorb each channel's multiplier and offset into weights and bias."
+            },
+            {
+              "label": "Calibrate and compile",
+              "detail": "Fit ranges to the folded graph and lower it for the target."
+            },
+            {
+              "label": "Inspect the trace",
+              "detail": "Check launches, conversions and intermediate traffic at deployed shapes."
+            }
+          ]
+        }
+      },
+      {
+        "id": "combine-changes-in-order",
+        "heading": "Sequence changes around what calibration assumes",
+        "sourceHeadings": [
+          "Choosing and Combining Techniques",
+          "Fallacies and Pitfalls"
+        ],
+        "targetWords": 460,
+        "core": "Compression techniques interact through the tensors they change. Channel pruning changes the inputs received by downstream layers. Fine-tuning or distillation changes the surviving weights and can shift activation ranges again. Integer scales fitted to an earlier graph can therefore clip the final model even if each change passed in isolation. For a pruned student using post-training quantization, settle the topology, recover task quality, finalize inference transformations that alter ranges and then calibrate. Keep intermediate candidates so a regression can be traced to a particular change or combination.",
+        "beats": [
+          "Use the bottleneck to limit the search. For repeated weight streaming, compare a supported weight format first. For expensive dense arithmetic, compare hardware-aligned widths. Reprofile after each material gain because a different resource can become limiting.",
+          "Record quality and cost for each exported candidate. A candidate is dominated if another is at least as good on every chosen objective and better on one. Apply hard deployment limits before choosing among the remaining trade-offs.",
+          "Assign each operation to the tool that can realize it. Training code can learn a student or simulate quantization, while the deployment compiler chooses actual kernels. Preserve preprocessing, scales and export settings so the comparisons are reproducible."
+        ],
+        "example": "Suppose pruning alone passes the sorter's damaged-label test and INT8 calibration of the original model also passes. The combined model fails. Compare its floating-point pruned checkpoint with a freshly calibrated export of that same checkpoint. If clipping concentrates in one layer, test a wider supported precision there and remeasure the conversion cost. This comparison can identify a viable candidate without abandoning both changes.",
+        "misconception": "Two acceptable quality losses can simply be added to predict the combined loss. Pruning can move the very activation distribution that determined the quantizer's original error.",
+        "visual": {
+          "id": "sequence-a-pruned-student",
+          "title": "Preparing a pruned student for integer deployment",
+          "caption": "Each range-changing step precedes final calibration, so the integer scales describe the model that the compiler receives.",
+          "kind": "flow",
+          "steps": [
+            {
+              "label": "Choose channel widths",
+              "detail": "Prune compatible groups to shapes the target kernels handle efficiently."
+            },
+            {
+              "label": "Recover task quality",
+              "detail": "Fine-tune the surviving model, using teacher outputs where helpful."
+            },
+            {
+              "label": "Finalize inference",
+              "detail": "Freeze parameters and apply range-changing inference folds."
+            },
+            {
+              "label": "Calibrate the graph",
+              "detail": "Fit integer ranges on representative inputs for the final topology."
+            },
+            {
+              "label": "Export and compare",
+              "detail": "Measure this candidate alongside the saved intermediate variants."
+            }
+          ]
+        }
+      },
+      {
+        "id": "accept-the-deployed-model",
+        "heading": "Accept the model on a full production-shaped run",
+        "sourceHeadings": [
+          "Measuring Compression Gains",
+          "Fallacies and Pitfalls"
+        ],
+        "targetWords": 510,
+        "core": "The acceptance test asks whether the delivered system makes a good enough decision in time under the conditions users encounter. Run the baseline and exported candidate on the target with the same preprocessing, input mix, arrival pattern and output handling. Record artifact size, peak resident memory, latency distribution, sustained throughput and energy per completed decision. Pair these measurements with task quality and confidence calibration on consequential slices. A candidate qualifies when the same deployed configuration meets all required limits. Results drawn from different batch sizes, devices or precision settings cannot establish that joint outcome.",
+        "beats": [
+          "Define quality and systems thresholds before comparing candidates. In sorting, a confident wrong destination and a request for manual inspection have different costs. Evaluate each outcome by lighting, label damage and other relevant conditions.",
+          "Measure cold initialization separately from warmed operation. Replay long enough to expose thermal throttling, repeat trials and report variation. Measure energy over a stated interval and divide by the number of completed decisions in that interval.",
+          "Investigate failed checks with evidence tied to individual inputs. Compare float and quantized layer outputs for saturation, inspect activation traces for pruned features, and align slow requests with fallback kernels or transfers.",
+          "Retain the artifact identifier, runtime version, device settings and replay description alongside the results. These details let an engineer repeat the acceptance test after a compiler or model update."
+        ],
+        "example": "Assume an acceptance contract requires 99th-percentile capture-to-command latency of at most 20 ms and a damaged-label misroute rate of at most 1%. Suppose a trial reports 18 ms at that percentile and 18 misroutes in 1,000 damaged-label cases. The observed slice rate is 18 / 1,000 = 1.8%, so withhold acceptance despite passing latency. Inspect the affected images and compare their intermediate outputs with the baseline before choosing the next change.",
+        "misconception": "Stable aggregate accuracy establishes that the compressed model is safe to substitute. A rare but costly slice can deteriorate while the aggregate rounds to the same value, and confidence changes can alter which parcels the system sends for review.",
+        "visual": {
+          "id": "accept-a-sorter-release",
+          "title": "One acceptance test for the exported sorter",
+          "caption": "Pairing device measurements with decisions on the same replay exposes candidates that satisfy a timing limit while violating a user-facing quality requirement.",
+          "kind": "flow",
+          "steps": [
+            {
+              "label": "Fix the contract",
+              "detail": "Set workload, quality slices, memory, timing and energy limits."
+            },
+            {
+              "label": "Replay both builds",
+              "detail": "Use the deployed pipeline and record per-input outcomes on the target."
+            },
+            {
+              "label": "Check every limit",
+              "detail": "Evaluate sustained device behavior and quality on the specified slices."
+            },
+            {
+              "label": "Resolve the outcome",
+              "detail": "Accept a passing build or trace a failed check to its inputs and operators."
+            }
+          ]
+        }
+      }
+    ],
+    "glossary": [
+      {
+        "term": "Deployment budget",
+        "definition": "The storage, working memory, time and energy a deployment can allocate while delivering its required service."
+      },
+      {
+        "term": "Weights and activations",
+        "definition": "Weights are learned coefficients reused across inputs. Activations are intermediate values produced while processing a particular input or batch."
+      },
+      {
+        "term": "Memory capacity",
+        "definition": "The maximum number of bytes available in a particular memory pool. Capacity must cover allocations that coexist in that pool."
+      },
+      {
+        "term": "Memory bandwidth",
+        "definition": "The rate at which bytes can cross a memory interface. A model can fit in memory and still wait on that interface on every request."
+      },
+      {
+        "term": "Critical path",
+        "definition": "The chain of dependent work and waits that determines when a result becomes available."
+      },
+      {
+        "term": "Structured pruning",
+        "definition": "Removing defined groups of parameters, such as whole channels, so the computation can use smaller tensor shapes or a supported sparse pattern."
+      },
+      {
+        "term": "Low-rank factorization",
+        "definition": "Approximating a linear map by composing two maps through a smaller intermediate dimension."
+      },
+      {
+        "term": "Knowledge distillation",
+        "definition": "Training a student model using a teacher's predictions or representations as learning targets."
+      },
+      {
+        "term": "Quantization calibration",
+        "definition": "Using representative data or tensor statistics to choose numerical ranges and scales for a quantized model."
+      },
+      {
+        "term": "Confidence calibration",
+        "definition": "Agreement between predicted confidence and observed correctness across comparable predictions."
+      },
+      {
+        "term": "Kernel fusion",
+        "definition": "Implementing adjacent operations in a combined kernel so intermediate values can stay close to the arithmetic units."
+      },
+      {
+        "term": "Pareto frontier",
+        "definition": "The measured candidates for which improving one selected objective requires giving up ground on another among the available choices."
+      }
+    ],
+    "applications": [
+      "Extend the resident-memory case by making an additional 8 MiB runtime buffer simultaneously resident. Calculate the new footprint, name the allocations you counted and decide whether they fit the unchanged 48 MiB budget.",
+      "For a phone decoder that fits in memory but generates tokens slowly, measure weight traffic per token and time spent waiting on memory. Use those observations to decide whether to trial packed weights or a change to the compute graph.",
+      "For a microcontroller audio classifier, map the persistent model, feature extractor, live activations and scratch storage to their actual memory pools before choosing between smaller weights and shorter feature windows.",
+      "For a cloud inference service, compare a compact dense student with a sparse candidate at the same arrival rate and tail-latency requirement. Use measured quality and cost per completed request to choose between them."
+    ],
+    "openQuestions": [
+      "Which damaged-label features disappear first as the sorter's projection rank decreases, and do those failures cluster by destination or printing process?",
+      "On the intended runtime, at what batch sizes and tensor shapes does reduced weight traffic repay the cost of unpacking the supported low-bit format?",
+      "How does a sustained run of difficult parcels change queue lengths and misroute rates for an early-exit student compared with a fixed-depth student?",
+      "How stable are the chosen activation ranges and confidence thresholds across cameras, seasonal lighting changes and later compiler releases?"
+    ]
+  }
+}

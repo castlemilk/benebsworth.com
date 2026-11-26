@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Jevons rebound geometry: savings area versus new consumption area">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .ax{stroke:var(--diagram-ink-soft,#5a5a60);stroke-width:1.2;fill:none}
+    .dem{stroke:var(--diagram-accent,#3c64c8);stroke-width:2.4;fill:none}
+    .green{fill:var(--diagram-ok-fill,#dcefdc);stroke:var(--diagram-ok,#3c8c4e);stroke-width:1.2;stroke-dasharray:5 3}
+    .red{fill:var(--diagram-warn-fill,#f2ddd4);stroke:var(--diagram-warn,#c85a3c);stroke-width:1.2;stroke-dasharray:5 3}
+    .base{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-edge,#bbb);stroke-width:1}
+    .gt{font:600 11px var(--font-sans,sans-serif);fill:var(--diagram-ok,#3c8c4e)}
+    .rt{font:600 11px var(--font-sans,sans-serif);fill:var(--diagram-warn,#c85a3c)}
+  </style>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="32">The red area swallows the green</text>
+  <text class="sub" x="30" y="51">Elastic demand, schematic after the book's figure. Areas are expenditure; energy only when unit cost tracks joules.</text>
+  <!-- axes -->
+  <line class="ax" x1="90" y1="350" x2="700" y2="350"/>
+  <line class="ax" x1="90" y1="350" x2="90" y2="80"/>
+  <text class="lbl" x="395" y="382" text-anchor="middle">compute volume</text>
+  <text class="lbl" x="48" y="215" transform="rotate(-90 48 215)" text-anchor="middle">unit cost per operation</text>
+  <!-- demand curve -->
+  <path class="dem" d="M 120 130 C 220 190, 330 250, 660 305"/>
+  <text class="sm" x="520" y="230">elastic demand</text>
+  <text class="sm" x="520" y="244">(elasticity greater than 1)</text>
+  <!-- baseline volume rect: q0 in [140,320], price p0 at y=150, p1 at y=240 -->
+  <rect class="base" x="140" y="240" width="180" height="110"/>
+  <text class="sm" x="230" y="300" text-anchor="middle">retained base volume</text>
+  <!-- green savings strip -->
+  <rect class="green" x="140" y="150" width="180" height="90"/>
+  <text class="gt" x="230" y="190" text-anchor="middle">saving on baseline</text>
+  <text class="gt" x="230" y="205" text-anchor="middle">volume (efficiency)</text>
+  <!-- red rebound area -->
+  <rect class="red" x="320" y="240" width="300" height="110"/>
+  <text class="rt" x="470" y="290" text-anchor="middle">new consumption at the lower unit cost:</text>
+  <text class="rt" x="470" y="306" text-anchor="middle">exceeds the saving when demand is elastic</text>
+  <!-- axis ticks -->
+  <line class="ax" x1="140" y1="350" x2="140" y2="356"/>
+  <text class="sm" x="140" y="370" text-anchor="middle">Q0 base</text>
+  <line class="ax" x1="620" y1="350" x2="620" y2="356"/>
+  <text class="sm" x="620" y="370" text-anchor="middle">Q1 rebound</text>
+  <line class="ax" x1="84" y1="150" x2="90" y2="150"/>
+  <text class="sm" x="80" y="154" text-anchor="end">P0</text>
+  <line class="ax" x1="84" y1="240" x2="90" y2="240"/>
+  <text class="sm" x="80" y="244" text-anchor="end">P1</text>
+  <!-- annotation -->
+  <text class="sm" x="90" y="404">Efficiency creates room inside a resource budget; demand decides how much of the room is consumed. Absolute budgets close the loop.</text>
+</svg>

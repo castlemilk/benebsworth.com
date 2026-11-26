@@ -1,0 +1,63 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "States the numerator-shrinking claim and the selection inequality; the first worked figure follows in The data wall."
+    },
+    "The data wall": {
+      "figure": "::chart[token-budget]",
+      "teaches": "Compare unique token supply against the compute-optimal need and the tokens actually processed.",
+      "source": "The data wall. WebText 10B unique, Chinchilla ~20 tok/param need of 30B, 167B processed at ~17 repeats — book values."
+    },
+    "Measuring data value": {
+      "figure": "::chart[icr-decay]",
+      "teaches": "Read how marginal ICR halves with each corpus doubling under the chapter's illustrative model.",
+      "source": "Diminishing returns and the ICR frontier. Normalized doublings are illustrative; the 1/(O·D) form is the chapter's."
+    },
+    "The selection inequality": {
+      "figure": "::fig[inequality-timeline]",
+      "teaches": "Judge whether a scorer's added time still leaves selection + subset training under the full-run bar.",
+      "source": "The selection inequality. The worked 128,117-image coreset on one H100 at 25% of peak is the book's example."
+    },
+    "Static pruning": {
+      "figure": "::fig[coverage-floors]",
+      "teaches": "Identify which high-scored common example a rare-class floor displaces inside a fixed budget.",
+      "source": "Coreset selection and Validating a reduced dataset. Scores, slices and the three-slot budget are illustrative."
+    },
+    "Dynamic selection": {
+      "figure": "::fig[active-loop]",
+      "teaches": "Trace the score-query-annotate-expand-retrain loop and name who pays each stage's cost.",
+      "source": "Active learning, human in the loop; the $5/label and $500k budget are the book's worked ROI."
+    },
+    "Synthetic data and the unlabeled levers": {
+      "figure": "::fig[foundation-be]",
+      "teaches": "Count the downstream tasks at which prepaid pretraining undercuts training from scratch.",
+      "source": "Foundation-model amortization — 10,000 + 50N versus 1,000N GPU-hours, break-even at N >= 11 (book values)."
+    },
+    "Selection engineering: the data path tax": {
+      "figure": "::fig[read-penalty]",
+      "teaches": "Match storage tier to the realized-bandwidth loss of scattered 4 KB reads, and pick the subset plan that materializes.",
+      "source": "The random-access penalty — ~375x HDD, ~14x SATA SSD, <2x NVMe (book's table)."
+    },
+    "Choosing a strategy": {
+      "figure": "::chart[amortized-roi]",
+      "teaches": "Find the run count where accumulated gross savings reaches the fixed curation cost.",
+      "source": "Amortization across training runs — the book's worked $30k setup and $6k per-run saving."
+    },
+    "Fallacies and pitfalls": {
+      "proseOnly": "The fallacies are prose rules already exercised by the quiz; their mechanisms live in the figures above."
+    },
+    "The physics": {
+      "proseOnly": "The quantity/value/use table is the chapter's lookup surface for every pinned number."
+    },
+    "Glossary": {
+      "proseOnly": "Searchable definitions also feed the /study/concepts index."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Transfer prompts applying the chapter to benchmark, droplet, and doc-analyser economics."
+    },
+    "Open questions": {
+      "proseOnly": "Review prompts for the matched-quality and coverage assumptions."
+    }
+  }
+}

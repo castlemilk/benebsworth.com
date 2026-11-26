@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 430" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#dbeafe"]{fill:#1e3a5f}
+    .dark [fill="#e5e7eb"]{fill:#374151}
+    .dark [fill="#fef3c7"]{fill:#453007}
+    .dark [fill="#fee2e2"]{fill:#4c1d1d}
+    .dark [fill="#f3f4f6"]{fill:#1f2937}
+    .dark [fill="#ffffff"]{fill:#161a22}
+    .dark rect.bg{fill:#0f1115}
+    .dark [fill="none"]{fill:none}
+  </style>
+  <rect x="0" y="0" width="700" height="430" fill="#ffffff" class="bg"/>
+  <text x="350" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#374151">The execution continuum: every optimization needs visibility</text>
+  <text x="350" y="44" text-anchor="middle" font-size="10" fill="#6b7280">what the runtime can see bounds what it can change -- flexibility falls left to right</text>
+
+  <!-- arrows between stages -->
+  <g stroke="#9ca3af" stroke-width="1.2" fill="#9ca3af">
+    <line x1="160" y1="150" x2="186" y2="150"/><polygon points="186,150 180,146.5 180,153.5"/>
+    <line x1="324" y1="150" x2="350" y2="150"/><polygon points="350,150 344,146.5 344,153.5"/>
+    <line x1="488" y1="150" x2="514" y2="150"/><polygon points="514,150 508,146.5 508,153.5"/>
+  </g>
+  <g font-size="8" fill="#6b7280" text-anchor="middle">
+    <text x="173" y="150" transform="rotate(-90 173 150)">capture</text>
+    <text x="337" y="150" transform="rotate(-90 337 150)">export</text>
+    <text x="501" y="150" transform="rotate(-90 501 150)">specialize</text>
+  </g>
+
+  <!-- STAGE 1: EAGER -->
+  <rect x="24" y="80" width="136" height="210" rx="10" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.5"/>
+  <text x="92" y="104" text-anchor="middle" font-size="12" font-weight="bold" fill="#b91c1c">EAGER</text>
+  <text x="92" y="118" text-anchor="middle" font-size="8" fill="#b91c1c">sees 1 op at a time</text>
+  <!-- window: single op -->
+  <rect x="58" y="136" width="68" height="22" rx="4" fill="#ffffff" stroke="#b91c1c" stroke-width="1" stroke-dasharray="3 2"/>
+  <text x="92" y="151" text-anchor="middle" font-size="9" fill="#374151">relu(...)</text>
+  <text x="92" y="176" text-anchor="middle" font-size="8" fill="#6b7280">debug every value</text>
+  <text x="92" y="198" text-anchor="middle" font-size="8" font-weight="bold" fill="#b91c1c">unlocks: nothing</text>
+  <text x="92" y="212" text-anchor="middle" font-size="8" fill="#6b7280">fusion impossible</text>
+  <text x="92" y="224" text-anchor="middle" font-size="8" fill="#6b7280">by construction</text>
+  <text x="92" y="248" text-anchor="middle" font-size="8" fill="#4b5563">pays: ~15 us/op</text>
+  <text x="92" y="260" text-anchor="middle" font-size="8" fill="#4b5563">dispatch + launch</text>
+  <text x="92" y="282" text-anchor="middle" font-size="8" fill="#6b7280">python REPL loops</text>
+
+  <!-- STAGE 2: GRAPH JIT -->
+  <rect x="188" y="80" width="136" height="210" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="256" y="104" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">GRAPH JIT</text>
+  <text x="256" y="118" text-anchor="middle" font-size="8" fill="#92400e">sees a captured region</text>
+  <!-- window: region of 3 ops -->
+  <rect x="206" y="130" width="100" height="46" rx="4" fill="#ffffff" stroke="#d97706" stroke-width="1" stroke-dasharray="3 2"/>
+  <text x="256" y="144" text-anchor="middle" font-size="8" fill="#374151">ln -> drop -> gelu</text>
+  <text x="256" y="157" text-anchor="middle" font-size="8" fill="#d97706">fuse: 2kNB -> 2NB</text>
+  <text x="256" y="169" text-anchor="middle" font-size="8" fill="#6b7280">| graph break |</text>
+  <text x="256" y="198" text-anchor="middle" font-size="8" font-weight="bold" fill="#92400e">unlocks: fusion</text>
+  <text x="256" y="212" text-anchor="middle" font-size="8" fill="#6b7280">kernel co-scheduling</text>
+  <text x="256" y="224" text-anchor="middle" font-size="8" fill="#6b7280">inside the region</text>
+  <text x="256" y="248" text-anchor="middle" font-size="8" fill="#4b5563">pays: graph breaks</text>
+  <text x="256" y="260" text-anchor="middle" font-size="8" fill="#4b5563">+ compile time</text>
+  <text x="256" y="282" text-anchor="middle" font-size="8" fill="#6b7280">torch.compile / jax.jit</text>
+
+  <!-- STAGE 3: AOT EXPORT -->
+  <rect x="352" y="80" width="136" height="210" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="420" y="104" text-anchor="middle" font-size="12" font-weight="bold" fill="#1d4ed8">AOT RUNTIME</text>
+  <text x="420" y="118" text-anchor="middle" font-size="8" fill="#1d4ed8">sees the whole program</text>
+  <!-- window: full program, 3 rows -->
+  <rect x="370" y="130" width="100" height="46" rx="4" fill="#ffffff" stroke="#2563eb" stroke-width="1" stroke-dasharray="3 2"/>
+  <text x="420" y="144" text-anchor="middle" font-size="8" fill="#374151">full graph</text>
+  <text x="420" y="157" text-anchor="middle" font-size="8" fill="#1d4ed8">arena alloc + schedule</text>
+  <text x="420" y="169" text-anchor="middle" font-size="8" fill="#6b7280">no python at run time</text>
+  <text x="420" y="198" text-anchor="middle" font-size="8" font-weight="bold" fill="#1d4ed8">unlocks: planning</text>
+  <text x="420" y="212" text-anchor="middle" font-size="8" fill="#6b7280">static memory arena</text>
+  <text x="420" y="224" text-anchor="middle" font-size="8" fill="#6b7280">whole-program layout</text>
+  <text x="420" y="248" text-anchor="middle" font-size="8" fill="#4b5563">pays: op coverage</text>
+  <text x="420" y="260" text-anchor="middle" font-size="8" fill="#4b5563">~14x surface gap</text>
+  <text x="420" y="282" text-anchor="middle" font-size="8" fill="#6b7280">SavedModel / ONNX</text>
+
+  <!-- STAGE 4: VENDOR ENGINE -->
+  <rect x="516" y="80" width="160" height="210" rx="10" fill="#e5e7eb" stroke="#4b5563" stroke-width="1.5"/>
+  <text x="596" y="104" text-anchor="middle" font-size="12" font-weight="bold" fill="#374151">VENDOR ENGINE</text>
+  <text x="596" y="118" text-anchor="middle" font-size="8" fill="#4b5563">program + fixed shapes + 1 chip</text>
+  <!-- window: frozen program -->
+  <rect x="534" y="130" width="124" height="46" rx="4" fill="#ffffff" stroke="#4b5563" stroke-width="1" stroke-dasharray="3 2"/>
+  <text x="596" y="144" text-anchor="middle" font-size="8" fill="#374151">graph, frozen</text>
+  <text x="596" y="157" text-anchor="middle" font-size="8" fill="#374151">shapes baked in</text>
+  <text x="596" y="169" text-anchor="middle" font-size="8" fill="#6b7280">rebuild to change</text>
+  <text x="596" y="198" text-anchor="middle" font-size="8" font-weight="bold" fill="#374151">unlocks: everything</text>
+  <text x="596" y="212" text-anchor="middle" font-size="8" fill="#6b7280">hand-tuned kernels,</text>
+  <text x="596" y="224" text-anchor="middle" font-size="8" fill="#6b7280">calibration, graphs</text>
+  <text x="596" y="248" text-anchor="middle" font-size="8" fill="#4b5563">pays: rigidity</text>
+  <text x="596" y="260" text-anchor="middle" font-size="8" fill="#4b5563">model change = rebuild</text>
+  <text x="596" y="282" text-anchor="middle" font-size="8" fill="#6b7280">TensorRT / TFLM / ExecuTorch</text>
+
+  <!-- bottom axis labels -->
+  <line x1="40" y1="316" x2="660" y2="316" stroke="#9ca3af" stroke-width="1"/>
+  <polygon points="660,316 652,312.5 652,319.5" fill="#9ca3af"/>
+  <text x="40" y="334" font-size="9" fill="#6b7280">max flexibility: change anything per call</text>
+  <text x="660" y="334" text-anchor="end" font-size="9" fill="#6b7280">max optimization: change nothing</text>
+  <text x="350" y="356" text-anchor="middle" font-size="9" fill="#6b7280">breakeven decides where to sit: eager->JIT ~2x10^6 execs, JIT->AOT ~6.7x10^6 (one cost model)</text>
+  <text x="350" y="380" text-anchor="middle" font-size="10" font-weight="bold" fill="#374151">visibility is the budget -- each position is a framework idiom, not a quality ranking</text>
+</svg>

@@ -9,6 +9,7 @@ import {
   effectsByCategory,
   isLabConceptGuide,
 } from './registry'
+import type { EffectModule } from './types'
 
 const CONCEPT_GUIDE_SLUGS = [
   'aliasing-and-nyquist',
@@ -21,7 +22,7 @@ const CONCEPT_GUIDE_SLUGS = [
 describe('lab registry', () => {
   // Loading ~45 effect modules serially inside the it() blows the default 5s
   // timeout under full-suite load; hoist the imports with a generous timeout.
-  let loadedEffects: { slug: string; mod: { controls: any[]; defaults: Record<string, unknown> } }[] = []
+  let loadedEffects: { slug: string; mod: EffectModule }[] = []
   beforeAll(async () => {
     loadedEffects = await Promise.all(
       LAB_EFFECTS.flatMap((e) => {
@@ -38,12 +39,12 @@ describe('lab registry', () => {
   })
   it('every default key has a matching in-range control', () => {
     for (const { slug, mod } of loadedEffects) {
-      const byKey = Object.fromEntries(mod.controls.map((c: any) => [c.key, c]))
+      const byKey = Object.fromEntries(mod.controls.map((c) => [c.key, c]))
       for (const [k, v] of Object.entries(mod.defaults)) {
         const spec = byKey[k]
         expect(spec, `${slug}.${k} has a control`).toBeTruthy()
         if (spec.type === 'range') { expect(v).toBeGreaterThanOrEqual(spec.min); expect(v).toBeLessThanOrEqual(spec.max) }
-        if (spec.type === 'select') expect(spec.options.some((o: any) => o.value === v)).toBe(true)
+        if (spec.type === 'select') expect(spec.options.some((o) => o.value === v)).toBe(true)
       }
     }
   })

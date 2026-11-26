@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-specialization-diagnosis-title" aria-describedby="study-svg-specialization-diagnosis-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-specialization-diagnosis-title">From workload shape to a hardware hypothesis</title>
+  <desc id="study-svg-specialization-diagnosis-desc">The operation mix identifies candidate execution units, and the operand path determines whether those units can stay busy. Profile the phases: Measure time at the target shapes, batch sizes, and precision. Then Find regular work: Identify operations that can share control and reuse operands. Then Trace operand delivery: Follow data through conversion, memory, and the execution unit. Then Test the change: Check unit activity and compare elapsed time for the full workload.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Profile the phases</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Measure time at the target shapes,</tspan>
+    <tspan x="19" y="64">batch sizes, and precision.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Find regular work</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Identify operations that can share</tspan>
+    <tspan x="19" y="165">control and reuse operands.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Trace operand delivery</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Follow data through conversion,</tspan>
+    <tspan x="19" y="266">memory, and the execution unit.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Test the change</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Check unit activity and compare</tspan>
+    <tspan x="19" y="367">elapsed time for the full workload.</tspan></text>
+  </g>
+</svg>

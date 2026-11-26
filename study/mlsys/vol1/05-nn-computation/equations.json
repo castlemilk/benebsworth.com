@@ -1,0 +1,112 @@
+[
+ {
+  "id": "layer-map",
+  "number": 1,
+  "title": "A layer is a map",
+  "latex": "A^{(l)} = f^{(l)}\\!\\left(A^{(l-1)} W^{(l)} + b^{(l)}\\right)",
+  "caption": "One dense layer: previous activations times a weight matrix plus a bias, then an element-wise nonlinearity. A network is this map composed L times; without f the composition collapses to a single linear map and depth buys nothing.",
+  "symbols": [
+   {"symbol": "A^{(l)}", "name": "layer output", "meaning": "activations leaving layer l (B x n_l matrix at batch B)"},
+   {"symbol": "A^{(l-1)}", "name": "layer input", "meaning": "activations arriving from the previous layer (or the raw example for l = 1)"},
+   {"symbol": "W^{(l)}", "name": "weight matrix", "meaning": "n_{l-1} x n_l parameters; one MAC per weight per example"},
+   {"symbol": "b^{(l)}", "name": "bias vector", "meaning": "n_l added parameters, broadcast across the batch"},
+   {"symbol": "f^{(l)}", "name": "activation", "meaning": "element-wise nonlinearity (ReLU, sigmoid, softmax); the load-bearing term"}
+  ]
+ },
+ {
+  "id": "depth-width-cost",
+  "number": 2,
+  "title": "Cost from shapes",
+  "latex": "P = \\sum_{l=1}^{L} (n_{l-1}+1)\\,n_l, \\quad \\mathrm{Ops} = 2\\sum_{l=1}^{L} n_{l-1}\\,n_l, \\quad M_{act} \\propto B\\sum_{l=1}^{L} n_l",
+  "caption": "Parameters, per-example work, and retained-activation memory all read off the layer widths before any code runs. Width enters quadratically (every weight sits in a product), depth linearly but adds sequential steps and saved activations. For 784-128-64-10: P = 109,386, Ops = 218,368 FLOPs/digit.",
+  "symbols": [
+   {"symbol": "P", "name": "parameter count", "meaning": "weights plus biases; the persistent memory term"},
+   {"symbol": "n_{l-1}+1", "name": "fan-in plus bias", "meaning": "inputs per neuron including the bias column"},
+   {"symbol": "\\mathrm{Ops}", "name": "per-example FLOPs", "meaning": "2 per MAC (multiply + add); 218,368 for the running network"},
+   {"symbol": "M_{act}", "name": "activation memory", "meaning": "bytes held for outputs at batch B; the inference-buffer term"},
+   {"symbol": "n_{l-1}n_l", "name": "layer MACs", "meaning": "multiply-accumulates per example; x2 for FLOPs"},
+   {"symbol": "B", "name": "batch size", "meaning": "multiplies retained activations only, not parameters"},
+   {"symbol": "L", "name": "depth", "meaning": "layer count; also the number of chain-rule factors and saved activation sets"}
+  ]
+ },
+ {
+  "id": "softmax-ce",
+  "number": 3,
+  "title": "Cross-entropy with fused softmax gradient",
+  "latex": "L = -\\log \\hat{y}_{\\mathrm{correct}}, \\qquad \\frac{\\partial L}{\\partial z_j} = p_j - y_j",
+  "caption": "Against a one-hot label the full cross-entropy sum collapses to the negative log of the correct-class probability. Fused with softmax, each logit's gradient is predicted mass minus target: wrong classes push down by p, the right class up by 1 - p. The 'seven read as three' example: loss -log(0.1) = 2.30, gradients +0.6 on 'three', -0.9 on 'seven'.",
+  "symbols": [
+   {"symbol": "\\hat{y}_{\\mathrm{correct}}", "name": "correct-class probability", "meaning": "softmax output on the true label; log grows sharply near zero, punishing confident errors"},
+   {"symbol": "z_j", "name": "logit j", "meaning": "raw pre-softmax score for class j"},
+   {"symbol": "p_j", "name": "predicted mass", "meaning": "softmax probability assigned to class j"},
+   {"symbol": "y_j", "name": "target", "meaning": "one-hot label: 1 on the true class, 0 elsewhere"}
+  ]
+ },
+ {
+  "id": "backprop-cost",
+  "number": 4,
+  "title": "Two backward products per layer",
+  "latex": "\\frac{\\partial L}{\\partial W^{(l)}} = {A^{(l-1)}}^{\\!\\!T}\\frac{\\partial L}{\\partial Z^{(l)}}, \\qquad \\frac{\\partial L}{\\partial A^{(l-1)}} = \\frac{\\partial L}{\\partial Z^{(l)}}{W^{(l)}}^{\\!\\!T}",
+  "caption": "A dense layer's backward pass runs two matrix products of forward size: one for the weight gradient and one to carry the signal to the previous layer. That is the origin of the 3x rule, one forward product plus two backward products per layer. The first layer skips its input gradient, so the running network lands near 2.08x.",
+  "symbols": [
+   {"symbol": "\\partial L / \\partial W^{(l)}", "name": "weight gradient", "meaning": "what the optimizer consumes; one forward-size matmul (A^T dZ)"},
+   {"symbol": "\\partial L / \\partial A^{(l-1)}", "name": "input gradient", "meaning": "signal carried to the previous layer; second forward-size matmul (dZ W^T)"},
+   {"symbol": "\\partial L / \\partial Z^{(l)}", "name": "pre-activation error", "meaning": "output error masked by f'(Z); the Hadamard-product term"},
+   {"symbol": "A^{(l-1)}", "name": "saved input", "meaning": "forward activations that must stay live until this point in the backward pass"},
+   {"symbol": "W^{(l)}", "name": "weights", "meaning": "the forward matrix transposed for the input-gradient product"}
+  ]
+ },
+ {
+  "id": "training-memory",
+  "number": 5,
+  "title": "Four kinds of state",
+  "latex": "M_{train} \\approx W + G + O + A_{saved}, \\qquad M_{infer} \\approx W + \\max_l\\big(A^{(l)} + A^{(l+1)}\\big)",
+  "caption": "Training holds weights, gradients, optimizer state, and saved activations; inference keeps the weights plus the largest adjacent pair of activation buffers (each layer's buffer dies when the next layer finishes). For the running network at batch 32 that is ~1.3 MB vs ~462 KB, about 3x the memory for identical weights and identical forward arithmetic.",
+  "symbols": [
+   {"symbol": "W", "name": "weights", "meaning": "persistent parameters; the only term inference keeps"},
+   {"symbol": "G", "name": "gradients", "meaning": "one buffer per parameter; vanishes at inference"},
+   {"symbol": "O", "name": "optimizer state", "meaning": "running statistics per parameter (1 copy momentum, 2 for Adam)"},
+   {"symbol": "A_{saved}", "name": "saved activations", "meaning": "all layer outputs held for the backward pass; scales with B, depth, width"},
+   {"symbol": "\\max_l\\big(A^{(l)} + A^{(l+1)}\\big)", "name": "buffer pair", "meaning": "largest adjacent pair of activation buffers; all inference keeps beyond weights"}
+  ]
+ },
+ {
+  "id": "arithmetic-intensity",
+  "number": 6,
+  "title": "Intensity and the roofline bound",
+  "latex": "I = \\frac{2\\,B\\sum_l n_{l-1}n_l}{4B\\sum_l n_l + 4P}, \\qquad \\mathrm{rate} = \\min(\\mathrm{peak},\\ \\mathrm{BW} \\times I)",
+  "caption": "FLOPs over bytes moved under a stream-everything traffic model. Batching multiplies the numerator (each weight read serves B examples) while parameter bytes stay fixed, so intensity climbs ~0.5 FLOP/byte at batch 1 toward ~12 at batch 32, both below the ~20 FLOP/byte ridge. The workload is bandwidth-bound: the accelerator's lead is its memory bandwidth, not its multipliers.",
+  "symbols": [
+   {"symbol": "I", "name": "arithmetic intensity", "meaning": "FLOP per byte moved; what batching raises"},
+   {"symbol": "2B\\sum n_{l-1}n_l", "name": "FLOPs", "meaning": "2 per MAC per example, times batch"},
+   {"symbol": "4P", "name": "parameter bytes", "meaning": "FP32 weights read once per batch; fixed in B, this is the reuse"},
+   {"symbol": "4B\\sum n_l", "name": "activation bytes", "meaning": "activations written and read; grows with batch"},
+   {"symbol": "\\mathrm{BW} \\times I", "name": "bandwidth slope", "meaning": "attainable rate below the ridge point"}
+  ]
+ },
+ {
+  "id": "reject-cost",
+  "number": 7,
+  "title": "The expected-cost threshold rule",
+  "latex": "\\tau^{*} = \\arg\\min_{\\tau}\\ r(\\tau)\\,C_{review} + e(\\tau)\\,C_{error}",
+  "caption": "Chow's 1970 reject option: choose the confidence threshold minimizing manual-review fraction times review cost plus misclassified fraction times error cost. Both fractions count all arriving items, so an error rate quoted on accepted items must be scaled by the accepted fraction. When errors are expensive the rule buys review volume; when reviews are expensive it tolerates error.",
+  "symbols": [
+   {"symbol": "\\tau", "name": "confidence threshold", "meaning": "cutoff on top-class score; below it, items route to review"},
+   {"symbol": "r(\\tau)", "name": "review fraction", "meaning": "share of all arriving items sent to humans"},
+   {"symbol": "e(\\tau)", "name": "error fraction", "meaning": "share of all items misclassified by the automation"},
+   {"symbol": "C_{review}, C_{error}", "name": "per-item costs", "meaning": "their ratio, not their absolute values, sets the threshold"}
+  ]
+ },
+ {
+  "id": "chain-rule",
+  "number": 8,
+  "title": "The chain-rule product",
+  "latex": "\\frac{\\partial L}{\\partial A^{(l)}} = \\frac{\\partial L}{\\partial A^{(l+1)}}\\,\\frac{\\partial A^{(l+1)}}{\\partial A^{(l)}}",
+  "caption": "Each layer's gradient is a product of local slopes applied in reverse order, so the backward pass consumes saved activations last-to-first. Cascaded over L layers it multiplies L Jacobian factors end to end: factors below 1 vanish exponentially (20 sigmoid layers: 0.25^20 ~ 9e-13), above 1 they explode to Inf then NaN. Numerical range is part of the training contract.",
+  "symbols": [
+   {"symbol": "\\partial A^{(l+1)} / \\partial A^{(l)}", "name": "local Jacobian", "meaning": "one layer's matrix of slopes; magnitudes near 1 keep the product stable"},
+   {"symbol": "\\partial L / \\partial A^{(l)}", "name": "layer error signal", "meaning": "sensitivity of the final loss to this layer's output"},
+   {"symbol": "L", "name": "factors", "meaning": "the depth is also the product length; why initialization scale matters"}
+  ]
+ }
+]

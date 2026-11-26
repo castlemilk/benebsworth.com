@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="iface-fail" class="study-fig-fit" viewBox="0 0 380 320" role="img" aria-labelledby="iface-fail-title iface-fail-desc">
+  <title id="iface-fail-title">Every team green, the fleet still fails</title>
+  <desc id="iface-fail-desc">Three teams each hit their local metric — architecture (depthwise), compression (INT8 in SRAM), serving (p99 under 50 ms). A calibration choice then travels three stages downstream: INT8 clipping ranges meet a firmware-specific preprocessing path, the input distribution shifts on one cohort, and accuracy drops four points where nobody measured.</desc>
+  <style>
+    .dark #iface-fail { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#iface-fail { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="320" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="32" font-size="19" font-weight="650">Local wins compose into a global loss</text>
+    <text x="20" y="54" font-size="12.5">each metric green; the failure lived between them</text>
+
+    <g font-size="12">
+      <rect x="20" y="70" width="104" height="52" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="72" y="90" text-anchor="middle" font-weight="620">architecture</text>
+      <text x="72" y="107" text-anchor="middle" fill="var(--fig-outline, #364c50)">depthwise ✓</text>
+      <rect x="138" y="70" width="104" height="52" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="190" y="90" text-anchor="middle" font-weight="620">compression</text>
+      <text x="190" y="107" text-anchor="middle" fill="var(--fig-outline, #364c50)">INT8 in SRAM ✓</text>
+      <rect x="256" y="70" width="104" height="52" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="308" y="90" text-anchor="middle" font-weight="620">serving</text>
+      <text x="308" y="107" text-anchor="middle" fill="var(--fig-outline, #364c50)">p99 &lt; 50 ms ✓</text>
+    </g>
+
+    <g stroke="var(--fig-rule, #b8ad96)" stroke-width="1.4" fill="none" marker-end="url(#iface-arrow)">
+      <path d="M190 128 V 152"/>
+      <path d="M190 176 V 200"/>
+      <path d="M190 224 V 248"/>
+    </g>
+    <defs>
+      <marker id="iface-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L8 4 L0 8 Z" fill="var(--fig-rule, #b8ad96)"/>
+      </marker>
+    </defs>
+
+    <g font-size="12">
+      <rect x="60" y="152" width="260" height="24" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="190" y="168" text-anchor="middle">INT8 clipping ranges frozen at calibration</text>
+      <rect x="60" y="200" width="260" height="24" rx="5" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="190" y="216" text-anchor="middle">firmware path interpolates images differently</text>
+      <rect x="60" y="248" width="260" height="24" rx="5" fill="none" stroke="var(--fig-mark, #a33c20)" stroke-dasharray="4 3"/>
+      <text x="190" y="264" text-anchor="middle" fill="var(--fig-mark, #a33c20)">input distribution shifts — on one cohort only</text>
+    </g>
+
+    <text x="190" y="296" text-anchor="middle" font-size="12.5" font-weight="620" fill="var(--fig-mark, #a33c20)">accuracy −4 pp on one cohort; telemetry stayed green</text>
+    <text x="190" y="312" text-anchor="middle" font-size="11" fill="var(--fig-rule, #6e6a5b)">the interface nobody tested was the only place it could fail</text>
+  </g>
+</svg>

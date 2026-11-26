@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-trace-a-split-reduction-title" aria-describedby="study-svg-trace-a-split-reduction-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-trace-a-split-reduction-title">A projection split across its reduction dimension</title>
+  <desc id="study-svg-trace-a-split-reduction-desc">The output becomes usable only after the partial results are combined, so the exchange can sit directly on one request&apos;s critical path. Partition features: Give each device matching slices of the input features and weight rows. Then Compute partial sums: Each device contributes to the same set of output elements. Then Combine contributions: Exchange and sum partial results over the inter-device link. Then Release the output: Start the dependent operator when its required sums are complete.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Partition features</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Give each device matching slices of</tspan>
+    <tspan x="19" y="64">the input features and weight rows.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Compute partial sums</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Each device contributes to the same</tspan>
+    <tspan x="19" y="165">set of output elements.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Combine contributions</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Exchange and sum partial results</tspan>
+    <tspan x="19" y="266">over the inter-device link.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Release the output</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Start the dependent operator when</tspan>
+    <tspan x="19" y="367">its required sums are complete.</tspan></text>
+  </g>
+</svg>

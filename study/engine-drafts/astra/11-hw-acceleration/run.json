@@ -1,0 +1,292 @@
+{
+  "id": "vol1/02_hardware_pilot",
+  "title": "Hardware Acceleration",
+  "profile": "chapter",
+  "chapterProfile": "astra",
+  "command": "chapter",
+  "sourceUrl": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd",
+  "sourceHash": "ed96957a7d57264fafbd1b8ebd9f9d309697a5a59387b6bd2aeefbc45d94399b",
+  "specHash": "3af063304eb16d59f7e3858ba8bed40e38a4cf9e0c7be5f46838fdf747d6f088",
+  "status": "accepted",
+  "sections": [
+    {
+      "id": "start-with-the-operator",
+      "heading": "Why the same projection can need two different machines",
+      "sourceHeadings": [
+        "Anatomy of an Accelerator",
+        "Hardware Specialization"
+      ]
+    },
+    {
+      "id": "identify-the-execution-path",
+      "heading": "Find the unit that executes each instruction",
+      "sourceHeadings": [
+        "Compute Primitives",
+        "Compute Units"
+      ]
+    },
+    {
+      "id": "count-memory-traffic",
+      "heading": "Count bytes at the boundary the operator crosses",
+      "sourceHeadings": [
+        "Memory Systems"
+      ]
+    },
+    {
+      "id": "calculate-the-ceilings",
+      "heading": "Use the roofline to make a falsifiable prediction",
+      "sourceHeadings": [
+        "Performance Bounds"
+      ]
+    },
+    {
+      "id": "tile-capacity",
+      "heading": "Fit operands and accumulators on chip",
+      "sourceHeadings": [
+        "Anatomy of an Accelerator",
+        "Hardware Mapping"
+      ]
+    },
+    {
+      "id": "map-the-projection",
+      "heading": "Choose which values stay near the arithmetic",
+      "sourceHeadings": [
+        "Hardware Mapping"
+      ]
+    },
+    {
+      "id": "verify-the-runtime-plan",
+      "heading": "Trace the compiled schedule through a real request",
+      "sourceHeadings": [
+        "Compilers and Runtimes"
+      ]
+    },
+    {
+      "id": "cross-device-boundaries",
+      "heading": "Decide what has to cross a device boundary",
+      "sourceHeadings": [
+        "Beyond One Accelerator"
+      ]
+    },
+    {
+      "id": "place-a-mobile-pipeline",
+      "heading": "Follow an inspection frame across a heterogeneous chip",
+      "sourceHeadings": [
+        "Heterogeneous SoC Design"
+      ]
+    },
+    {
+      "id": "choose-from-service-evidence",
+      "heading": "Choose hardware using completed work at the required service level",
+      "sourceHeadings": [
+        "Choosing an Accelerator",
+        "Fallacies and Pitfalls"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "role": "architect",
+      "model": "gpt-6.2-astra",
+      "effort": "high",
+      "sections": [],
+      "promptBytes": 45184,
+      "cached": false,
+      "key": "48e0ee5c9e4584b121677a799b1761479e828e094e61b5fc1c1bf30c969e83ab",
+      "usage": {
+        "input": 23186,
+        "cachedInput": 0,
+        "output": 6952
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "start-with-the-operator",
+        "identify-the-execution-path"
+      ],
+      "promptBytes": 27559,
+      "cached": false,
+      "key": "1b8820ef1c36120baf2ccb42a1e18a0ba87759ffd4685bb7bfb83f47f1d02357",
+      "usage": {
+        "input": 18506,
+        "cachedInput": 0,
+        "output": 1458
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "count-memory-traffic",
+        "calculate-the-ceilings"
+      ],
+      "promptBytes": 18852,
+      "cached": false,
+      "key": "8d65c2b97d3575c8ba9959cf11e4c377b27fae94e0a0ca470c80d10a246a1826",
+      "usage": {
+        "input": 17071,
+        "cachedInput": 0,
+        "output": 1808
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "tile-capacity",
+        "map-the-projection"
+      ],
+      "promptBytes": 24878,
+      "cached": false,
+      "key": "5b3b6a6c9c6d509a0f4a37d4cc67f35f78e69a02e4bcf45b60e1aa13d232aabb",
+      "usage": {
+        "input": 18436,
+        "cachedInput": 0,
+        "output": 1764
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "verify-the-runtime-plan",
+        "cross-device-boundaries"
+      ],
+      "promptBytes": 18208,
+      "cached": false,
+      "key": "b9fed75840b2b702b2d471f3f251a0586bc3eee2be4b34459b5894cf8363ea5b",
+      "usage": {
+        "input": 16680,
+        "cachedInput": 2688,
+        "output": 1475
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "place-a-mobile-pipeline",
+        "choose-from-service-evidence"
+      ],
+      "promptBytes": 22374,
+      "cached": false,
+      "key": "7ebeaf7eac9cde39934d0380874c35d51027579f9bfd7e47b05250f4d9ac29df",
+      "usage": {
+        "input": 17569,
+        "cachedInput": 2688,
+        "output": 1527
+      }
+    },
+    {
+      "role": "chapter-reviewer",
+      "model": "gpt-6.2-astra",
+      "effort": "low",
+      "sections": [
+        "start-with-the-operator",
+        "identify-the-execution-path",
+        "count-memory-traffic",
+        "calculate-the-ceilings",
+        "tile-capacity",
+        "map-the-projection",
+        "verify-the-runtime-plan",
+        "cross-device-boundaries",
+        "place-a-mobile-pipeline",
+        "choose-from-service-evidence"
+      ],
+      "promptBytes": 125006,
+      "cached": false,
+      "key": "c36deac53dbc3a1b1cdcf1fd6d4290c737b044b7d619d10e18ad9a7e3506c9c6",
+      "usage": {
+        "input": 38008,
+        "cachedInput": 2688,
+        "output": 569
+      }
+    },
+    {
+      "role": "chapter-repair",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "count-memory-traffic"
+      ],
+      "promptBytes": 16514,
+      "cached": false,
+      "key": "d7bd9bbc45a96ab3b5ad47cf979ec7e44641eea5dd4df57418145baaef99bc85",
+      "usage": {
+        "input": 16451,
+        "cachedInput": 0,
+        "output": 668
+      }
+    },
+    {
+      "role": "chapter-reviewer",
+      "model": "gpt-6.2-astra",
+      "effort": "low",
+      "sections": [
+        "start-with-the-operator",
+        "identify-the-execution-path",
+        "count-memory-traffic",
+        "calculate-the-ceilings",
+        "tile-capacity",
+        "map-the-projection",
+        "verify-the-runtime-plan",
+        "cross-device-boundaries",
+        "place-a-mobile-pipeline",
+        "choose-from-service-evidence"
+      ],
+      "promptBytes": 125995,
+      "cached": false,
+      "key": "9390ee4c4a7b822ab0f1c5e341c4e109a13eeaf45bd570f2b6e669732dfd42ca",
+      "usage": {
+        "input": 38189,
+        "cachedInput": 12160,
+        "output": 460
+      }
+    }
+  ],
+  "maxCalls": 24,
+  "stopAfterTokens": null,
+  "liveCalls": 9,
+  "tokens": {
+    "input": 204096,
+    "cachedInput": 20224,
+    "output": 16681,
+    "total": 220777
+  },
+  "usageIncomplete": false,
+  "elapsedMs": 565972,
+  "reviews": [
+    {
+      "verdict": "revise",
+      "checks": {
+        "mechanism": "Tracking W[k,n] answers the opening question at operator scale. Eight ready rows give the weight eight uses. Scheduling all eight while the tile is resident cuts the assumed weight traffic from 8S to S. The deployment test checks both bytes per completed row and latency from arrival, including time spent waiting to form the batch.",
+        "calculation": "The roofline bars give 24 GFLOP / 60 TFLOP/s = 0.4 ms and 6 GB / 1.5 TB/s = 4 ms. Reaching 12 TFLOP/s allows 2 ms, hence at most 3 GB at that interface ceiling. For the SRAM baseline, the four live allocations are 49,152 + 32,768 + 24,576 + 12,288 = 118,784 bytes = 116 KiB, so the planned overlap exceeds capacity by 20 KiB. Halving output width gives 49,152 + 16,384 + 12,288 + 12,288 = 90,112 bytes = 88 KiB, leaving +8 KiB. The changed-input result appears only in the quiz key.",
+        "continuity": "The fusion example predicts an 8 MiB saving from eliminating one 4 MiB store and one 4 MiB load. The compiler section then asks whether the next region forces a layout conversion, and the service section checks whether the measured stage saving improves arrival-to-result latency and energy per accepted result. Together these steps carry a prediction about one memory boundary through to a hardware decision.",
+        "assessment": "Gathering the column shards is a tempting answer after the worked reduction split, where the consumer waits until max(50, 60) + 45 = 105 µs. The quiz changes the partition axis. Each device now holds complete dot products for its columns, the activation is elementwise, and later consumers accept shards. Option a alone satisfies those dependencies with zero inter-device traffic."
+      },
+      "issues": [
+        {
+          "id": "count-memory-traffic",
+          "change": "The ledger closes when the kernel finishes, yet the partial-sum example charges a reload performed by a second kernel. Define the interval as the whole projection invocation, from its first kernel through its final dependent kernel, or keep separate per-kernel ledgers and sum them. Pair the resulting byte count with time and counters from the same scope. Combining both kernels’ bytes with only the first kernel’s duration can falsely suggest bandwidth saturation."
+        }
+      ]
+    },
+    {
+      "verdict": "pass",
+      "checks": {
+        "mechanism": "Splitting the projection over input features leaves each device with an M × N array of partial sums. The consumer needs both contributions. With the stated timing, it can start at max(50, 60) + 45 = 105 µs, so the 100 µs single-device mapping wins. Splitting over output columns changes that dependency because each local column is already fully reduced.",
+        "calculation": "In KiB, the baseline input buffers use 2 × 96 × 128 × 2 / 1024 = 48, the weight buffers use 2 × 128 × 64 × 2 / 1024 = 32, and the accumulator uses 96 × 64 × 4 / 1024 = 24. Adding 12 for workspace gives 116 and a signed margin of −20 KiB. At width 32 only the weights and accumulator halve. The total is 48 + 16 + 12 + 12 = 88 KiB, so the tile fits with +8 KiB. The packet and figure withhold this transfer result.",
+        "continuity": "The previous ledger defect is fixed. The packet charges a partial-sum store to its producer and the reload to its consumer, then pairs their transaction bytes with elapsed time through final dependent completion. That makes the roofline diagnosis testable. In the illustrative projection, 6 GB in 4.2 ms gives 1.43 TB/s against a 1.5 TB/s ceiling. This supports testing a mapping that reduces crossings. The final section checks whether that saving reaches arrival-to-result latency and energy per accepted inspection.",
+        "assessment": "The fleet question makes X tempting even on efficiency grounds. At full allowed throughput, X uses 200/40 = 5 J per result versus 260/50 = 5.2 for Y. At the specified demand of 90/s, whole-server provisioning reverses the ranking. Three X servers consume 600 Wh in the hour, while two Y servers meet demand using 520 Wh. The prompt supplies the power assumption for spare capacity, making B uniquely correct."
+      },
+      "issues": []
+    }
+  ]
+}

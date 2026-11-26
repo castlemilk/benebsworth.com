@@ -1,0 +1,52 @@
+[
+ {
+  "id": "ckpt-dominance",
+  "kind": "BAR_STACKED",
+  "title": "Reads are the rounding error",
+  "caption": "Traffic moved over the 30-day run, three classes against each other. The 6 TB corpus is read once; the serving rollout fans 35 TB to 100 replicas; the checkpoint contract writes ~10.6 PB across 4,320 saves — over 1,000x the epoch read. Storage for this workload is a write system with a read side, not the reverse.",
+  "xLabel": "Traffic class",
+  "yLabel": "TB moved over the run",
+  "xPoints": [
+   "corpus epoch read",
+   "rollout fan-out (100 replicas)",
+   "checkpoint writes (4,320 saves)"
+  ],
+  "series": [
+   {
+    "key": "bytes",
+    "label": "TB moved over the run",
+    "color": "var(--chart-1)",
+    "values": [
+     6,
+     35,
+     10600
+    ]
+   }
+  ]
+ },
+ {
+  "id": "per-accel-demand",
+  "kind": "BAR_STACKED",
+  "title": "The feed requirement is workload-shaped",
+  "caption": "Median sustained read throughput per emulated H100 accelerator from MLPerf Storage v1.0 closed submissions, by workload: ResNet-50 0.18, CosmoFlow 0.55, 3D U-Net 2.8 GB/s (A100 medians ran about half: 0.09, 0.35, 1.4). The 175B text job needs ~MB/s fleet-wide — the same storage system is overfed on tokens and starved on pixels.",
+  "xLabel": "Workload",
+  "yLabel": "GB/s per H100 accelerator",
+  "xPoints": [
+   "ResNet-50",
+   "CosmoFlow",
+   "3D U-Net"
+  ],
+  "series": [
+   {
+    "key": "h100",
+    "label": "GB/s per H100 (MLPerf median)",
+    "color": "var(--chart-2)",
+    "values": [
+     0.18,
+     0.55,
+     2.8
+    ]
+   }
+  ]
+ }
+]

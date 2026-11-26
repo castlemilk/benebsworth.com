@@ -1,0 +1,211 @@
+[
+  {
+    "id": "projection-work",
+    "number": 1,
+    "title": "Projection work and one-pass traffic",
+    "latex": "\\begin{aligned} O&=2mkb\\\\ D&=2(mk+kb+mb)\\\\ I&=O/D \\end{aligned}",
+    "caption": "One dense projection with FP16 weights, inputs and final outputs, and locally held FP32 accumulators. Count a multiply-accumulate as two FLOPs. The one-pass traffic assumes one read of each weight and input, one output write and no spilled partial sums across the selected device-memory interface.",
+    "symbols": [
+      {
+        "symbol": "O",
+        "name": "Work",
+        "meaning": "Floating-point operations, counting a multiply-accumulate as two operations."
+      },
+      {
+        "symbol": "D",
+        "name": "Device-memory traffic",
+        "meaning": "Bytes crossing the chosen device-memory interface under the one-pass assumption."
+      },
+      {
+        "symbol": "m",
+        "name": "Output width",
+        "meaning": "Number of output features, or rows of the weight matrix."
+      },
+      {
+        "symbol": "k",
+        "name": "Input width",
+        "meaning": "Number of input features, or columns of the weight matrix."
+      },
+      {
+        "symbol": "b",
+        "name": "Batch size",
+        "meaning": "Number of input columns sharing the same weights."
+      },
+      {
+        "symbol": "2",
+        "name": "Format width",
+        "meaning": "Two bytes per FP16 weight, input or final output. In the work count it represents two FLOPs per multiply-accumulate."
+      },
+      {
+        "symbol": "I",
+        "name": "Arithmetic intensity",
+        "meaning": "Work divided by bytes crossing this particular memory interface, in FLOPs per byte."
+      }
+    ]
+  },
+  {
+    "id": "time-floors",
+    "number": 2,
+    "title": "Compute and transfer time floors",
+    "latex": "t\\geq\\max\\!\\left(\\frac{D}{B},\\frac{O}{P}\\right)",
+    "caption": "The terms are ideal lower bounds with a fixed amount of work and traffic. The maximum applies even if compute and transfer overlap perfectly. Dependencies, imperfect overlap, launches and achieved rates can make execution take longer.",
+    "symbols": [
+      {
+        "symbol": "t",
+        "name": "Kernel elapsed time",
+        "meaning": "Seconds required to execute this kernel at the stated boundary."
+      },
+      {
+        "symbol": "D",
+        "name": "Traffic",
+        "meaning": "Bytes that must cross the specified memory interface."
+      },
+      {
+        "symbol": "B",
+        "name": "Bandwidth",
+        "meaning": "Bytes per second available at that interface. A peak gives an optimistic bound."
+      },
+      {
+        "symbol": "O",
+        "name": "Operation count",
+        "meaning": "Floating-point operations required by the kernel."
+      },
+      {
+        "symbol": "P",
+        "name": "Compute rate",
+        "meaning": "Peak operations per second on the supported numerical execution path."
+      },
+      {
+        "symbol": "\\max",
+        "name": "Larger floor",
+        "meaning": "Even with perfect overlap, time cannot be shorter than either resource floor."
+      }
+    ]
+  },
+  {
+    "id": "roofline",
+    "number": 3,
+    "title": "Roofline and ridge point",
+    "latex": "R\\leq\\min(P,BI),\\qquad I_{\\mathrm{ridge}}=P/B",
+    "caption": "For one precision and one memory interface, the lower ceiling bounds the useful rate. A kernel below that ceiling may also be limited by dispatch, dependencies, occupancy or a different interface.",
+    "symbols": [
+      {
+        "symbol": "R",
+        "name": "Achieved useful rate",
+        "meaning": "Useful floating-point operations per second for this kernel."
+      },
+      {
+        "symbol": "P",
+        "name": "Compute ceiling",
+        "meaning": "Peak FLOP/s on the numerical path actually used."
+      },
+      {
+        "symbol": "B",
+        "name": "Memory bandwidth",
+        "meaning": "Bytes per second at the selected memory boundary."
+      },
+      {
+        "symbol": "I",
+        "name": "Arithmetic intensity",
+        "meaning": "Useful FLOPs divided by bytes crossing that boundary."
+      },
+      {
+        "symbol": "I_{\\mathrm{ridge}}",
+        "name": "Ridge intensity",
+        "meaning": "FLOPs per byte where the modeled bandwidth and compute ceilings meet."
+      }
+    ]
+  },
+  {
+    "id": "tile-capacity",
+    "number": 4,
+    "title": "Live tile capacity",
+    "latex": "2m_tk_t+2k_tn_t+4m_tn_t\\leq C",
+    "caption": "FP16 weight and input tiles and an FP32 output accumulator must coexist in the same local store. This necessary fit excludes additional staging buffers, alignment, workspace and space reserved by other work.",
+    "symbols": [
+      {
+        "symbol": "m_t",
+        "name": "Output-feature tile",
+        "meaning": "Number of weight rows and output rows in the tile."
+      },
+      {
+        "symbol": "k_t",
+        "name": "Reduction tile",
+        "meaning": "Number of input features consumed in this step."
+      },
+      {
+        "symbol": "n_t",
+        "name": "Batch tile",
+        "meaning": "Number of input and output columns in this tile."
+      },
+      {
+        "symbol": "2",
+        "name": "FP16 bytes",
+        "meaning": "Bytes per weight or input element."
+      },
+      {
+        "symbol": "4",
+        "name": "FP32 bytes",
+        "meaning": "Bytes per live output accumulator."
+      },
+      {
+        "symbol": "C",
+        "name": "Local capacity",
+        "meaning": "Usable bytes available to all three live tiles at the chosen memory tier."
+      }
+    ]
+  },
+  {
+    "id": "amdahl",
+    "number": 5,
+    "title": "Serial request speedup",
+    "latex": "S=\\frac{1}{(1-f)+f/G}",
+    "caption": "Amdahl’s law for a serial request when the chosen stage alone gets gain G and all other work remains fixed. On overlapping paths, trace the actual critical path instead of adding stage times.",
+    "symbols": [
+      {
+        "symbol": "S",
+        "name": "End-to-end speedup",
+        "meaning": "Baseline request time divided by optimized request time."
+      },
+      {
+        "symbol": "f",
+        "name": "Accelerated fraction",
+        "meaning": "Share of baseline request time spent in the stage that receives the gain."
+      },
+      {
+        "symbol": "G",
+        "name": "Stage gain",
+        "meaning": "Baseline stage time divided by its optimized time."
+      },
+      {
+        "symbol": "1-f",
+        "name": "Unaffected fraction",
+        "meaning": "Baseline time share unchanged by this specific intervention."
+      }
+    ]
+  },
+  {
+    "id": "energy-per-result",
+    "number": 6,
+    "title": "Energy per completed result",
+    "latex": "E_{\\mathrm{result}}=P_{\\mathrm{system}}/r",
+    "caption": "Divide average whole-system watts by completed results per second over the same steady interval. Use the same workload, quality and power boundary when comparing systems.",
+    "symbols": [
+      {
+        "symbol": "E_{\\mathrm{result}}",
+        "name": "Energy per result",
+        "meaning": "Joules per completed useful result."
+      },
+      {
+        "symbol": "P_{\\mathrm{system}}",
+        "name": "Average system power",
+        "meaning": "Average watts inside the declared power measurement boundary, including the host when comparing complete systems."
+      },
+      {
+        "symbol": "r",
+        "name": "Completion rate",
+        "meaning": "Completed useful results per second over the same measurement interval."
+      }
+    ]
+  }
+]

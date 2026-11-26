@@ -1,0 +1,32 @@
+[
+  {
+    "id": "latency-budget-bar",
+    "file": "images/svg/model_serving_latency_budget_bar.svg",
+    "title": "ResNet-50 latency budget",
+    "caption": "Per-phase breakdown of a single serving request on the reference H100: host preprocessing alone takes longer than the modeled forward pass — the model is one stage of the request."
+  },
+  {
+    "id": "blast-radius",
+    "file": "images/svg/model_serving_blast_radius.svg",
+    "title": "Blast radius of a shared serving failure",
+    "caption": "One failed serving dependency fans out across every downstream request — the queueing and isolation argument for replicas and headroom."
+  },
+  {
+    "id": "margin-stack",
+    "file": "images/svg/margin_stack.svg",
+    "title": "Margin stack",
+    "caption": "Serving margins layered per stage: queueing, execution and dispatch each carry their own headroom before the request meets the SLO."
+  },
+  {
+    "id": "margin-001",
+    "file": "images/svg/vol1_model_serving_margin_001.svg",
+    "title": "Serving margin study I",
+    "caption": "Margin study from the chapter's margins — where utilization, queuing and tail headroom intersect."
+  },
+  {
+    "id": "margin-002",
+    "file": "images/svg/vol1_model_serving_margin_002.svg",
+    "title": "Serving margin study II",
+    "caption": "Margin study from the chapter's margins — batching and runtime trade-offs in the serving loop."
+  }
+]

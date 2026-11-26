@@ -1,0 +1,32 @@
+[
+  {
+    "id": "claim-to-test",
+    "file": "claim-to-test.svg",
+    "title": "A claim becomes a test",
+    "caption": "Six components must be fixed before a number counts: task and dataset (what is correct), model and metrics (what is better), the harness, the machine specification, the run rules and the report."
+  },
+  {
+    "id": "vendor-claims-card",
+    "file": "vendor-claims-card.svg",
+    "title": "Which claim survives normalization?",
+    "caption": "Five vendor spec cards — 8 TOPS at INT8, 15 TOPS at INT4, a proprietary latency, a two-generation-old MLPerf score, a peak at maximum batch — cannot be ranked until all five run the same task, model, machine state and boundary. Only then do the camera-trap gates (p99 ≤ 33 ms, battery, slice recall) decide."
+  },
+  {
+    "id": "measurement-boundary",
+    "file": "measurement-boundary.svg",
+    "title": "One prompt, two measurements",
+    "caption": "The same prompt costs 0.10 Wh measured at the accelerators and 0.24 Wh measured across the whole service — 58% accelerators, 25% host CPUs and DRAM, 17% idle reserve and overhead. The meter's dashed loop is the boundary."
+  },
+  {
+    "id": "duty-cycle-timeline",
+    "file": "duty-cycle-timeline.svg",
+    "title": "8.3 ms of work per 1,000 ms",
+    "caption": "Keyword spotting runs one ~8.3 ms, ~3.3 mJ inference inside each one-second audio window — a 0.8% duty cycle. At that duty the standby floor sets battery drain: the efficiency that matters is the one that is off."
+  },
+  {
+    "id": "disagreement-decides",
+    "file": "disagreement-decides.svg",
+    "title": "Same scores, different disagreements",
+    "caption": "Both illustrative runs have 50 baseline errors and 60 compressed-model errors on 1,000 images. Count which model alone was right. With the chapter’s uncorrected McNemar statistic, 10 against 0 gives 10.0, above the 3.84 cutoff. With 30 against 20 it gives 2.0, below the cutoff."
+  }
+]

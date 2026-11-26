@@ -1,0 +1,30 @@
+[
+  {
+    "id": "boundary-map",
+    "file": "boundary-map.svg",
+    "title": "What crosses the device boundary",
+    "caption": "Local-only learning sends nothing, centralized learning uploads raw observations, and federated learning downloads a shared model then uploads updates. Keeping raw data local reduces one exposure but does not by itself make the update private.",
+    "alt": "Three lanes comparing local-only, centralized and federated learning across a dashed device boundary"
+  },
+  {
+    "id": "memory-amplifier",
+    "file": "memory-amplifier.svg",
+    "title": "Training memory amplifier",
+    "caption": "The chapter's 10M-parameter example: 40 MB weights plus 40 MB gradients, 80 MB Adam state and 200 MB activations make a 360 MB full-update working set, beyond the 200-300 MB background allowance.",
+    "alt": "Stacked memory bar showing weights gradients optimizer and activations compared with background allowance"
+  },
+  {
+    "id": "lora-slimming",
+    "file": "lora-slimming.svg",
+    "title": "Freeze the matrix, train the thin path",
+    "caption": "For a 768 by 768 layer, rank-4 LoRA trains 6,144 parameters instead of 589,824. The trainable artifact shrinks by 99 percent, while backward traversal, activations and adapter optimizer state remain in the budget.",
+    "alt": "Large frozen matrix beside thin low-rank trainable projections"
+  },
+  {
+    "id": "participation-funnel",
+    "file": "participation-funnel.svg",
+    "title": "The aggregate learns the admitted population",
+    "caption": "Eligibility, sampling, over-selection, deadlines and dropout filter the deployed fleet into completed updates. Coverage ratio compares each cohort's share of completed updates with its share of the deployed population.",
+    "alt": "Funnel from deployed fleet to admitted devices selected cohort and completed updates with coverage-ratio definition"
+  }
+]

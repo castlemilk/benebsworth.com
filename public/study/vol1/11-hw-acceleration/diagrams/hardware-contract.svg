@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ha-hardware-contract" class="study-fig-fit" viewBox="0 0 420 330" role="img" aria-labelledby="ha-hardware-contract-title ha-hardware-contract-desc">
+<title id="ha-hardware-contract-title">The specialized path has conditions</title>
+<desc id="ha-hardware-contract-desc">A supported matrix operation, precision, shape, layout and sufficient parallel work can select a matrix path; failed conditions require another path whose costs must be measured.</desc>
+<style>
+  #ha-hardware-contract { font-family: system-ui, sans-serif; }
+  .dark #ha-hardware-contract [fill="#fbf7f0"] { fill: #201a17; }
+  .dark #ha-hardware-contract [fill="#eee5da"] { fill: #332b26; }
+  .dark #ha-hardware-contract [fill="#29231e"] { fill: #f7eee3; }
+  .dark #ha-hardware-contract [fill="#6f6055"] { fill: #c8b8aa; }
+  .dark #ha-hardware-contract [fill="#9a3d1d"] { fill: #f2a276; }
+  .dark #ha-hardware-contract [stroke="#b8a89c"] { stroke: #72665c; }
+  .dark #ha-hardware-contract [stroke="#6f6055"] { stroke: #ad9d8f; }
+  .dark #ha-hardware-contract [stroke="#9a3d1d"] { stroke: #f2a276; }
+</style>
+<rect width="420" height="330" rx="12" fill="#fbf7f0"/>
+<text x="22" y="36" fill="#29231e" font-size="22" font-weight="650">A path has a contract</text>
+<rect x="22" y="54" width="376" height="38" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="34" y="79" fill="#6f6055" font-size="17">Operation</text>
+<text x="386" y="79" fill="#29231e" font-size="17" text-anchor="end">matrix product</text>
+<rect x="22" y="100" width="376" height="38" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="34" y="125" fill="#6f6055" font-size="17">Format</text>
+<text x="386" y="125" fill="#29231e" font-size="17" text-anchor="end">supported FP16</text>
+<rect x="22" y="146" width="376" height="38" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="34" y="171" fill="#6f6055" font-size="17">Shape + layout</text>
+<text x="386" y="171" fill="#29231e" font-size="17" text-anchor="end">supported tiles</text>
+<rect x="22" y="192" width="376" height="38" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="34" y="217" fill="#6f6055" font-size="17">Parallel work</text>
+<text x="386" y="217" fill="#29231e" font-size="17" text-anchor="end">enough active work</text>
+<path d="M210 233L210 253" fill="none" stroke="#6f6055" stroke-width="2"/>
+<text x="210" y="272" fill="#9a3d1d" font-size="19" font-weight="650" text-anchor="middle">Supported path → matrix unit</text>
+<text x="210" y="304" fill="#6f6055" font-size="17" text-anchor="middle">Otherwise: trace the actual fallback</text>
+</svg>

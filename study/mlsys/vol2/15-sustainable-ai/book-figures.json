@@ -1,0 +1,72 @@
+[
+  {
+    "id": "book-power-energy-boundaries",
+    "file": "power-energy-boundaries.svg",
+    "title": "Book power and energy boundaries",
+    "caption": "The book's figure separating the instantaneous power envelope from the cumulative energy account. Our power-vs-energy sketch compresses the same contrast into two panels with the burst-versus-month comparison.",
+    "alt": "Book figure of power envelope versus energy account boundaries"
+  },
+  {
+    "id": "book-intervention-cascade",
+    "file": "intervention-cascade.svg",
+    "title": "Book intervention cascade",
+    "caption": "The book's cascade of mitigation levers across accounting tiers. Our carbon-multiplier-chain redraws the same tiers as a multiplicative chain with the additive embodied term separated.",
+    "alt": "Book cascade of intervention levers across lifecycle tiers"
+  },
+  {
+    "id": "book-carbon-lifecycle",
+    "file": "carbon-lifecycle.svg",
+    "title": "Book carbon lifecycle views",
+    "caption": "The book's alignment of emission scopes, lifecycle phases, and activity views, which must never be added across views. Our packet carries the three-view warning in prose.",
+    "alt": "Book figure aligning scopes, phases and activity views of the same emissions"
+  },
+  {
+    "id": "book-ai-lca",
+    "file": "ai-lca.svg",
+    "title": "Book AI lifecycle assessment",
+    "caption": "The book's four-phase lifecycle diagram: design, manufacture, use, disposal. Our packet keeps the phase mechanisms and the hardware lifespan break-even in prose.",
+    "alt": "Book diagram of the four AI hardware lifecycle phases"
+  },
+  {
+    "id": "book-prefill-decode-energy",
+    "file": "prefill-decode-energy.svg",
+    "title": "Book prefill-decode energy split",
+    "caption": "The book's figure contrasting prefill's parallel weight reuse against decode's one-token-at-a-time memory traffic. Our packet carries the batch-one arithmetic in prose: two FLOPs per parameter against two bytes read.",
+    "alt": "Book figure comparing prefill and decode dataflow energy"
+  },
+  {
+    "id": "book-inference-crossover",
+    "file": "sustainable_ai_inference_crossover.svg",
+    "title": "Book inference crossover",
+    "caption": "The book's crossover plot of cumulative inference overtaking training. Our inference-crossover chart recomputes the same arithmetic as paired bars at fixed day counts.",
+    "alt": "Book line plot of cumulative inference energy crossing one-time training energy"
+  },
+  {
+    "id": "book-grid-interconnection",
+    "file": "sustainable_ai_grid_interconnection_ladder.svg",
+    "title": "Book grid interconnection ladder",
+    "caption": "The book's ladder of interconnection and substation lead times against GPU procurement. Our packet keeps the electrically-stranded-silicon warning in prose.",
+    "alt": "Book ladder comparing substation and GPU procurement timelines"
+  },
+  {
+    "id": "book-water-accounts",
+    "file": "datacenter-water-accounts.svg",
+    "title": "Book water accounts",
+    "caption": "The book's separation of direct evaporative water from indirect generation water, weighted by watershed stress. Our packet summarizes the water account in the physics table and fallacies.",
+    "alt": "Book figure of data center water withdrawal and consumption accounts"
+  },
+  {
+    "id": "book-carbon-scheduling",
+    "file": "carbon-scheduling-constraints.svg",
+    "title": "Book carbon-aware scheduling constraints",
+    "caption": "The book's constraint diagram for moving flexible work across regions and hours. Our packet carries the constraint list in prose: capacity, data access, deadlines, transfer and restart emissions.",
+    "alt": "Book figure of spatial and temporal carbon-aware scheduling constraints"
+  },
+  {
+    "id": "book-energy-per-byte",
+    "file": "sustainable_ai_energy_per_byte_ladder.svg",
+    "title": "Book energy-per-byte ladder",
+    "caption": "The book's ladder of data-movement energy by hierarchy level. Our boundary-ladder sketch focuses on accounting boundaries instead; the movement numbers live in the decode analysis.",
+    "alt": "Book ladder of energy per byte across the memory hierarchy"
+  }
+]

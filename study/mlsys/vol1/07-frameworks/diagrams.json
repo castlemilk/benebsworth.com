@@ -1,0 +1,20 @@
+[
+  {
+    "id": "visibility-ladder",
+    "file": "visibility-ladder.svg",
+    "title": "The execution continuum as widening visibility",
+    "caption": "Every optimization has a visibility prerequisite. Eager reveals one operation, so fusion and memory planning are impossible by construction. Graph capture reveals a region and enables fusion inside it. AOT export reveals the whole program, enabling arena allocation and full scheduling. A vendor engine adds fixed shapes and one target, unlocking hand-tuned kernels. Moving right buys optimization and pays in flexibility - and each position maps to a framework idiom: Python loops, torch.compile/jax.jit, SavedModel/ONNX export, TensorRT/TFLM."
+  },
+  {
+    "id": "gpt2-decode-tax",
+    "file": "gpt2-decode-tax.svg",
+    "title": "The decode step the host can't feed",
+    "caption": "One batch-one GPT-2 XL decode step in three clockings: the device can read the 3 GB of FP16 weights in ~0.9 ms, driver launches alone take ~2.9 ms (576 kernels x ~5 us), and full eager issue with Python dispatch takes ~8.6 ms. The accelerator spends ~90% of the step waiting for instructions. The gap between the first bar and the last is the framework's latency contribution."
+  },
+  {
+    "id": "tape-and-peak",
+    "file": "tape-and-peak.svg",
+    "title": "The tape builds the peak, backward unwinds it",
+    "caption": "Forward execution records ops and retains the tensors each backward rule will need, so the saved-activation stack grows one tower per layer and peaks exactly where forward ends. Backward consumes the towers in reverse order, freeing each as it passes. Checkpointing chooses to re-record a segment during backward rather than hold it - the compute-for-memory trade at the heart of training memory."
+  }
+]

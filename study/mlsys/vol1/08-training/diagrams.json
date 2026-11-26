@@ -1,0 +1,20 @@
+[
+  {
+    "id": "memory-staircase-svg",
+    "file": "memory-staircase.svg",
+    "title": "The staircase into one H100",
+    "caption": "The walkthrough as a descent into the capacity box: each intervention removes a labelled slice of activation memory while the 24 GB static floor never moves. FP32's 574 GB of activations halves to 287 GB under mixed precision, loses ~201 GB of score matrices to FlashAttention, and halves again under the 16-sequence micro-batch -- 598 GB to 66.8 GB, nine times smaller, now inside 80 GB. The dashed checkpoint path shows the alternative: all 32 sequences in ~35.5 GB, paid for with ~33% more step arithmetic."
+  },
+  {
+    "id": "overlap-timeline",
+    "file": "overlap-timeline.svg",
+    "title": "Serial cost is the sum; overlapped cost is the max",
+    "caption": "Three dependent stages -- 30 ms prepare, 10 ms transfer, 50 ms compute -- cost 90 ms serially. With prefetch buffers and pinned memory, batch n+1's preparation hides under batch n's compute and the steady-state interval falls to the slowest stage: 50 ms, a 1.8x throughput gain bought entirely with staging buffers. The residual bubbles show what overlap cannot remove: the slowest stage itself."
+  },
+  {
+    "id": "checkpoint-sqrt",
+    "file": "checkpoint-sqrt.svg",
+    "title": "sqrt(L) anchors, recompute the rest",
+    "caption": "Activation checkpointing on a 48-layer network: seven segment-boundary tensors are retained through forward, and each ~7-layer segment interior is re-run during backward to regenerate the tensors its backward rules need. Stored activations fall from O(L) to kA + (L/k)A, minimized at k = sqrt(L) -- about 14 layers' worth instead of 48, ~71% saved, paid for with roughly one extra forward pass per step."
+  }
+]

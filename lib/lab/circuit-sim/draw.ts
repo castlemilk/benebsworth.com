@@ -57,9 +57,9 @@ export function gridSnap(v: number): number {
  * LEAD_EXT = additional lead wire length extending past the body edge.
  * TOTAL_OFFSET = LEAD_HALF + LEAD_EXT = distance from center to terminal.
  */
-const LEAD_EXT = 8
+const _LEAD_EXT = 8
 
-const TOTAL_OFFSET: Record<string, number> = {
+const _TOTAL_OFFSET: Record<string, number> = {
   R: 30,   // body half-width 22 + lead 8
   L: 36,   // body half-width 28 + lead 8
   C: 20,   // plate gap half 6 + lead 8 = 14... actually gap is 12, half=6, but let me just make it work consistently

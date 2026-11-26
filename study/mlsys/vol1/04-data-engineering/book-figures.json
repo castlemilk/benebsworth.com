@@ -1,0 +1,62 @@
+[
+ {
+  "id": "dataset-size-growth",
+  "file": "fig-dataset-size-growth (generated)",
+  "title": "fig-dataset-size-growth: training-data scales",
+  "caption": "Two log-scale panels of landmark corpora — image counts for LeNet/AlexNet/ViT vs training tokens for GPT-3/Chinchilla/DeepSeek-V3/Qwen3 — with the ImageNet-1k reference line the chapter's ResNet-50 workload uses. Illustrates scale, not a fitted growth rate."
+ },
+ {
+  "id": "cascades",
+  "file": "_data_engineering_cascades.png",
+  "title": "fig-cascades: the lifecycle failure arcs",
+  "caption": "The book's cascade figure: early defects in framing and collection bypass intermediate validation and surface at evaluation and deployment. Our data-cascade.svg distils the same propagation plus the widening remediation-cost band."
+ },
+ {
+  "id": "four-pillars",
+  "file": "fig-four-pillars (generated)",
+  "title": "fig-four-pillars: quality, reliability, scalability, governance",
+  "caption": "Four pillars feeding the ML data system, with dashed trade-off edges — validation overhead vs throughput, consistency vs coordination, privacy vs performance, bias mitigation vs coverage."
+ },
+ {
+  "id": "false-wake-margin",
+  "file": "vol1_data_engineering_margin_001.svg",
+  "title": "margin: the false-wake multiplication",
+  "caption": "Expected monthly false wakes on a log scale: ~2,592 at 99.9% per-window rejection, ~26 at 99.999% — both over the 1/month budget line. Same arithmetic as our false-wake-curve chart."
+ },
+ {
+  "id": "pipeline-flow",
+  "file": "_data_pipeline.png",
+  "title": "fig-pipeline-flow: end-to-end data pipeline",
+  "caption": "Heterogeneous sources normalizing into unified storage, with labeling looping back and a governance boundary around everything — the map for the chapter's middle sections."
+ },
+ {
+  "id": "mswc-pipeline",
+  "file": "_kws_pipeline.svg",
+  "title": "fig-mswc: forced-alignment labeling at scale",
+  "caption": "How MSWC was built: forced alignment over continuous speech corpora + transcripts, sliced into >1M one-second keyword windows across 50 keywords and 5 languages — automated labeling as the throughput answer."
+ },
+ {
+  "id": "spectrogram",
+  "file": "kws_spectrogram.png",
+  "title": "fig-spectrogram-example: waveform → spectrogram → MFCC",
+  "caption": "Three aligned views of one audio sample — raw waveform, time-frequency spectrogram, 13-coefficient MFCC — the representation the KWS pipeline must compute identically on cluster and device."
+ },
+ {
+  "id": "data-gravity-entropy",
+  "file": "data_engineering_data_gravity_entropy.svg",
+  "title": "physics: gravity vs task-relevant signal",
+  "caption": "Data selection gain ∝ information entropy / data gravity — the book's lens for when moving/acquiring bytes is worth the signal they carry."
+ },
+ {
+  "id": "storage-latency",
+  "file": "data_engineering_storage_latency_hierarchy.svg",
+  "title": "storage: the latency hierarchy",
+  "caption": "Latency tiers across storage media — no medium is both cheap and fast, which is why training scans and serving lookups pull toward different tiers."
+ },
+ {
+  "id": "debt-compounding",
+  "file": "data_engineering_debt_compounding.svg",
+  "title": "debt: compounding backlog",
+  "caption": "The Debt_n ≈ Debt_0(1+r)^n heuristic drawn as a growth curve — the same shape as our illustrative debt-compound chart at three net rates."
+ }
+]

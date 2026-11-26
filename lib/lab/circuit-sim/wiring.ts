@@ -71,7 +71,6 @@ export function computeManhattanPath(
 
   // Horizontal-first: (ax,ay) → (bx,ay) → (bx,by)
   // Vertical-first:   (ax,ay) → (ax,by) → (bx,by)
-  const hDist = Math.abs(ax - bx) + Math.abs(ay - by) // same for both paths
   // Prefer horizontal-first for shorter first segment, or just always h-first
   return [{ x: bx, y: ay }]
 }

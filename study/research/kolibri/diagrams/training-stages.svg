@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 435" role="img" aria-labelledby="title desc">
+<title id="title">How the base model is trained</title><desc id="desc">The context grows from 16,384 through 65,536 to 262,144 tokens as the training data changes.</desc>
+<style>
+text{font:22px system-ui,sans-serif;fill:#202d2c} .title{font-size:25px;font-weight:700} .small{font-size:19px;fill:#495a57} .label{font-weight:600} .card{fill:#e7eeeb;stroke:#8a9c98} .accent{fill:#bce5d8;stroke:#257660;stroke-width:2} .arrow{fill:none;stroke:#257660;stroke-width:2.5;marker-end:url(#head)}
+</style>
+<defs><marker id="head" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L7 3L0 6z" fill="#257660"/></marker></defs>
+<rect width="600" height="435" rx="12" fill="#f8faf9"/>
+<text x="26" y="43" class="title" text-anchor="start">Three stages to Kolibri Base</text>
+<rect x="26" y="67" width="548" height="98" rx="9" class="card"/>
+<text x="43" y="97" class="label" text-anchor="start">Pre-training</text>
+<text x="43" y="126" class="small" text-anchor="start">16,384-token context</text>
+<text x="43" y="151" class="small" text-anchor="start">20T tokens · broad mixture</text>
+<path class="arrow" d="M300 168v22"/>
+<rect x="26" y="192" width="548" height="98" rx="9" class="accent"/>
+<text x="43" y="222" class="label" text-anchor="start">Mid-training</text>
+<text x="43" y="251" class="small" text-anchor="start">65,536-token context</text>
+<text x="43" y="276" class="small" text-anchor="start">3.44T tokens · curated mixture</text>
+<path class="arrow" d="M300 293v22"/>
+<rect x="26" y="317" width="548" height="98" rx="9" class="accent"/>
+<text x="43" y="347" class="label" text-anchor="start">Long-context extension</text>
+<text x="43" y="376" class="small" text-anchor="start">262,144-token context</text>
+<text x="43" y="401" class="small" text-anchor="start">≈200B tokens · longer examples</text>
+</svg>

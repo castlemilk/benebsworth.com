@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="study-fig-fit ds9-echo-timeline" viewBox="0 0 336 178" role="img" aria-labelledby="ds9-echo-timeline-title ds9-echo-timeline-desc">
+  <title id="ds9-echo-timeline-title">One batch, three accelerator slots</title>
+  <desc id="ds9-echo-timeline-desc">With one use the accelerator waits for 80 milliseconds. Three uses keep it busy until the next fresh batch is ready.</desc>
+  <style>
+    .ds9-echo-timeline { --ink: #253741; --quiet: #435861; --accent: #086653; --wash: #c9e8dd; --line: #858e8a; }
+    .dark .ds9-echo-timeline { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; }
+    @media (prefers-color-scheme: dark) { :root.ds9-echo-timeline { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; } }
+    .ds9-echo-timeline text { font: 16px system-ui, sans-serif; fill: var(--ink); }
+    .ds9-echo-timeline .ds-title { font-weight: 650; }
+    .ds9-echo-timeline .ds-note { font-size: 14px; fill: var(--quiet); }
+    .ds9-echo-timeline .ds-track { fill: none; stroke: var(--line); stroke-width: 1.5; }
+    .ds9-echo-timeline .ds-focus { fill: var(--wash); stroke: var(--accent); stroke-width: 1.5; }
+  </style>
+<text x="4" y="22" class="ds-title">Use a batch once</text>
+<rect x="4" y="32" width="108" height="32" class="ds-focus"/>
+<rect x="112" y="32" width="216" height="32" class="ds-track"/>
+<text x="58" y="54" text-anchor="middle">Train</text><text x="220" y="54" text-anchor="middle">Wait for input</text>
+<text x="4" y="95" class="ds-title">Use the same batch three times</text>
+<g class="ds-focus"><rect x="4" y="105" width="108" height="32"/><rect x="112" y="105" width="108" height="32"/><rect x="220" y="105" width="108" height="32"/></g>
+<g text-anchor="middle"><text x="58" y="127">Use 1</text><text x="166" y="127">Use 2</text><text x="274" y="127">Use 3</text></g>
+<g class="ds-note"><text class="ds-note" x="4" y="161">0 ms</text><text class="ds-note" x="112" y="161" text-anchor="middle">40 ms</text><text class="ds-note" x="220" y="161" text-anchor="middle">80 ms</text><text class="ds-note" x="328" y="161" text-anchor="end">120 ms</text></g>
+</svg>

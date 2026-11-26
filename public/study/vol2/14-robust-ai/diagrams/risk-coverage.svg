@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Risk-coverage curve with threshold and fallback capacity">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .ax{stroke:var(--diagram-ink-soft,#5a5a60);stroke-width:1.2;fill:none}
+    .curve{stroke:var(--diagram-accent,#3c64c8);stroke-width:2.4;fill:none}
+    .rej{stroke:var(--diagram-warn,#c85a3c);stroke-width:1.6;stroke-dasharray:5 4;fill:none}
+    .pt{fill:var(--diagram-accent,#3c64c8)}
+    .fb{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-warn,#c85a3c);stroke-width:1.2}
+    .fbtxt{font:600 11px var(--font-sans,sans-serif);fill:var(--diagram-warn,#c85a3c)}
+  </style>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="34">The risk-coverage curve is the serving contract</text>
+  <text class="sub" x="30" y="53">Lower accepted risk costs coverage — and the rejected tail prices the fallback path.</text>
+  <!-- axes -->
+  <line class="ax" x1="90" y1="340" x2="560" y2="340"/>
+  <line class="ax" x1="90" y1="340" x2="90" y2="86"/>
+  <text class="lbl" x="325" y="368" text-anchor="middle">coverage — fraction of requests answered</text>
+  <text class="lbl" x="40" y="200" transform="rotate(-90 40 200)" text-anchor="middle">selective risk</text>
+  <text class="sm" x="556" y="356" text-anchor="end">1.0</text>
+  <text class="sm" x="86" y="356" text-anchor="end">0</text>
+  <text class="sm" x="84" y="96" text-anchor="end">0</text>
+  <!-- curve: high risk at high coverage, low at low coverage -->
+  <path class="curve" d="M 110 108 C 200 120, 300 170, 380 240 C 440 292, 510 322, 548 330"/>
+  <!-- threshold point -->
+  <circle class="pt" cx="380" cy="240" r="5"/>
+  <text class="lbl" x="392" y="230">threshold τ</text>
+  <line class="rej" x1="380" y1="240" x2="380" y2="340"/>
+  <text class="sm" x="380" y="356" text-anchor="middle">accepted</text>
+  <line class="rej" x1="380" y1="340" x2="548" y2="340"/>
+  <!-- fallback panel -->
+  <rect class="fb" x="586" y="120" width="144" height="96" rx="8"/>
+  <text class="fbtxt" x="658" y="144" text-anchor="middle">rejected tail</text>
+  <text class="sm" x="598" y="168">fallback load =</text>
+  <text class="sm" x="598" y="186">request rate × reject</text>
+  <text class="sm" x="598" y="200">fraction</text>
+  <path class="rej" d="M 480 332 C 540 300, 560 240, 586 200" marker-end="none"/>
+  <text class="sm" x="498" y="292">abstentions route to</text>
+  <text class="sm" x="510" y="306">reviewer or stronger model</text>
+  <!-- annotation -->
+  <text class="sm" x="110" y="90">low coverage: only the best-ordered requests answered</text>
+  <text class="sm" x="420" y="120">raising τ moves down-left</text>
+  <text class="sm" x="420" y="136">only if the score orders errors well</text>
+</svg>

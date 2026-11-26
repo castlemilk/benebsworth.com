@@ -1,0 +1,32 @@
+[
+  {
+    "id": "blast-radius",
+    "file": "images/svg/responsible_engr_blast_radius.svg",
+    "title": "Blast radius",
+    "caption": "How far a silently unfair decision propagates before anyone aggregates the outcomes."
+  },
+  {
+    "id": "dam-locator",
+    "file": "images/svg/responsible_engr_dam_locator_data.svg",
+    "title": "D·A·M locator: data",
+    "caption": "The data axis of the chapter's architecture map — where responsibility attaches."
+  },
+  {
+    "id": "goodhart-anchor",
+    "file": "images/svg/responsible_engr_scale_anchor_goodhart.svg",
+    "title": "Goodhart anchor",
+    "caption": "The proxy decorrelation pattern — optimizing the metric until it stops tracking the goal."
+  },
+  {
+    "id": "tco-bar",
+    "file": "images/svg/responsible_engr_tco_bar.svg",
+    "title": "Total cost of ownership",
+    "caption": "Lifecycle cost decomposition: training, serving and operations as ledger entries."
+  },
+  {
+    "id": "margin-003",
+    "file": "images/svg/vol1_responsible_engr_margin_003.svg",
+    "title": "Responsible engineering margin study",
+    "caption": "Margin study — fairness criteria and the impossibility result."
+  }
+]

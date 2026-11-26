@@ -1,0 +1,7825 @@
+{
+  "hosts": {
+    "A": "Marcus",
+    "B": "Iris"
+  },
+  "segments": [
+    {
+      "speaker": "A",
+      "text": "I'm Marcus, this is Iris. Volume two, chapter eight: fleet orchestration, the chapter about why jobs wait while expensive accelerators sit idle.",
+      "start": 0.0,
+      "end": 10.78,
+      "words": [
+        {
+          "text": "I'm",
+          "start": 0.0,
+          "end": 0.6
+        },
+        {
+          "text": "Marcus,",
+          "start": 0.6,
+          "end": 0.9
+        },
+        {
+          "text": "this",
+          "start": 1.06,
+          "end": 1.26
+        },
+        {
+          "text": "is",
+          "start": 1.26,
+          "end": 1.44
+        },
+        {
+          "text": "Iris.",
+          "start": 1.44,
+          "end": 1.84
+        },
+        {
+          "text": "Volume",
+          "start": 2.62,
+          "end": 2.92
+        },
+        {
+          "text": "2,",
+          "start": 2.92,
+          "end": 3.34
+        },
+        {
+          "text": "Chapter",
+          "start": 3.54,
+          "end": 3.74
+        },
+        {
+          "text": "8.",
+          "start": 3.74,
+          "end": 4.2
+        },
+        {
+          "text": "Fleet",
+          "start": 4.64,
+          "end": 4.86
+        },
+        {
+          "text": "Orchestration,",
+          "start": 4.86,
+          "end": 5.7
+        },
+        {
+          "text": "the",
+          "start": 6.02,
+          "end": 6.14
+        },
+        {
+          "text": "chapter",
+          "start": 6.14,
+          "end": 6.48
+        },
+        {
+          "text": "about",
+          "start": 6.48,
+          "end": 6.78
+        },
+        {
+          "text": "why",
+          "start": 6.78,
+          "end": 7.06
+        },
+        {
+          "text": "jobs",
+          "start": 7.06,
+          "end": 7.36
+        },
+        {
+          "text": "wait",
+          "start": 7.36,
+          "end": 7.8
+        },
+        {
+          "text": "while",
+          "start": 7.8,
+          "end": 8.04
+        },
+        {
+          "text": "expensive",
+          "start": 8.04,
+          "end": 8.6
+        },
+        {
+          "text": "accelerators",
+          "start": 8.6,
+          "end": 9.4
+        },
+        {
+          "text": "sit",
+          "start": 9.4,
+          "end": 9.68
+        },
+        {
+          "text": "eyed.",
+          "start": 9.68,
+          "end": 10.14
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Start with the paradox. Two teams share a thousand-GPU cluster. Team A submits one five-hundred-twelve-GPU job that runs for a month. Team B submits hundreds of eight-GPU experiments that each run an hour. If the scheduler admits whatever fits, the small jobs fragment the fleet forever and the big job never starts.",
+      "start": 10.78,
+      "end": 32.2,
+      "words": [
+        {
+          "text": "Start",
+          "start": 10.6,
+          "end": 11.24
+        },
+        {
+          "text": "with",
+          "start": 11.24,
+          "end": 11.42
+        },
+        {
+          "text": "the",
+          "start": 11.42,
+          "end": 11.54
+        },
+        {
+          "text": "paradox.",
+          "start": 11.54,
+          "end": 11.88
+        },
+        {
+          "text": "Two",
+          "start": 12.56,
+          "end": 12.74
+        },
+        {
+          "text": "teams",
+          "start": 12.74,
+          "end": 13.14
+        },
+        {
+          "text": "share",
+          "start": 13.14,
+          "end": 13.44
+        },
+        {
+          "text": "a",
+          "start": 13.44,
+          "end": 13.66
+        },
+        {
+          "text": "thousand",
+          "start": 13.66,
+          "end": 13.98
+        },
+        {
+          "text": "GPU",
+          "start": 13.98,
+          "end": 14.42
+        },
+        {
+          "text": "cluster.",
+          "start": 14.42,
+          "end": 14.98
+        },
+        {
+          "text": "Team",
+          "start": 15.66,
+          "end": 15.84
+        },
+        {
+          "text": "A",
+          "start": 15.84,
+          "end": 16.18
+        },
+        {
+          "text": "submits",
+          "start": 16.18,
+          "end": 16.7
+        },
+        {
+          "text": "one",
+          "start": 16.7,
+          "end": 17.02
+        },
+        {
+          "text": "512",
+          "start": 17.02,
+          "end": 17.78
+        },
+        {
+          "text": "GPU",
+          "start": 17.78,
+          "end": 18.38
+        },
+        {
+          "text": "job",
+          "start": 18.38,
+          "end": 18.92
+        },
+        {
+          "text": "that",
+          "start": 18.92,
+          "end": 19.2
+        },
+        {
+          "text": "runs",
+          "start": 19.2,
+          "end": 19.44
+        },
+        {
+          "text": "for",
+          "start": 19.44,
+          "end": 19.7
+        },
+        {
+          "text": "a",
+          "start": 19.7,
+          "end": 19.8
+        },
+        {
+          "text": "month.",
+          "start": 19.8,
+          "end": 19.98
+        },
+        {
+          "text": "Team",
+          "start": 20.6,
+          "end": 20.86
+        },
+        {
+          "text": "B",
+          "start": 20.86,
+          "end": 21.16
+        },
+        {
+          "text": "submits",
+          "start": 21.16,
+          "end": 21.58
+        },
+        {
+          "text": "hundreds",
+          "start": 21.58,
+          "end": 21.92
+        },
+        {
+          "text": "of",
+          "start": 21.92,
+          "end": 22.16
+        },
+        {
+          "text": "eight",
+          "start": 22.16,
+          "end": 22.38
+        },
+        {
+          "text": "GPU",
+          "start": 22.38,
+          "end": 22.78
+        },
+        {
+          "text": "experiments",
+          "start": 22.78,
+          "end": 23.42
+        },
+        {
+          "text": "that",
+          "start": 23.42,
+          "end": 23.84
+        },
+        {
+          "text": "each",
+          "start": 23.84,
+          "end": 24.14
+        },
+        {
+          "text": "run",
+          "start": 24.14,
+          "end": 24.38
+        },
+        {
+          "text": "an",
+          "start": 24.38,
+          "end": 24.52
+        },
+        {
+          "text": "hour.",
+          "start": 24.52,
+          "end": 24.7
+        },
+        {
+          "text": "If",
+          "start": 25.14,
+          "end": 25.52
+        },
+        {
+          "text": "the",
+          "start": 25.52,
+          "end": 25.66
+        },
+        {
+          "text": "scheduler",
+          "start": 25.66,
+          "end": 26.16
+        },
+        {
+          "text": "admits",
+          "start": 26.16,
+          "end": 26.48
+        },
+        {
+          "text": "whatever",
+          "start": 26.48,
+          "end": 26.82
+        },
+        {
+          "text": "fits,",
+          "start": 26.82,
+          "end": 27.2
+        },
+        {
+          "text": "the",
+          "start": 27.62,
+          "end": 27.72
+        },
+        {
+          "text": "small",
+          "start": 27.72,
+          "end": 28.06
+        },
+        {
+          "text": "jobs",
+          "start": 28.06,
+          "end": 28.46
+        },
+        {
+          "text": "fragment",
+          "start": 28.46,
+          "end": 28.9
+        },
+        {
+          "text": "the",
+          "start": 28.9,
+          "end": 29.1
+        },
+        {
+          "text": "fleet",
+          "start": 29.1,
+          "end": 29.34
+        },
+        {
+          "text": "forever",
+          "start": 29.34,
+          "end": 29.74
+        },
+        {
+          "text": "and",
+          "start": 29.74,
+          "end": 30.28
+        },
+        {
+          "text": "the",
+          "start": 30.28,
+          "end": 30.4
+        },
+        {
+          "text": "big",
+          "start": 30.4,
+          "end": 30.58
+        },
+        {
+          "text": "job",
+          "start": 30.58,
+          "end": 30.9
+        },
+        {
+          "text": "never",
+          "start": 30.9,
+          "end": 31.16
+        },
+        {
+          "text": "starts.",
+          "start": 31.16,
+          "end": 31.6
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And that mix is the normal one. In the Kalos production trace, eighty-six percent of jobs use a single GPU and consume almost no GPU time, while jobs of two hundred fifty-six or more GPUs are four percent of submissions yet hold ninety-six percent of GPU time. Fair by job count starves the jobs that hold the fleet; fair by GPU time starves the experiments.",
+      "start": 32.2,
+      "end": 59.15,
+      "words": [
+        {
+          "text": "And",
+          "start": 32.32,
+          "end": 32.72
+        },
+        {
+          "text": "that",
+          "start": 32.72,
+          "end": 32.94
+        },
+        {
+          "text": "mix",
+          "start": 32.94,
+          "end": 33.14
+        },
+        {
+          "text": "is",
+          "start": 33.14,
+          "end": 33.36
+        },
+        {
+          "text": "the",
+          "start": 33.36,
+          "end": 33.52
+        },
+        {
+          "text": "normal",
+          "start": 33.52,
+          "end": 33.82
+        },
+        {
+          "text": "one.",
+          "start": 33.82,
+          "end": 34.14
+        },
+        {
+          "text": "In",
+          "start": 34.66,
+          "end": 34.84
+        },
+        {
+          "text": "the",
+          "start": 34.84,
+          "end": 34.94
+        },
+        {
+          "text": "Colos",
+          "start": 34.94,
+          "end": 35.36
+        },
+        {
+          "text": "production",
+          "start": 35.36,
+          "end": 35.8
+        },
+        {
+          "text": "trace,",
+          "start": 35.8,
+          "end": 36.2
+        },
+        {
+          "text": "86",
+          "start": 36.76,
+          "end": 37.02
+        },
+        {
+          "text": "%",
+          "start": 37.02,
+          "end": 37.66
+        },
+        {
+          "text": "of",
+          "start": 37.66,
+          "end": 37.82
+        },
+        {
+          "text": "jobs",
+          "start": 37.82,
+          "end": 38.22
+        },
+        {
+          "text": "use",
+          "start": 38.22,
+          "end": 38.6
+        },
+        {
+          "text": "a",
+          "start": 38.6,
+          "end": 38.76
+        },
+        {
+          "text": "single",
+          "start": 38.76,
+          "end": 39.12
+        },
+        {
+          "text": "GPU",
+          "start": 39.12,
+          "end": 39.7
+        },
+        {
+          "text": "and",
+          "start": 39.7,
+          "end": 40.14
+        },
+        {
+          "text": "consume",
+          "start": 40.14,
+          "end": 40.58
+        },
+        {
+          "text": "almost",
+          "start": 40.58,
+          "end": 41.08
+        },
+        {
+          "text": "no",
+          "start": 41.08,
+          "end": 41.4
+        },
+        {
+          "text": "GPU",
+          "start": 41.4,
+          "end": 41.86
+        },
+        {
+          "text": "time,",
+          "start": 41.86,
+          "end": 42.36
+        },
+        {
+          "text": "while",
+          "start": 42.74,
+          "end": 43.08
+        },
+        {
+          "text": "jobs",
+          "start": 43.08,
+          "end": 43.52
+        },
+        {
+          "text": "of",
+          "start": 43.52,
+          "end": 43.72
+        },
+        {
+          "text": "256",
+          "start": 43.72,
+          "end": 44.52
+        },
+        {
+          "text": "or",
+          "start": 44.52,
+          "end": 45.1
+        },
+        {
+          "text": "more",
+          "start": 45.1,
+          "end": 45.32
+        },
+        {
+          "text": "GPUs",
+          "start": 45.32,
+          "end": 46.28
+        },
+        {
+          "text": "are",
+          "start": 46.28,
+          "end": 46.52
+        },
+        {
+          "text": "4",
+          "start": 46.52,
+          "end": 46.82
+        },
+        {
+          "text": "%",
+          "start": 46.82,
+          "end": 47.14
+        },
+        {
+          "text": "of",
+          "start": 47.14,
+          "end": 47.28
+        },
+        {
+          "text": "submissions,",
+          "start": 47.28,
+          "end": 47.76
+        },
+        {
+          "text": "yet",
+          "start": 48.2,
+          "end": 48.42
+        },
+        {
+          "text": "hold",
+          "start": 48.42,
+          "end": 48.74
+        },
+        {
+          "text": "96",
+          "start": 48.74,
+          "end": 49.24
+        },
+        {
+          "text": "%",
+          "start": 49.24,
+          "end": 49.86
+        },
+        {
+          "text": "of",
+          "start": 49.86,
+          "end": 50.04
+        },
+        {
+          "text": "GPU",
+          "start": 50.04,
+          "end": 50.44
+        },
+        {
+          "text": "time.",
+          "start": 50.44,
+          "end": 50.96
+        },
+        {
+          "text": "Fair",
+          "start": 51.66,
+          "end": 51.98
+        },
+        {
+          "text": "by",
+          "start": 51.98,
+          "end": 52.22
+        },
+        {
+          "text": "job",
+          "start": 52.22,
+          "end": 52.5
+        },
+        {
+          "text": "count",
+          "start": 52.5,
+          "end": 52.84
+        },
+        {
+          "text": "starves",
+          "start": 52.84,
+          "end": 53.46
+        },
+        {
+          "text": "the",
+          "start": 53.46,
+          "end": 53.62
+        },
+        {
+          "text": "jobs",
+          "start": 53.62,
+          "end": 54.02
+        },
+        {
+          "text": "that",
+          "start": 54.02,
+          "end": 54.26
+        },
+        {
+          "text": "hold",
+          "start": 54.26,
+          "end": 54.54
+        },
+        {
+          "text": "the",
+          "start": 54.54,
+          "end": 54.7
+        },
+        {
+          "text": "fleet.",
+          "start": 54.7,
+          "end": 54.96
+        },
+        {
+          "text": "Fair",
+          "start": 55.44,
+          "end": 55.84
+        },
+        {
+          "text": "by",
+          "start": 55.84,
+          "end": 56.08
+        },
+        {
+          "text": "GPU",
+          "start": 56.08,
+          "end": 56.42
+        },
+        {
+          "text": "time",
+          "start": 56.42,
+          "end": 57.02
+        },
+        {
+          "text": "starves",
+          "start": 57.02,
+          "end": 57.62
+        },
+        {
+          "text": "the",
+          "start": 57.62,
+          "end": 57.78
+        },
+        {
+          "text": "experiments.",
+          "start": 57.78,
+          "end": 58.32
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The stake is priced at fleet scale. Ten thousand GPUs at about two dollars per GPU-hour burn four hundred eighty thousand dollars a day whether or not they produce anything. At thirty percent scheduling-idle that is fifty-two point six million dollars a year of waste. Raising fleet usage from fifty to eighty percent recovers three thousand productive GPUs, the output of six thousand raw GPUs at the old usage.",
+      "start": 59.15,
+      "end": 85.18,
+      "words": [
+        {
+          "text": "The",
+          "start": 59.16,
+          "end": 59.54
+        },
+        {
+          "text": "stake",
+          "start": 59.54,
+          "end": 59.74
+        },
+        {
+          "text": "is",
+          "start": 59.74,
+          "end": 59.96
+        },
+        {
+          "text": "priced",
+          "start": 59.96,
+          "end": 60.24
+        },
+        {
+          "text": "at",
+          "start": 60.24,
+          "end": 60.54
+        },
+        {
+          "text": "fleet",
+          "start": 60.54,
+          "end": 60.72
+        },
+        {
+          "text": "scale.",
+          "start": 60.72,
+          "end": 61.08
+        },
+        {
+          "text": "10",
+          "start": 61.76,
+          "end": 61.96
+        },
+        {
+          "text": ",000",
+          "start": 61.96,
+          "end": 62.36
+        },
+        {
+          "text": "GPUs",
+          "start": 62.36,
+          "end": 63.06
+        },
+        {
+          "text": "at",
+          "start": 63.06,
+          "end": 63.3
+        },
+        {
+          "text": "about",
+          "start": 63.3,
+          "end": 63.46
+        },
+        {
+          "text": "$2",
+          "start": 63.46,
+          "end": 63.74
+        },
+        {
+          "text": "per",
+          "start": 63.74,
+          "end": 64.28
+        },
+        {
+          "text": "GPU",
+          "start": 64.28,
+          "end": 64.64
+        },
+        {
+          "text": "are",
+          "start": 64.64,
+          "end": 64.94
+        },
+        {
+          "text": "burned",
+          "start": 64.94,
+          "end": 65.2
+        },
+        {
+          "text": "$480",
+          "start": 65.2,
+          "end": 66.1
+        },
+        {
+          "text": ",000",
+          "start": 66.1,
+          "end": 66.62
+        },
+        {
+          "text": "a",
+          "start": 66.62,
+          "end": 67.44
+        },
+        {
+          "text": "day",
+          "start": 67.44,
+          "end": 67.66
+        },
+        {
+          "text": "whether",
+          "start": 67.66,
+          "end": 67.88
+        },
+        {
+          "text": "or",
+          "start": 67.88,
+          "end": 68.1
+        },
+        {
+          "text": "not",
+          "start": 68.1,
+          "end": 68.24
+        },
+        {
+          "text": "they",
+          "start": 68.24,
+          "end": 68.5
+        },
+        {
+          "text": "produce",
+          "start": 68.5,
+          "end": 68.78
+        },
+        {
+          "text": "anything.",
+          "start": 68.78,
+          "end": 69.2
+        },
+        {
+          "text": "At",
+          "start": 69.74,
+          "end": 70.06
+        },
+        {
+          "text": "30",
+          "start": 70.06,
+          "end": 70.38
+        },
+        {
+          "text": "%",
+          "start": 70.38,
+          "end": 70.7
+        },
+        {
+          "text": "scheduling",
+          "start": 70.7,
+          "end": 71.08
+        },
+        {
+          "text": "idle,",
+          "start": 71.08,
+          "end": 71.4
+        },
+        {
+          "text": "that",
+          "start": 71.58,
+          "end": 71.7
+        },
+        {
+          "text": "is",
+          "start": 71.7,
+          "end": 71.98
+        },
+        {
+          "text": "$52",
+          "start": 71.98,
+          "end": 72.3
+        },
+        {
+          "text": ".6",
+          "start": 72.3,
+          "end": 73.04
+        },
+        {
+          "text": "million",
+          "start": 73.04,
+          "end": 73.34
+        },
+        {
+          "text": "a",
+          "start": 73.34,
+          "end": 73.96
+        },
+        {
+          "text": "year",
+          "start": 73.96,
+          "end": 74.16
+        },
+        {
+          "text": "of",
+          "start": 74.16,
+          "end": 74.28
+        },
+        {
+          "text": "waste.",
+          "start": 74.28,
+          "end": 74.6
+        },
+        {
+          "text": "Raising",
+          "start": 75.33,
+          "end": 75.7
+        },
+        {
+          "text": "fleet",
+          "start": 75.7,
+          "end": 75.94
+        },
+        {
+          "text": "usage",
+          "start": 75.94,
+          "end": 76.28
+        },
+        {
+          "text": "from",
+          "start": 76.28,
+          "end": 76.66
+        },
+        {
+          "text": "50",
+          "start": 76.66,
+          "end": 77.1
+        },
+        {
+          "text": "%",
+          "start": 77.1,
+          "end": 77.2
+        },
+        {
+          "text": "to",
+          "start": 77.2,
+          "end": 77.28
+        },
+        {
+          "text": "80",
+          "start": 77.28,
+          "end": 77.56
+        },
+        {
+          "text": "%",
+          "start": 77.56,
+          "end": 78.06
+        },
+        {
+          "text": "recovers",
+          "start": 78.06,
+          "end": 78.74
+        },
+        {
+          "text": "3",
+          "start": 78.74,
+          "end": 79.1
+        },
+        {
+          "text": ",000",
+          "start": 79.1,
+          "end": 79.58
+        },
+        {
+          "text": "productive",
+          "start": 79.58,
+          "end": 79.84
+        },
+        {
+          "text": "GPUs,",
+          "start": 79.84,
+          "end": 80.76
+        },
+        {
+          "text": "the",
+          "start": 81.04,
+          "end": 81.28
+        },
+        {
+          "text": "output",
+          "start": 81.28,
+          "end": 81.66
+        },
+        {
+          "text": "of",
+          "start": 81.66,
+          "end": 81.96
+        },
+        {
+          "text": "6",
+          "start": 81.96,
+          "end": 82.34
+        },
+        {
+          "text": ",000",
+          "start": 82.34,
+          "end": 82.8
+        },
+        {
+          "text": "raw",
+          "start": 82.8,
+          "end": 82.98
+        },
+        {
+          "text": "GPUs",
+          "start": 82.98,
+          "end": 83.74
+        },
+        {
+          "text": "at",
+          "start": 83.74,
+          "end": 83.86
+        },
+        {
+          "text": "the",
+          "start": 83.86,
+          "end": 83.96
+        },
+        {
+          "text": "old",
+          "start": 83.96,
+          "end": 84.18
+        },
+        {
+          "text": "usage.",
+          "start": 84.18,
+          "end": 84.56
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Queueing theory explains half the paradox by itself. Mean wait carries a load factor rho over one-minus-rho, times a variability factor, times mean service. As load approaches capacity the wait bends sharply upward.",
+      "start": 85.18,
+      "end": 101.73,
+      "eq": {
+        "id": "queueing-wait",
+        "title": "Mean queue wait",
+        "latex": "W = \\frac{\\rho}{1-\\rho}\\cdot\\frac{1+C_s^{2}}{2}\\cdot\\bar{S}"
+      },
+      "words": [
+        {
+          "text": "Queuing",
+          "start": 85.24,
+          "end": 85.84
+        },
+        {
+          "text": "theory",
+          "start": 85.84,
+          "end": 86.16
+        },
+        {
+          "text": "explains",
+          "start": 86.16,
+          "end": 86.88
+        },
+        {
+          "text": "half",
+          "start": 86.88,
+          "end": 87.2
+        },
+        {
+          "text": "the",
+          "start": 87.2,
+          "end": 87.36
+        },
+        {
+          "text": "paradox",
+          "start": 87.36,
+          "end": 87.8
+        },
+        {
+          "text": "by",
+          "start": 87.8,
+          "end": 88.12
+        },
+        {
+          "text": "itself.",
+          "start": 88.12,
+          "end": 88.54
+        },
+        {
+          "text": "Mean",
+          "start": 89.34,
+          "end": 89.52
+        },
+        {
+          "text": "weight",
+          "start": 89.52,
+          "end": 89.78
+        },
+        {
+          "text": "carries",
+          "start": 89.78,
+          "end": 90.24
+        },
+        {
+          "text": "a",
+          "start": 90.24,
+          "end": 90.44
+        },
+        {
+          "text": "load",
+          "start": 90.44,
+          "end": 90.72
+        },
+        {
+          "text": "factor",
+          "start": 90.72,
+          "end": 91.04
+        },
+        {
+          "text": "row",
+          "start": 91.04,
+          "end": 91.52
+        },
+        {
+          "text": "over",
+          "start": 91.52,
+          "end": 91.8
+        },
+        {
+          "text": "one",
+          "start": 91.8,
+          "end": 92.02
+        },
+        {
+          "text": "minus",
+          "start": 92.02,
+          "end": 92.34
+        },
+        {
+          "text": "row",
+          "start": 92.34,
+          "end": 92.7
+        },
+        {
+          "text": "times",
+          "start": 92.7,
+          "end": 93.34
+        },
+        {
+          "text": "a",
+          "start": 93.34,
+          "end": 93.58
+        },
+        {
+          "text": "variability",
+          "start": 93.58,
+          "end": 94.02
+        },
+        {
+          "text": "factor",
+          "start": 94.02,
+          "end": 94.74
+        },
+        {
+          "text": "times",
+          "start": 94.74,
+          "end": 95.5
+        },
+        {
+          "text": "mean",
+          "start": 95.5,
+          "end": 95.88
+        },
+        {
+          "text": "service.",
+          "start": 95.88,
+          "end": 96.44
+        },
+        {
+          "text": "As",
+          "start": 97.0,
+          "end": 97.32
+        },
+        {
+          "text": "load",
+          "start": 97.32,
+          "end": 97.64
+        },
+        {
+          "text": "approaches",
+          "start": 97.64,
+          "end": 98.22
+        },
+        {
+          "text": "capacity,",
+          "start": 98.22,
+          "end": 98.92
+        },
+        {
+          "text": "the",
+          "start": 99.14,
+          "end": 99.22
+        },
+        {
+          "text": "weight",
+          "start": 99.22,
+          "end": 99.48
+        },
+        {
+          "text": "bends",
+          "start": 99.48,
+          "end": 99.92
+        },
+        {
+          "text": "sharply",
+          "start": 99.92,
+          "end": 100.4
+        },
+        {
+          "text": "upward.",
+          "start": 100.4,
+          "end": 100.96
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Same fleet load, very different waits. A uniform workload waits with ratio about four, while a mixed machine-learning workload with coefficient of variation three waits with ratio about twenty, five times longer, because the variability term multiplies everything. High wait at high load is arithmetic. Idle devices beside a full queue is a different problem entirely.",
+      "start": 101.73,
+      "end": 125.75,
+      "words": [
+        {
+          "text": "Same",
+          "start": 101.8,
+          "end": 102.22
+        },
+        {
+          "text": "fleet",
+          "start": 102.22,
+          "end": 102.56
+        },
+        {
+          "text": "load,",
+          "start": 102.56,
+          "end": 102.84
+        },
+        {
+          "text": "very",
+          "start": 103.2,
+          "end": 103.46
+        },
+        {
+          "text": "different",
+          "start": 103.46,
+          "end": 103.78
+        },
+        {
+          "text": "weights.",
+          "start": 103.78,
+          "end": 104.06
+        },
+        {
+          "text": "A",
+          "start": 104.74,
+          "end": 104.86
+        },
+        {
+          "text": "uniform",
+          "start": 104.86,
+          "end": 105.16
+        },
+        {
+          "text": "workload",
+          "start": 105.16,
+          "end": 105.6
+        },
+        {
+          "text": "weights",
+          "start": 105.6,
+          "end": 106.08
+        },
+        {
+          "text": "with",
+          "start": 106.08,
+          "end": 106.28
+        },
+        {
+          "text": "ratio",
+          "start": 106.28,
+          "end": 106.68
+        },
+        {
+          "text": "about",
+          "start": 106.68,
+          "end": 107.0
+        },
+        {
+          "text": "4,",
+          "start": 107.0,
+          "end": 107.38
+        },
+        {
+          "text": "while",
+          "start": 107.76,
+          "end": 107.96
+        },
+        {
+          "text": "a",
+          "start": 107.96,
+          "end": 108.1
+        },
+        {
+          "text": "mixed",
+          "start": 108.1,
+          "end": 108.28
+        },
+        {
+          "text": "machine",
+          "start": 108.28,
+          "end": 108.62
+        },
+        {
+          "text": "learning",
+          "start": 108.62,
+          "end": 109.02
+        },
+        {
+          "text": "workload",
+          "start": 109.02,
+          "end": 109.52
+        },
+        {
+          "text": "with",
+          "start": 109.52,
+          "end": 109.8
+        },
+        {
+          "text": "coefficient",
+          "start": 109.8,
+          "end": 110.22
+        },
+        {
+          "text": "of",
+          "start": 110.22,
+          "end": 110.54
+        },
+        {
+          "text": "variation,",
+          "start": 110.54,
+          "end": 111.06
+        },
+        {
+          "text": "3",
+          "start": 111.64,
+          "end": 111.8
+        },
+        {
+          "text": "weights",
+          "start": 111.8,
+          "end": 112.04
+        },
+        {
+          "text": "with",
+          "start": 112.04,
+          "end": 112.28
+        },
+        {
+          "text": "ratio",
+          "start": 112.28,
+          "end": 112.72
+        },
+        {
+          "text": "about",
+          "start": 112.72,
+          "end": 113.04
+        },
+        {
+          "text": "20,",
+          "start": 113.04,
+          "end": 113.5
+        },
+        {
+          "text": "5",
+          "start": 113.82,
+          "end": 114.14
+        },
+        {
+          "text": "times",
+          "start": 114.14,
+          "end": 114.52
+        },
+        {
+          "text": "longer,",
+          "start": 114.52,
+          "end": 114.92
+        },
+        {
+          "text": "because",
+          "start": 115.3,
+          "end": 115.54
+        },
+        {
+          "text": "the",
+          "start": 115.54,
+          "end": 115.76
+        },
+        {
+          "text": "variability",
+          "start": 115.76,
+          "end": 116.26
+        },
+        {
+          "text": "term",
+          "start": 116.26,
+          "end": 116.78
+        },
+        {
+          "text": "multiplies",
+          "start": 116.78,
+          "end": 117.5
+        },
+        {
+          "text": "everything.",
+          "start": 117.5,
+          "end": 117.96
+        },
+        {
+          "text": "High",
+          "start": 118.7,
+          "end": 118.98
+        },
+        {
+          "text": "weight",
+          "start": 118.98,
+          "end": 119.22
+        },
+        {
+          "text": "at",
+          "start": 119.22,
+          "end": 119.42
+        },
+        {
+          "text": "high",
+          "start": 119.42,
+          "end": 119.68
+        },
+        {
+          "text": "load",
+          "start": 119.68,
+          "end": 119.96
+        },
+        {
+          "text": "is",
+          "start": 119.96,
+          "end": 120.22
+        },
+        {
+          "text": "arithmetic.",
+          "start": 120.22,
+          "end": 120.6
+        },
+        {
+          "text": "Idle",
+          "start": 121.46,
+          "end": 121.82
+        },
+        {
+          "text": "devices",
+          "start": 121.82,
+          "end": 122.24
+        },
+        {
+          "text": "beside",
+          "start": 122.24,
+          "end": 122.66
+        },
+        {
+          "text": "a",
+          "start": 122.66,
+          "end": 122.9
+        },
+        {
+          "text": "full",
+          "start": 122.9,
+          "end": 123.06
+        },
+        {
+          "text": "queue",
+          "start": 123.06,
+          "end": 123.32
+        },
+        {
+          "text": "is",
+          "start": 123.32,
+          "end": 123.68
+        },
+        {
+          "text": "a",
+          "start": 123.68,
+          "end": 123.82
+        },
+        {
+          "text": "different",
+          "start": 123.82,
+          "end": 123.98
+        },
+        {
+          "text": "problem",
+          "start": 123.98,
+          "end": 124.42
+        },
+        {
+          "text": "entirely.",
+          "start": 124.42,
+          "end": 124.88
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "So what is fair? Not equal GPU counts: one tenant's jobs saturate host CPU and memory while another's saturate the network fabric, and free GPUs strand behind exhausted auxiliary resources. Dominant-resource fairness reduces each tenant to its largest resource share and equalizes that.",
+      "start": 125.75,
+      "end": 147.43,
+      "eq": {
+        "id": "dominant-share",
+        "title": "Dominant share",
+        "latex": "s_i = \\max_{r}\\, a_{ir}\\, /\\, c_r"
+      },
+      "words": [
+        {
+          "text": "So",
+          "start": 125.88,
+          "end": 126.28
+        },
+        {
+          "text": "what",
+          "start": 126.28,
+          "end": 126.46
+        },
+        {
+          "text": "is",
+          "start": 126.46,
+          "end": 126.62
+        },
+        {
+          "text": "fair?",
+          "start": 126.62,
+          "end": 126.9
+        },
+        {
+          "text": "Not",
+          "start": 127.54,
+          "end": 127.74
+        },
+        {
+          "text": "equal",
+          "start": 127.74,
+          "end": 128.1
+        },
+        {
+          "text": "GPU",
+          "start": 128.1,
+          "end": 128.46
+        },
+        {
+          "text": "counts.",
+          "start": 128.46,
+          "end": 129.0
+        },
+        {
+          "text": "One",
+          "start": 129.0,
+          "end": 129.82
+        },
+        {
+          "text": "tenant's",
+          "start": 129.82,
+          "end": 130.32
+        },
+        {
+          "text": "job",
+          "start": 130.32,
+          "end": 130.56
+        },
+        {
+          "text": "saturate",
+          "start": 130.56,
+          "end": 131.18
+        },
+        {
+          "text": "hosts",
+          "start": 131.18,
+          "end": 131.48
+        },
+        {
+          "text": "CPU",
+          "start": 131.48,
+          "end": 132.06
+        },
+        {
+          "text": "and",
+          "start": 132.06,
+          "end": 132.46
+        },
+        {
+          "text": "memory",
+          "start": 132.46,
+          "end": 132.78
+        },
+        {
+          "text": "while",
+          "start": 132.78,
+          "end": 133.38
+        },
+        {
+          "text": "another",
+          "start": 133.38,
+          "end": 133.74
+        },
+        {
+          "text": "saturate",
+          "start": 133.74,
+          "end": 134.46
+        },
+        {
+          "text": "the",
+          "start": 134.46,
+          "end": 134.6
+        },
+        {
+          "text": "network",
+          "start": 134.6,
+          "end": 134.9
+        },
+        {
+          "text": "fabric",
+          "start": 134.9,
+          "end": 135.38
+        },
+        {
+          "text": "and",
+          "start": 135.38,
+          "end": 136.0
+        },
+        {
+          "text": "free",
+          "start": 136.0,
+          "end": 136.28
+        },
+        {
+          "text": "GPUs",
+          "start": 136.28,
+          "end": 137.16
+        },
+        {
+          "text": "strand",
+          "start": 137.16,
+          "end": 137.4
+        },
+        {
+          "text": "behind",
+          "start": 137.4,
+          "end": 137.82
+        },
+        {
+          "text": "exhausted",
+          "start": 137.82,
+          "end": 138.72
+        },
+        {
+          "text": "auxiliary",
+          "start": 138.72,
+          "end": 139.34
+        },
+        {
+          "text": "resources.",
+          "start": 139.34,
+          "end": 140.16
+        },
+        {
+          "text": "Dominant",
+          "start": 140.88,
+          "end": 141.38
+        },
+        {
+          "text": "resource",
+          "start": 141.38,
+          "end": 141.72
+        },
+        {
+          "text": "fairness",
+          "start": 141.72,
+          "end": 142.28
+        },
+        {
+          "text": "reduces",
+          "start": 142.28,
+          "end": 142.98
+        },
+        {
+          "text": "each",
+          "start": 142.98,
+          "end": 143.4
+        },
+        {
+          "text": "tenant",
+          "start": 143.4,
+          "end": 143.74
+        },
+        {
+          "text": "to",
+          "start": 143.74,
+          "end": 144.02
+        },
+        {
+          "text": "its",
+          "start": 144.02,
+          "end": 144.18
+        },
+        {
+          "text": "largest",
+          "start": 144.18,
+          "end": 144.56
+        },
+        {
+          "text": "resource",
+          "start": 144.56,
+          "end": 145.12
+        },
+        {
+          "text": "share",
+          "start": 145.12,
+          "end": 145.52
+        },
+        {
+          "text": "and",
+          "start": 145.52,
+          "end": 145.8
+        },
+        {
+          "text": "equalizes",
+          "start": 145.8,
+          "end": 146.44
+        },
+        {
+          "text": "that.",
+          "start": 146.44,
+          "end": 146.74
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The worked example is worth doing once. Eight GPUs, thirty-two cores, two hundred fifty-six gigabytes, four hundred gigabits per second. Tenant A's replica needs one GPU; tenant B's worker needs two. Progressive filling hands a bundle to whoever has the smaller dominant share, alternating two A replicas per B worker, until both land at zero point five: A with four single-GPU replicas, B with two two-GPU workers.",
+      "start": 147.43,
+      "end": 174.0,
+      "words": [
+        {
+          "text": "The",
+          "start": 147.3,
+          "end": 147.8
+        },
+        {
+          "text": "worked",
+          "start": 147.8,
+          "end": 147.98
+        },
+        {
+          "text": "example",
+          "start": 147.98,
+          "end": 148.32
+        },
+        {
+          "text": "is",
+          "start": 148.32,
+          "end": 148.66
+        },
+        {
+          "text": "worth",
+          "start": 148.66,
+          "end": 148.88
+        },
+        {
+          "text": "doing",
+          "start": 148.88,
+          "end": 149.14
+        },
+        {
+          "text": "once.",
+          "start": 149.14,
+          "end": 149.54
+        },
+        {
+          "text": "8",
+          "start": 150.12,
+          "end": 150.36
+        },
+        {
+          "text": "GPUs,",
+          "start": 150.36,
+          "end": 151.06
+        },
+        {
+          "text": "32",
+          "start": 151.2,
+          "end": 151.5
+        },
+        {
+          "text": "cores,",
+          "start": 151.5,
+          "end": 151.84
+        },
+        {
+          "text": "256",
+          "start": 152.2,
+          "end": 152.82
+        },
+        {
+          "text": "gigabytes,",
+          "start": 152.82,
+          "end": 153.48
+        },
+        {
+          "text": "400",
+          "start": 153.88,
+          "end": 154.12
+        },
+        {
+          "text": "gigabits",
+          "start": 154.12,
+          "end": 154.68
+        },
+        {
+          "text": "per",
+          "start": 154.68,
+          "end": 154.88
+        },
+        {
+          "text": "second.",
+          "start": 154.88,
+          "end": 155.24
+        },
+        {
+          "text": "Tenant",
+          "start": 155.78,
+          "end": 156.1
+        },
+        {
+          "text": "A's",
+          "start": 156.1,
+          "end": 156.4
+        },
+        {
+          "text": "replica",
+          "start": 156.4,
+          "end": 156.68
+        },
+        {
+          "text": "needs",
+          "start": 156.68,
+          "end": 157.08
+        },
+        {
+          "text": "one",
+          "start": 157.08,
+          "end": 157.34
+        },
+        {
+          "text": "GPU.",
+          "start": 157.34,
+          "end": 157.64
+        },
+        {
+          "text": "Tenant",
+          "start": 158.24,
+          "end": 158.56
+        },
+        {
+          "text": "B's",
+          "start": 158.56,
+          "end": 158.84
+        },
+        {
+          "text": "worker",
+          "start": 158.84,
+          "end": 159.04
+        },
+        {
+          "text": "needs",
+          "start": 159.04,
+          "end": 159.38
+        },
+        {
+          "text": "two.",
+          "start": 159.38,
+          "end": 159.7
+        },
+        {
+          "text": "Progressive",
+          "start": 160.32,
+          "end": 160.84
+        },
+        {
+          "text": "filling",
+          "start": 160.84,
+          "end": 161.02
+        },
+        {
+          "text": "hands",
+          "start": 161.02,
+          "end": 161.4
+        },
+        {
+          "text": "a",
+          "start": 161.4,
+          "end": 161.52
+        },
+        {
+          "text": "bundle",
+          "start": 161.52,
+          "end": 161.72
+        },
+        {
+          "text": "to",
+          "start": 161.72,
+          "end": 161.92
+        },
+        {
+          "text": "whoever",
+          "start": 161.92,
+          "end": 162.18
+        },
+        {
+          "text": "has",
+          "start": 162.18,
+          "end": 162.5
+        },
+        {
+          "text": "the",
+          "start": 162.5,
+          "end": 162.64
+        },
+        {
+          "text": "smaller",
+          "start": 162.64,
+          "end": 162.96
+        },
+        {
+          "text": "dominant",
+          "start": 162.96,
+          "end": 163.34
+        },
+        {
+          "text": "share,",
+          "start": 163.34,
+          "end": 163.68
+        },
+        {
+          "text": "alternating",
+          "start": 164.12,
+          "end": 164.5
+        },
+        {
+          "text": "two",
+          "start": 164.5,
+          "end": 164.92
+        },
+        {
+          "text": "a",
+          "start": 164.92,
+          "end": 165.04
+        },
+        {
+          "text": "replicas",
+          "start": 165.04,
+          "end": 165.42
+        },
+        {
+          "text": "per",
+          "start": 165.42,
+          "end": 165.64
+        },
+        {
+          "text": "B",
+          "start": 165.64,
+          "end": 165.76
+        },
+        {
+          "text": "worker",
+          "start": 165.76,
+          "end": 166.04
+        },
+        {
+          "text": "until",
+          "start": 166.04,
+          "end": 166.7
+        },
+        {
+          "text": "both",
+          "start": 166.7,
+          "end": 166.98
+        },
+        {
+          "text": "land",
+          "start": 166.98,
+          "end": 167.34
+        },
+        {
+          "text": "at",
+          "start": 167.34,
+          "end": 167.56
+        },
+        {
+          "text": "0",
+          "start": 167.56,
+          "end": 167.82
+        },
+        {
+          "text": ".5.",
+          "start": 167.82,
+          "end": 168.48
+        },
+        {
+          "text": "A",
+          "start": 169.08,
+          "end": 169.3
+        },
+        {
+          "text": "with",
+          "start": 169.3,
+          "end": 169.48
+        },
+        {
+          "text": "four",
+          "start": 169.48,
+          "end": 169.74
+        },
+        {
+          "text": "single",
+          "start": 169.74,
+          "end": 170.04
+        },
+        {
+          "text": "GPU",
+          "start": 170.04,
+          "end": 170.48
+        },
+        {
+          "text": "replicas,",
+          "start": 170.48,
+          "end": 171.1
+        },
+        {
+          "text": "B",
+          "start": 171.42,
+          "end": 171.74
+        },
+        {
+          "text": "with",
+          "start": 171.74,
+          "end": 171.98
+        },
+        {
+          "text": "two",
+          "start": 171.98,
+          "end": 172.24
+        },
+        {
+          "text": "two",
+          "start": 172.24,
+          "end": 172.46
+        },
+        {
+          "text": "GPU",
+          "start": 172.46,
+          "end": 172.84
+        },
+        {
+          "text": "workers.",
+          "start": 172.84,
+          "end": 173.26
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "But that equal share is a policy target, not a placement. If B's two workers form one gang, four GPUs must become free atomically. If the job needs one NVLink domain, four scattered GPUs do not count. Feasibility comes before fairness: filter the placements a job can actually run, then be fair among them. Reverse the order and you hand tenants a fair share of nothing.",
+      "start": 174.0,
+      "end": 200.57,
+      "words": [
+        {
+          "text": "But",
+          "start": 173.9,
+          "end": 174.48
+        },
+        {
+          "text": "that",
+          "start": 174.48,
+          "end": 174.68
+        },
+        {
+          "text": "equal",
+          "start": 174.68,
+          "end": 175.04
+        },
+        {
+          "text": "share",
+          "start": 175.04,
+          "end": 175.38
+        },
+        {
+          "text": "is",
+          "start": 175.38,
+          "end": 175.6
+        },
+        {
+          "text": "a",
+          "start": 175.6,
+          "end": 175.78
+        },
+        {
+          "text": "policy",
+          "start": 175.78,
+          "end": 176.1
+        },
+        {
+          "text": "target,",
+          "start": 176.1,
+          "end": 176.56
+        },
+        {
+          "text": "not",
+          "start": 176.64,
+          "end": 176.78
+        },
+        {
+          "text": "a",
+          "start": 176.78,
+          "end": 176.92
+        },
+        {
+          "text": "placement.",
+          "start": 176.92,
+          "end": 177.22
+        },
+        {
+          "text": "If",
+          "start": 177.78,
+          "end": 178.02
+        },
+        {
+          "text": "B's",
+          "start": 178.02,
+          "end": 178.42
+        },
+        {
+          "text": "two",
+          "start": 178.42,
+          "end": 178.6
+        },
+        {
+          "text": "workers",
+          "start": 178.6,
+          "end": 178.92
+        },
+        {
+          "text": "form",
+          "start": 178.92,
+          "end": 179.26
+        },
+        {
+          "text": "one",
+          "start": 179.26,
+          "end": 179.52
+        },
+        {
+          "text": "gang,",
+          "start": 179.52,
+          "end": 179.82
+        },
+        {
+          "text": "four",
+          "start": 180.26,
+          "end": 180.46
+        },
+        {
+          "text": "GPUs",
+          "start": 180.46,
+          "end": 181.22
+        },
+        {
+          "text": "must",
+          "start": 181.22,
+          "end": 181.36
+        },
+        {
+          "text": "become",
+          "start": 181.36,
+          "end": 181.72
+        },
+        {
+          "text": "free",
+          "start": 181.72,
+          "end": 182.02
+        },
+        {
+          "text": "atomically.",
+          "start": 182.02,
+          "end": 182.7
+        },
+        {
+          "text": "If",
+          "start": 182.7,
+          "end": 183.38
+        },
+        {
+          "text": "the",
+          "start": 183.38,
+          "end": 183.56
+        },
+        {
+          "text": "job",
+          "start": 183.56,
+          "end": 183.84
+        },
+        {
+          "text": "needs",
+          "start": 183.84,
+          "end": 184.14
+        },
+        {
+          "text": "one",
+          "start": 184.14,
+          "end": 184.44
+        },
+        {
+          "text": "NVLink",
+          "start": 184.44,
+          "end": 185.2
+        },
+        {
+          "text": "domain,",
+          "start": 185.2,
+          "end": 185.64
+        },
+        {
+          "text": "four",
+          "start": 186.14,
+          "end": 186.36
+        },
+        {
+          "text": "scattered",
+          "start": 186.36,
+          "end": 186.88
+        },
+        {
+          "text": "GPUs",
+          "start": 186.88,
+          "end": 187.74
+        },
+        {
+          "text": "do",
+          "start": 187.74,
+          "end": 187.84
+        },
+        {
+          "text": "not",
+          "start": 187.84,
+          "end": 188.04
+        },
+        {
+          "text": "count.",
+          "start": 188.04,
+          "end": 188.4
+        },
+        {
+          "text": "Feasibility",
+          "start": 188.98,
+          "end": 189.58
+        },
+        {
+          "text": "comes",
+          "start": 189.58,
+          "end": 189.98
+        },
+        {
+          "text": "before",
+          "start": 189.98,
+          "end": 190.4
+        },
+        {
+          "text": "fairness.",
+          "start": 190.4,
+          "end": 190.86
+        },
+        {
+          "text": "Filter",
+          "start": 191.42,
+          "end": 191.78
+        },
+        {
+          "text": "the",
+          "start": 191.78,
+          "end": 191.98
+        },
+        {
+          "text": "placements",
+          "start": 191.98,
+          "end": 192.48
+        },
+        {
+          "text": "a",
+          "start": 192.48,
+          "end": 192.66
+        },
+        {
+          "text": "job",
+          "start": 192.66,
+          "end": 193.0
+        },
+        {
+          "text": "can",
+          "start": 193.0,
+          "end": 193.24
+        },
+        {
+          "text": "actually",
+          "start": 193.24,
+          "end": 193.72
+        },
+        {
+          "text": "run,",
+          "start": 193.72,
+          "end": 194.14
+        },
+        {
+          "text": "then",
+          "start": 194.5,
+          "end": 194.66
+        },
+        {
+          "text": "be",
+          "start": 194.66,
+          "end": 194.86
+        },
+        {
+          "text": "fair",
+          "start": 194.86,
+          "end": 195.16
+        },
+        {
+          "text": "among",
+          "start": 195.16,
+          "end": 195.48
+        },
+        {
+          "text": "them.",
+          "start": 195.48,
+          "end": 195.76
+        },
+        {
+          "text": "Reverse",
+          "start": 196.32,
+          "end": 196.84
+        },
+        {
+          "text": "the",
+          "start": 196.84,
+          "end": 197.0
+        },
+        {
+          "text": "order",
+          "start": 197.0,
+          "end": 197.34
+        },
+        {
+          "text": "and",
+          "start": 197.34,
+          "end": 197.62
+        },
+        {
+          "text": "you",
+          "start": 197.62,
+          "end": 197.76
+        },
+        {
+          "text": "hand",
+          "start": 197.76,
+          "end": 198.14
+        },
+        {
+          "text": "tenants",
+          "start": 198.14,
+          "end": 198.48
+        },
+        {
+          "text": "a",
+          "start": 198.48,
+          "end": 198.72
+        },
+        {
+          "text": "fair",
+          "start": 198.72,
+          "end": 199.02
+        },
+        {
+          "text": "share",
+          "start": 199.02,
+          "end": 199.36
+        },
+        {
+          "text": "of",
+          "start": 199.36,
+          "end": 199.52
+        },
+        {
+          "text": "nothing.",
+          "start": 199.52,
+          "end": 199.84
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Why atomic? Because rigid synchronous training has step-function utility. A job configured for a thousand twenty-four GPUs but holding half completes zero steps, not half as many: every collective waits for every rank. Two such jobs can each grab half the pool and block each other indefinitely at full price.",
+      "start": 200.57,
+      "end": 220.7,
+      "visual": {
+        "src": "/study/vol2/08-fleet-orchestration/diagrams/hold-and-wait.svg",
+        "title": "Hold-and-wait and the atomic repair",
+        "alt": "Left panel: two rigid jobs each hold four of the eight GPUs they need; wait arrows close a cycle and every held GPU idles. Right panel: atomic gang allocation grants one job all eight and the other waits holding nothing, so no cycle can form."
+      },
+      "words": [
+        {
+          "text": "Why",
+          "start": 200.72,
+          "end": 201.06
+        },
+        {
+          "text": "atomic?",
+          "start": 201.06,
+          "end": 201.42
+        },
+        {
+          "text": "Because",
+          "start": 201.96,
+          "end": 202.18
+        },
+        {
+          "text": "rigid",
+          "start": 202.18,
+          "end": 202.48
+        },
+        {
+          "text": "synchronous",
+          "start": 202.48,
+          "end": 202.9
+        },
+        {
+          "text": "training",
+          "start": 202.9,
+          "end": 203.36
+        },
+        {
+          "text": "has",
+          "start": 203.36,
+          "end": 203.68
+        },
+        {
+          "text": "step",
+          "start": 203.68,
+          "end": 203.92
+        },
+        {
+          "text": "function",
+          "start": 203.92,
+          "end": 204.22
+        },
+        {
+          "text": "utility.",
+          "start": 204.22,
+          "end": 204.76
+        },
+        {
+          "text": "A",
+          "start": 205.46,
+          "end": 205.64
+        },
+        {
+          "text": "job",
+          "start": 205.64,
+          "end": 205.9
+        },
+        {
+          "text": "configured",
+          "start": 205.9,
+          "end": 206.34
+        },
+        {
+          "text": "for",
+          "start": 206.34,
+          "end": 206.66
+        },
+        {
+          "text": "1024",
+          "start": 206.66,
+          "end": 207.68
+        },
+        {
+          "text": "GPUs,",
+          "start": 207.68,
+          "end": 208.54
+        },
+        {
+          "text": "but",
+          "start": 208.7,
+          "end": 208.9
+        },
+        {
+          "text": "holding",
+          "start": 208.9,
+          "end": 209.2
+        },
+        {
+          "text": "half",
+          "start": 209.2,
+          "end": 209.5
+        },
+        {
+          "text": "complete",
+          "start": 209.5,
+          "end": 209.84
+        },
+        {
+          "text": "zero",
+          "start": 209.84,
+          "end": 210.24
+        },
+        {
+          "text": "steps,",
+          "start": 210.24,
+          "end": 210.78
+        },
+        {
+          "text": "not",
+          "start": 211.12,
+          "end": 211.34
+        },
+        {
+          "text": "half",
+          "start": 211.34,
+          "end": 211.6
+        },
+        {
+          "text": "as",
+          "start": 211.6,
+          "end": 211.74
+        },
+        {
+          "text": "many.",
+          "start": 211.74,
+          "end": 211.94
+        },
+        {
+          "text": "Every",
+          "start": 212.46,
+          "end": 212.76
+        },
+        {
+          "text": "collective",
+          "start": 212.76,
+          "end": 213.16
+        },
+        {
+          "text": "waits",
+          "start": 213.16,
+          "end": 213.5
+        },
+        {
+          "text": "for",
+          "start": 213.5,
+          "end": 213.78
+        },
+        {
+          "text": "every",
+          "start": 213.78,
+          "end": 214.06
+        },
+        {
+          "text": "rank.",
+          "start": 214.06,
+          "end": 214.4
+        },
+        {
+          "text": "Two",
+          "start": 215.0,
+          "end": 215.22
+        },
+        {
+          "text": "such",
+          "start": 215.22,
+          "end": 215.5
+        },
+        {
+          "text": "jobs",
+          "start": 215.5,
+          "end": 215.92
+        },
+        {
+          "text": "can",
+          "start": 215.92,
+          "end": 216.18
+        },
+        {
+          "text": "each",
+          "start": 216.18,
+          "end": 216.38
+        },
+        {
+          "text": "grab",
+          "start": 216.38,
+          "end": 216.64
+        },
+        {
+          "text": "half",
+          "start": 216.64,
+          "end": 216.96
+        },
+        {
+          "text": "the",
+          "start": 216.96,
+          "end": 217.12
+        },
+        {
+          "text": "pool",
+          "start": 217.12,
+          "end": 217.38
+        },
+        {
+          "text": "and",
+          "start": 217.38,
+          "end": 217.7
+        },
+        {
+          "text": "block",
+          "start": 217.7,
+          "end": 217.94
+        },
+        {
+          "text": "each",
+          "start": 217.94,
+          "end": 218.24
+        },
+        {
+          "text": "other",
+          "start": 218.24,
+          "end": 218.46
+        },
+        {
+          "text": "indefinitely",
+          "start": 218.46,
+          "end": 219.16
+        },
+        {
+          "text": "at",
+          "start": 219.16,
+          "end": 219.52
+        },
+        {
+          "text": "full",
+          "start": 219.52,
+          "end": 219.76
+        },
+        {
+          "text": "price.",
+          "start": 219.76,
+          "end": 220.06
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "That is hold-and-wait deadlock, and the price is the whole allocation for as long as the cycle persists. On the ten-thousand-GPU cluster, roughly seven hours of whole-cluster deadlock erases an entire day of the usage gain. Gang scheduling removes it by construction: all GPUs atomically, or the job waits holding nothing.",
+      "start": 220.7,
+      "end": 243.85,
+      "words": [
+        {
+          "text": "That",
+          "start": 220.78,
+          "end": 221.26
+        },
+        {
+          "text": "is",
+          "start": 221.26,
+          "end": 221.42
+        },
+        {
+          "text": "hold",
+          "start": 221.42,
+          "end": 221.76
+        },
+        {
+          "text": "-end",
+          "start": 221.76,
+          "end": 222.0
+        },
+        {
+          "text": "-wait",
+          "start": 222.0,
+          "end": 222.26
+        },
+        {
+          "text": "-deadlock,",
+          "start": 222.26,
+          "end": 222.82
+        },
+        {
+          "text": "and",
+          "start": 223.22,
+          "end": 223.4
+        },
+        {
+          "text": "the",
+          "start": 223.4,
+          "end": 223.5
+        },
+        {
+          "text": "price",
+          "start": 223.5,
+          "end": 223.84
+        },
+        {
+          "text": "is",
+          "start": 223.84,
+          "end": 224.06
+        },
+        {
+          "text": "the",
+          "start": 224.06,
+          "end": 224.2
+        },
+        {
+          "text": "whole",
+          "start": 224.2,
+          "end": 224.44
+        },
+        {
+          "text": "allocation",
+          "start": 224.44,
+          "end": 225.06
+        },
+        {
+          "text": "for",
+          "start": 225.06,
+          "end": 225.34
+        },
+        {
+          "text": "as",
+          "start": 225.34,
+          "end": 225.5
+        },
+        {
+          "text": "long",
+          "start": 225.5,
+          "end": 225.8
+        },
+        {
+          "text": "as",
+          "start": 225.8,
+          "end": 226.02
+        },
+        {
+          "text": "the",
+          "start": 226.02,
+          "end": 226.16
+        },
+        {
+          "text": "cycle",
+          "start": 226.16,
+          "end": 226.5
+        },
+        {
+          "text": "persists.",
+          "start": 226.5,
+          "end": 227.12
+        },
+        {
+          "text": "On",
+          "start": 227.7,
+          "end": 227.92
+        },
+        {
+          "text": "the",
+          "start": 227.92,
+          "end": 228.0
+        },
+        {
+          "text": "10",
+          "start": 228.0,
+          "end": 228.24
+        },
+        {
+          "text": ",000",
+          "start": 228.24,
+          "end": 228.74
+        },
+        {
+          "text": "GPU",
+          "start": 228.74,
+          "end": 229.12
+        },
+        {
+          "text": "cluster,",
+          "start": 229.12,
+          "end": 229.78
+        },
+        {
+          "text": "roughly",
+          "start": 230.4,
+          "end": 230.62
+        },
+        {
+          "text": "seven",
+          "start": 230.62,
+          "end": 231.08
+        },
+        {
+          "text": "hours",
+          "start": 231.08,
+          "end": 231.48
+        },
+        {
+          "text": "of",
+          "start": 231.48,
+          "end": 231.7
+        },
+        {
+          "text": "whole",
+          "start": 231.7,
+          "end": 231.9
+        },
+        {
+          "text": "cluster",
+          "start": 231.9,
+          "end": 232.28
+        },
+        {
+          "text": "deadlock",
+          "start": 232.28,
+          "end": 232.82
+        },
+        {
+          "text": "erases",
+          "start": 232.82,
+          "end": 233.28
+        },
+        {
+          "text": "an",
+          "start": 233.28,
+          "end": 233.52
+        },
+        {
+          "text": "entire",
+          "start": 233.52,
+          "end": 234.0
+        },
+        {
+          "text": "day",
+          "start": 234.0,
+          "end": 234.38
+        },
+        {
+          "text": "of",
+          "start": 234.38,
+          "end": 234.56
+        },
+        {
+          "text": "the",
+          "start": 234.56,
+          "end": 234.68
+        },
+        {
+          "text": "usage",
+          "start": 234.68,
+          "end": 234.98
+        },
+        {
+          "text": "gain.",
+          "start": 234.98,
+          "end": 235.42
+        },
+        {
+          "text": "Gang",
+          "start": 236.18,
+          "end": 236.48
+        },
+        {
+          "text": "scheduling",
+          "start": 236.48,
+          "end": 237.06
+        },
+        {
+          "text": "removes",
+          "start": 237.06,
+          "end": 237.62
+        },
+        {
+          "text": "it",
+          "start": 237.62,
+          "end": 237.86
+        },
+        {
+          "text": "by",
+          "start": 237.86,
+          "end": 238.02
+        },
+        {
+          "text": "construction.",
+          "start": 238.02,
+          "end": 238.56
+        },
+        {
+          "text": "All",
+          "start": 239.02,
+          "end": 239.36
+        },
+        {
+          "text": "GPUs",
+          "start": 239.36,
+          "end": 240.24
+        },
+        {
+          "text": "atomically,",
+          "start": 240.24,
+          "end": 240.92
+        },
+        {
+          "text": "or",
+          "start": 241.1,
+          "end": 241.48
+        },
+        {
+          "text": "the",
+          "start": 241.48,
+          "end": 241.64
+        },
+        {
+          "text": "job",
+          "start": 241.64,
+          "end": 241.96
+        },
+        {
+          "text": "waits",
+          "start": 241.96,
+          "end": 242.38
+        },
+        {
+          "text": "holding",
+          "start": 242.38,
+          "end": 242.72
+        },
+        {
+          "text": "nothing.",
+          "start": 242.72,
+          "end": 243.12
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Naive atomicity wastes in the other direction. A large gang never assembles if every freed GPU keeps going to small jobs, so the scheduler places a reservation and drains capacity toward it. Backfill recovers the idle hole: a one-hundred-twenty-eight-GPU job with a two-hour estimate can run inside the window if its enforced release finishes before the gang starts.",
+      "start": 243.85,
+      "end": 267.88,
+      "visual": {
+        "src": "/study/vol2/08-fleet-orchestration/diagrams/backfill-window.svg",
+        "title": "The backfill window",
+        "alt": "A timeline: a 512-GPU gang reservation drains capacity toward its start five hours from now. A 128-GPU job with a two-hour enforced runtime fits the idle hole because its release completes well before the reservation needs the GPUs; a six-hour job does not fit and must wait."
+      },
+      "words": [
+        {
+          "text": "Naive",
+          "start": 243.86,
+          "end": 244.54
+        },
+        {
+          "text": "atomicity",
+          "start": 244.54,
+          "end": 245.14
+        },
+        {
+          "text": "wastes",
+          "start": 245.14,
+          "end": 245.6
+        },
+        {
+          "text": "in",
+          "start": 245.6,
+          "end": 245.74
+        },
+        {
+          "text": "the",
+          "start": 245.74,
+          "end": 245.84
+        },
+        {
+          "text": "other",
+          "start": 245.84,
+          "end": 245.98
+        },
+        {
+          "text": "direction.",
+          "start": 245.98,
+          "end": 246.4
+        },
+        {
+          "text": "A",
+          "start": 247.14,
+          "end": 247.26
+        },
+        {
+          "text": "large",
+          "start": 247.26,
+          "end": 247.54
+        },
+        {
+          "text": "gang",
+          "start": 247.54,
+          "end": 247.82
+        },
+        {
+          "text": "never",
+          "start": 247.82,
+          "end": 248.18
+        },
+        {
+          "text": "assembles",
+          "start": 248.18,
+          "end": 248.76
+        },
+        {
+          "text": "if",
+          "start": 248.76,
+          "end": 249.0
+        },
+        {
+          "text": "every",
+          "start": 249.0,
+          "end": 249.3
+        },
+        {
+          "text": "freed",
+          "start": 249.3,
+          "end": 249.6
+        },
+        {
+          "text": "GPU",
+          "start": 249.6,
+          "end": 250.0
+        },
+        {
+          "text": "keeps",
+          "start": 250.0,
+          "end": 250.54
+        },
+        {
+          "text": "going",
+          "start": 250.54,
+          "end": 250.78
+        },
+        {
+          "text": "to",
+          "start": 250.78,
+          "end": 250.92
+        },
+        {
+          "text": "small",
+          "start": 250.92,
+          "end": 251.18
+        },
+        {
+          "text": "jobs,",
+          "start": 251.18,
+          "end": 251.66
+        },
+        {
+          "text": "so",
+          "start": 252.0,
+          "end": 252.22
+        },
+        {
+          "text": "the",
+          "start": 252.22,
+          "end": 252.36
+        },
+        {
+          "text": "scheduler",
+          "start": 252.36,
+          "end": 252.76
+        },
+        {
+          "text": "places",
+          "start": 252.76,
+          "end": 253.08
+        },
+        {
+          "text": "a",
+          "start": 253.08,
+          "end": 253.34
+        },
+        {
+          "text": "reservation",
+          "start": 253.34,
+          "end": 253.76
+        },
+        {
+          "text": "and",
+          "start": 253.76,
+          "end": 254.46
+        },
+        {
+          "text": "drains",
+          "start": 254.46,
+          "end": 254.74
+        },
+        {
+          "text": "capacity",
+          "start": 254.74,
+          "end": 255.34
+        },
+        {
+          "text": "toward",
+          "start": 255.34,
+          "end": 255.66
+        },
+        {
+          "text": "it.",
+          "start": 255.66,
+          "end": 255.84
+        },
+        {
+          "text": "Backfill",
+          "start": 256.56,
+          "end": 257.04
+        },
+        {
+          "text": "recovers",
+          "start": 257.04,
+          "end": 257.56
+        },
+        {
+          "text": "the",
+          "start": 257.56,
+          "end": 257.76
+        },
+        {
+          "text": "idle",
+          "start": 257.76,
+          "end": 258.08
+        },
+        {
+          "text": "hole.",
+          "start": 258.08,
+          "end": 258.38
+        },
+        {
+          "text": "A",
+          "start": 258.94,
+          "end": 259.08
+        },
+        {
+          "text": "128",
+          "start": 259.08,
+          "end": 259.72
+        },
+        {
+          "text": "GPU",
+          "start": 259.72,
+          "end": 260.34
+        },
+        {
+          "text": "job",
+          "start": 260.34,
+          "end": 260.92
+        },
+        {
+          "text": "with",
+          "start": 260.92,
+          "end": 261.18
+        },
+        {
+          "text": "a",
+          "start": 261.18,
+          "end": 261.28
+        },
+        {
+          "text": "two",
+          "start": 261.28,
+          "end": 261.46
+        },
+        {
+          "text": "-hour",
+          "start": 261.46,
+          "end": 261.72
+        },
+        {
+          "text": "estimate",
+          "start": 261.72,
+          "end": 262.22
+        },
+        {
+          "text": "can",
+          "start": 262.22,
+          "end": 262.76
+        },
+        {
+          "text": "run",
+          "start": 262.76,
+          "end": 263.06
+        },
+        {
+          "text": "inside",
+          "start": 263.06,
+          "end": 263.42
+        },
+        {
+          "text": "the",
+          "start": 263.42,
+          "end": 263.66
+        },
+        {
+          "text": "window",
+          "start": 263.66,
+          "end": 263.96
+        },
+        {
+          "text": "if",
+          "start": 263.96,
+          "end": 264.48
+        },
+        {
+          "text": "it's",
+          "start": 264.48,
+          "end": 264.66
+        },
+        {
+          "text": "enforced",
+          "start": 264.66,
+          "end": 265.14
+        },
+        {
+          "text": "release",
+          "start": 265.14,
+          "end": 265.58
+        },
+        {
+          "text": "finishes",
+          "start": 265.58,
+          "end": 266.1
+        },
+        {
+          "text": "before",
+          "start": 266.1,
+          "end": 266.48
+        },
+        {
+          "text": "the",
+          "start": 266.48,
+          "end": 266.68
+        },
+        {
+          "text": "gang",
+          "start": 266.68,
+          "end": 266.88
+        },
+        {
+          "text": "starts.",
+          "start": 266.88,
+          "end": 267.18
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The estimate finds the window; the release contract makes it safe. Users mis-estimate in both directions, so the bound has to cover the exit path, checkpoint and cleanup included. And preemption needs the same care: a victim starved of bandwidth cannot checkpoint and exit, which is how a high-priority job ends up waiting on the lowest-priority job in the cluster. Holistic preemption reserves the victim's escape bandwidth.",
+      "start": 267.88,
+      "end": 296.25,
+      "words": [
+        {
+          "text": "The",
+          "start": 267.78,
+          "end": 268.34
+        },
+        {
+          "text": "estimate",
+          "start": 268.34,
+          "end": 268.72
+        },
+        {
+          "text": "finds",
+          "start": 268.72,
+          "end": 269.16
+        },
+        {
+          "text": "the",
+          "start": 269.16,
+          "end": 269.4
+        },
+        {
+          "text": "window.",
+          "start": 269.4,
+          "end": 269.76
+        },
+        {
+          "text": "The",
+          "start": 270.3,
+          "end": 270.38
+        },
+        {
+          "text": "release",
+          "start": 270.38,
+          "end": 270.66
+        },
+        {
+          "text": "contract",
+          "start": 270.66,
+          "end": 271.16
+        },
+        {
+          "text": "makes",
+          "start": 271.16,
+          "end": 271.6
+        },
+        {
+          "text": "it",
+          "start": 271.6,
+          "end": 271.78
+        },
+        {
+          "text": "safe.",
+          "start": 271.78,
+          "end": 272.12
+        },
+        {
+          "text": "Users",
+          "start": 272.8,
+          "end": 273.12
+        },
+        {
+          "text": "mees",
+          "start": 273.12,
+          "end": 273.58
+        },
+        {
+          "text": "estimate",
+          "start": 273.58,
+          "end": 273.9
+        },
+        {
+          "text": "in",
+          "start": 273.9,
+          "end": 274.14
+        },
+        {
+          "text": "both",
+          "start": 274.14,
+          "end": 274.36
+        },
+        {
+          "text": "directions,",
+          "start": 274.36,
+          "end": 274.9
+        },
+        {
+          "text": "so",
+          "start": 275.3,
+          "end": 275.54
+        },
+        {
+          "text": "the",
+          "start": 275.54,
+          "end": 275.68
+        },
+        {
+          "text": "bound",
+          "start": 275.68,
+          "end": 276.02
+        },
+        {
+          "text": "has",
+          "start": 276.02,
+          "end": 276.26
+        },
+        {
+          "text": "to",
+          "start": 276.26,
+          "end": 276.42
+        },
+        {
+          "text": "cover",
+          "start": 276.42,
+          "end": 276.64
+        },
+        {
+          "text": "the",
+          "start": 276.64,
+          "end": 276.8
+        },
+        {
+          "text": "exit",
+          "start": 276.8,
+          "end": 277.1
+        },
+        {
+          "text": "path,",
+          "start": 277.1,
+          "end": 277.52
+        },
+        {
+          "text": "checkpoint",
+          "start": 278.0,
+          "end": 278.28
+        },
+        {
+          "text": "and",
+          "start": 278.28,
+          "end": 278.54
+        },
+        {
+          "text": "cleanup",
+          "start": 278.54,
+          "end": 279.0
+        },
+        {
+          "text": "included.",
+          "start": 279.0,
+          "end": 279.52
+        },
+        {
+          "text": "And",
+          "start": 280.2,
+          "end": 280.36
+        },
+        {
+          "text": "preemption",
+          "start": 280.36,
+          "end": 280.68
+        },
+        {
+          "text": "needs",
+          "start": 280.68,
+          "end": 281.08
+        },
+        {
+          "text": "the",
+          "start": 281.08,
+          "end": 281.3
+        },
+        {
+          "text": "same",
+          "start": 281.3,
+          "end": 281.6
+        },
+        {
+          "text": "care.",
+          "start": 281.6,
+          "end": 281.9
+        },
+        {
+          "text": "A",
+          "start": 282.5,
+          "end": 282.6
+        },
+        {
+          "text": "victim",
+          "start": 282.6,
+          "end": 282.88
+        },
+        {
+          "text": "starved",
+          "start": 282.88,
+          "end": 283.48
+        },
+        {
+          "text": "of",
+          "start": 283.48,
+          "end": 283.56
+        },
+        {
+          "text": "bandwidth",
+          "start": 283.56,
+          "end": 283.98
+        },
+        {
+          "text": "cannot",
+          "start": 283.98,
+          "end": 284.44
+        },
+        {
+          "text": "checkpoint",
+          "start": 284.44,
+          "end": 285.0
+        },
+        {
+          "text": "and",
+          "start": 285.0,
+          "end": 285.3
+        },
+        {
+          "text": "exit,",
+          "start": 285.3,
+          "end": 285.64
+        },
+        {
+          "text": "which",
+          "start": 285.94,
+          "end": 286.22
+        },
+        {
+          "text": "is",
+          "start": 286.22,
+          "end": 286.38
+        },
+        {
+          "text": "how",
+          "start": 286.38,
+          "end": 286.62
+        },
+        {
+          "text": "a",
+          "start": 286.62,
+          "end": 286.88
+        },
+        {
+          "text": "high",
+          "start": 286.88,
+          "end": 287.08
+        },
+        {
+          "text": "priority",
+          "start": 287.08,
+          "end": 287.5
+        },
+        {
+          "text": "job",
+          "start": 287.5,
+          "end": 288.06
+        },
+        {
+          "text": "ends",
+          "start": 288.06,
+          "end": 288.44
+        },
+        {
+          "text": "up",
+          "start": 288.44,
+          "end": 288.62
+        },
+        {
+          "text": "waiting",
+          "start": 288.62,
+          "end": 288.98
+        },
+        {
+          "text": "on",
+          "start": 288.98,
+          "end": 289.22
+        },
+        {
+          "text": "the",
+          "start": 289.22,
+          "end": 289.32
+        },
+        {
+          "text": "lowest",
+          "start": 289.32,
+          "end": 289.62
+        },
+        {
+          "text": "priority",
+          "start": 289.62,
+          "end": 290.0
+        },
+        {
+          "text": "job",
+          "start": 290.0,
+          "end": 290.62
+        },
+        {
+          "text": "in",
+          "start": 290.62,
+          "end": 290.8
+        },
+        {
+          "text": "the",
+          "start": 290.8,
+          "end": 290.88
+        },
+        {
+          "text": "cluster.",
+          "start": 290.88,
+          "end": 291.22
+        },
+        {
+          "text": "Holistic",
+          "start": 291.88,
+          "end": 292.36
+        },
+        {
+          "text": "preemption",
+          "start": 292.36,
+          "end": 293.0
+        },
+        {
+          "text": "reserves",
+          "start": 293.0,
+          "end": 293.48
+        },
+        {
+          "text": "the",
+          "start": 293.48,
+          "end": 293.92
+        },
+        {
+          "text": "victim's",
+          "start": 293.92,
+          "end": 294.5
+        },
+        {
+          "text": "escape",
+          "start": 294.5,
+          "end": 294.84
+        },
+        {
+          "text": "bandwidth.",
+          "start": 294.84,
+          "end": 295.46
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Even without deadlock, placement strands capacity. Six-GPU jobs on eight-GPU nodes strand two per node, a quarter of the fleet, before any policy gets a vote. And equal-size allocations are not equal: the same job's all-reduce measures one hundred twenty milliseconds scattered, forty rail-optimized, twenty-five optimally placed. A four-point-eight-fold difference from placement alone, owned by the scheduler, not the runtime.",
+      "start": 296.25,
+      "end": 322.23,
+      "words": [
+        {
+          "text": "Even",
+          "start": 296.16,
+          "end": 296.76
+        },
+        {
+          "text": "without",
+          "start": 296.76,
+          "end": 297.14
+        },
+        {
+          "text": "deadlock",
+          "start": 297.14,
+          "end": 297.64
+        },
+        {
+          "text": "placement",
+          "start": 297.64,
+          "end": 298.12
+        },
+        {
+          "text": "strands",
+          "start": 298.12,
+          "end": 298.46
+        },
+        {
+          "text": "capacity.",
+          "start": 298.46,
+          "end": 299.1
+        },
+        {
+          "text": "Six",
+          "start": 299.86,
+          "end": 300.02
+        },
+        {
+          "text": "GPU",
+          "start": 300.02,
+          "end": 300.38
+        },
+        {
+          "text": "jobs",
+          "start": 300.38,
+          "end": 300.82
+        },
+        {
+          "text": "on",
+          "start": 300.82,
+          "end": 301.04
+        },
+        {
+          "text": "eight",
+          "start": 301.04,
+          "end": 301.28
+        },
+        {
+          "text": "GPU",
+          "start": 301.28,
+          "end": 301.54
+        },
+        {
+          "text": "nodes",
+          "start": 301.54,
+          "end": 301.98
+        },
+        {
+          "text": "strand",
+          "start": 301.98,
+          "end": 302.32
+        },
+        {
+          "text": "two",
+          "start": 302.32,
+          "end": 302.62
+        },
+        {
+          "text": "per",
+          "start": 302.62,
+          "end": 302.78
+        },
+        {
+          "text": "node,",
+          "start": 302.78,
+          "end": 303.1
+        },
+        {
+          "text": "a",
+          "start": 303.42,
+          "end": 303.58
+        },
+        {
+          "text": "quarter",
+          "start": 303.58,
+          "end": 303.76
+        },
+        {
+          "text": "of",
+          "start": 303.76,
+          "end": 303.92
+        },
+        {
+          "text": "the",
+          "start": 303.92,
+          "end": 304.0
+        },
+        {
+          "text": "fleet,",
+          "start": 304.0,
+          "end": 304.26
+        },
+        {
+          "text": "before",
+          "start": 304.54,
+          "end": 304.78
+        },
+        {
+          "text": "any",
+          "start": 304.78,
+          "end": 305.04
+        },
+        {
+          "text": "policy",
+          "start": 305.04,
+          "end": 305.42
+        },
+        {
+          "text": "gets",
+          "start": 305.42,
+          "end": 305.68
+        },
+        {
+          "text": "a",
+          "start": 305.68,
+          "end": 305.82
+        },
+        {
+          "text": "vote.",
+          "start": 305.82,
+          "end": 306.04
+        },
+        {
+          "text": "And",
+          "start": 306.64,
+          "end": 306.76
+        },
+        {
+          "text": "equal",
+          "start": 306.76,
+          "end": 307.0
+        },
+        {
+          "text": "size",
+          "start": 307.0,
+          "end": 307.24
+        },
+        {
+          "text": "allocations",
+          "start": 307.24,
+          "end": 307.96
+        },
+        {
+          "text": "are",
+          "start": 307.96,
+          "end": 308.14
+        },
+        {
+          "text": "not",
+          "start": 308.14,
+          "end": 308.3
+        },
+        {
+          "text": "equal.",
+          "start": 308.3,
+          "end": 308.64
+        },
+        {
+          "text": "The",
+          "start": 309.16,
+          "end": 309.28
+        },
+        {
+          "text": "same",
+          "start": 309.28,
+          "end": 309.56
+        },
+        {
+          "text": "jobs",
+          "start": 309.56,
+          "end": 309.88
+        },
+        {
+          "text": "all",
+          "start": 309.88,
+          "end": 310.14
+        },
+        {
+          "text": "reduce",
+          "start": 310.14,
+          "end": 310.38
+        },
+        {
+          "text": "measures",
+          "start": 310.38,
+          "end": 310.76
+        },
+        {
+          "text": "120",
+          "start": 310.76,
+          "end": 311.24
+        },
+        {
+          "text": "milliseconds",
+          "start": 311.24,
+          "end": 311.98
+        },
+        {
+          "text": "scattered,",
+          "start": 311.98,
+          "end": 312.44
+        },
+        {
+          "text": "40",
+          "start": 312.94,
+          "end": 313.12
+        },
+        {
+          "text": "rail",
+          "start": 313.12,
+          "end": 313.36
+        },
+        {
+          "text": "optimized,",
+          "start": 313.36,
+          "end": 313.86
+        },
+        {
+          "text": "25",
+          "start": 314.32,
+          "end": 314.76
+        },
+        {
+          "text": "optimally",
+          "start": 314.76,
+          "end": 315.52
+        },
+        {
+          "text": "placed.",
+          "start": 315.52,
+          "end": 315.82
+        },
+        {
+          "text": "A",
+          "start": 316.5,
+          "end": 316.66
+        },
+        {
+          "text": "4",
+          "start": 316.66,
+          "end": 316.82
+        },
+        {
+          "text": ".8",
+          "start": 316.82,
+          "end": 317.28
+        },
+        {
+          "text": "fold",
+          "start": 317.28,
+          "end": 317.54
+        },
+        {
+          "text": "difference",
+          "start": 317.54,
+          "end": 317.9
+        },
+        {
+          "text": "from",
+          "start": 317.9,
+          "end": 318.2
+        },
+        {
+          "text": "placement",
+          "start": 318.2,
+          "end": 318.58
+        },
+        {
+          "text": "alone,",
+          "start": 318.58,
+          "end": 318.98
+        },
+        {
+          "text": "owned",
+          "start": 319.42,
+          "end": 319.76
+        },
+        {
+          "text": "by",
+          "start": 319.76,
+          "end": 320.0
+        },
+        {
+          "text": "the",
+          "start": 320.0,
+          "end": 320.14
+        },
+        {
+          "text": "scheduler,",
+          "start": 320.14,
+          "end": 320.68
+        },
+        {
+          "text": "not",
+          "start": 320.9,
+          "end": 321.06
+        },
+        {
+          "text": "the",
+          "start": 321.06,
+          "end": 321.22
+        },
+        {
+          "text": "runtime.",
+          "start": 321.22,
+          "end": 321.48
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The control planes disagree about the contract. Slurm decides once, imperatively; Kubernetes reconciles continuously toward declared state. Neither is a refinement of the other. And Kubernetes' default one-pod-at-a-time scheduling can recreate the partial-gang deadlock one layer up, which is why the ecosystem rebuilt gang admission as pod groups.",
+      "start": 322.23,
+      "end": 346.88,
+      "words": [
+        {
+          "text": "The",
+          "start": 322.08,
+          "end": 322.64
+        },
+        {
+          "text": "control",
+          "start": 322.64,
+          "end": 323.06
+        },
+        {
+          "text": "planes",
+          "start": 323.06,
+          "end": 323.5
+        },
+        {
+          "text": "disagree",
+          "start": 323.5,
+          "end": 323.98
+        },
+        {
+          "text": "about",
+          "start": 323.98,
+          "end": 324.36
+        },
+        {
+          "text": "the",
+          "start": 324.36,
+          "end": 324.54
+        },
+        {
+          "text": "contract.",
+          "start": 324.54,
+          "end": 325.04
+        },
+        {
+          "text": "Slurm",
+          "start": 325.66,
+          "end": 326.12
+        },
+        {
+          "text": "decides",
+          "start": 326.12,
+          "end": 326.46
+        },
+        {
+          "text": "once,",
+          "start": 326.46,
+          "end": 327.02
+        },
+        {
+          "text": "imperatively,",
+          "start": 327.58,
+          "end": 328.34
+        },
+        {
+          "text": "Kubernetes",
+          "start": 328.96,
+          "end": 329.28
+        },
+        {
+          "text": "reconciles",
+          "start": 329.28,
+          "end": 330.28
+        },
+        {
+          "text": "continuously",
+          "start": 330.28,
+          "end": 330.86
+        },
+        {
+          "text": "toward",
+          "start": 330.86,
+          "end": 331.5
+        },
+        {
+          "text": "declared",
+          "start": 331.5,
+          "end": 331.94
+        },
+        {
+          "text": "state.",
+          "start": 331.94,
+          "end": 332.42
+        },
+        {
+          "text": "Neither",
+          "start": 333.04,
+          "end": 333.36
+        },
+        {
+          "text": "is",
+          "start": 333.36,
+          "end": 333.66
+        },
+        {
+          "text": "a",
+          "start": 333.66,
+          "end": 333.76
+        },
+        {
+          "text": "refinement",
+          "start": 333.76,
+          "end": 334.28
+        },
+        {
+          "text": "of",
+          "start": 334.28,
+          "end": 334.48
+        },
+        {
+          "text": "the",
+          "start": 334.48,
+          "end": 334.6
+        },
+        {
+          "text": "other.",
+          "start": 334.6,
+          "end": 334.82
+        },
+        {
+          "text": "And",
+          "start": 335.32,
+          "end": 335.54
+        },
+        {
+          "text": "Kubernetes",
+          "start": 335.54,
+          "end": 336.04
+        },
+        {
+          "text": "default",
+          "start": 336.04,
+          "end": 336.58
+        },
+        {
+          "text": "one",
+          "start": 336.58,
+          "end": 337.0
+        },
+        {
+          "text": "pod",
+          "start": 337.0,
+          "end": 337.32
+        },
+        {
+          "text": "at",
+          "start": 337.32,
+          "end": 337.44
+        },
+        {
+          "text": "a",
+          "start": 337.44,
+          "end": 337.56
+        },
+        {
+          "text": "time",
+          "start": 337.56,
+          "end": 337.84
+        },
+        {
+          "text": "scheduling",
+          "start": 337.84,
+          "end": 338.34
+        },
+        {
+          "text": "can",
+          "start": 338.34,
+          "end": 338.74
+        },
+        {
+          "text": "recreate",
+          "start": 338.74,
+          "end": 339.24
+        },
+        {
+          "text": "the",
+          "start": 339.24,
+          "end": 339.54
+        },
+        {
+          "text": "partial",
+          "start": 339.54,
+          "end": 339.94
+        },
+        {
+          "text": "gang",
+          "start": 339.94,
+          "end": 340.22
+        },
+        {
+          "text": "deadlock",
+          "start": 340.22,
+          "end": 340.7
+        },
+        {
+          "text": "one",
+          "start": 340.7,
+          "end": 341.04
+        },
+        {
+          "text": "layer",
+          "start": 341.04,
+          "end": 341.38
+        },
+        {
+          "text": "up,",
+          "start": 341.38,
+          "end": 341.76
+        },
+        {
+          "text": "which",
+          "start": 342.12,
+          "end": 342.36
+        },
+        {
+          "text": "is",
+          "start": 342.36,
+          "end": 342.52
+        },
+        {
+          "text": "why",
+          "start": 342.52,
+          "end": 342.78
+        },
+        {
+          "text": "the",
+          "start": 342.78,
+          "end": 342.96
+        },
+        {
+          "text": "ecosystem",
+          "start": 342.96,
+          "end": 343.62
+        },
+        {
+          "text": "rebuilt",
+          "start": 343.62,
+          "end": 344.08
+        },
+        {
+          "text": "gang",
+          "start": 344.08,
+          "end": 344.5
+        },
+        {
+          "text": "admission",
+          "start": 344.5,
+          "end": 344.96
+        },
+        {
+          "text": "as",
+          "start": 344.96,
+          "end": 345.36
+        },
+        {
+          "text": "pod",
+          "start": 345.36,
+          "end": 345.7
+        },
+        {
+          "text": "groups.",
+          "start": 345.7,
+          "end": 346.14
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Rigid allocation wastes in both directions: off-peak, a job cannot absorb idle GPUs; at peak, it cannot release them without dying. Elastic scheduling replaces keep-or-kill with a range, a transition cost, and a scaling-efficiency curve.",
+      "start": 346.88,
+      "end": 363.55,
+      "eq": {
+        "id": "scaling-efficiency",
+        "title": "Scaling efficiency",
+        "latex": "E(n) = T(1)\\, /\\, n\\, T(n)"
+      },
+      "words": [
+        {
+          "text": "Rigid",
+          "start": 346.78,
+          "end": 347.44
+        },
+        {
+          "text": "allocation",
+          "start": 347.44,
+          "end": 347.78
+        },
+        {
+          "text": "wastes",
+          "start": 347.78,
+          "end": 348.48
+        },
+        {
+          "text": "in",
+          "start": 348.48,
+          "end": 348.62
+        },
+        {
+          "text": "both",
+          "start": 348.62,
+          "end": 348.82
+        },
+        {
+          "text": "directions.",
+          "start": 348.82,
+          "end": 349.32
+        },
+        {
+          "text": "Off",
+          "start": 349.92,
+          "end": 350.26
+        },
+        {
+          "text": "peak,",
+          "start": 350.26,
+          "end": 350.54
+        },
+        {
+          "text": "a",
+          "start": 350.94,
+          "end": 351.06
+        },
+        {
+          "text": "job",
+          "start": 351.06,
+          "end": 351.32
+        },
+        {
+          "text": "cannot",
+          "start": 351.32,
+          "end": 351.62
+        },
+        {
+          "text": "absorb",
+          "start": 351.62,
+          "end": 352.14
+        },
+        {
+          "text": "idle",
+          "start": 352.14,
+          "end": 352.52
+        },
+        {
+          "text": "GPUs.",
+          "start": 352.52,
+          "end": 353.34
+        },
+        {
+          "text": "At",
+          "start": 353.62,
+          "end": 353.8
+        },
+        {
+          "text": "peak,",
+          "start": 353.8,
+          "end": 354.06
+        },
+        {
+          "text": "it",
+          "start": 354.52,
+          "end": 354.62
+        },
+        {
+          "text": "cannot",
+          "start": 354.62,
+          "end": 354.88
+        },
+        {
+          "text": "release",
+          "start": 354.88,
+          "end": 355.36
+        },
+        {
+          "text": "them",
+          "start": 355.36,
+          "end": 355.56
+        },
+        {
+          "text": "without",
+          "start": 355.56,
+          "end": 355.84
+        },
+        {
+          "text": "dying.",
+          "start": 355.84,
+          "end": 356.24
+        },
+        {
+          "text": "Elastic",
+          "start": 356.88,
+          "end": 357.46
+        },
+        {
+          "text": "scheduling",
+          "start": 357.46,
+          "end": 357.96
+        },
+        {
+          "text": "replaces",
+          "start": 357.96,
+          "end": 358.52
+        },
+        {
+          "text": "keep",
+          "start": 358.52,
+          "end": 358.94
+        },
+        {
+          "text": "or",
+          "start": 358.94,
+          "end": 359.12
+        },
+        {
+          "text": "kill",
+          "start": 359.12,
+          "end": 359.3
+        },
+        {
+          "text": "with",
+          "start": 359.3,
+          "end": 359.54
+        },
+        {
+          "text": "a",
+          "start": 359.54,
+          "end": 359.66
+        },
+        {
+          "text": "range,",
+          "start": 359.66,
+          "end": 360.0
+        },
+        {
+          "text": "a",
+          "start": 360.3,
+          "end": 360.44
+        },
+        {
+          "text": "transition",
+          "start": 360.44,
+          "end": 360.82
+        },
+        {
+          "text": "cost,",
+          "start": 360.82,
+          "end": 361.26
+        },
+        {
+          "text": "and",
+          "start": 361.62,
+          "end": 361.76
+        },
+        {
+          "text": "a",
+          "start": 361.76,
+          "end": 361.88
+        },
+        {
+          "text": "scaling",
+          "start": 361.88,
+          "end": 362.1
+        },
+        {
+          "text": "efficiency",
+          "start": 362.1,
+          "end": 362.44
+        },
+        {
+          "text": "curve.",
+          "start": 362.44,
+          "end": 362.92
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The curve passes through three regimes. Near-linear while per-worker computation dominates, sublinear as pipeline fill-and-drain becomes visible, saturated when fixed per-step costs rival the shrinking computation. For the reference job the pipeline bubble drives the fall, because fixing the global batch shrinks microbatches per replica while stage count stays constant.",
+      "start": 363.55,
+      "end": 388.8,
+      "visual": {
+        "src": "/study/vol2/08-fleet-orchestration/diagrams/elastic-efficiency.svg",
+        "title": "Scaling efficiency regimes",
+        "alt": "Scaling efficiency against worker count for the 175B reference job in 64-GPU replica steps. The curve hugs ideal through the near-linear regime, bends away in the sublinear regime, and flattens in saturation, while throughput still rises at every step. The pipeline bubble is the growing loss term at the top."
+      },
+      "words": [
+        {
+          "text": "The",
+          "start": 363.7,
+          "end": 364.02
+        },
+        {
+          "text": "curve",
+          "start": 364.02,
+          "end": 364.28
+        },
+        {
+          "text": "passes",
+          "start": 364.28,
+          "end": 364.78
+        },
+        {
+          "text": "through",
+          "start": 364.78,
+          "end": 365.08
+        },
+        {
+          "text": "three",
+          "start": 365.08,
+          "end": 365.4
+        },
+        {
+          "text": "regimes.",
+          "start": 365.4,
+          "end": 365.96
+        },
+        {
+          "text": "Near",
+          "start": 366.72,
+          "end": 366.94
+        },
+        {
+          "text": "linear",
+          "start": 366.94,
+          "end": 367.3
+        },
+        {
+          "text": "while",
+          "start": 367.3,
+          "end": 367.62
+        },
+        {
+          "text": "per",
+          "start": 367.62,
+          "end": 367.88
+        },
+        {
+          "text": "worker",
+          "start": 367.88,
+          "end": 368.1
+        },
+        {
+          "text": "computation",
+          "start": 368.1,
+          "end": 368.78
+        },
+        {
+          "text": "dominates.",
+          "start": 368.78,
+          "end": 369.12
+        },
+        {
+          "text": "Sublinear",
+          "start": 370.06,
+          "end": 370.54
+        },
+        {
+          "text": "as",
+          "start": 370.54,
+          "end": 370.86
+        },
+        {
+          "text": "pipeline",
+          "start": 370.86,
+          "end": 371.3
+        },
+        {
+          "text": "fill",
+          "start": 371.3,
+          "end": 371.64
+        },
+        {
+          "text": "and",
+          "start": 371.64,
+          "end": 371.84
+        },
+        {
+          "text": "drain",
+          "start": 371.84,
+          "end": 372.14
+        },
+        {
+          "text": "becomes",
+          "start": 372.14,
+          "end": 372.6
+        },
+        {
+          "text": "visible.",
+          "start": 372.6,
+          "end": 373.1
+        },
+        {
+          "text": "Saturated",
+          "start": 373.64,
+          "end": 374.32
+        },
+        {
+          "text": "when",
+          "start": 374.32,
+          "end": 374.52
+        },
+        {
+          "text": "fixed",
+          "start": 374.52,
+          "end": 374.9
+        },
+        {
+          "text": "per",
+          "start": 374.9,
+          "end": 375.12
+        },
+        {
+          "text": "step",
+          "start": 375.12,
+          "end": 375.34
+        },
+        {
+          "text": "costs",
+          "start": 375.34,
+          "end": 375.76
+        },
+        {
+          "text": "rival",
+          "start": 375.76,
+          "end": 376.26
+        },
+        {
+          "text": "the",
+          "start": 376.26,
+          "end": 376.54
+        },
+        {
+          "text": "shrinking",
+          "start": 376.54,
+          "end": 376.84
+        },
+        {
+          "text": "computation.",
+          "start": 376.84,
+          "end": 377.56
+        },
+        {
+          "text": "For",
+          "start": 378.14,
+          "end": 378.5
+        },
+        {
+          "text": "the",
+          "start": 378.5,
+          "end": 378.62
+        },
+        {
+          "text": "reference",
+          "start": 378.62,
+          "end": 378.92
+        },
+        {
+          "text": "job,",
+          "start": 378.92,
+          "end": 379.36
+        },
+        {
+          "text": "the",
+          "start": 379.52,
+          "end": 379.58
+        },
+        {
+          "text": "pipeline",
+          "start": 379.58,
+          "end": 379.96
+        },
+        {
+          "text": "bubble",
+          "start": 379.96,
+          "end": 380.36
+        },
+        {
+          "text": "drives",
+          "start": 380.36,
+          "end": 380.8
+        },
+        {
+          "text": "the",
+          "start": 380.8,
+          "end": 381.1
+        },
+        {
+          "text": "fall,",
+          "start": 381.1,
+          "end": 381.46
+        },
+        {
+          "text": "because",
+          "start": 381.88,
+          "end": 382.22
+        },
+        {
+          "text": "fixing",
+          "start": 382.22,
+          "end": 382.7
+        },
+        {
+          "text": "the",
+          "start": 382.7,
+          "end": 382.98
+        },
+        {
+          "text": "global",
+          "start": 382.98,
+          "end": 383.3
+        },
+        {
+          "text": "batch",
+          "start": 383.3,
+          "end": 383.8
+        },
+        {
+          "text": "shrinks",
+          "start": 383.8,
+          "end": 384.16
+        },
+        {
+          "text": "microbatches",
+          "start": 384.16,
+          "end": 385.04
+        },
+        {
+          "text": "per",
+          "start": 385.04,
+          "end": 385.22
+        },
+        {
+          "text": "replica",
+          "start": 385.22,
+          "end": 385.7
+        },
+        {
+          "text": "while",
+          "start": 385.7,
+          "end": 386.12
+        },
+        {
+          "text": "stage",
+          "start": 386.12,
+          "end": 386.54
+        },
+        {
+          "text": "count",
+          "start": 386.54,
+          "end": 387.0
+        },
+        {
+          "text": "stays",
+          "start": 387.0,
+          "end": 387.38
+        },
+        {
+          "text": "constant.",
+          "start": 387.38,
+          "end": 388.04
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Whether a resize pays is arithmetic. The throughput gain over the time the job keeps the new allocation must exceed the measured transition cost. The chapter's reference resize breaks even at about nine hours. Resize more often and the mechanism eats the gain.",
+      "start": 388.8,
+      "end": 406.3,
+      "words": [
+        {
+          "text": "Whether",
+          "start": 389.1,
+          "end": 389.28
+        },
+        {
+          "text": "a",
+          "start": 389.28,
+          "end": 389.52
+        },
+        {
+          "text": "resize",
+          "start": 389.52,
+          "end": 389.78
+        },
+        {
+          "text": "pays",
+          "start": 389.78,
+          "end": 390.24
+        },
+        {
+          "text": "is",
+          "start": 390.24,
+          "end": 390.54
+        },
+        {
+          "text": "arithmetic.",
+          "start": 390.54,
+          "end": 390.98
+        },
+        {
+          "text": "The",
+          "start": 391.8,
+          "end": 391.92
+        },
+        {
+          "text": "throughput",
+          "start": 391.92,
+          "end": 392.22
+        },
+        {
+          "text": "gain",
+          "start": 392.22,
+          "end": 392.62
+        },
+        {
+          "text": "over",
+          "start": 392.62,
+          "end": 392.86
+        },
+        {
+          "text": "the",
+          "start": 392.86,
+          "end": 392.96
+        },
+        {
+          "text": "time,",
+          "start": 392.96,
+          "end": 393.36
+        },
+        {
+          "text": "the",
+          "start": 393.64,
+          "end": 393.78
+        },
+        {
+          "text": "job",
+          "start": 393.78,
+          "end": 394.06
+        },
+        {
+          "text": "keeps",
+          "start": 394.06,
+          "end": 394.38
+        },
+        {
+          "text": "the",
+          "start": 394.38,
+          "end": 394.62
+        },
+        {
+          "text": "new",
+          "start": 394.62,
+          "end": 394.78
+        },
+        {
+          "text": "allocation,",
+          "start": 394.78,
+          "end": 395.26
+        },
+        {
+          "text": "must",
+          "start": 395.68,
+          "end": 395.88
+        },
+        {
+          "text": "exceed",
+          "start": 395.88,
+          "end": 396.28
+        },
+        {
+          "text": "the",
+          "start": 396.28,
+          "end": 396.5
+        },
+        {
+          "text": "measured",
+          "start": 396.5,
+          "end": 396.84
+        },
+        {
+          "text": "transition",
+          "start": 396.84,
+          "end": 397.4
+        },
+        {
+          "text": "cost.",
+          "start": 397.4,
+          "end": 397.92
+        },
+        {
+          "text": "The",
+          "start": 398.58,
+          "end": 398.72
+        },
+        {
+          "text": "chapter's",
+          "start": 398.72,
+          "end": 399.22
+        },
+        {
+          "text": "reference",
+          "start": 399.22,
+          "end": 399.54
+        },
+        {
+          "text": "resize",
+          "start": 399.54,
+          "end": 400.02
+        },
+        {
+          "text": "breaks",
+          "start": 400.02,
+          "end": 400.52
+        },
+        {
+          "text": "even",
+          "start": 400.52,
+          "end": 401.02
+        },
+        {
+          "text": "at",
+          "start": 401.02,
+          "end": 401.24
+        },
+        {
+          "text": "about",
+          "start": 401.24,
+          "end": 401.46
+        },
+        {
+          "text": "nine",
+          "start": 401.46,
+          "end": 401.74
+        },
+        {
+          "text": "hours,",
+          "start": 401.74,
+          "end": 402.16
+        },
+        {
+          "text": "resize",
+          "start": 402.72,
+          "end": 403.1
+        },
+        {
+          "text": "more",
+          "start": 403.1,
+          "end": 403.5
+        },
+        {
+          "text": "often,",
+          "start": 403.5,
+          "end": 403.88
+        },
+        {
+          "text": "and",
+          "start": 404.14,
+          "end": 404.26
+        },
+        {
+          "text": "the",
+          "start": 404.26,
+          "end": 404.36
+        },
+        {
+          "text": "mechanism",
+          "start": 404.36,
+          "end": 404.86
+        },
+        {
+          "text": "eats",
+          "start": 404.86,
+          "end": 405.22
+        },
+        {
+          "text": "the",
+          "start": 405.22,
+          "end": 405.38
+        },
+        {
+          "text": "gain.",
+          "start": 405.38,
+          "end": 405.68
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Interruptions are the same economics from the other side. Every preemption charges discarded work since the last durable checkpoint plus relaunch, reload and warmup: about twenty minutes and forty-four dollars per event on the sixty-four-GPU fine-tune, two hundred sixty-one GPU-hours a day at one preemption daily. And one eviction can cascade: fanout two per level reaches six jobs in two levels.",
+      "start": 406.3,
+      "end": 432.98,
+      "words": [
+        {
+          "text": "Interruptions",
+          "start": 406.64,
+          "end": 407.34
+        },
+        {
+          "text": "are",
+          "start": 407.34,
+          "end": 407.5
+        },
+        {
+          "text": "the",
+          "start": 407.5,
+          "end": 407.64
+        },
+        {
+          "text": "same",
+          "start": 407.64,
+          "end": 407.96
+        },
+        {
+          "text": "economics",
+          "start": 407.96,
+          "end": 408.52
+        },
+        {
+          "text": "from",
+          "start": 408.52,
+          "end": 408.78
+        },
+        {
+          "text": "the",
+          "start": 408.78,
+          "end": 408.9
+        },
+        {
+          "text": "other",
+          "start": 408.9,
+          "end": 409.02
+        },
+        {
+          "text": "side.",
+          "start": 409.02,
+          "end": 409.52
+        },
+        {
+          "text": "Every",
+          "start": 410.16,
+          "end": 410.4
+        },
+        {
+          "text": "preemption",
+          "start": 410.4,
+          "end": 410.78
+        },
+        {
+          "text": "charges",
+          "start": 410.78,
+          "end": 411.28
+        },
+        {
+          "text": "discarded",
+          "start": 411.28,
+          "end": 411.84
+        },
+        {
+          "text": "work",
+          "start": 411.84,
+          "end": 412.18
+        },
+        {
+          "text": "since",
+          "start": 412.18,
+          "end": 412.42
+        },
+        {
+          "text": "the",
+          "start": 412.42,
+          "end": 412.64
+        },
+        {
+          "text": "last",
+          "start": 412.64,
+          "end": 412.96
+        },
+        {
+          "text": "durable",
+          "start": 412.96,
+          "end": 413.32
+        },
+        {
+          "text": "checkpoint",
+          "start": 413.32,
+          "end": 413.92
+        },
+        {
+          "text": "plus",
+          "start": 413.92,
+          "end": 414.24
+        },
+        {
+          "text": "relaunch,",
+          "start": 414.24,
+          "end": 414.92
+        },
+        {
+          "text": "reload,",
+          "start": 415.3,
+          "end": 415.7
+        },
+        {
+          "text": "and",
+          "start": 416.0,
+          "end": 416.04
+        },
+        {
+          "text": "warm",
+          "start": 416.04,
+          "end": 416.28
+        },
+        {
+          "text": "up.",
+          "start": 416.28,
+          "end": 416.52
+        },
+        {
+          "text": "About",
+          "start": 416.98,
+          "end": 417.18
+        },
+        {
+          "text": "20",
+          "start": 417.18,
+          "end": 417.56
+        },
+        {
+          "text": "minutes",
+          "start": 417.56,
+          "end": 417.82
+        },
+        {
+          "text": "and",
+          "start": 417.82,
+          "end": 418.02
+        },
+        {
+          "text": "$44",
+          "start": 418.02,
+          "end": 418.42
+        },
+        {
+          "text": "per",
+          "start": 418.42,
+          "end": 419.16
+        },
+        {
+          "text": "event",
+          "start": 419.16,
+          "end": 419.52
+        },
+        {
+          "text": "on",
+          "start": 419.52,
+          "end": 419.7
+        },
+        {
+          "text": "the",
+          "start": 419.7,
+          "end": 419.82
+        },
+        {
+          "text": "64",
+          "start": 419.82,
+          "end": 420.28
+        },
+        {
+          "text": "GPU",
+          "start": 420.28,
+          "end": 420.7
+        },
+        {
+          "text": "fine",
+          "start": 420.7,
+          "end": 421.2
+        },
+        {
+          "text": "tune,",
+          "start": 421.2,
+          "end": 421.54
+        },
+        {
+          "text": "261",
+          "start": 422.5,
+          "end": 423.2
+        },
+        {
+          "text": "GPU",
+          "start": 423.2,
+          "end": 423.52
+        },
+        {
+          "text": "hours",
+          "start": 423.52,
+          "end": 424.04
+        },
+        {
+          "text": "a",
+          "start": 424.04,
+          "end": 424.22
+        },
+        {
+          "text": "day",
+          "start": 424.22,
+          "end": 424.5
+        },
+        {
+          "text": "at",
+          "start": 424.5,
+          "end": 424.8
+        },
+        {
+          "text": "one",
+          "start": 424.8,
+          "end": 425.04
+        },
+        {
+          "text": "preemption",
+          "start": 425.04,
+          "end": 425.48
+        },
+        {
+          "text": "daily.",
+          "start": 425.48,
+          "end": 425.82
+        },
+        {
+          "text": "And",
+          "start": 426.48,
+          "end": 426.7
+        },
+        {
+          "text": "one",
+          "start": 426.7,
+          "end": 426.92
+        },
+        {
+          "text": "eviction",
+          "start": 426.92,
+          "end": 427.32
+        },
+        {
+          "text": "can",
+          "start": 427.32,
+          "end": 427.62
+        },
+        {
+          "text": "cascade.",
+          "start": 427.62,
+          "end": 428.04
+        },
+        {
+          "text": "Fanout",
+          "start": 428.84,
+          "end": 429.26
+        },
+        {
+          "text": "2",
+          "start": 429.26,
+          "end": 429.6
+        },
+        {
+          "text": "per",
+          "start": 429.6,
+          "end": 429.9
+        },
+        {
+          "text": "level",
+          "start": 429.9,
+          "end": 430.16
+        },
+        {
+          "text": "reaches",
+          "start": 430.16,
+          "end": 430.58
+        },
+        {
+          "text": "six",
+          "start": 430.58,
+          "end": 430.94
+        },
+        {
+          "text": "jobs",
+          "start": 430.94,
+          "end": 431.42
+        },
+        {
+          "text": "in",
+          "start": 431.42,
+          "end": 431.64
+        },
+        {
+          "text": "two",
+          "start": 431.64,
+          "end": 431.88
+        },
+        {
+          "text": "levels.",
+          "start": 431.88,
+          "end": 432.26
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Spot instances invert it. The provider preempts you, at sixty to seventy percent off, with notice measured in minutes on AWS and as little as thirty seconds on GCP. Whether the discount survives is the effective-cost relation.",
+      "start": 432.98,
+      "end": 448.53,
+      "eq": {
+        "id": "effective-spot-cost",
+        "title": "Effective spot cost",
+        "latex": "C_{\\mathrm{eff}} = p_{\\mathrm{spot}} \\times T_{\\mathrm{billed}}\\, /\\, T_{\\mathrm{retained}}"
+      },
+      "words": [
+        {
+          "text": "Spot",
+          "start": 433.18,
+          "end": 433.48
+        },
+        {
+          "text": "instances",
+          "start": 433.48,
+          "end": 433.94
+        },
+        {
+          "text": "inverted.",
+          "start": 433.94,
+          "end": 434.58
+        },
+        {
+          "text": "The",
+          "start": 435.04,
+          "end": 435.42
+        },
+        {
+          "text": "provider",
+          "start": 435.42,
+          "end": 435.82
+        },
+        {
+          "text": "preempts",
+          "start": 435.82,
+          "end": 436.4
+        },
+        {
+          "text": "you",
+          "start": 436.4,
+          "end": 436.54
+        },
+        {
+          "text": "at",
+          "start": 436.54,
+          "end": 437.06
+        },
+        {
+          "text": "60",
+          "start": 437.06,
+          "end": 437.46
+        },
+        {
+          "text": "to",
+          "start": 437.46,
+          "end": 437.62
+        },
+        {
+          "text": "70",
+          "start": 437.62,
+          "end": 437.98
+        },
+        {
+          "text": "%",
+          "start": 437.98,
+          "end": 438.3
+        },
+        {
+          "text": "off,",
+          "start": 438.3,
+          "end": 438.66
+        },
+        {
+          "text": "with",
+          "start": 439.02,
+          "end": 439.18
+        },
+        {
+          "text": "notice",
+          "start": 439.18,
+          "end": 439.58
+        },
+        {
+          "text": "measured",
+          "start": 439.58,
+          "end": 440.02
+        },
+        {
+          "text": "in",
+          "start": 440.02,
+          "end": 440.24
+        },
+        {
+          "text": "minutes",
+          "start": 440.24,
+          "end": 440.46
+        },
+        {
+          "text": "on",
+          "start": 440.46,
+          "end": 440.74
+        },
+        {
+          "text": "AWS",
+          "start": 440.74,
+          "end": 441.12
+        },
+        {
+          "text": "and",
+          "start": 441.12,
+          "end": 441.52
+        },
+        {
+          "text": "as",
+          "start": 441.52,
+          "end": 441.68
+        },
+        {
+          "text": "little",
+          "start": 441.68,
+          "end": 441.9
+        },
+        {
+          "text": "as",
+          "start": 441.9,
+          "end": 442.18
+        },
+        {
+          "text": "30",
+          "start": 442.18,
+          "end": 442.5
+        },
+        {
+          "text": "seconds",
+          "start": 442.5,
+          "end": 442.94
+        },
+        {
+          "text": "on",
+          "start": 442.94,
+          "end": 443.28
+        },
+        {
+          "text": "GCP.",
+          "start": 443.28,
+          "end": 443.78
+        },
+        {
+          "text": "Whether",
+          "start": 444.56,
+          "end": 444.82
+        },
+        {
+          "text": "the",
+          "start": 444.82,
+          "end": 444.98
+        },
+        {
+          "text": "discount",
+          "start": 444.98,
+          "end": 445.28
+        },
+        {
+          "text": "survives",
+          "start": 445.28,
+          "end": 445.68
+        },
+        {
+          "text": "is",
+          "start": 445.68,
+          "end": 446.34
+        },
+        {
+          "text": "the",
+          "start": 446.34,
+          "end": 446.5
+        },
+        {
+          "text": "effective",
+          "start": 446.5,
+          "end": 446.9
+        },
+        {
+          "text": "cost",
+          "start": 446.9,
+          "end": 447.3
+        },
+        {
+          "text": "relation.",
+          "start": 447.3,
+          "end": 447.82
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Spot price times billed time over retained time. Interruptions bill checkpoint, restart and replay hours that produce no progress, so the nominal discount evaporates as they multiply. The scenario prices it: three hundred forty-four thousand on-demand versus one hundred sixty-one thousand on spot for the same run, sixty-five percent nominal settling to about fifty-two real.",
+      "start": 448.53,
+      "end": 475.13,
+      "words": [
+        {
+          "text": "Spot",
+          "start": 448.74,
+          "end": 449.16
+        },
+        {
+          "text": "price",
+          "start": 449.16,
+          "end": 449.48
+        },
+        {
+          "text": "times",
+          "start": 449.48,
+          "end": 449.92
+        },
+        {
+          "text": "build",
+          "start": 449.92,
+          "end": 450.22
+        },
+        {
+          "text": "time",
+          "start": 450.22,
+          "end": 450.62
+        },
+        {
+          "text": "over",
+          "start": 450.62,
+          "end": 450.92
+        },
+        {
+          "text": "retained",
+          "start": 450.92,
+          "end": 451.32
+        },
+        {
+          "text": "time.",
+          "start": 451.32,
+          "end": 451.88
+        },
+        {
+          "text": "Interruptions",
+          "start": 452.44,
+          "end": 453.14
+        },
+        {
+          "text": "build",
+          "start": 453.14,
+          "end": 453.44
+        },
+        {
+          "text": "checkpoint,",
+          "start": 453.44,
+          "end": 453.98
+        },
+        {
+          "text": "restart,",
+          "start": 454.54,
+          "end": 454.84
+        },
+        {
+          "text": "and",
+          "start": 455.14,
+          "end": 455.18
+        },
+        {
+          "text": "replay",
+          "start": 455.18,
+          "end": 455.5
+        },
+        {
+          "text": "hours",
+          "start": 455.5,
+          "end": 455.98
+        },
+        {
+          "text": "that",
+          "start": 455.98,
+          "end": 456.26
+        },
+        {
+          "text": "produce",
+          "start": 456.26,
+          "end": 456.64
+        },
+        {
+          "text": "no",
+          "start": 456.64,
+          "end": 456.88
+        },
+        {
+          "text": "progress,",
+          "start": 456.88,
+          "end": 457.44
+        },
+        {
+          "text": "so",
+          "start": 457.7,
+          "end": 458.16
+        },
+        {
+          "text": "the",
+          "start": 458.16,
+          "end": 458.3
+        },
+        {
+          "text": "nominal",
+          "start": 458.3,
+          "end": 458.66
+        },
+        {
+          "text": "discount",
+          "start": 458.66,
+          "end": 459.2
+        },
+        {
+          "text": "evaporates",
+          "start": 459.2,
+          "end": 459.92
+        },
+        {
+          "text": "as",
+          "start": 459.92,
+          "end": 460.12
+        },
+        {
+          "text": "they",
+          "start": 460.12,
+          "end": 460.28
+        },
+        {
+          "text": "multiply.",
+          "start": 460.28,
+          "end": 460.72
+        },
+        {
+          "text": "The",
+          "start": 461.32,
+          "end": 461.72
+        },
+        {
+          "text": "scenario",
+          "start": 461.72,
+          "end": 462.2
+        },
+        {
+          "text": "prices",
+          "start": 462.2,
+          "end": 462.74
+        },
+        {
+          "text": "it.",
+          "start": 462.74,
+          "end": 463.0
+        },
+        {
+          "text": "344",
+          "start": 463.92,
+          "end": 464.72
+        },
+        {
+          "text": ",000",
+          "start": 464.72,
+          "end": 465.3
+        },
+        {
+          "text": "on",
+          "start": 465.3,
+          "end": 465.48
+        },
+        {
+          "text": "-demand",
+          "start": 465.48,
+          "end": 465.86
+        },
+        {
+          "text": "versus",
+          "start": 465.86,
+          "end": 466.22
+        },
+        {
+          "text": "161",
+          "start": 466.22,
+          "end": 467.78
+        },
+        {
+          "text": ",000",
+          "start": 467.78,
+          "end": 468.36
+        },
+        {
+          "text": "on",
+          "start": 468.36,
+          "end": 468.6
+        },
+        {
+          "text": "spot",
+          "start": 468.6,
+          "end": 468.96
+        },
+        {
+          "text": "for",
+          "start": 468.96,
+          "end": 469.24
+        },
+        {
+          "text": "the",
+          "start": 469.24,
+          "end": 469.36
+        },
+        {
+          "text": "same",
+          "start": 469.36,
+          "end": 469.68
+        },
+        {
+          "text": "run,",
+          "start": 469.68,
+          "end": 470.06
+        },
+        {
+          "text": "65",
+          "start": 470.58,
+          "end": 471.0
+        },
+        {
+          "text": "%",
+          "start": 471.0,
+          "end": 471.66
+        },
+        {
+          "text": "nominal",
+          "start": 471.66,
+          "end": 472.14
+        },
+        {
+          "text": "settling",
+          "start": 472.14,
+          "end": 472.64
+        },
+        {
+          "text": "to",
+          "start": 472.64,
+          "end": 473.18
+        },
+        {
+          "text": "about",
+          "start": 473.18,
+          "end": 473.46
+        },
+        {
+          "text": "52",
+          "start": 473.46,
+          "end": 473.96
+        },
+        {
+          "text": "real.",
+          "start": 473.96,
+          "end": 474.44
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Which job gets the next free GPUs? Four research schedulers answer with four different signals. Tiresias uses attained service, GPU-time already consumed, because low-service jobs are probably short when durations are heavy-tailed. Gandiva time-slices at iteration boundaries, when temporary activations are already released. Themis bids in auctions on finish-time fairness ratios. And Pollux co-adapts allocation and batch size because past the critical batch, more GPUs can raise throughput while lowering goodput.",
+      "start": 475.13,
+      "end": 500.15,
+      "eq": {
+        "id": "statistical-goodput",
+        "title": "Statistical goodput",
+        "latex": "G = \\Theta \\times \\eta"
+      },
+      "words": [
+        {
+          "text": "Which",
+          "start": 474.96,
+          "end": 475.58
+        },
+        {
+          "text": "job",
+          "start": 475.58,
+          "end": 475.92
+        },
+        {
+          "text": "gets",
+          "start": 475.92,
+          "end": 476.16
+        },
+        {
+          "text": "the",
+          "start": 476.16,
+          "end": 476.34
+        },
+        {
+          "text": "next",
+          "start": 476.34,
+          "end": 476.54
+        },
+        {
+          "text": "free",
+          "start": 476.54,
+          "end": 476.82
+        },
+        {
+          "text": "GPUs?",
+          "start": 476.82,
+          "end": 477.56
+        },
+        {
+          "text": "Four",
+          "start": 477.94,
+          "end": 478.26
+        },
+        {
+          "text": "research",
+          "start": 478.26,
+          "end": 478.62
+        },
+        {
+          "text": "schedulers",
+          "start": 478.62,
+          "end": 479.2
+        },
+        {
+          "text": "answer",
+          "start": 479.2,
+          "end": 479.54
+        },
+        {
+          "text": "with",
+          "start": 479.54,
+          "end": 479.82
+        },
+        {
+          "text": "four",
+          "start": 479.82,
+          "end": 480.08
+        },
+        {
+          "text": "different",
+          "start": 480.08,
+          "end": 480.34
+        },
+        {
+          "text": "signals.",
+          "start": 480.34,
+          "end": 480.76
+        },
+        {
+          "text": "Terecius",
+          "start": 481.44,
+          "end": 482.02
+        },
+        {
+          "text": "uses",
+          "start": 482.02,
+          "end": 482.3
+        },
+        {
+          "text": "attained",
+          "start": 482.3,
+          "end": 482.7
+        },
+        {
+          "text": "service,",
+          "start": 482.7,
+          "end": 483.14
+        },
+        {
+          "text": "GPU",
+          "start": 483.6,
+          "end": 483.92
+        },
+        {
+          "text": "time",
+          "start": 483.92,
+          "end": 484.32
+        },
+        {
+          "text": "already",
+          "start": 484.32,
+          "end": 484.68
+        },
+        {
+          "text": "consumed,",
+          "start": 484.68,
+          "end": 485.32
+        },
+        {
+          "text": "because",
+          "start": 485.74,
+          "end": 485.98
+        },
+        {
+          "text": "low",
+          "start": 485.98,
+          "end": 486.26
+        },
+        {
+          "text": "service",
+          "start": 486.26,
+          "end": 486.52
+        },
+        {
+          "text": "jobs",
+          "start": 486.52,
+          "end": 486.94
+        },
+        {
+          "text": "are",
+          "start": 486.94,
+          "end": 487.18
+        },
+        {
+          "text": "probably",
+          "start": 487.18,
+          "end": 487.58
+        },
+        {
+          "text": "short",
+          "start": 487.58,
+          "end": 488.0
+        },
+        {
+          "text": "when",
+          "start": 488.0,
+          "end": 488.18
+        },
+        {
+          "text": "durations",
+          "start": 488.18,
+          "end": 488.66
+        },
+        {
+          "text": "are",
+          "start": 488.66,
+          "end": 488.9
+        },
+        {
+          "text": "heavy",
+          "start": 488.9,
+          "end": 489.1
+        },
+        {
+          "text": "-tailed.",
+          "start": 489.1,
+          "end": 489.54
+        },
+        {
+          "text": "GANDAVA",
+          "start": 490.14,
+          "end": 490.56
+        },
+        {
+          "text": "timeslices",
+          "start": 490.56,
+          "end": 491.34
+        },
+        {
+          "text": "at",
+          "start": 491.34,
+          "end": 491.62
+        },
+        {
+          "text": "iteration",
+          "start": 491.62,
+          "end": 492.0
+        },
+        {
+          "text": "boundaries",
+          "start": 492.0,
+          "end": 492.56
+        },
+        {
+          "text": "when",
+          "start": 492.56,
+          "end": 493.14
+        },
+        {
+          "text": "temporary",
+          "start": 493.14,
+          "end": 493.56
+        },
+        {
+          "text": "activations",
+          "start": 493.56,
+          "end": 494.4
+        },
+        {
+          "text": "are",
+          "start": 494.4,
+          "end": 494.62
+        },
+        {
+          "text": "already",
+          "start": 494.62,
+          "end": 494.98
+        },
+        {
+          "text": "released.",
+          "start": 494.98,
+          "end": 495.52
+        },
+        {
+          "text": "Themis",
+          "start": 496.1,
+          "end": 496.6
+        },
+        {
+          "text": "bids",
+          "start": 496.6,
+          "end": 496.98
+        },
+        {
+          "text": "in",
+          "start": 496.98,
+          "end": 497.16
+        },
+        {
+          "text": "auctions",
+          "start": 497.16,
+          "end": 497.68
+        },
+        {
+          "text": "on",
+          "start": 497.68,
+          "end": 497.92
+        },
+        {
+          "text": "finish",
+          "start": 497.92,
+          "end": 498.2
+        },
+        {
+          "text": "time",
+          "start": 498.2,
+          "end": 498.52
+        },
+        {
+          "text": "fairness",
+          "start": 498.52,
+          "end": 498.92
+        },
+        {
+          "text": "ratios.",
+          "start": 498.92,
+          "end": 499.5
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Statistical goodput is throughput times progress per example. Grow the batch to use more devices and every example is discounted, so the product is the objective, not the rate. Pollux reports thirty-seven to fifty percent lower completion times on its testbed, but the durable lesson is the coupling.",
+      "start": 500.15,
+      "end": 521.3,
+      "eq": {
+        "id": "finish-time-fairness",
+        "title": "Finish-time fairness",
+        "latex": "F_{\\mathrm{finish}} = T_{\\mathrm{shared}}\\, /\\, T_{\\mathrm{fair\\,share}}"
+      },
+      "words": [
+        {
+          "text": "Statistical",
+          "start": 500.34,
+          "end": 501.08
+        },
+        {
+          "text": "good",
+          "start": 501.08,
+          "end": 501.36
+        },
+        {
+          "text": "-put",
+          "start": 501.36,
+          "end": 501.58
+        },
+        {
+          "text": "is",
+          "start": 501.58,
+          "end": 501.88
+        },
+        {
+          "text": "throughput",
+          "start": 501.88,
+          "end": 502.34
+        },
+        {
+          "text": "times",
+          "start": 502.34,
+          "end": 502.76
+        },
+        {
+          "text": "progress",
+          "start": 502.76,
+          "end": 503.28
+        },
+        {
+          "text": "per",
+          "start": 503.28,
+          "end": 503.54
+        },
+        {
+          "text": "example.",
+          "start": 503.54,
+          "end": 504.04
+        },
+        {
+          "text": "Grow",
+          "start": 504.66,
+          "end": 504.96
+        },
+        {
+          "text": "the",
+          "start": 504.96,
+          "end": 505.16
+        },
+        {
+          "text": "batch",
+          "start": 505.16,
+          "end": 505.44
+        },
+        {
+          "text": "to",
+          "start": 505.44,
+          "end": 505.68
+        },
+        {
+          "text": "use",
+          "start": 505.68,
+          "end": 505.88
+        },
+        {
+          "text": "more",
+          "start": 505.88,
+          "end": 506.12
+        },
+        {
+          "text": "devices",
+          "start": 506.12,
+          "end": 506.66
+        },
+        {
+          "text": "and",
+          "start": 506.66,
+          "end": 506.96
+        },
+        {
+          "text": "every",
+          "start": 506.96,
+          "end": 507.3
+        },
+        {
+          "text": "example",
+          "start": 507.3,
+          "end": 507.84
+        },
+        {
+          "text": "is",
+          "start": 507.84,
+          "end": 508.1
+        },
+        {
+          "text": "discounted,",
+          "start": 508.1,
+          "end": 508.86
+        },
+        {
+          "text": "so",
+          "start": 509.2,
+          "end": 509.42
+        },
+        {
+          "text": "the",
+          "start": 509.42,
+          "end": 509.56
+        },
+        {
+          "text": "product",
+          "start": 509.56,
+          "end": 509.98
+        },
+        {
+          "text": "is",
+          "start": 509.98,
+          "end": 510.22
+        },
+        {
+          "text": "the",
+          "start": 510.22,
+          "end": 510.38
+        },
+        {
+          "text": "objective,",
+          "start": 510.38,
+          "end": 510.88
+        },
+        {
+          "text": "not",
+          "start": 511.42,
+          "end": 511.66
+        },
+        {
+          "text": "the",
+          "start": 511.66,
+          "end": 511.84
+        },
+        {
+          "text": "rate.",
+          "start": 511.84,
+          "end": 512.1
+        },
+        {
+          "text": "Pollux",
+          "start": 512.7,
+          "end": 513.32
+        },
+        {
+          "text": "reports",
+          "start": 513.32,
+          "end": 513.76
+        },
+        {
+          "text": "37",
+          "start": 513.76,
+          "end": 514.64
+        },
+        {
+          "text": "to",
+          "start": 514.64,
+          "end": 514.88
+        },
+        {
+          "text": "50",
+          "start": 514.88,
+          "end": 515.22
+        },
+        {
+          "text": "%",
+          "start": 515.22,
+          "end": 515.74
+        },
+        {
+          "text": "lower",
+          "start": 515.74,
+          "end": 516.06
+        },
+        {
+          "text": "completion",
+          "start": 516.06,
+          "end": 516.6
+        },
+        {
+          "text": "times",
+          "start": 516.6,
+          "end": 517.1
+        },
+        {
+          "text": "on",
+          "start": 517.1,
+          "end": 517.4
+        },
+        {
+          "text": "its",
+          "start": 517.4,
+          "end": 517.56
+        },
+        {
+          "text": "test",
+          "start": 517.56,
+          "end": 517.84
+        },
+        {
+          "text": "bed,",
+          "start": 517.84,
+          "end": 518.16
+        },
+        {
+          "text": "but",
+          "start": 518.54,
+          "end": 518.76
+        },
+        {
+          "text": "the",
+          "start": 518.76,
+          "end": 518.88
+        },
+        {
+          "text": "durable",
+          "start": 518.88,
+          "end": 519.22
+        },
+        {
+          "text": "lesson",
+          "start": 519.22,
+          "end": 519.74
+        },
+        {
+          "text": "is",
+          "start": 519.74,
+          "end": 520.04
+        },
+        {
+          "text": "the",
+          "start": 520.04,
+          "end": 520.2
+        },
+        {
+          "text": "coupling.",
+          "start": 520.2,
+          "end": 520.56
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Themis's ratio is worth pausing on too: completion time in the shared cluster over completion time on a fair-share isolated slice. A ratio of one means you finished no later than your entitlement allowed. It is a direct measurement of unfair delay, not a proxy.",
+      "start": 521.3,
+      "end": 539.3,
+      "words": [
+        {
+          "text": "Themis's",
+          "start": 521.44,
+          "end": 522.08
+        },
+        {
+          "text": "ratio",
+          "start": 522.08,
+          "end": 522.46
+        },
+        {
+          "text": "is",
+          "start": 522.46,
+          "end": 522.86
+        },
+        {
+          "text": "worth",
+          "start": 522.86,
+          "end": 523.12
+        },
+        {
+          "text": "pausing",
+          "start": 523.12,
+          "end": 523.56
+        },
+        {
+          "text": "on",
+          "start": 523.56,
+          "end": 523.8
+        },
+        {
+          "text": "too.",
+          "start": 523.8,
+          "end": 524.02
+        },
+        {
+          "text": "Completion",
+          "start": 524.64,
+          "end": 525.12
+        },
+        {
+          "text": "time",
+          "start": 525.12,
+          "end": 525.44
+        },
+        {
+          "text": "in",
+          "start": 525.44,
+          "end": 525.68
+        },
+        {
+          "text": "the",
+          "start": 525.68,
+          "end": 525.8
+        },
+        {
+          "text": "shared",
+          "start": 525.8,
+          "end": 526.0
+        },
+        {
+          "text": "cluster",
+          "start": 526.0,
+          "end": 526.48
+        },
+        {
+          "text": "over",
+          "start": 526.48,
+          "end": 527.02
+        },
+        {
+          "text": "completion",
+          "start": 527.02,
+          "end": 527.44
+        },
+        {
+          "text": "time",
+          "start": 527.44,
+          "end": 527.9
+        },
+        {
+          "text": "on",
+          "start": 527.9,
+          "end": 528.26
+        },
+        {
+          "text": "a",
+          "start": 528.26,
+          "end": 528.4
+        },
+        {
+          "text": "fair",
+          "start": 528.4,
+          "end": 528.58
+        },
+        {
+          "text": "share",
+          "start": 528.58,
+          "end": 528.84
+        },
+        {
+          "text": "isolated",
+          "start": 528.84,
+          "end": 529.5
+        },
+        {
+          "text": "slice.",
+          "start": 529.5,
+          "end": 529.82
+        },
+        {
+          "text": "A",
+          "start": 530.72,
+          "end": 530.88
+        },
+        {
+          "text": "ratio",
+          "start": 530.88,
+          "end": 531.24
+        },
+        {
+          "text": "of",
+          "start": 531.24,
+          "end": 531.54
+        },
+        {
+          "text": "one",
+          "start": 531.54,
+          "end": 531.78
+        },
+        {
+          "text": "means",
+          "start": 531.78,
+          "end": 532.06
+        },
+        {
+          "text": "you",
+          "start": 532.06,
+          "end": 532.28
+        },
+        {
+          "text": "finished",
+          "start": 532.28,
+          "end": 532.64
+        },
+        {
+          "text": "no",
+          "start": 532.64,
+          "end": 532.98
+        },
+        {
+          "text": "later",
+          "start": 532.98,
+          "end": 533.36
+        },
+        {
+          "text": "than",
+          "start": 533.36,
+          "end": 533.64
+        },
+        {
+          "text": "your",
+          "start": 533.64,
+          "end": 533.78
+        },
+        {
+          "text": "entitlement",
+          "start": 533.78,
+          "end": 534.3
+        },
+        {
+          "text": "allowed.",
+          "start": 534.3,
+          "end": 534.66
+        },
+        {
+          "text": "It",
+          "start": 535.3,
+          "end": 535.46
+        },
+        {
+          "text": "is",
+          "start": 535.46,
+          "end": 535.6
+        },
+        {
+          "text": "a",
+          "start": 535.6,
+          "end": 535.72
+        },
+        {
+          "text": "direct",
+          "start": 535.72,
+          "end": 536.02
+        },
+        {
+          "text": "measurement",
+          "start": 536.02,
+          "end": 536.48
+        },
+        {
+          "text": "of",
+          "start": 536.48,
+          "end": 536.74
+        },
+        {
+          "text": "unfair",
+          "start": 536.74,
+          "end": 537.16
+        },
+        {
+          "text": "delay,",
+          "start": 537.16,
+          "end": 537.7
+        },
+        {
+          "text": "not",
+          "start": 537.9,
+          "end": 538.18
+        },
+        {
+          "text": "a",
+          "start": 538.18,
+          "end": 538.32
+        },
+        {
+          "text": "proxy.",
+          "start": 538.32,
+          "end": 538.64
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Serving shares the same devices. Exclusive allocation needs one hundred eighty GPUs where measured sharing needs one hundred thirty for the same service, worth about eight hundred seventy-six thousand dollars a year. Time-slicing and MPS both leave about a third of capacity dark under interference, so co-location has to be measured, not assumed.",
+      "start": 539.3,
+      "end": 563.45,
+      "words": [
+        {
+          "text": "Serving",
+          "start": 539.24,
+          "end": 540.04
+        },
+        {
+          "text": "shares",
+          "start": 540.04,
+          "end": 540.4
+        },
+        {
+          "text": "the",
+          "start": 540.4,
+          "end": 540.68
+        },
+        {
+          "text": "same",
+          "start": 540.68,
+          "end": 541.04
+        },
+        {
+          "text": "devices.",
+          "start": 541.04,
+          "end": 541.58
+        },
+        {
+          "text": "Exclusive",
+          "start": 542.16,
+          "end": 542.84
+        },
+        {
+          "text": "allocation",
+          "start": 542.84,
+          "end": 543.42
+        },
+        {
+          "text": "needs",
+          "start": 543.42,
+          "end": 543.92
+        },
+        {
+          "text": "180",
+          "start": 543.92,
+          "end": 544.72
+        },
+        {
+          "text": "GPUs",
+          "start": 544.72,
+          "end": 545.76
+        },
+        {
+          "text": "where",
+          "start": 545.76,
+          "end": 545.92
+        },
+        {
+          "text": "measured",
+          "start": 545.92,
+          "end": 546.32
+        },
+        {
+          "text": "sharing",
+          "start": 546.32,
+          "end": 546.72
+        },
+        {
+          "text": "needs",
+          "start": 546.72,
+          "end": 547.1
+        },
+        {
+          "text": "130",
+          "start": 547.1,
+          "end": 547.7
+        },
+        {
+          "text": "for",
+          "start": 547.7,
+          "end": 548.24
+        },
+        {
+          "text": "the",
+          "start": 548.24,
+          "end": 548.38
+        },
+        {
+          "text": "same",
+          "start": 548.38,
+          "end": 548.68
+        },
+        {
+          "text": "service,",
+          "start": 548.68,
+          "end": 549.22
+        },
+        {
+          "text": "worth",
+          "start": 549.66,
+          "end": 549.94
+        },
+        {
+          "text": "about",
+          "start": 549.94,
+          "end": 550.28
+        },
+        {
+          "text": "$876",
+          "start": 550.28,
+          "end": 551.64
+        },
+        {
+          "text": ",000",
+          "start": 551.64,
+          "end": 552.26
+        },
+        {
+          "text": "a",
+          "start": 552.26,
+          "end": 552.82
+        },
+        {
+          "text": "year.",
+          "start": 552.82,
+          "end": 553.12
+        },
+        {
+          "text": "Time",
+          "start": 553.88,
+          "end": 554.18
+        },
+        {
+          "text": "slicing",
+          "start": 554.18,
+          "end": 554.66
+        },
+        {
+          "text": "and",
+          "start": 554.66,
+          "end": 554.96
+        },
+        {
+          "text": "MPS",
+          "start": 554.96,
+          "end": 555.4
+        },
+        {
+          "text": "both",
+          "start": 555.4,
+          "end": 555.9
+        },
+        {
+          "text": "leave",
+          "start": 555.9,
+          "end": 556.24
+        },
+        {
+          "text": "about",
+          "start": 556.24,
+          "end": 556.48
+        },
+        {
+          "text": "a",
+          "start": 556.48,
+          "end": 556.64
+        },
+        {
+          "text": "third",
+          "start": 556.64,
+          "end": 556.88
+        },
+        {
+          "text": "of",
+          "start": 556.88,
+          "end": 557.04
+        },
+        {
+          "text": "capacity",
+          "start": 557.04,
+          "end": 557.56
+        },
+        {
+          "text": "dark",
+          "start": 557.56,
+          "end": 557.98
+        },
+        {
+          "text": "under",
+          "start": 557.98,
+          "end": 558.28
+        },
+        {
+          "text": "interference,",
+          "start": 558.28,
+          "end": 558.8
+        },
+        {
+          "text": "so",
+          "start": 559.28,
+          "end": 559.6
+        },
+        {
+          "text": "co",
+          "start": 559.6,
+          "end": 559.86
+        },
+        {
+          "text": "-location",
+          "start": 559.86,
+          "end": 560.42
+        },
+        {
+          "text": "has",
+          "start": 560.42,
+          "end": 560.7
+        },
+        {
+          "text": "to",
+          "start": 560.7,
+          "end": 560.88
+        },
+        {
+          "text": "be",
+          "start": 560.88,
+          "end": 561.04
+        },
+        {
+          "text": "measured,",
+          "start": 561.04,
+          "end": 561.48
+        },
+        {
+          "text": "not",
+          "start": 561.9,
+          "end": 562.18
+        },
+        {
+          "text": "assumed.",
+          "start": 562.18,
+          "end": 562.68
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And the chapter lands where it started: usage is not one number. Allocated counts complete allocations only. Active counts hardware activity, including work later replayed. Productive counts retained progress at the fault-free rate. Five hundred narrows to three hundred fifty narrows to two hundred eighty, and each gap is a different investigation with a different owner.",
+      "start": 563.45,
+      "end": 586.03,
+      "visual": {
+        "src": "/study/vol2/08-fleet-orchestration/diagrams/usage-tiers.svg",
+        "title": "Three tiers of use",
+        "alt": "Three narrowing horizontal bars: 500 allocated GPUs, 350 active-equivalents, 280 productive-equivalents. The gap from allocated to active is owned by input supply and runtime execution; the gap from active to productive is replay and synchronization overhead."
+      },
+      "words": [
+        {
+          "text": "And",
+          "start": 563.28,
+          "end": 563.84
+        },
+        {
+          "text": "the",
+          "start": 563.84,
+          "end": 563.96
+        },
+        {
+          "text": "chapter",
+          "start": 563.96,
+          "end": 564.22
+        },
+        {
+          "text": "lands",
+          "start": 564.22,
+          "end": 564.72
+        },
+        {
+          "text": "where",
+          "start": 564.72,
+          "end": 564.94
+        },
+        {
+          "text": "it",
+          "start": 564.94,
+          "end": 565.08
+        },
+        {
+          "text": "started.",
+          "start": 565.08,
+          "end": 565.34
+        },
+        {
+          "text": "Usage",
+          "start": 565.98,
+          "end": 566.4
+        },
+        {
+          "text": "is",
+          "start": 566.4,
+          "end": 566.6
+        },
+        {
+          "text": "not",
+          "start": 566.6,
+          "end": 566.84
+        },
+        {
+          "text": "one",
+          "start": 566.84,
+          "end": 567.06
+        },
+        {
+          "text": "number.",
+          "start": 567.06,
+          "end": 567.38
+        },
+        {
+          "text": "Allocated",
+          "start": 568.02,
+          "end": 568.5
+        },
+        {
+          "text": "counts",
+          "start": 568.5,
+          "end": 568.84
+        },
+        {
+          "text": "complete",
+          "start": 568.84,
+          "end": 569.26
+        },
+        {
+          "text": "allocations",
+          "start": 569.26,
+          "end": 570.0
+        },
+        {
+          "text": "only.",
+          "start": 570.0,
+          "end": 570.4
+        },
+        {
+          "text": "Active",
+          "start": 571.12,
+          "end": 571.42
+        },
+        {
+          "text": "counts",
+          "start": 571.42,
+          "end": 571.72
+        },
+        {
+          "text": "hardware",
+          "start": 571.72,
+          "end": 572.08
+        },
+        {
+          "text": "activity,",
+          "start": 572.08,
+          "end": 572.7
+        },
+        {
+          "text": "including",
+          "start": 573.04,
+          "end": 573.46
+        },
+        {
+          "text": "work",
+          "start": 573.46,
+          "end": 573.74
+        },
+        {
+          "text": "later",
+          "start": 573.74,
+          "end": 574.06
+        },
+        {
+          "text": "replayed.",
+          "start": 574.06,
+          "end": 574.74
+        },
+        {
+          "text": "Productive",
+          "start": 575.22,
+          "end": 575.7
+        },
+        {
+          "text": "counts",
+          "start": 575.7,
+          "end": 575.94
+        },
+        {
+          "text": "retained",
+          "start": 575.94,
+          "end": 576.28
+        },
+        {
+          "text": "progress",
+          "start": 576.28,
+          "end": 576.8
+        },
+        {
+          "text": "at",
+          "start": 576.8,
+          "end": 577.06
+        },
+        {
+          "text": "the",
+          "start": 577.06,
+          "end": 577.16
+        },
+        {
+          "text": "fault",
+          "start": 577.16,
+          "end": 577.36
+        },
+        {
+          "text": "free",
+          "start": 577.36,
+          "end": 577.58
+        },
+        {
+          "text": "rate.",
+          "start": 577.58,
+          "end": 577.84
+        },
+        {
+          "text": "500",
+          "start": 578.5,
+          "end": 578.8
+        },
+        {
+          "text": "narrows",
+          "start": 578.8,
+          "end": 579.54
+        },
+        {
+          "text": "to",
+          "start": 579.54,
+          "end": 579.7
+        },
+        {
+          "text": "350",
+          "start": 579.7,
+          "end": 580.26
+        },
+        {
+          "text": "narrows",
+          "start": 580.26,
+          "end": 581.04
+        },
+        {
+          "text": "to",
+          "start": 581.04,
+          "end": 581.2
+        },
+        {
+          "text": "280",
+          "start": 581.2,
+          "end": 581.8
+        },
+        {
+          "text": "and",
+          "start": 581.8,
+          "end": 582.54
+        },
+        {
+          "text": "each",
+          "start": 582.54,
+          "end": 582.86
+        },
+        {
+          "text": "gap",
+          "start": 582.86,
+          "end": 583.16
+        },
+        {
+          "text": "is",
+          "start": 583.16,
+          "end": 583.38
+        },
+        {
+          "text": "a",
+          "start": 583.38,
+          "end": 583.5
+        },
+        {
+          "text": "different",
+          "start": 583.5,
+          "end": 583.68
+        },
+        {
+          "text": "investigation",
+          "start": 583.68,
+          "end": 584.32
+        },
+        {
+          "text": "with",
+          "start": 584.32,
+          "end": 584.78
+        },
+        {
+          "text": "a",
+          "start": 584.78,
+          "end": 584.9
+        },
+        {
+          "text": "different",
+          "start": 584.9,
+          "end": 585.06
+        },
+        {
+          "text": "owner.",
+          "start": 585.06,
+          "end": 585.38
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The debugging discipline follows the tiers. Low allocated: check demand, quotas, placement feasibility. Low active: trace input supply and runtime. Low productive despite busy kernels: compare retained progress against replay and synchronization. One fleet raised productive use twenty-four points, about four hundred ten GPUs of useful work on a thousand, just by separating the tiers.",
+      "start": 586.03,
+      "end": 613.75,
+      "words": [
+        {
+          "text": "The",
+          "start": 585.98,
+          "end": 586.52
+        },
+        {
+          "text": "debugging",
+          "start": 586.52,
+          "end": 586.88
+        },
+        {
+          "text": "discipline",
+          "start": 586.88,
+          "end": 587.38
+        },
+        {
+          "text": "follows",
+          "start": 587.38,
+          "end": 587.86
+        },
+        {
+          "text": "the",
+          "start": 587.86,
+          "end": 588.12
+        },
+        {
+          "text": "tiers.",
+          "start": 588.12,
+          "end": 588.44
+        },
+        {
+          "text": "Low",
+          "start": 588.95,
+          "end": 589.38
+        },
+        {
+          "text": "allocated,",
+          "start": 589.38,
+          "end": 589.96
+        },
+        {
+          "text": "check",
+          "start": 590.48,
+          "end": 590.74
+        },
+        {
+          "text": "demand",
+          "start": 590.74,
+          "end": 591.14
+        },
+        {
+          "text": "quotas",
+          "start": 591.14,
+          "end": 591.84
+        },
+        {
+          "text": "placement",
+          "start": 591.84,
+          "end": 592.3
+        },
+        {
+          "text": "feasibility.",
+          "start": 592.3,
+          "end": 593.02
+        },
+        {
+          "text": "Low",
+          "start": 593.48,
+          "end": 593.82
+        },
+        {
+          "text": "active,",
+          "start": 593.82,
+          "end": 594.22
+        },
+        {
+          "text": "trace",
+          "start": 594.76,
+          "end": 594.92
+        },
+        {
+          "text": "input",
+          "start": 594.92,
+          "end": 595.38
+        },
+        {
+          "text": "supply",
+          "start": 595.38,
+          "end": 595.92
+        },
+        {
+          "text": "and",
+          "start": 595.92,
+          "end": 596.16
+        },
+        {
+          "text": "runtime.",
+          "start": 596.16,
+          "end": 596.54
+        },
+        {
+          "text": "Low",
+          "start": 597.28,
+          "end": 597.56
+        },
+        {
+          "text": "productive",
+          "start": 597.56,
+          "end": 598.02
+        },
+        {
+          "text": "despite",
+          "start": 598.02,
+          "end": 598.44
+        },
+        {
+          "text": "busy",
+          "start": 598.44,
+          "end": 598.9
+        },
+        {
+          "text": "kernels,",
+          "start": 598.9,
+          "end": 599.5
+        },
+        {
+          "text": "compare",
+          "start": 599.88,
+          "end": 600.16
+        },
+        {
+          "text": "retained",
+          "start": 600.16,
+          "end": 600.74
+        },
+        {
+          "text": "progress",
+          "start": 600.74,
+          "end": 601.28
+        },
+        {
+          "text": "against",
+          "start": 601.28,
+          "end": 601.62
+        },
+        {
+          "text": "replay",
+          "start": 601.62,
+          "end": 602.08
+        },
+        {
+          "text": "and",
+          "start": 602.08,
+          "end": 602.4
+        },
+        {
+          "text": "synchronization.",
+          "start": 602.4,
+          "end": 603.14
+        },
+        {
+          "text": "One",
+          "start": 603.72,
+          "end": 604.16
+        },
+        {
+          "text": "fleet",
+          "start": 604.16,
+          "end": 604.5
+        },
+        {
+          "text": "raised",
+          "start": 604.5,
+          "end": 604.96
+        },
+        {
+          "text": "productive",
+          "start": 604.96,
+          "end": 605.52
+        },
+        {
+          "text": "use",
+          "start": 605.52,
+          "end": 605.84
+        },
+        {
+          "text": "24",
+          "start": 605.84,
+          "end": 606.36
+        },
+        {
+          "text": "points,",
+          "start": 606.36,
+          "end": 606.84
+        },
+        {
+          "text": "about",
+          "start": 607.3,
+          "end": 607.52
+        },
+        {
+          "text": "410",
+          "start": 607.52,
+          "end": 608.3
+        },
+        {
+          "text": "GPUs",
+          "start": 608.3,
+          "end": 609.38
+        },
+        {
+          "text": "of",
+          "start": 609.38,
+          "end": 609.48
+        },
+        {
+          "text": "useful",
+          "start": 609.48,
+          "end": 609.84
+        },
+        {
+          "text": "work",
+          "start": 609.84,
+          "end": 610.22
+        },
+        {
+          "text": "on",
+          "start": 610.22,
+          "end": 610.36
+        },
+        {
+          "text": "a",
+          "start": 610.36,
+          "end": 610.52
+        },
+        {
+          "text": "thousand",
+          "start": 610.52,
+          "end": 610.9
+        },
+        {
+          "text": "just",
+          "start": 610.9,
+          "end": 611.54
+        },
+        {
+          "text": "by",
+          "start": 611.54,
+          "end": 611.82
+        },
+        {
+          "text": "separating",
+          "start": 611.82,
+          "end": 612.34
+        },
+        {
+          "text": "the",
+          "start": 612.34,
+          "end": 612.6
+        },
+        {
+          "text": "tiers.",
+          "start": 612.6,
+          "end": 612.92
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "What do you carry out of this one? Feasibility before fairness. Atomic gangs, because seven hours of deadlock erases a day of gain. Placement is a four-point-eight-fold performance variable. Elasticity is a contract with a break-even. Spot's discount is nominal until effective cost says otherwise. Match the scheduling signal to the objective. And never trust a single usage number.",
+      "start": 613.75,
+      "end": 638.35,
+      "words": [
+        {
+          "text": "What",
+          "start": 613.74,
+          "end": 614.16
+        },
+        {
+          "text": "do",
+          "start": 614.16,
+          "end": 614.24
+        },
+        {
+          "text": "you",
+          "start": 614.24,
+          "end": 614.34
+        },
+        {
+          "text": "carry",
+          "start": 614.34,
+          "end": 614.56
+        },
+        {
+          "text": "out",
+          "start": 614.56,
+          "end": 614.82
+        },
+        {
+          "text": "of",
+          "start": 614.82,
+          "end": 614.9
+        },
+        {
+          "text": "this",
+          "start": 614.9,
+          "end": 615.04
+        },
+        {
+          "text": "one?",
+          "start": 615.04,
+          "end": 615.24
+        },
+        {
+          "text": "Feasibility",
+          "start": 615.68,
+          "end": 616.2
+        },
+        {
+          "text": "before",
+          "start": 616.2,
+          "end": 616.56
+        },
+        {
+          "text": "fairness.",
+          "start": 616.56,
+          "end": 617.02
+        },
+        {
+          "text": "Atomic",
+          "start": 617.6,
+          "end": 617.96
+        },
+        {
+          "text": "gangs",
+          "start": 617.96,
+          "end": 618.38
+        },
+        {
+          "text": "because",
+          "start": 618.38,
+          "end": 618.84
+        },
+        {
+          "text": "seven",
+          "start": 618.84,
+          "end": 619.26
+        },
+        {
+          "text": "hours",
+          "start": 619.26,
+          "end": 619.64
+        },
+        {
+          "text": "of",
+          "start": 619.64,
+          "end": 619.8
+        },
+        {
+          "text": "deadlock",
+          "start": 619.8,
+          "end": 620.16
+        },
+        {
+          "text": "erases",
+          "start": 620.16,
+          "end": 620.64
+        },
+        {
+          "text": "a",
+          "start": 620.64,
+          "end": 620.84
+        },
+        {
+          "text": "day",
+          "start": 620.84,
+          "end": 621.0
+        },
+        {
+          "text": "of",
+          "start": 621.0,
+          "end": 621.12
+        },
+        {
+          "text": "gain.",
+          "start": 621.12,
+          "end": 621.4
+        },
+        {
+          "text": "Placement",
+          "start": 621.76,
+          "end": 622.36
+        },
+        {
+          "text": "is",
+          "start": 622.36,
+          "end": 622.7
+        },
+        {
+          "text": "a",
+          "start": 622.7,
+          "end": 622.84
+        },
+        {
+          "text": "4",
+          "start": 622.84,
+          "end": 623.08
+        },
+        {
+          "text": ".8",
+          "start": 623.08,
+          "end": 623.58
+        },
+        {
+          "text": "fold",
+          "start": 623.58,
+          "end": 623.86
+        },
+        {
+          "text": "performance",
+          "start": 623.86,
+          "end": 624.3
+        },
+        {
+          "text": "variable.",
+          "start": 624.3,
+          "end": 624.86
+        },
+        {
+          "text": "Elasticity",
+          "start": 625.56,
+          "end": 626.18
+        },
+        {
+          "text": "is",
+          "start": 626.18,
+          "end": 626.4
+        },
+        {
+          "text": "a",
+          "start": 626.4,
+          "end": 626.52
+        },
+        {
+          "text": "contract",
+          "start": 626.52,
+          "end": 626.88
+        },
+        {
+          "text": "with",
+          "start": 626.88,
+          "end": 627.2
+        },
+        {
+          "text": "a",
+          "start": 627.2,
+          "end": 627.32
+        },
+        {
+          "text": "break",
+          "start": 627.32,
+          "end": 627.48
+        },
+        {
+          "text": "even.",
+          "start": 627.48,
+          "end": 627.78
+        },
+        {
+          "text": "Spots",
+          "start": 628.36,
+          "end": 628.8
+        },
+        {
+          "text": "discount",
+          "start": 628.8,
+          "end": 629.16
+        },
+        {
+          "text": "is",
+          "start": 629.16,
+          "end": 629.46
+        },
+        {
+          "text": "nominal",
+          "start": 629.46,
+          "end": 629.88
+        },
+        {
+          "text": "until",
+          "start": 629.88,
+          "end": 630.38
+        },
+        {
+          "text": "effective",
+          "start": 630.38,
+          "end": 630.82
+        },
+        {
+          "text": "cost",
+          "start": 630.82,
+          "end": 631.36
+        },
+        {
+          "text": "says",
+          "start": 631.36,
+          "end": 631.66
+        },
+        {
+          "text": "otherwise.",
+          "start": 631.66,
+          "end": 632.04
+        },
+        {
+          "text": "Match",
+          "start": 632.64,
+          "end": 632.98
+        },
+        {
+          "text": "the",
+          "start": 632.98,
+          "end": 633.26
+        },
+        {
+          "text": "scheduling",
+          "start": 633.26,
+          "end": 633.64
+        },
+        {
+          "text": "signal",
+          "start": 633.64,
+          "end": 634.18
+        },
+        {
+          "text": "to",
+          "start": 634.18,
+          "end": 634.4
+        },
+        {
+          "text": "the",
+          "start": 634.4,
+          "end": 634.52
+        },
+        {
+          "text": "objective",
+          "start": 634.52,
+          "end": 634.94
+        },
+        {
+          "text": "and",
+          "start": 634.94,
+          "end": 635.62
+        },
+        {
+          "text": "never",
+          "start": 635.62,
+          "end": 635.9
+        },
+        {
+          "text": "trust",
+          "start": 635.9,
+          "end": 636.36
+        },
+        {
+          "text": "a",
+          "start": 636.36,
+          "end": 636.58
+        },
+        {
+          "text": "single",
+          "start": 636.58,
+          "end": 636.92
+        },
+        {
+          "text": "usage",
+          "start": 636.92,
+          "end": 637.28
+        },
+        {
+          "text": "number.",
+          "start": 637.28,
+          "end": 637.7
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Next chapter: performance engineering, where the fleet law stops being about who holds the GPUs and starts being about what the GPUs actually do.",
+      "start": 638.35,
+      "end": 649.2,
+      "words": [
+        {
+          "text": "Next",
+          "start": 638.3,
+          "end": 638.98
+        },
+        {
+          "text": "chapter,",
+          "start": 638.98,
+          "end": 639.48
+        },
+        {
+          "text": "performance",
+          "start": 639.94,
+          "end": 640.46
+        },
+        {
+          "text": "engineering,",
+          "start": 640.46,
+          "end": 641.2
+        },
+        {
+          "text": "where",
+          "start": 641.7,
+          "end": 641.94
+        },
+        {
+          "text": "the",
+          "start": 641.94,
+          "end": 642.08
+        },
+        {
+          "text": "fleet",
+          "start": 642.08,
+          "end": 642.34
+        },
+        {
+          "text": "law",
+          "start": 642.34,
+          "end": 642.68
+        },
+        {
+          "text": "stops",
+          "start": 642.68,
+          "end": 643.0
+        },
+        {
+          "text": "being",
+          "start": 643.0,
+          "end": 643.4
+        },
+        {
+          "text": "about",
+          "start": 643.4,
+          "end": 643.72
+        },
+        {
+          "text": "who",
+          "start": 643.72,
+          "end": 643.94
+        },
+        {
+          "text": "holds",
+          "start": 643.94,
+          "end": 644.28
+        },
+        {
+          "text": "the",
+          "start": 644.28,
+          "end": 644.46
+        },
+        {
+          "text": "GPUs",
+          "start": 644.46,
+          "end": 645.38
+        },
+        {
+          "text": "and",
+          "start": 645.38,
+          "end": 645.52
+        },
+        {
+          "text": "starts",
+          "start": 645.52,
+          "end": 645.82
+        },
+        {
+          "text": "being",
+          "start": 645.82,
+          "end": 646.18
+        },
+        {
+          "text": "about",
+          "start": 646.18,
+          "end": 646.52
+        },
+        {
+          "text": "what",
+          "start": 646.52,
+          "end": 646.78
+        },
+        {
+          "text": "the",
+          "start": 646.78,
+          "end": 646.94
+        },
+        {
+          "text": "GPUs",
+          "start": 646.94,
+          "end": 647.0
+        },
+        {
+          "text": "are.",
+          "start": 647.0,
+          "end": 647.0
+        },
+        {
+          "text": "The",
+          "start": 647.0,
+          "end": 647.32
+        },
+        {
+          "text": "GPUs",
+          "start": 647.32,
+          "end": 647.76
+        },
+        {
+          "text": "actually",
+          "start": 647.76,
+          "end": 648.12
+        },
+        {
+          "text": "do.",
+          "start": 648.12,
+          "end": 648.46
+        }
+      ]
+    }
+  ]
+}

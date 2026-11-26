@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 285" role="img" aria-labelledby="study-svg-early-exit-decision-title" aria-describedby="study-svg-early-exit-decision-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-early-exit-decision-title">How a frame takes an early exit</title>
+  <desc id="study-svg-early-exit-decision-desc">A confidence policy determines how often the shorter route is used. Full-depth frames can still determine the tail of the latency distribution. Run shared layers: Produce the features used by the early prediction head. Then Check exit confidence: Compare the early prediction with the validated confidence threshold. Then Return or continue: Return a confident prediction or run the remaining layers for this frame.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Run shared layers</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Produce the features used by the</tspan>
+    <tspan x="19" y="64">early prediction head.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Check exit confidence</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Compare the early prediction with</tspan>
+    <tspan x="19" y="165">the validated confidence threshold.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Return or continue</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Return a confident prediction or run</tspan>
+    <tspan x="19" y="266">the remaining layers for this frame.</tspan></text>
+  </g>
+</svg>

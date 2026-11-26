@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 487" role="img" aria-labelledby="study-svg-mapping-candidate-selection-title" aria-describedby="study-svg-mapping-candidate-selection-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-mapping-candidate-selection-title">Compare schedules for the same tensor operation</title>
+  <desc id="study-svg-mapping-candidate-selection-desc">Capacity establishes which schedules can run. Traffic estimates and profiling reveal whether their reuse improves elapsed time. Find reuse in the loops: Identify which weights, inputs, and partial sums are used repeatedly. Then Place work and data: Assign tiles to processing elements and choose what stays local. Then Check storage and layout: Verify tile capacity, lane access patterns, and conversion costs. Then Evaluate fusion: Compare saved intermediate traffic with additional live storage. Then Profile candidates: Compare traffic, unit activity, and time at representative shapes.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Find reuse in the loops</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Identify which weights, inputs, and</tspan>
+    <tspan x="19" y="64">partial sums are used repeatedly.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Place work and data</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Assign tiles to processing elements</tspan>
+    <tspan x="19" y="165">and choose what stays local.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Check storage and layout</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Verify tile capacity, lane access</tspan>
+    <tspan x="19" y="266">patterns, and conversion costs.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Evaluate fusion</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Compare saved intermediate traffic</tspan>
+    <tspan x="19" y="367">with additional live storage.</tspan></text>
+  <path d="M172 387v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="407" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="431" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Profile candidates</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="451">Compare traffic, unit activity, and</tspan>
+    <tspan x="19" y="468">time at representative shapes.</tspan></text>
+  </g>
+</svg>

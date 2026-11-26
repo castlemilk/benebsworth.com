@@ -1,0 +1,109 @@
+[
+  {
+    "id": "training-time-law",
+    "number": 1,
+    "title": "The training-time law",
+    "latex": "T_{\\mathrm{train}} = \\frac{O}{R_{\\mathrm{peak}} \\times \\eta_{\\mathrm{hw}}}",
+    "caption": "The iron law's macroscopic product specialized to a training run. O counts only useful model FLOPs; every stall, bubble, and recompute lives in eta. Memory is absent -- it is a feasibility constraint, not a factor.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{train}}", "name": "training time", "meaning": "wall-clock duration of the run" },
+      { "symbol": "O", "name": "operation count", "meaning": "useful forward-plus-backward model FLOPs, ~6PD" },
+      { "symbol": "R_{\\mathrm{peak}}", "name": "peak rate", "meaning": "hardware peak FLOP/s at the chosen precision" },
+      { "symbol": "\\eta_{\\mathrm{hw}}", "name": "utilization", "meaning": "achieved model-FLOP rate over the peak -- the engineering target" }
+    ]
+  },
+  {
+    "id": "work-six-pd",
+    "number": 2,
+    "title": "Training work per token",
+    "latex": "O = 6 \\cdot P \\cdot D",
+    "caption": "Each token costs ~2P FLOPs forward and ~4P backward -- six per parameter in all, times the corpus token count. The factor the optimizer cannot change; only data curation or a different algorithm shrinks it.",
+    "symbols": [
+      { "symbol": "O", "name": "operation count", "meaning": "total useful FLOPs the run must execute" },
+      { "symbol": "P", "name": "parameters", "meaning": "model parameter count" },
+      { "symbol": "D", "name": "dataset tokens", "meaning": "tokens processed across the run" },
+      { "symbol": "6", "name": "six per param-token", "meaning": "2P forward + 4P backward FLOPs per token" }
+    ]
+  },
+  {
+    "id": "mfu",
+    "number": 3,
+    "title": "Model FLOPs utilization",
+    "latex": "\\eta_{\\mathrm{MFU}} = \\frac{O_{\\mathrm{model}}}{R_{\\mathrm{peak}} \\cdot T_{\\mathrm{step}}}",
+    "caption": "The per-step estimator of eta_hw: useful model arithmetic over what the peak could have executed in the measured step time. The numerator excludes rematerialization, so a checkpointed run scores lower even at equal speed.",
+    "symbols": [
+      { "symbol": "\\eta_{\\mathrm{MFU}}", "name": "MFU", "meaning": "fraction of peak throughput doing useful model work" },
+      { "symbol": "O_{\\mathrm{model}}", "name": "model FLOPs", "meaning": "per-step forward+backward arithmetic, no recompute" },
+      { "symbol": "R_{\\mathrm{peak}}", "name": "peak rate", "meaning": "device peak FLOP/s at the run's precision" },
+      { "symbol": "T_{\\mathrm{step}}", "name": "step time", "meaning": "measured wall-clock time per training step" }
+    ]
+  },
+  {
+    "id": "memory-budget",
+    "number": 4,
+    "title": "The four-term memory budget",
+    "latex": "M_{\\mathrm{train}} = W + G + S_{\\mathrm{opt}} + A_{\\mathrm{saved}}",
+    "caption": "Weights, gradients, optimizer state, and saved activations. Under mixed-precision Adam the first three are a fixed 16 B/param; only A grows with batch and sequence, which is the term that pushes a model off one device.",
+    "symbols": [
+      { "symbol": "M_{\\mathrm{train}}", "name": "training memory", "meaning": "total resident state a step must fit" },
+      { "symbol": "W", "name": "weights", "meaning": "FP16 kernel copy + FP32 master in the standard recipe" },
+      { "symbol": "G", "name": "gradients", "meaning": "per-parameter gradient buffer, FP16 in mixed precision" },
+      { "symbol": "S_{\\mathrm{opt}}", "name": "optimizer state", "meaning": "Adam's first + second FP32 moments, 8 B/param" },
+      { "symbol": "A_{\\mathrm{saved}}", "name": "saved activations", "meaning": "forward tensors retained for backward; scales with B x S" }
+    ]
+  },
+  {
+    "id": "overlapped-step",
+    "number": 5,
+    "title": "The overlapped step floor",
+    "latex": "T_{\\mathrm{step}} \\ge \\max\\!\\left(t_{\\mathrm{prep}},\\, t_{\\mathrm{xfer}},\\, t_{\\mathrm{comp}}\\right)",
+    "caption": "Serial stages cost their sum; correctly overlapped stages cost their maximum. The book's 30+10+50 ms example falls to a 50 ms interval -- overlap removes exposed waits, never the slowest stage itself.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{step}}", "name": "step interval", "meaning": "steady-state time between consecutive steps" },
+      { "symbol": "t_{\\mathrm{prep}}", "name": "prepare time", "meaning": "host decode/augment/tokenize per batch" },
+      { "symbol": "t_{\\mathrm{xfer}}", "name": "transfer time", "meaning": "host-to-device copy per batch" },
+      { "symbol": "t_{\\mathrm{comp}}", "name": "compute time", "meaning": "device forward+backward+update per batch" }
+    ]
+  },
+  {
+    "id": "checkpoint-schedule",
+    "number": 6,
+    "title": "Optimal checkpoint schedule",
+    "latex": "M_{\\mathrm{act}} = kA + \\frac{L}{k}A,\\qquad k^{*} = \\sqrt{L}",
+    "caption": "Store k segment boundaries and recompute the L/k layers inside each. The minimum lands at k = sqrt(L): 48 layers become ~7 retained checkpoints, ~71% of activations saved for about one extra forward pass.",
+    "symbols": [
+      { "symbol": "M_{\\mathrm{act}}", "name": "activation memory", "meaning": "retained forward state under the schedule" },
+      { "symbol": "k", "name": "checkpoint count", "meaning": "number of segment boundaries stored" },
+      { "symbol": "A", "name": "per-layer activation", "meaning": "activation bytes one layer retains for backward" },
+      { "symbol": "L", "name": "layer count", "meaning": "network depth" },
+      { "symbol": "k^{*}", "name": "optimal k", "meaning": "sqrt(L) -- the memory-minimizing segment count" }
+    ]
+  },
+  {
+    "id": "ring-allreduce",
+    "number": 7,
+    "title": "Ring AllReduce per-device volume",
+    "latex": "V_{\\mathrm{sent}} = 2\\,\\frac{N-1}{N} \\cdot P \\cdot B_{\\mathrm{bytes}}",
+    "caption": "Scatter-reduce plus all-gather around a ring. Per-GPU traffic tends to a fixed 2PB as N grows -- set by parameter count, not batch size, which is why splitting a batch raises the unhidden sync share.",
+    "symbols": [
+      { "symbol": "V_{\\mathrm{sent}}", "name": "sent volume", "meaning": "bytes each device transmits per gradient sync" },
+      { "symbol": "N", "name": "device count", "meaning": "replicas in the ring" },
+      { "symbol": "P", "name": "parameters", "meaning": "gradients synchronized, one value per parameter" },
+      { "symbol": "B_{\\mathrm{bytes}}", "name": "bytes per gradient", "meaning": "gradient element size, 2 B in FP16" },
+      { "symbol": "\\frac{N-1}{N}", "name": "ring factor", "meaning": "1.75x for N=8, tending to 2 as N grows" }
+    ]
+  },
+  {
+    "id": "effective-batch",
+    "number": 8,
+    "title": "Effective batch under accumulation",
+    "latex": "B_{\\mathrm{eff}} = b_{\\mathrm{micro}} \\cdot K \\cdot N",
+    "caption": "The batch the optimizer actually sees: micro-batch per accumulation step, times accumulation steps, times data-parallel replicas. Arithmetic per update is unchanged -- accumulation changes the memory shape of the batch, not the math.",
+    "symbols": [
+      { "symbol": "B_{\\mathrm{eff}}", "name": "effective batch", "meaning": "sequences summed into one gradient update" },
+      { "symbol": "b_{\\mathrm{micro}}", "name": "micro-batch", "meaning": "resident batch per forward/backward" },
+      { "symbol": "K", "name": "accumulation steps", "meaning": "micro-batches summed before the update" },
+      { "symbol": "N", "name": "replicas", "meaning": "data-parallel devices contributing to the update" }
+    ]
+  }
+]

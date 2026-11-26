@@ -74,6 +74,23 @@ describe('::eq markers', () => {
   })
 })
 
+describe('callout asides', () => {
+  it('keeps a bare > [!kind] marker title-free — the first body line is not the title', async () => {
+    const html = await renderMarkdown('> [!observation]\n> The first wrapped body line.\n> Continues here.', {})
+    expect(html).toContain('study-note')
+    expect(html).toContain('data-kind="observation"')
+    expect(html).not.toContain('study-note-title')
+    expect(html).toContain('The first wrapped body line.')
+  })
+
+  it('uses a same-line title when one is written', async () => {
+    const html = await renderMarkdown('> [!note] A real title\n> Body text.', {})
+    expect(html).toContain('study-note-title')
+    expect(html).toContain('A real title')
+    expect(html).toContain('Body text.')
+  })
+})
+
 it('links reference book figures without exporting SVG or raster bytes', async () => {
   const html = await renderMarkdown('::fig[reference]', {
     inlineFigures: new Map([['reference', { title: 'Source illustration', svg: '<svg id="upstream-bytes"></svg>', imageUri: 'data:image/png;base64,PRIVATE' }]]),

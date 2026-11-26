@@ -1,0 +1,8 @@
+[
+  {"id": "book-gang-deadlock", "file": "gang-deadlock.svg", "title": "Gang scheduling deadlock", "caption": "The book's two-panel original: partial allocation deadlock beside atomic allocation. Our sketch redraws the same mechanism as an explicit wait-for cycle to connect it with the detection argument."},
+  {"id": "book-backfill", "file": "backfill-reservation.svg", "title": "Backfill reservation", "caption": "The book's reservation figure with backfill candidates. Our version emphasizes the release-contract deadline rather than the capacity hole."},
+  {"id": "book-preempt-cascade", "file": "fleet_orchestration_preempt_cascade.svg", "title": "Preemption cascade tree", "caption": "The k plus k-squared eviction fanout with the requeue cap drawn as a cut across the tree. Worth reading beside the Interruption Economics section."},
+  {"id": "book-dependency-cascade", "file": "fleet_orchestration_dependency_cascade.svg", "title": "Priority inversion wait-for chain", "caption": "The high-priority job waiting on the low-priority holder that medium-priority work starves. The reason holistic preemption exists."},
+  {"id": "book-elastic-state-machine", "file": "elastic-training-state-machine.svg", "title": "Elastic training state machine", "caption": "Worker-membership lifecycle centered on active training: scale-up, scale-down, and replacement paths all returning through rendezvous. The contract made mechanical."},
+  {"id": "book-topology-hierarchy", "file": "topology-hierarchy.svg", "title": "Topology hierarchy", "caption": "NVLink domain to leaf to spine bandwidth steps. The map placement exploits; pairs with the 120/40/25 ms speedup numbers in the packet."}
+]

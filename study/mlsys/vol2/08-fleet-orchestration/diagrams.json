@@ -1,0 +1,26 @@
+[
+  {
+    "id": "hold-and-wait",
+    "file": "hold-and-wait.svg",
+    "title": "Hold-and-wait and the atomic repair",
+    "caption": "Left: two rigid jobs each holding half their gang, wait arrows closing a cycle, every held GPU idle at full price. Right: atomic gang allocation grants one job everything and queues the other holding nothing, breaking the cycle by construction."
+  },
+  {
+    "id": "backfill-window",
+    "file": "backfill-window.svg",
+    "title": "The backfill window",
+    "caption": "A large gang's reservation drains capacity toward its start time. A 128-GPU job with a two-hour estimate fits the idle hole only because its enforced release completes before the reservation needs the GPUs."
+  },
+  {
+    "id": "elastic-efficiency",
+    "file": "elastic-efficiency.svg",
+    "title": "Scaling efficiency regimes",
+    "caption": "Efficiency against worker count for the 175B reference job: near-linear while per-worker computation dominates, sublinear as fixed per-step costs surface, saturated when they rival the shrinking computation. Throughput still rises while efficiency falls; the policy window is a choice, not a derivation."
+  },
+  {
+    "id": "usage-tiers",
+    "file": "usage-tiers.svg",
+    "title": "Three tiers of use",
+    "caption": "500 allocated GPUs narrow to 350 active-equivalents to 280 productive-equivalents. Each gap has a different owner: scheduling losses below allocated, input and runtime losses below active, replay and synchronization below productive."
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The thesis is the rate-vs-event argument and the Young-Daly-as-archetype claim; both are developed fully in prose."
+    },
+    "The Price of Standing Still": {
+      "proseOnly": "Opening cost arithmetic ($340/min, $0.5M/day, 2.45 TB checkpoint) stays as prose; the numbers are single facts, not a system to diagram."
+    },
+    "Failure Becomes a Rate": {
+      "figure": "::fig[mtbf-ladder]",
+      "teaches": "GPU-only MTBF collapse as fleet grows: 1 GPU at 50,000 h, 1,000 at 50 h, 10,000 at 5 h — with the full-system cascade (~3.9 h) and the Llama 3 measured point (~3.1 h at 16,384) plotted against the GPU-only line.",
+      "source": "Book's fault_tolerance_mtbf_ladder margin figure + tbl-cluster-mtbf-scaling + the RSC/Llama-3 published rates."
+    },
+    "Four Ways to Fail, One Invisible": {
+      "proseOnly": "The taxonomy is a four-row classification argument and the SDC cadence (~100 h, ~20/run) is arithmetic; the packet carries both as prose."
+    },
+    "The Checkpoint Contract": {
+      "figure": "::fig[young-daly-floor]",
+      "teaches": "The Young-Daly trade-off curve: save overhead falling hyperbolically, expected rework rising linearly, their shallow sum minimized near ~14 min at ~5.9% waste. The forgiving floor is the point.",
+      "source": "Book's fig-checkpoint-tradeoff: 175B example, 24.5 s write, 3.9 h MTBF, optimum ~13.8-14 min ~5.9%."
+    },
+    "What Recovery Actually Buys": {
+      "figure": "::fig[recovery-budget]",
+      "teaches": "The ~6.6 min cold-restart budget as a stacked timeline: detect ~30 s, restart ~4 min, load ~24.5 s, warmup ~2 min — restart+warmup dominate, the I/O everyone fears is the small term.",
+      "source": "Book's RecoveryBudget scenario (Gpt3RecoveryBudget1K/10K): t_total ~6.6 min, load ~24.5 s, daily loss 3 min @1K vs 31 min @10K."
+    },
+    "Elastic and Stateless Recovery": {
+      "figure": "::fig[detection-layers]",
+      "teaches": "The escalating detection stack: liveness probe -> heartbeat+timeout -> inference check -> progress-median straggler detection, each layer catching a class the one below misses, ending at the gray failure.",
+      "source": "Book's detection mechanisms (health checks, 5 s/3-miss -> 12-17 s window, progress-median straggler flagging) + serving failover subsection."
+    },
+    "What the Chapter Says to Carry": { "proseOnly": "Summary list." },
+    "Fallacies and Pitfalls": { "proseOnly": "Pitfall list." },
+    "The physics": { "proseOnly": "Number table." },
+    "Glossary": { "proseOnly": "Term list." },
+    "→ Ben's world": { "proseOnly": "Cross-domain applications." },
+    "Open questions": { "proseOnly": "Open questions." }
+  }
+}

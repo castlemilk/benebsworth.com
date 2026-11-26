@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="usage-tiers" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="ut-title ut-desc">
+  <title id="ut-title">Three tiers of use</title>
+  <desc id="ut-desc">Three narrowing horizontal bars: 500 allocated GPUs, 350 active-equivalents, 280 productive-equivalents. The gap from allocated to active is owned by input supply and runtime execution; the gap from active to productive is replay and synchronization overhead.</desc>
+  <style>
+    .dark #usage-tiers { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#usage-tiers { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Three tiers of use</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">time-averaged GPU-equivalents for one team's allocation</text>
+
+    <!-- bar scale: 500 GPUs = 280px wide, x0=24 -->
+    <!-- allocated bar 500: width 280 -->
+    <text x="24" y="82" font-size="10" font-weight="650">allocated</text>
+    <rect x="24" y="90" width="280" height="30" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.75"/>
+    <text x="298" y="110" font-size="10" text-anchor="end" font-weight="650" fill="var(--fig-paper, #f7f3e9)">500</text>
+    <text x="312" y="110" font-size="8" fill="var(--fig-rule, #6e6a5b)">complete</text>
+    <text x="312" y="120" font-size="8" fill="var(--fig-rule, #6e6a5b)">gangs only</text>
+
+    <!-- active bar 350: width 196 -->
+    <text x="24" y="142" font-size="10" font-weight="650">active</text>
+    <rect x="24" y="150" width="196" height="30" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.5"/>
+    <text x="214" y="170" font-size="10" text-anchor="end" font-weight="650" fill="var(--fig-paper, #f7f3e9)">350</text>
+    <text x="228" y="170" font-size="8" fill="var(--fig-rule, #6e6a5b)">kernels busy,</text>
+    <text x="228" y="180" font-size="8" fill="var(--fig-rule, #6e6a5b)">any definition</text>
+
+    <!-- productive bar 280: width 157 -->
+    <text x="24" y="202" font-size="10" font-weight="650">productive</text>
+    <rect x="24" y="210" width="157" height="30" rx="4" fill="var(--fig-mark, #b4571f)" opacity="0.75"/>
+    <text x="175" y="230" font-size="10" text-anchor="end" font-weight="650" fill="var(--fig-paper, #f7f3e9)">280</text>
+    <text x="189" y="230" font-size="8" fill="var(--fig-rule, #6e6a5b)">retained progress at</text>
+    <text x="189" y="240" font-size="8" fill="var(--fig-rule, #6e6a5b)">the fault-free rate</text>
+
+    <!-- gap annotations -->
+    <path d="M 230 120 L 250 148" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.7" opacity="0.6"/>
+    <text x="254" y="138" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">−150: input supply,</text>
+    <text x="262" y="148" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">communication waits, runtime</text>
+
+    <path d="M 190 180 L 210 208" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.7" opacity="0.6"/>
+    <text x="214" y="198" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">−70: replay, synchronization,</text>
+    <text x="222" y="208" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">work redone after failures</text>
+
+    <!-- bottom: the discipline -->
+    <line x1="24" x2="356" y1="256" y2="256" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.6" opacity="0.4"/>
+    <text x="24" y="272" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">each gap is a different investigation with a different owner —</text>
+    <text x="24" y="284" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">a single dashboard number hides which one to start.</text>
+    <text x="356" y="284" font-size="9" text-anchor="end" font-weight="650" fill="var(--fig-mark, #b4571f)">productive: 56%</text>
+  </g>
+</svg>

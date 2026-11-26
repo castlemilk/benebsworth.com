@@ -267,6 +267,7 @@ export function useAnimatedSeriesPath({
       control.stop();
       animatingRef.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- scales/targets are read live via latestRef; only a new signature should restart the tween
   }, [
     transitionSignature,
     dataSignature,

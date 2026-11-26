@@ -1,0 +1,68 @@
+[
+  {
+    "id": "fleet-law",
+    "number": 1,
+    "title": "The Fleet Law",
+    "latex": "T_{\\mathrm{step}}=\\frac{T_{\\mathrm{compute}}}{N}+T_{\\mathrm{comm}}(N)+T_{\\mathrm{sync}}(N)+T_{\\mathrm{interruption}}(N)",
+    "caption": "The distributed counterpart of the single-machine iron law. Only the first term falls with device count by construction; the other three depend on partition, schedule, and component count and carry no such guarantee.",
+    "symbols": [
+      {"symbol": "N", "meaning": "accelerator count in the training job"},
+      {"symbol": "T_{\\mathrm{comm}}(N)", "meaning": "exposed communication time on the step's critical path"},
+      {"symbol": "T_{\\mathrm{sync}}(N)", "meaning": "synchronization and straggler waiting"},
+      {"symbol": "T_{\\mathrm{interruption}}(N)", "meaning": "expected recovery cost from routine failure"}
+    ]
+  },
+  {
+    "id": "expansion-mtbf",
+    "number": 2,
+    "title": "Job MTBF under expansion",
+    "latex": "\\mathrm{MTBF}_{\\mathrm{job}}=\\frac{\\mathrm{MTTF}_{\\mathrm{gpu}}}{N}\\quad\\Rightarrow\\quad 48.8\\,\\mathrm{h}\\xrightarrow{N\\times 2}24.4\\,\\mathrm{h}",
+    "caption": "Job-level failure cadence is component reliability divided by component count. Doubling the reference cluster halves ideal step time and halves the mean time between interruptions in the same motion.",
+    "symbols": [
+      {"symbol": "\\mathrm{MTTF}_{\\mathrm{gpu}}", "meaning": "mean time to failure of one accelerator"},
+      {"symbol": "\\mathrm{MTBF}_{\\mathrm{job}}", "meaning": "mean time between interruptions for the whole job"}
+    ]
+  },
+  {
+    "id": "young-daly-overhead",
+    "number": 3,
+    "title": "Checkpoint overhead growth",
+    "latex": "\\mathrm{overhead}\\approx\\sqrt{\\frac{2\\,T_{\\mathrm{write}}}{\\mathrm{MTBF}_{\\mathrm{job}}}}\\quad\\Rightarrow\\quad 1.7\\%\\xrightarrow{N\\times 2}2.4\\%",
+    "caption": "Optimal checkpoint frequency rises with the square root of the failure rate, so overhead grows with the square root of fleet size. The 175B checkpoint is 2.45 terabytes at 14 bytes per parameter and takes about 24.5 seconds to write.",
+    "symbols": [
+      {"symbol": "T_{\\mathrm{write}}", "meaning": "time to write one checkpoint"},
+      {"symbol": "\\mathrm{overhead}", "meaning": "fraction of run time spent checkpointing at the optimal cadence"}
+    ]
+  },
+  {
+    "id": "fanout-tail",
+    "number": 4,
+    "title": "Fan-out tail exposure",
+    "latex": "\\Pr(\\text{tail hit})=1-(0.99)^{100}\\approx 0.63",
+    "caption": "A request fanning out to a hundred leaf servers, each fast at its own ninety-ninth percentile, still hits a slow leaf almost two-thirds of the time. Tail exposure is structural, not a defect.",
+    "symbols": [
+      {"symbol": "0.99", "meaning": "probability a single leaf responds within its fast envelope"},
+      {"symbol": "100", "meaning": "leaf servers in the fan-out"}
+    ]
+  },
+  {
+    "id": "scaling-wall",
+    "number": 5,
+    "title": "The scaling wall",
+    "latex": "\\mathrm{speedup}(N)=\\frac{T_{\\mathrm{step}}(1)}{T_{\\mathrm{step}}(N)}<N\\quad\\text{whenever}\\quad T_{\\mathrm{comm}}+T_{\\mathrm{sync}}+T_{\\mathrm{interruption}}>0",
+    "caption": "Scaling efficiency falls below linear whenever any non-compute term is positive, and the wall arrives where added coordination consumes the compute time added accelerators save. Growth can also break on the model side, when capacity outgrows tokens or data stops adding information.",
+    "symbols": [
+      {"symbol": "\\mathrm{speedup}(N)", "meaning": "ratio of single-device to N-device step time"}
+    ]
+  },
+  {
+    "id": "straggler-step",
+    "number": 6,
+    "title": "Barrier step time",
+    "latex": "T_{\\mathrm{step}}=\\max_{i\\in 1..N}\\,T_{\\mathrm{worker}}^{(i)}",
+    "caption": "A barrier-synchronized step finishes when its slowest worker finishes. One worker at reduced speed degrades the whole step, and speeding the workers already waiting at the barrier does nothing: the illustrative 8,000-worker case loses twenty percent of throughput to a single straggler.",
+    "symbols": [
+      {"symbol": "T_{\\mathrm{worker}}^{(i)}", "meaning": "time worker i needs for its share plus its exposed communication"}
+    ]
+  }
+]

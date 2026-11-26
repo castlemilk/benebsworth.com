@@ -108,7 +108,7 @@ export function ParallelismRace() {
   // reset the clock if the length changes mid-run
   useEffect(() => {
     reset()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [n])
 
   const word = (i: number) => WORDS[i % WORDS.length]

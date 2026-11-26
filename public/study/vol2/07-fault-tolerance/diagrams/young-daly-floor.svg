@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="young-daly-floor" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="yd-title yd-desc">
+  <title id="yd-title">The Young-Daly floor</title>
+  <desc id="yd-desc">Wall-time waste against checkpoint interval: write overhead falls hyperbolically, expected rework rises linearly, and their sum has a shallow minimum near 14 minutes at about 5.9 percent, where the two terms are equal.</desc>
+  <style>
+    .dark #young-daly-floor { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#young-daly-floor { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">The Young-Daly floor</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">waste = T_write/t + t/(2·MTBF) · 24.5 s write · 3.9 h MTBF</text>
+
+    <!-- axes: x 56..360 maps 0..60 min ; y 250..70 maps 0..0.30 -->
+    <line x1="56" y1="250" x2="360" y2="250" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <line x1="56" y1="70" x2="56" y2="250" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <text x="52" y="252" font-size="8" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">0%</text>
+    <text x="52" y="130" font-size="8" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">20%</text>
+    <line x1="52" x2="56" y1="130" y2="130" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <text x="52" y="190" font-size="8" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">10%</text>
+    <line x1="52" x2="56" y1="190" y2="190" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <text x="56" y="262" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">0</text>
+    <text x="157" y="262" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">20 min</text>
+    <line x1="157" x2="157" y1="250" y2="246" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <text x="258" y="262" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">40 min</text>
+    <line x1="258" x2="258" y1="250" y2="246" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <text x="358" y="262" font-size="8" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">60</text>
+
+    <!-- write term: waste_w = (24.5/60)/tau*600 s scale -> fraction = 0.4083/tau_min ... in y: 250 - frac*600 -->
+    <!-- at tau=1: 0.408 -> off chart; tau=2: .204->y128; tau=5:.0817->y201; tau=14:.029->y232; tau=30:.0136->y242; tau=60:.0068->y246 -->
+    <path d="M 61 128 C 70 170, 90 200, 115 216 S 180 236, 235 243 S 330 247, 356 246" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <text x="82" y="150" font-size="8.5" fill="var(--fig-outline, #364c50)">save overhead</text>
+    <text x="82" y="161" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">T_write / τ</text>
+
+    <!-- rework term: waste_r = tau/(2*234min) -> tau=60: 0.128 -> y173 -->
+    <path d="M 56 250 L 356 173" fill="none" stroke="var(--fig-mark, #b4571f)" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <text x="296" y="215" font-size="8.5" fill="var(--fig-mark, #b4571f)">expected rework</text>
+    <text x="296" y="226" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">τ / 2·MTBF</text>
+
+    <!-- total: min at tau=sqrt(2*0.4083*234)=sqrt(191)=13.8 min, waste = 2*0.0295=0.059 -> y=215 -->
+    <!-- tau=2: 0.204+0.004=0.208->125; tau=5:0.0817+0.0107=0.092->195; tau=14:0.059->215; tau=30:0.0136+0.064=0.078->203; tau=60:0.0068+0.128=0.135->169 -->
+    <path d="M 61 125 C 76 175, 100 205, 127 215 S 190 222, 240 210 S 330 175, 356 169" fill="none" stroke="var(--fig-ink, #252923)" stroke-width="2.2"/>
+
+    <!-- minimum marker -->
+    <circle cx="127" cy="215" r="4" fill="var(--fig-mark, #b4571f)"/>
+    <line x1="127" y1="215" x2="127" y2="250" stroke="var(--fig-mark, #b4571f)" stroke-width="0.8" stroke-dasharray="2 2"/>
+    <text x="127" y="240" font-size="8" text-anchor="middle" fill="var(--fig-mark, #b4571f)"></text>
+    <text x="140" y="207" font-size="9" font-weight="650">τ* ≈ 14 min</text>
+    <text x="140" y="219" font-size="8" fill="var(--fig-rule, #6e6a5b)">~5.9% waste, terms equal</text>
+    <circle cx="127" cy="227" r="2.2" fill="none" stroke="var(--fig-rule,#6e6a5b)"/>
+    <text x="119" y="237" font-size="6.5" fill="var(--fig-rule,#6e6a5b)"></text>
+
+    <!-- region labels -->
+    <text x="80" y="90" font-size="8" fill="var(--fig-outline, #364c50)">writes dominate</text>
+    <text x="290" y="90" font-size="8" fill="var(--fig-mark, #b4571f)">rework dominates</text>
+
+    <text x="190" y="288" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">the floor is shallow: a rough MTBF estimate still buys a usable schedule</text>
+  </g>
+</svg>

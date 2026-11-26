@@ -21,6 +21,10 @@ export default tseslint.config(
       '.vercel/**',
       '.wrangler/**',
       '.cache/**',
+      // Vendored book checkout and self-contained skill examples/tooling are
+      // reference material, not site runtime code; linting them drowns the gate.
+      'study/cs249r_book/**',
+      '.agents/skills/**',
       'tmp/**',
       'public/lab-data/**',
       'test-results/**',
@@ -88,7 +92,7 @@ export default tseslint.config(
     },
     rules: {
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
       '@typescript-eslint/no-import-type-side-effects': 'error',
@@ -118,7 +122,7 @@ export default tseslint.config(
   {
     files: ['scripts/**/*.mjs', 'scripts/**/*.js'],
     rules: {
-      'no-console': 'warn',
+      'no-console': 'off',
     },
   },
 );

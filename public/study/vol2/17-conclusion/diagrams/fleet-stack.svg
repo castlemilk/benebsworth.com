@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="The fleet stack: four bands supplying rates and obligations upward">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .band{fill:var(--diagram-accent-soft,#e8eefb);stroke:var(--diagram-accent,#3c64c8);stroke-width:1.2}
+    .bt{font:600 12.5px var(--font-sans,sans-serif);fill:var(--diagram-accent,#3c64c8)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .up{stroke:var(--diagram-ink-soft,#5a5a60);stroke-width:1.6;fill:none;marker-end:url(#ahs)}
+    .ut{font:10px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .gov{fill:var(--diagram-warn-fill,#f2ddd4);stroke:var(--diagram-warn,#c85a3c);stroke-width:1.3}
+    .gt{font:600 12.5px var(--font-sans,sans-serif);fill:var(--diagram-warn,#c85a3c)}
+  </style>
+  <defs><marker id="ahs" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="var(--diagram-ink-soft,#5a5a60)"/></marker></defs>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="32">The fleet stack: what each band inherits</text>
+  <text class="sub" x="30" y="51">Rates flow up; obligations flow down. A frontier system binds at any layer.</text>
+  <!-- bands bottom to top -->
+  <rect class="band" x="150" y="320" width="460" height="62" rx="8"/>
+  <text class="bt" x="170" y="345">physical substrate</text>
+  <text class="sm" x="170" y="363">accelerators, fabric links, storage, facility power: the inherited rates</text>
+  <rect class="band" x="150" y="244" width="460" height="62" rx="8"/>
+  <text class="bt" x="170" y="269">distribution band</text>
+  <text class="sm" x="170" y="287">partitioning, collectives, scheduling, recovery: one system</text>
+  <rect class="band" x="150" y="168" width="460" height="62" rx="8"/>
+  <text class="bt" x="170" y="193">serving band</text>
+  <text class="sm" x="170" y="211">latency, availability, cost: execution becomes a contract</text>
+  <rect class="gov" x="150" y="92" width="460" height="62" rx="8"/>
+  <text class="gt" x="170" y="117">governance band</text>
+  <text class="sm" x="170" y="135">security, robustness, sustainability, accountability: may it run?</text>
+  <!-- inheritance arrows -->
+  <line class="up" x1="660" y1="320" x2="660" y2="310"/>
+  <line class="up" x1="660" y1="244" x2="660" y2="234"/>
+  <line class="up" x1="660" y1="168" x2="660" y2="158"/>
+  <text class="ut" x="672" y="316">rates</text>
+  <text class="ut" x="672" y="240">coordination cost</text>
+  <text class="ut" x="672" y="164">evidence + obligation</text>
+  <!-- side notes -->
+  <text class="sm" x="30" y="120">the conclusion's</text>
+  <text class="sm" x="30" y="136">frontier: test-time</text>
+  <text class="sm" x="30" y="152">compute moves cost</text>
+  <text class="sm" x="30" y="168">into the serving</text>
+  <text class="sm" x="30" y="184">path; new substrates</text>
+  <text class="sm" x="30" y="200">change the rates</text>
+  <text class="sm" x="30" y="216">below</text>
+  <text class="sm" x="30" y="404">Archetypes A, B, C each stress a different corner of compute, communication, coordination — all four bands still apply.</text>
+</svg>

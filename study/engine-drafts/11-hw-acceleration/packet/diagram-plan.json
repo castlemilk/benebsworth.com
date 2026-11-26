@@ -1,0 +1,70 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "Introduce the decision that connects the worked sections."
+    },
+    "Identify the work worth specializing": {
+      "figure": "::fig[specialization-diagnosis]",
+      "teaches": "An accelerator trades some of a general-purpose processor's flexibility for efficient execution of recurring operations. A CPU spends chip area and energy on machinery that handles branches, speculation, and a wide variety of instruction sequences. A dense linear layer offers a more regular workload. Its multiply-accumulate operations can share instruction control and reuse operands across many arithmetic units. Local storage and data paths make that reuse practical by delivering values at the rate the units consume them. As specialization raises arithmetic throughput, operand delivery can become the limiting resource. This integration bottleneck explains why a wider array may spend much of its time idle and why a smaller model file can leave request latency nearly unchanged.",
+      "source": "Anatomy of an Accelerator, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L115-L325; Hardware Specialization, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L640-L997"
+    },
+    "Follow an operator to its execution units": {
+      "figure": "::fig[projection-softmax-path]",
+      "teaches": "A model graph exposes several kinds of work that call for different execution units. Vector operations apply the same instruction across many elements. Matrix operations organize multiply-accumulates into tiles so each fetched input or weight contributes to multiple outputs. Special function units and dedicated instruction paths help evaluate operations such as the exponential in softmax or the reciprocal square root in normalization. SIMD issues one instruction across lanes, while GPU SIMT exposes individual threads that typically issue instructions in groups. Tensor Cores execute instruction-driven matrix tiles. A systolic array passes values between neighboring processing elements in a timed pattern, reducing repeated register-file accesses. A single layer can move among these paths, so its performance depends on the mix of work and the cost of moving data between units.",
+      "source": "Compute Primitives, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L1134-L1331; Compute Units, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L1405-L1491"
+    },
+    "Find which interface carries the bytes": {
+      "figure": "::fig[tensor-interface-path]",
+      "teaches": "An accelerator moves tensors through a hierarchy that trades capacity against access speed. Registers and local SRAM feed arithmetic quickly but hold small working sets. Device DRAM, including HBM on some accelerators, holds much larger tensors and supplies less bandwidth than the combined local paths. A discrete accelerator also exchanges data with the host over a separate link. The same tensor can cross several of these interfaces, so count traffic at the one under investigation. A dense operation can repeatedly use values already in local storage, while token-by-token decoding at small batch sizes can stream weights from device memory with little reuse. The memory wall appears when an interface reaches sustainable bandwidth and the arithmetic units wait for data.",
+      "source": "Memory Systems, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L2374-L3145"
+    },
+    "Predict whether compute or bandwidth limits a kernel": {
+      "figure": "::fig[roofline-upgrade-comparison]",
+      "teaches": "The roofline model estimates kernel throughput from the arithmetic peak of the execution path and the bandwidth of a specified memory interface. Arithmetic intensity is the number of operations performed per byte crossing that interface. The bandwidth ceiling is bandwidth multiplied by intensity, and the kernel's modeled throughput is bounded by the lower of that ceiling and the compute peak. Their intersection, the ridge point, equals peak compute divided by bandwidth. A kernel below the ridge can benefit from moving fewer bytes or using a faster interface. A kernel above it has more reason to pursue better execution-unit utilization or a higher arithmetic rate. Profile the kernel to check whether it approaches the predicted ceiling.",
+      "source": "Performance Bounds, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L3154-L4136"
+    },
+    "Fit operands and accumulators on chip": {
+      "figure": "::fig[baseline-tile-storage]",
+      "teaches": "A tile can exploit local reuse only when all values live at the same time fit in the storage available to its execution group. The working set includes input and weight tiles, partial sums, and temporary workspace. Double buffering reserves two copies of an operand tile so the next can load while the current one is in use. Accumulators often use a wider format than the operands, so their footprint can be substantial even with a single buffer. In a matrix multiply, reducing the output tile width shrinks the weight tile and the accumulator tile while the input tile stays the same size. That change can make a schedule feasible, but it can also produce more tiles and alter how often the input is loaded.",
+      "source": "Anatomy of an Accelerator, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L122-L321; Hardware Mapping, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L4650-L5005"
+    },
+    "Turn reuse in the equations into reuse on the chip": {
+      "figure": "::fig[mapping-candidate-selection]",
+      "teaches": "Mapping turns a tensor operation into a plan for where work runs, what data each processing element holds, and in which order loops execute. A weight-stationary schedule keeps weights local while inputs stream past them. An output-stationary schedule keeps partial sums near the units that update them. An input-stationary schedule keeps input values local while different filters or output channels use them. Each schedule saves traffic for one operand and places different demands on storage, parallelism, and communication. Tile dimensions determine how much reuse fits, tensor layout determines whether accesses use memory efficiently, and fusion can keep intermediates near their producers. Choose these together because a locally attractive choice can force a layout conversion, spill, or synchronization elsewhere.",
+      "source": "Hardware Mapping, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L4523-L5111"
+    },
+    "Verify the plan the compiler and runtime actually execute": {
+      "figure": "::fig[graph-to-device-trace]",
+      "teaches": "A machine learning compiler preserves tensor operations long enough to make graph-wide decisions about fusion, layout, precision, and memory lifetimes. It optimizes the graph, chooses kernels, plans storage, schedules computations, and generates code for the target. The runtime makes that plan work under current conditions by selecting a compatible variant, obtaining workspace, launching work, and enforcing dependencies between kernels and copies. Ahead-of-time compilation can specialize common shapes and shift compilation out of the request path. Just-in-time compilation can specialize a newly encountered shape, with compilation time on or near its first use. Changing shapes, concurrency, or available memory can change the selected path and move the bottleneck.",
+      "source": "Compilers and Runtimes, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5164-L5367"
+    },
+    "Extend the bottleneck analysis across accelerators": {
+      "figure": "::fig[device-partition-critical-path]",
+      "teaches": "Multiple accelerators can provide aggregate memory capacity, higher throughput, or shorter computation time. Each device still needs an efficient local mapping, and partitioning adds communication to account for. Data parallelism gives devices separate batches, normally with a model replica on each device. Training replicas must coordinate gradient updates. Model parallelism partitions layers or individual tensor operations so weights and runtime state can span devices, with activations or partial results crossing the partition. The location of that boundary matters. Chiplets communicate inside a package, wafer-scale designs keep more communication within the device, and board-level or network links impose their own bandwidth, latency, and contention limits. End-to-end latency depends on the communication and waiting exposed on the critical path.",
+      "source": "Beyond One Accelerator, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5385-L5391"
+    },
+    "Map the full pipeline under a sustained power budget": {
+      "figure": "::fig[soc-pipeline-evaluation]",
+      "teaches": "A heterogeneous system-on-chip combines CPU cores, GPU execution units, digital signal processors, and neural processing units connected to shared memory. A deployment can assign each pipeline stage to the engine that handles its operations efficiently. Shared memory helps with data exchange, but engines may still require different layouts or precisions and wait for each other at boundaries. Unsupported operators or shapes can cause an accelerator delegate to split a graph and send part of it to another engine. At the same time, sustained work heats the device and can reduce clock rates. The best mapping therefore depends on whole-pipeline latency, shared memory traffic, and energy after the device has reached a representative operating temperature.",
+      "source": "Heterogeneous SoC Design, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5395-L5453"
+    },
+    "Choose hardware by useful work delivered": {
+      "figure": "::fig[accelerator-evaluation-sequence]",
+      "teaches": "Accelerator selection starts with constraints on memory capacity, numerical quality, latency, throughput, and power. Compare candidates using the actual operation mix, shapes, and software stack. Dense training can reward matrix throughput and fast interconnects. Small-batch decoding can put more weight on memory bandwidth and capacity. An embedded pipeline can depend on operator coverage and sustained power. Diagnose the limiting resource with traces and counters, then change one relevant factor and measure the effect. Rank feasible candidates by useful requests per unit cost and joules per useful request at the system boundary. Those figures reflect utilization, host work, and idle time when the measurement includes them. Emissions estimates also depend on cooling overhead, the electricity mix, and embodied hardware impacts.",
+      "source": "Choosing an Accelerator, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5544-L5668; Fallacies and Pitfalls, https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/11_hw_acceleration/11_hw_acceleration.qmd#L5672-L6073"
+    },
+    "The physics": {
+      "proseOnly": "Compare the quantities and conditions in a lookup table."
+    },
+    "Glossary": {
+      "proseOnly": "Look up a term encountered in the worked sections."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Apply the mechanisms to concrete engineering decisions."
+    },
+    "Open questions": {
+      "proseOnly": "Identify an experiment or evidence the chapter leaves open."
+    }
+  }
+}

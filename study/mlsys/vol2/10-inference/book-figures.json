@@ -1,0 +1,58 @@
+[
+  {
+    "id": "book-serving-hierarchy",
+    "file": "serving-hierarchy.svg",
+    "title": "Serving hierarchy",
+    "caption": "The book's workload hierarchy from embedding lookups through ranking, vision, LLMs, diffusion and real-time audio. Our packet uses that breadth to motivate workload-specific mechanisms rather than treating LLM serving as the whole field.",
+    "alt": "Hierarchy of machine-learning serving workloads with distinct bottlenecks and latency targets"
+  },
+  {
+    "id": "book-batching-knee",
+    "file": "inference_batching_knee.svg",
+    "title": "Batching knee",
+    "caption": "The book's throughput-versus-batch curve with fixed and marginal cost. Our batch-efficiency equation carries the same mechanism, while the original curve shows the knee visually.",
+    "alt": "Throughput rising quickly with batch size before flattening near an asymptote"
+  },
+  {
+    "id": "book-continuous-batching",
+    "file": "continuous-batching.svg",
+    "title": "Continuous batching",
+    "caption": "The book's iteration-level replacement diagram. Our padding-waste equation quantifies what the fixed-membership row leaves idle and continuous admission reclaims.",
+    "alt": "Static batch slots padding shorter sequences while continuous batching admits new requests at iteration boundaries"
+  },
+  {
+    "id": "book-kv-fragmentation",
+    "file": "kv-cache-fragmentation.svg",
+    "title": "KV-cache fragmentation",
+    "caption": "The book's comparison of contiguous cache allocation with paged allocation. We use the KV bytes-per-token equation for admission accounting and cite this figure for the allocation mechanism.",
+    "alt": "Contiguous KV cache blocks leaving unusable gaps compared with paged blocks filling memory more densely"
+  },
+  {
+    "id": "book-chunked-prefill",
+    "file": "chunked-prefill.svg",
+    "title": "Chunked prefill",
+    "caption": "The book's interleaving of prompt chunks with decode iterations. Our disaggregation sketch shows the coarser architectural choice that follows when interleaving still compromises the two phases.",
+    "alt": "Long prompt processing divided into chunks and interleaved with shorter decode steps"
+  },
+  {
+    "id": "book-disaggregated-serving",
+    "file": "disaggregated-serving.svg",
+    "title": "Disaggregated serving architecture",
+    "caption": "The book's detailed prefill-pool and decode-pool architecture connected by RDMA KV transfer. Our packet uses a simplified lane diagram because the transfer term is the decision-relevant mechanism.",
+    "alt": "Compute-bound prefill worker pool connected by KV cache transfer to bandwidth-bound decode worker pool"
+  },
+  {
+    "id": "book-tensor-parallel",
+    "file": "tensor-parallel-flow.svg",
+    "title": "Tensor-parallel execution flow",
+    "caption": "The book's tensor-parallel operator flow. We keep the communication cost in the scaling equation rather than reproducing the full operator decomposition.",
+    "alt": "Matrix operation divided across devices with partial results combined through communication"
+  },
+  {
+    "id": "book-spot-routing",
+    "file": "spot-aware-routing.svg",
+    "title": "Spot-aware routing",
+    "caption": "The book's routing treatment for interruptible capacity. Our capacity-control section uses the same principle qualitatively: price is not capacity until interruption and cold-start terms are counted.",
+    "alt": "Router steering traffic across stable and interruptible capacity pools"
+  }
+]

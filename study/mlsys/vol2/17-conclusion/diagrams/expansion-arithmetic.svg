@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="The cluster doubling arithmetic: what halves and what grows">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .half{fill:var(--diagram-ok-fill,#dcefdc);stroke:var(--diagram-ok,#3c8c4e);stroke-width:1.2}
+    .grow{fill:var(--diagram-warn-fill,#f2ddd4);stroke:var(--diagram-warn,#c85a3c);stroke-width:1.2}
+    .ht{font:600 11.5px var(--font-sans,sans-serif);fill:var(--diagram-ok,#3c8c4e)}
+    .wt{font:600 11.5px var(--font-sans,sans-serif);fill:var(--diagram-warn,#c85a3c)}
+    .val{font:600 13px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .arr{stroke:var(--diagram-ink-soft,#5a5a60);stroke-width:1.5;fill:none;marker-end:url(#ahx)}
+    .box{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-edge,#999);stroke-width:1.1}
+  </style>
+  <defs><marker id="ahx" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="var(--diagram-ink-soft,#5a5a60)"/></marker></defs>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="32">Doubling 1,024 to 2,048 accelerators</text>
+  <text class="sub" x="30" y="51">Capability and efficiency move in opposite directions in the same motion.</text>
+  <!-- center node -->
+  <rect class="box" x="310" y="86" width="150" height="52" rx="8"/>
+  <text class="val" x="385" y="108" text-anchor="middle">2x the devices</text>
+  <text class="sm" x="385" y="125" text-anchor="middle">same work, same fabric</text>
+  <!-- left: halves -->
+  <line class="arr" x1="310" y1="100" x2="200" y2="100"/>
+  <rect class="half" x="30" y="72" width="170" height="56" rx="8"/>
+  <text class="ht" x="115" y="94" text-anchor="middle">ideal step time</text>
+  <text class="val" x="115" y="114" text-anchor="middle">halves</text>
+  <line class="arr" x1="310" y1="130" x2="200" y2="180"/>
+  <rect class="grow" x="30" y="152" width="170" height="56" rx="8"/>
+  <text class="wt" x="115" y="174" text-anchor="middle">job MTBF</text>
+  <text class="val" x="115" y="194" text-anchor="middle">48.8 h → 24.4 h</text>
+  <!-- right: grows -->
+  <line class="arr" x1="460" y1="100" x2="560" y2="100"/>
+  <rect class="grow" x="566" y="72" width="170" height="56" rx="8"/>
+  <text class="wt" x="651" y="94" text-anchor="middle">checkpoint overhead</text>
+  <text class="val" x="651" y="114" text-anchor="middle">1.7% → 2.4%</text>
+  <line class="arr" x1="460" y1="130" x2="560" y2="180"/>
+  <rect class="grow" x="566" y="152" width="170" height="56" rx="8"/>
+  <text class="wt" x="651" y="174" text-anchor="middle">accelerator-hours</text>
+  <text class="val" x="651" y="194" text-anchor="middle">+0.7% at ideal 2x</text>
+  <!-- verdict -->
+  <rect class="box" x="180" y="250" width="400" height="76" rx="8"/>
+  <text class="lbl" x="380" y="276" text-anchor="middle">break-even: step speedup must exceed ~1.01x</text>
+  <text class="sm" x="380" y="296" text-anchor="middle">trivially met, yet total accelerator-hours still rise.</text>
+  <text class="sm" x="380" y="312" text-anchor="middle">The fleet grows in capability while shrinking in efficiency.</text>
+  <text class="sm" x="30" y="378">The scaling curve estimates what growth buys; the Fleet Law prices it. Whether the trade is worth it is a</text>
+  <text class="sm" x="30" y="394">decision the arithmetic informs but cannot make.</text>
+</svg>

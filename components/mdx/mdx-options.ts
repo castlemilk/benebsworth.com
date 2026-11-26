@@ -8,6 +8,7 @@ import rehypePrettyCode from 'rehype-pretty-code'
 import { visit } from 'unist-util-visit'
 import type { Root } from 'mdast'
 import type { Root as HastRoot } from 'hast'
+import { rehypeBenchmarkTables } from '@/lib/rehype-benchmark-tables'
 
 import type { MDXRemoteProps } from 'next-mdx-remote/rsc'
 
@@ -130,6 +131,7 @@ export function mdxOptions(basePath?: string): NonNullable<MDXRemoteProps['optio
         rehypeSlug,
         [rehypePrettyCode, { theme: 'github-dark' }],
         rehypeImageAttrs,
+        rehypeBenchmarkTables,
         [rehypeKatex, { strict: false, throwOnError: false }],
       ],
     },

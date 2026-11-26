@@ -8,6 +8,7 @@ one TTS segment; keep units spoken naturally (no formulas, spell numbers out).
 stripped from speech, rendered as math in the transcript.
 
 A: Chapter two today, I'm Marcus, with Iris. System paradigms. And this one
+::fig[tier-ladder]
 surprised me because it's secretly a physics chapter wearing a deployment
 diagram's clothes.
 
@@ -54,6 +55,7 @@ and why your laptop running a local model is, at heart, a bandwidth-bound
 machine.
 
 B: Then the workload archetypes, and this is where it stops being trivia and
+::fig[archetype-map]
 becomes a design tool. Four regimes, throughput, latency, capacity, power:
 each named after a lighthouse task that defines it.
 
@@ -78,11 +80,13 @@ bound already misses the budget, you never get to round two.
 ::eq[locality-invariant]
 
 A: Which is the screen-then-cost method, privacy screen, latency screen,
+::fig[screen-funnel]
 resource screen, and only then lifecycle cost. Each check excludes candidates
 before the next one runs, and they're ordered by how cheap the check is:
 physics first, money last.
 
 B: Last bit, hybrid architectures, because the real world isn't a single
+::fig[tier-ladder]
 tier. The voice-assistant cascade is the pricing exercise: waking word
 detection on-device, because streaming audio from a billion devices to the
 cloud is thirty-two terabytes a second and hundreds of millions of dollars a
@@ -98,6 +102,7 @@ model versions all have to match across the boundary or you reintroduce
 training-serving skew where the tiers meet.
 
 A: Takeaway for the review shelf: before any deployment discussion, write
+::fig[screen-funnel]
 down the three contract terms and the two preconditions. If a path fails a
 precondition, it's not a candidate, no amount of budget or cleverness
 reopens it.

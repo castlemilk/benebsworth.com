@@ -1,0 +1,104 @@
+[
+  {
+    "id": "memory-staircase",
+    "kind": "BAR_STACKED",
+    "title": "Fitting GPT-2 XL batch 32 onto one 80 GB H100",
+    "xLabel": "intervention applied",
+    "xPoints": [
+      "FP32 baseline",
+      "+ mixed precision",
+      "+ FlashAttention",
+      "+ accumulate 2 x 16"
+    ],
+    "series": [
+      {
+        "label": "static state (24 GB)",
+        "values": [
+          24,
+          24,
+          24,
+          24
+        ],
+        "color": "var(--chart-3)",
+        "key": "static"
+      },
+      {
+        "label": "activations",
+        "values": [
+          574,
+          287,
+          85.6,
+          42.8
+        ],
+        "color": "var(--chart-1)",
+        "key": "activations"
+      }
+    ],
+    "caption": "Each bar is one step's resident training state after applying the technique above the last. Static state never moves -- 24 GB under both FP32 Adam and mixed-precision Adam (16 B/param either way). Only activations shrink: halved by FP16, then the ~201 GB of quadratic score matrices removed by FlashAttention, then halved again by the 16-sequence micro-batch. The H100's capacity is 80 GB -- only the last bar fits. Segment checkpointing reaches ~35.5 GB instead, at +33% arithmetic."
+  },
+  {
+    "id": "mfu-share",
+    "kind": "BAR_STACKED",
+    "title": "Where the peak actually goes",
+    "xLabel": "published training run",
+    "xPoints": [
+      "MT-NLG",
+      "PaLM",
+      "GPT-2 XL (model)"
+    ],
+    "series": [
+      {
+        "label": "useful model FLOPs (MFU)",
+        "values": [
+          30.2,
+          46.2,
+          50
+        ],
+        "color": "var(--chart-2)",
+        "key": "mfu"
+      },
+      {
+        "label": "lost: stalls, bubbles, recompute, sync",
+        "values": [
+          69.8,
+          53.8,
+          50
+        ],
+        "color": "var(--chart-4)",
+        "key": "lost"
+      }
+    ],
+    "caption": "Each bar is the hardware's peak budget; only the left segment is credited model arithmetic. MT-NLG ran at 30.2% MFU and PaLM at 46.2% (PaLM paper, useful-FLOP convention); the chapter's GPT-2 XL model assumes 50%. The uncolored share is everything eta_hw absorbs -- memory stalls, pipeline bubbles, rematerialization, synchronization. Busy-time monitors would report the same runs near 100%."
+  },
+  {
+    "id": "sync-share",
+    "kind": "BAR_STACKED",
+    "title": "Splitting a fixed batch grows the sync share",
+    "xLabel": "batch placement on 8 replicas",
+    "xPoints": [
+      "batch 32 on every replica",
+      "batch 32 split to 4/replica"
+    ],
+    "series": [
+      {
+        "label": "compute share of step",
+        "values": [
+          98,
+          86
+        ],
+        "color": "var(--chart-2)",
+        "key": "compute"
+      },
+      {
+        "label": "unhidden AllReduce share",
+        "values": [
+          2,
+          14
+        ],
+        "color": "var(--chart-1)",
+        "key": "sync"
+      }
+    ],
+    "caption": "GPT-2 XL's ~12 ms AllReduce is ~2% of a step when each replica computes the full batch-32 gradient, but ~14% when the same batch is split eight ways: per-replica arithmetic falls with the local batch while the ~1.75x gradient volume stays fixed. The mechanism behind 'speedup < N' -- arithmetic divides, the synchronization bill does not. Illustrative shares at the chapter's constants, not a measured profile."
+  }
+]

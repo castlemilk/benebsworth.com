@@ -1,0 +1,7315 @@
+{
+  "hosts": {
+    "A": "Marcus",
+    "B": "Iris"
+  },
+  "segments": [
+    {
+      "speaker": "A",
+      "text": "I'm Marcus, and this is Iris. We have two imaginary accelerators. One offers twice the matrix compute of the other. The other offers twice the memory bandwidth. Which one would you choose for a neural network projection?",
+      "start": 0.0,
+      "end": 15.5,
+      "words": [
+        {
+          "text": "I'm",
+          "start": 0.0,
+          "end": 0.58
+        },
+        {
+          "text": "Marcus",
+          "start": 0.58,
+          "end": 0.88
+        },
+        {
+          "text": "and",
+          "start": 0.88,
+          "end": 1.28
+        },
+        {
+          "text": "this",
+          "start": 1.28,
+          "end": 1.5
+        },
+        {
+          "text": "is",
+          "start": 1.5,
+          "end": 1.72
+        },
+        {
+          "text": "Iris.",
+          "start": 1.72,
+          "end": 2.12
+        },
+        {
+          "text": "We",
+          "start": 2.7,
+          "end": 2.88
+        },
+        {
+          "text": "have",
+          "start": 2.88,
+          "end": 3.06
+        },
+        {
+          "text": "two",
+          "start": 3.06,
+          "end": 3.36
+        },
+        {
+          "text": "imaginary",
+          "start": 3.36,
+          "end": 4.12
+        },
+        {
+          "text": "accelerators.",
+          "start": 4.12,
+          "end": 4.98
+        },
+        {
+          "text": "One",
+          "start": 5.46,
+          "end": 5.76
+        },
+        {
+          "text": "offers",
+          "start": 5.76,
+          "end": 6.16
+        },
+        {
+          "text": "twice",
+          "start": 6.16,
+          "end": 6.5
+        },
+        {
+          "text": "the",
+          "start": 6.5,
+          "end": 6.82
+        },
+        {
+          "text": "matrix",
+          "start": 6.82,
+          "end": 7.16
+        },
+        {
+          "text": "compute",
+          "start": 7.16,
+          "end": 7.62
+        },
+        {
+          "text": "of",
+          "start": 7.62,
+          "end": 7.88
+        },
+        {
+          "text": "the",
+          "start": 7.88,
+          "end": 8.0
+        },
+        {
+          "text": "other.",
+          "start": 8.0,
+          "end": 8.2
+        },
+        {
+          "text": "The",
+          "start": 8.72,
+          "end": 8.86
+        },
+        {
+          "text": "other",
+          "start": 8.86,
+          "end": 9.06
+        },
+        {
+          "text": "offers",
+          "start": 9.06,
+          "end": 9.56
+        },
+        {
+          "text": "twice",
+          "start": 9.56,
+          "end": 9.86
+        },
+        {
+          "text": "the",
+          "start": 9.86,
+          "end": 10.22
+        },
+        {
+          "text": "memory",
+          "start": 10.22,
+          "end": 10.56
+        },
+        {
+          "text": "bandwidth.",
+          "start": 10.56,
+          "end": 11.1
+        },
+        {
+          "text": "Which",
+          "start": 11.78,
+          "end": 12.04
+        },
+        {
+          "text": "one",
+          "start": 12.04,
+          "end": 12.3
+        },
+        {
+          "text": "would",
+          "start": 12.3,
+          "end": 12.48
+        },
+        {
+          "text": "you",
+          "start": 12.48,
+          "end": 12.64
+        },
+        {
+          "text": "choose",
+          "start": 12.64,
+          "end": 13.02
+        },
+        {
+          "text": "for",
+          "start": 13.02,
+          "end": 13.32
+        },
+        {
+          "text": "a",
+          "start": 13.32,
+          "end": 13.46
+        },
+        {
+          "text": "neural",
+          "start": 13.46,
+          "end": 13.74
+        },
+        {
+          "text": "network",
+          "start": 13.74,
+          "end": 14.18
+        },
+        {
+          "text": "projection?",
+          "start": 14.18,
+          "end": 14.7
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/cover.webp",
+        "title": "Hardware acceleration",
+        "alt": "Hardware acceleration"
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "I want to know the workload first. In our exercise the same projection runs at batch one and then at batch two hundred and fifty-six. We will hold each batch fixed while comparing the two machines. The answer changes with the batch.",
+      "start": 15.5,
+      "end": 29.93,
+      "words": [
+        {
+          "text": "I",
+          "start": 15.5,
+          "end": 15.9
+        },
+        {
+          "text": "want",
+          "start": 15.9,
+          "end": 16.06
+        },
+        {
+          "text": "to",
+          "start": 16.06,
+          "end": 16.18
+        },
+        {
+          "text": "know",
+          "start": 16.18,
+          "end": 16.32
+        },
+        {
+          "text": "the",
+          "start": 16.32,
+          "end": 16.46
+        },
+        {
+          "text": "workload",
+          "start": 16.46,
+          "end": 16.8
+        },
+        {
+          "text": "first.",
+          "start": 16.8,
+          "end": 17.16
+        },
+        {
+          "text": "In",
+          "start": 17.84,
+          "end": 18.02
+        },
+        {
+          "text": "our",
+          "start": 18.02,
+          "end": 18.14
+        },
+        {
+          "text": "exercise,",
+          "start": 18.14,
+          "end": 18.64
+        },
+        {
+          "text": "the",
+          "start": 19.02,
+          "end": 19.06
+        },
+        {
+          "text": "same",
+          "start": 19.06,
+          "end": 19.34
+        },
+        {
+          "text": "projection",
+          "start": 19.34,
+          "end": 19.68
+        },
+        {
+          "text": "runs",
+          "start": 19.68,
+          "end": 20.16
+        },
+        {
+          "text": "at",
+          "start": 20.16,
+          "end": 20.36
+        },
+        {
+          "text": "batch",
+          "start": 20.36,
+          "end": 20.6
+        },
+        {
+          "text": "one",
+          "start": 20.6,
+          "end": 20.92
+        },
+        {
+          "text": "and",
+          "start": 20.92,
+          "end": 21.42
+        },
+        {
+          "text": "then",
+          "start": 21.42,
+          "end": 21.6
+        },
+        {
+          "text": "at",
+          "start": 21.6,
+          "end": 21.82
+        },
+        {
+          "text": "batch",
+          "start": 21.82,
+          "end": 22.14
+        },
+        {
+          "text": "256.",
+          "start": 22.14,
+          "end": 22.74
+        },
+        {
+          "text": "We",
+          "start": 24.02,
+          "end": 24.34
+        },
+        {
+          "text": "will",
+          "start": 24.34,
+          "end": 24.46
+        },
+        {
+          "text": "hold",
+          "start": 24.46,
+          "end": 24.68
+        },
+        {
+          "text": "each",
+          "start": 24.68,
+          "end": 24.92
+        },
+        {
+          "text": "batch",
+          "start": 24.92,
+          "end": 25.3
+        },
+        {
+          "text": "fixed",
+          "start": 25.3,
+          "end": 25.66
+        },
+        {
+          "text": "while",
+          "start": 25.66,
+          "end": 25.94
+        },
+        {
+          "text": "comparing",
+          "start": 25.94,
+          "end": 26.32
+        },
+        {
+          "text": "the",
+          "start": 26.32,
+          "end": 26.56
+        },
+        {
+          "text": "two",
+          "start": 26.56,
+          "end": 26.7
+        },
+        {
+          "text": "machines.",
+          "start": 26.7,
+          "end": 27.06
+        },
+        {
+          "text": "The",
+          "start": 27.06,
+          "end": 27.92
+        },
+        {
+          "text": "answer",
+          "start": 27.92,
+          "end": 28.26
+        },
+        {
+          "text": "changes",
+          "start": 28.26,
+          "end": 28.68
+        },
+        {
+          "text": "with",
+          "start": 28.68,
+          "end": 28.96
+        },
+        {
+          "text": "the",
+          "start": 28.96,
+          "end": 29.06
+        },
+        {
+          "text": "batch.",
+          "start": 29.06,
+          "end": 29.34
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/device-rooflines.svg",
+        "title": "Two device rooflines and their crossover",
+        "alt": "The horizontal axis is arithmetic intensity in FLOPs per byte and the vertical axis is the roofline ceiling in teraFLOPs per second. Device A rises by 0.5 teraFLOP per second for each FLOP per byte until its 200-FLOP-per-byte ridge and 100-teraFLOP-per-second peak. Device B rises by one teraFLOP per second for each FLOP per byte until its 50-FLOP-per-byte ridge and 50-teraFLOP-per-second peak. Their ceilings cross at 100 FLOPs per byte and 50 teraFLOPs per second. For positive intensity, device B has the higher ceiling below the crossover; A has the higher ceiling above it."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Let's name them. Compute machine has one hundred trillion floating-point operations per second at its supported half-precision matrix path, and five hundred gigabytes per second of device-memory bandwidth. Bandwidth machine has half the compute rate and twice the bandwidth. These are invented, ideal ceilings, not measurements or product specifications.",
+      "start": 29.93,
+      "end": 53.48,
+      "words": [
+        {
+          "text": "Let's",
+          "start": 30.24,
+          "end": 30.56
+        },
+        {
+          "text": "name",
+          "start": 30.56,
+          "end": 30.78
+        },
+        {
+          "text": "them.",
+          "start": 30.78,
+          "end": 31.08
+        },
+        {
+          "text": "Compute",
+          "start": 31.64,
+          "end": 32.08
+        },
+        {
+          "text": "Machine",
+          "start": 32.08,
+          "end": 32.48
+        },
+        {
+          "text": "has",
+          "start": 32.48,
+          "end": 32.78
+        },
+        {
+          "text": "100",
+          "start": 32.78,
+          "end": 33.38
+        },
+        {
+          "text": "trillion",
+          "start": 33.38,
+          "end": 33.84
+        },
+        {
+          "text": "floating",
+          "start": 33.84,
+          "end": 34.22
+        },
+        {
+          "text": "point",
+          "start": 34.22,
+          "end": 34.52
+        },
+        {
+          "text": "operations",
+          "start": 34.52,
+          "end": 35.06
+        },
+        {
+          "text": "per",
+          "start": 35.06,
+          "end": 35.36
+        },
+        {
+          "text": "second",
+          "start": 35.36,
+          "end": 35.78
+        },
+        {
+          "text": "at",
+          "start": 35.78,
+          "end": 36.02
+        },
+        {
+          "text": "its",
+          "start": 36.02,
+          "end": 36.14
+        },
+        {
+          "text": "supported",
+          "start": 36.14,
+          "end": 36.52
+        },
+        {
+          "text": "half",
+          "start": 36.52,
+          "end": 36.88
+        },
+        {
+          "text": "precision",
+          "start": 36.88,
+          "end": 37.32
+        },
+        {
+          "text": "matrix",
+          "start": 37.32,
+          "end": 37.76
+        },
+        {
+          "text": "path",
+          "start": 37.76,
+          "end": 38.32
+        },
+        {
+          "text": "and",
+          "start": 38.32,
+          "end": 38.92
+        },
+        {
+          "text": "500",
+          "start": 38.92,
+          "end": 39.36
+        },
+        {
+          "text": "gigabytes",
+          "start": 39.36,
+          "end": 39.86
+        },
+        {
+          "text": "per",
+          "start": 39.86,
+          "end": 40.32
+        },
+        {
+          "text": "second",
+          "start": 40.32,
+          "end": 40.74
+        },
+        {
+          "text": "of",
+          "start": 40.74,
+          "end": 40.9
+        },
+        {
+          "text": "device",
+          "start": 40.9,
+          "end": 41.2
+        },
+        {
+          "text": "memory",
+          "start": 41.2,
+          "end": 41.7
+        },
+        {
+          "text": "bandwidth.",
+          "start": 41.7,
+          "end": 42.18
+        },
+        {
+          "text": "Bandwidth",
+          "start": 42.9,
+          "end": 43.44
+        },
+        {
+          "text": "Machine",
+          "start": 43.44,
+          "end": 43.9
+        },
+        {
+          "text": "has",
+          "start": 43.9,
+          "end": 44.22
+        },
+        {
+          "text": "half",
+          "start": 44.22,
+          "end": 44.52
+        },
+        {
+          "text": "the",
+          "start": 44.52,
+          "end": 44.68
+        },
+        {
+          "text": "compute",
+          "start": 44.68,
+          "end": 44.94
+        },
+        {
+          "text": "rate",
+          "start": 44.94,
+          "end": 45.38
+        },
+        {
+          "text": "and",
+          "start": 45.38,
+          "end": 45.6
+        },
+        {
+          "text": "twice",
+          "start": 45.6,
+          "end": 45.9
+        },
+        {
+          "text": "the",
+          "start": 45.9,
+          "end": 46.16
+        },
+        {
+          "text": "bandwidth.",
+          "start": 46.16,
+          "end": 46.56
+        },
+        {
+          "text": "These",
+          "start": 47.16,
+          "end": 47.54
+        },
+        {
+          "text": "are",
+          "start": 47.54,
+          "end": 47.88
+        },
+        {
+          "text": "invented,",
+          "start": 47.88,
+          "end": 48.4
+        },
+        {
+          "text": "ideal",
+          "start": 48.9,
+          "end": 49.32
+        },
+        {
+          "text": "ceilings,",
+          "start": 49.32,
+          "end": 50.08
+        },
+        {
+          "text": "not",
+          "start": 50.42,
+          "end": 50.56
+        },
+        {
+          "text": "measurements",
+          "start": 50.56,
+          "end": 51.02
+        },
+        {
+          "text": "or",
+          "start": 51.02,
+          "end": 51.36
+        },
+        {
+          "text": "product",
+          "start": 51.36,
+          "end": 51.74
+        },
+        {
+          "text": "specifications.",
+          "start": 51.74,
+          "end": 52.48
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Both run a weight matrix with four thousand and ninety-six inputs and four thousand and ninety-six outputs. Each weight and input takes two bytes. The final output takes two bytes, while the intermediate sums stay locally in thirty-two-bit precision. Count a multiply and an addition as two operations.",
+      "start": 53.48,
+      "end": 73.1,
+      "words": [
+        {
+          "text": "Both",
+          "start": 53.28,
+          "end": 53.96
+        },
+        {
+          "text": "run",
+          "start": 53.96,
+          "end": 54.28
+        },
+        {
+          "text": "a",
+          "start": 54.28,
+          "end": 54.42
+        },
+        {
+          "text": "weight",
+          "start": 54.42,
+          "end": 54.64
+        },
+        {
+          "text": "matrix",
+          "start": 54.64,
+          "end": 55.04
+        },
+        {
+          "text": "with",
+          "start": 55.04,
+          "end": 55.32
+        },
+        {
+          "text": "4",
+          "start": 55.32,
+          "end": 55.64
+        },
+        {
+          "text": ",096",
+          "start": 55.64,
+          "end": 56.82
+        },
+        {
+          "text": "inputs",
+          "start": 56.82,
+          "end": 57.28
+        },
+        {
+          "text": "and",
+          "start": 57.28,
+          "end": 57.82
+        },
+        {
+          "text": "4",
+          "start": 57.82,
+          "end": 58.16
+        },
+        {
+          "text": ",096",
+          "start": 58.16,
+          "end": 59.42
+        },
+        {
+          "text": "outputs.",
+          "start": 59.42,
+          "end": 59.84
+        },
+        {
+          "text": "Each",
+          "start": 60.54,
+          "end": 60.8
+        },
+        {
+          "text": "weight",
+          "start": 60.8,
+          "end": 61.12
+        },
+        {
+          "text": "and",
+          "start": 61.12,
+          "end": 61.36
+        },
+        {
+          "text": "input",
+          "start": 61.36,
+          "end": 61.68
+        },
+        {
+          "text": "takes",
+          "start": 61.68,
+          "end": 61.98
+        },
+        {
+          "text": "two",
+          "start": 61.98,
+          "end": 62.24
+        },
+        {
+          "text": "bytes.",
+          "start": 62.24,
+          "end": 62.48
+        },
+        {
+          "text": "The",
+          "start": 63.18,
+          "end": 63.32
+        },
+        {
+          "text": "final",
+          "start": 63.32,
+          "end": 63.62
+        },
+        {
+          "text": "output",
+          "start": 63.62,
+          "end": 64.04
+        },
+        {
+          "text": "takes",
+          "start": 64.04,
+          "end": 64.38
+        },
+        {
+          "text": "two",
+          "start": 64.38,
+          "end": 64.62
+        },
+        {
+          "text": "bytes",
+          "start": 64.62,
+          "end": 64.98
+        },
+        {
+          "text": "while",
+          "start": 64.98,
+          "end": 65.52
+        },
+        {
+          "text": "the",
+          "start": 65.52,
+          "end": 65.66
+        },
+        {
+          "text": "intermediate",
+          "start": 65.66,
+          "end": 66.14
+        },
+        {
+          "text": "some",
+          "start": 66.14,
+          "end": 66.5
+        },
+        {
+          "text": "stay",
+          "start": 66.5,
+          "end": 66.82
+        },
+        {
+          "text": "locally",
+          "start": 66.82,
+          "end": 67.28
+        },
+        {
+          "text": "in",
+          "start": 67.28,
+          "end": 67.62
+        },
+        {
+          "text": "32",
+          "start": 67.62,
+          "end": 67.98
+        },
+        {
+          "text": "-bit",
+          "start": 67.98,
+          "end": 68.34
+        },
+        {
+          "text": "precision.",
+          "start": 68.34,
+          "end": 68.78
+        },
+        {
+          "text": "Count",
+          "start": 69.34,
+          "end": 69.66
+        },
+        {
+          "text": "a",
+          "start": 69.66,
+          "end": 69.76
+        },
+        {
+          "text": "multiply",
+          "start": 69.76,
+          "end": 70.2
+        },
+        {
+          "text": "and",
+          "start": 70.2,
+          "end": 70.76
+        },
+        {
+          "text": "an",
+          "start": 70.76,
+          "end": 70.84
+        },
+        {
+          "text": "addition",
+          "start": 70.84,
+          "end": 71.2
+        },
+        {
+          "text": "as",
+          "start": 71.2,
+          "end": 71.54
+        },
+        {
+          "text": "two",
+          "start": 71.54,
+          "end": 71.76
+        },
+        {
+          "text": "operations.",
+          "start": 71.76,
+          "end": 72.38
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/local-reuse.svg",
+        "title": "A weight used twice without a second fetch",
+        "alt": "A weight value of three remains local. In the first step it multiplies two and adds a partial sum of one to produce seven. In the second it multiplies four and adds a partial sum of five to produce seventeen. The partial sums belong to different output columns."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Our generous traffic model reads each weight and each input once from device memory and writes each result once. It assumes no partial sums spill back to device memory. It also assumes the same projection shape, numerical path, and work on both machines at the chosen batch.",
+      "start": 73.1,
+      "end": 92.47,
+      "words": [
+        {
+          "text": "Our",
+          "start": 73.34,
+          "end": 73.62
+        },
+        {
+          "text": "generous",
+          "start": 73.62,
+          "end": 73.92
+        },
+        {
+          "text": "traffic",
+          "start": 73.92,
+          "end": 74.32
+        },
+        {
+          "text": "model",
+          "start": 74.32,
+          "end": 74.78
+        },
+        {
+          "text": "reads",
+          "start": 74.78,
+          "end": 75.26
+        },
+        {
+          "text": "each",
+          "start": 75.26,
+          "end": 75.56
+        },
+        {
+          "text": "weight",
+          "start": 75.56,
+          "end": 75.9
+        },
+        {
+          "text": "and",
+          "start": 75.9,
+          "end": 76.16
+        },
+        {
+          "text": "each",
+          "start": 76.16,
+          "end": 76.46
+        },
+        {
+          "text": "input",
+          "start": 76.46,
+          "end": 76.92
+        },
+        {
+          "text": "once",
+          "start": 76.92,
+          "end": 77.2
+        },
+        {
+          "text": "from",
+          "start": 77.2,
+          "end": 77.46
+        },
+        {
+          "text": "device",
+          "start": 77.46,
+          "end": 77.84
+        },
+        {
+          "text": "memory",
+          "start": 77.84,
+          "end": 78.28
+        },
+        {
+          "text": "and",
+          "start": 78.28,
+          "end": 78.6
+        },
+        {
+          "text": "writes",
+          "start": 78.6,
+          "end": 78.88
+        },
+        {
+          "text": "each",
+          "start": 78.88,
+          "end": 79.16
+        },
+        {
+          "text": "result",
+          "start": 79.16,
+          "end": 79.58
+        },
+        {
+          "text": "once.",
+          "start": 79.58,
+          "end": 79.96
+        },
+        {
+          "text": "It",
+          "start": 79.96,
+          "end": 80.8
+        },
+        {
+          "text": "assumes",
+          "start": 80.8,
+          "end": 81.28
+        },
+        {
+          "text": "no",
+          "start": 81.28,
+          "end": 81.6
+        },
+        {
+          "text": "partial",
+          "start": 81.6,
+          "end": 82.08
+        },
+        {
+          "text": "some",
+          "start": 82.08,
+          "end": 82.42
+        },
+        {
+          "text": "spill",
+          "start": 82.42,
+          "end": 82.8
+        },
+        {
+          "text": "back",
+          "start": 82.8,
+          "end": 83.14
+        },
+        {
+          "text": "to",
+          "start": 83.14,
+          "end": 83.36
+        },
+        {
+          "text": "device",
+          "start": 83.36,
+          "end": 83.72
+        },
+        {
+          "text": "memory.",
+          "start": 83.72,
+          "end": 84.18
+        },
+        {
+          "text": "It",
+          "start": 84.6,
+          "end": 84.94
+        },
+        {
+          "text": "also",
+          "start": 84.94,
+          "end": 85.24
+        },
+        {
+          "text": "assumes",
+          "start": 85.24,
+          "end": 85.84
+        },
+        {
+          "text": "the",
+          "start": 85.84,
+          "end": 86.06
+        },
+        {
+          "text": "same",
+          "start": 86.06,
+          "end": 86.42
+        },
+        {
+          "text": "projection",
+          "start": 86.42,
+          "end": 86.82
+        },
+        {
+          "text": "shape,",
+          "start": 86.82,
+          "end": 87.38
+        },
+        {
+          "text": "numerical",
+          "start": 87.74,
+          "end": 88.06
+        },
+        {
+          "text": "path,",
+          "start": 88.06,
+          "end": 88.72
+        },
+        {
+          "text": "and",
+          "start": 89.16,
+          "end": 89.36
+        },
+        {
+          "text": "work",
+          "start": 89.36,
+          "end": 89.56
+        },
+        {
+          "text": "on",
+          "start": 89.56,
+          "end": 89.78
+        },
+        {
+          "text": "both",
+          "start": 89.78,
+          "end": 90.04
+        },
+        {
+          "text": "machines",
+          "start": 90.04,
+          "end": 90.64
+        },
+        {
+          "text": "at",
+          "start": 90.64,
+          "end": 90.86
+        },
+        {
+          "text": "the",
+          "start": 90.86,
+          "end": 90.98
+        },
+        {
+          "text": "chosen",
+          "start": 90.98,
+          "end": 91.34
+        },
+        {
+          "text": "batch.",
+          "start": 91.34,
+          "end": 91.68
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/traffic-boundaries.svg",
+        "title": "Where are the bytes counted?",
+        "alt": "Host memory connects through a host link to device memory. Device memory feeds local SRAM and registers. The projection calculation counts bytes crossing the device-memory boundary; a host transfer is a separate boundary, and reuse can prevent repeated device-memory reads."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "At batch one, the weights dominate. The projection does about thirty-three point six million operations and moves about thirty-three point six million bytes. That's almost one floating-point operation per byte. At batch two hundred and fifty-six, we reuse the weights across the input columns. The work rises much faster than the device-memory traffic.",
+      "start": 92.47,
+      "end": 114.05,
+      "eq": {
+        "id": "projection-work",
+        "title": "Projection work and one-pass traffic",
+        "latex": "\\begin{aligned} O&=2mkb\\\\ D&=2(mk+kb+mb)\\\\ I&=O/D \\end{aligned}"
+      },
+      "words": [
+        {
+          "text": "At",
+          "start": 92.5,
+          "end": 92.86
+        },
+        {
+          "text": "batch",
+          "start": 92.86,
+          "end": 93.12
+        },
+        {
+          "text": "one,",
+          "start": 93.12,
+          "end": 93.46
+        },
+        {
+          "text": "the",
+          "start": 93.82,
+          "end": 93.92
+        },
+        {
+          "text": "weights",
+          "start": 93.92,
+          "end": 94.12
+        },
+        {
+          "text": "dominate.",
+          "start": 94.12,
+          "end": 94.54
+        },
+        {
+          "text": "The",
+          "start": 95.22,
+          "end": 95.32
+        },
+        {
+          "text": "projection",
+          "start": 95.32,
+          "end": 95.7
+        },
+        {
+          "text": "does",
+          "start": 95.7,
+          "end": 96.04
+        },
+        {
+          "text": "about",
+          "start": 96.04,
+          "end": 96.3
+        },
+        {
+          "text": "33",
+          "start": 96.3,
+          "end": 96.76
+        },
+        {
+          "text": ".6",
+          "start": 96.76,
+          "end": 97.44
+        },
+        {
+          "text": "million",
+          "start": 97.44,
+          "end": 97.74
+        },
+        {
+          "text": "operations",
+          "start": 97.74,
+          "end": 98.24
+        },
+        {
+          "text": "and",
+          "start": 98.24,
+          "end": 99.0
+        },
+        {
+          "text": "moves",
+          "start": 99.0,
+          "end": 99.34
+        },
+        {
+          "text": "about",
+          "start": 99.34,
+          "end": 99.68
+        },
+        {
+          "text": "33",
+          "start": 99.68,
+          "end": 100.12
+        },
+        {
+          "text": ".6",
+          "start": 100.12,
+          "end": 100.8
+        },
+        {
+          "text": "million",
+          "start": 100.8,
+          "end": 101.14
+        },
+        {
+          "text": "bytes.",
+          "start": 101.14,
+          "end": 101.38
+        },
+        {
+          "text": "That's",
+          "start": 102.02,
+          "end": 102.42
+        },
+        {
+          "text": "almost",
+          "start": 102.42,
+          "end": 102.76
+        },
+        {
+          "text": "one",
+          "start": 102.76,
+          "end": 103.1
+        },
+        {
+          "text": "floating",
+          "start": 103.1,
+          "end": 103.48
+        },
+        {
+          "text": "point",
+          "start": 103.48,
+          "end": 103.72
+        },
+        {
+          "text": "operation",
+          "start": 103.72,
+          "end": 104.3
+        },
+        {
+          "text": "per",
+          "start": 104.3,
+          "end": 104.54
+        },
+        {
+          "text": "byte.",
+          "start": 104.54,
+          "end": 104.74
+        },
+        {
+          "text": "At",
+          "start": 104.74,
+          "end": 105.42
+        },
+        {
+          "text": "batch",
+          "start": 105.42,
+          "end": 105.68
+        },
+        {
+          "text": "256,",
+          "start": 105.68,
+          "end": 106.72
+        },
+        {
+          "text": "we",
+          "start": 107.42,
+          "end": 107.68
+        },
+        {
+          "text": "reuse",
+          "start": 107.68,
+          "end": 108.04
+        },
+        {
+          "text": "the",
+          "start": 108.04,
+          "end": 108.26
+        },
+        {
+          "text": "weights",
+          "start": 108.26,
+          "end": 108.5
+        },
+        {
+          "text": "across",
+          "start": 108.5,
+          "end": 108.78
+        },
+        {
+          "text": "the",
+          "start": 108.78,
+          "end": 109.04
+        },
+        {
+          "text": "input",
+          "start": 109.04,
+          "end": 109.34
+        },
+        {
+          "text": "columns.",
+          "start": 109.34,
+          "end": 109.78
+        },
+        {
+          "text": "The",
+          "start": 110.5,
+          "end": 110.6
+        },
+        {
+          "text": "work",
+          "start": 110.6,
+          "end": 110.78
+        },
+        {
+          "text": "rises",
+          "start": 110.78,
+          "end": 111.16
+        },
+        {
+          "text": "much",
+          "start": 111.16,
+          "end": 111.5
+        },
+        {
+          "text": "faster",
+          "start": 111.5,
+          "end": 112.02
+        },
+        {
+          "text": "than",
+          "start": 112.02,
+          "end": 112.22
+        },
+        {
+          "text": "the",
+          "start": 112.22,
+          "end": 112.34
+        },
+        {
+          "text": "device",
+          "start": 112.34,
+          "end": 112.58
+        },
+        {
+          "text": "memory",
+          "start": 112.58,
+          "end": 112.96
+        },
+        {
+          "text": "traffic.",
+          "start": 112.96,
+          "end": 113.4
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Specifically, at the larger batch we do about eight point five nine billion operations and move about thirty-seven point seven five million bytes under the one-pass assumption. That is about two hundred and twenty-eight operations per byte. We have changed the workload, not made an individual weight read magically faster.",
+      "start": 114.05,
+      "end": 135.78,
+      "words": [
+        {
+          "text": "Specifically,",
+          "start": 114.12,
+          "end": 114.8
+        },
+        {
+          "text": "at",
+          "start": 115.3,
+          "end": 115.42
+        },
+        {
+          "text": "the",
+          "start": 115.42,
+          "end": 115.54
+        },
+        {
+          "text": "larger",
+          "start": 115.54,
+          "end": 115.82
+        },
+        {
+          "text": "batch,",
+          "start": 115.82,
+          "end": 116.22
+        },
+        {
+          "text": "we",
+          "start": 116.42,
+          "end": 116.5
+        },
+        {
+          "text": "do",
+          "start": 116.5,
+          "end": 116.7
+        },
+        {
+          "text": "about",
+          "start": 116.7,
+          "end": 116.96
+        },
+        {
+          "text": "8",
+          "start": 116.96,
+          "end": 117.28
+        },
+        {
+          "text": ".59",
+          "start": 117.28,
+          "end": 118.24
+        },
+        {
+          "text": "billion",
+          "start": 118.24,
+          "end": 118.68
+        },
+        {
+          "text": "operations",
+          "start": 118.68,
+          "end": 119.38
+        },
+        {
+          "text": "and",
+          "start": 119.38,
+          "end": 120.1
+        },
+        {
+          "text": "move",
+          "start": 120.1,
+          "end": 120.3
+        },
+        {
+          "text": "about",
+          "start": 120.3,
+          "end": 120.64
+        },
+        {
+          "text": "37",
+          "start": 120.64,
+          "end": 121.18
+        },
+        {
+          "text": ".75",
+          "start": 121.18,
+          "end": 122.12
+        },
+        {
+          "text": "million",
+          "start": 122.12,
+          "end": 123.02
+        },
+        {
+          "text": "bytes",
+          "start": 123.02,
+          "end": 123.38
+        },
+        {
+          "text": "under",
+          "start": 123.38,
+          "end": 123.78
+        },
+        {
+          "text": "the",
+          "start": 123.78,
+          "end": 123.9
+        },
+        {
+          "text": "one",
+          "start": 123.9,
+          "end": 124.12
+        },
+        {
+          "text": "pass",
+          "start": 124.12,
+          "end": 124.4
+        },
+        {
+          "text": "assumption.",
+          "start": 124.4,
+          "end": 124.94
+        },
+        {
+          "text": "That",
+          "start": 125.58,
+          "end": 125.9
+        },
+        {
+          "text": "is",
+          "start": 125.9,
+          "end": 126.04
+        },
+        {
+          "text": "about",
+          "start": 126.04,
+          "end": 126.28
+        },
+        {
+          "text": "228",
+          "start": 126.28,
+          "end": 127.7
+        },
+        {
+          "text": "operations",
+          "start": 127.7,
+          "end": 128.18
+        },
+        {
+          "text": "per",
+          "start": 128.18,
+          "end": 128.64
+        },
+        {
+          "text": "byte.",
+          "start": 128.64,
+          "end": 128.92
+        },
+        {
+          "text": "We",
+          "start": 128.92,
+          "end": 129.7
+        },
+        {
+          "text": "have",
+          "start": 129.7,
+          "end": 129.88
+        },
+        {
+          "text": "changed",
+          "start": 129.88,
+          "end": 130.34
+        },
+        {
+          "text": "the",
+          "start": 130.34,
+          "end": 130.58
+        },
+        {
+          "text": "workload,",
+          "start": 130.58,
+          "end": 131.04
+        },
+        {
+          "text": "not",
+          "start": 131.56,
+          "end": 131.88
+        },
+        {
+          "text": "made",
+          "start": 131.88,
+          "end": 132.18
+        },
+        {
+          "text": "an",
+          "start": 132.18,
+          "end": 132.38
+        },
+        {
+          "text": "individual",
+          "start": 132.38,
+          "end": 133.06
+        },
+        {
+          "text": "weight",
+          "start": 133.06,
+          "end": 133.5
+        },
+        {
+          "text": "read",
+          "start": 133.5,
+          "end": 133.92
+        },
+        {
+          "text": "magically",
+          "start": 133.92,
+          "end": 134.52
+        },
+        {
+          "text": "faster.",
+          "start": 134.52,
+          "end": 135.04
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Next, compare the time each resource needs. Divide bytes by bandwidth and operations by the supported peak compute rate. Even if transfers and arithmetic overlap perfectly, the kernel cannot finish before the slower of those two floors. Neither floor includes launch overhead or guarantees the hardware will reach its advertised rate.",
+      "start": 135.78,
+      "end": 157.22,
+      "eq": {
+        "id": "time-floors",
+        "title": "Compute and transfer time floors",
+        "latex": "t\\geq\\max\\!\\left(\\frac{D}{B},\\frac{O}{P}\\right)"
+      },
+      "words": [
+        {
+          "text": "Next,",
+          "start": 135.88,
+          "end": 136.4
+        },
+        {
+          "text": "compare",
+          "start": 136.7,
+          "end": 136.92
+        },
+        {
+          "text": "the",
+          "start": 136.92,
+          "end": 137.12
+        },
+        {
+          "text": "time",
+          "start": 137.12,
+          "end": 137.46
+        },
+        {
+          "text": "each",
+          "start": 137.46,
+          "end": 137.7
+        },
+        {
+          "text": "resource",
+          "start": 137.7,
+          "end": 138.02
+        },
+        {
+          "text": "needs.",
+          "start": 138.02,
+          "end": 138.48
+        },
+        {
+          "text": "Divide",
+          "start": 139.06,
+          "end": 139.5
+        },
+        {
+          "text": "bytes",
+          "start": 139.5,
+          "end": 139.76
+        },
+        {
+          "text": "by",
+          "start": 139.76,
+          "end": 140.04
+        },
+        {
+          "text": "bandwidth",
+          "start": 140.04,
+          "end": 140.42
+        },
+        {
+          "text": "and",
+          "start": 140.42,
+          "end": 140.7
+        },
+        {
+          "text": "operations",
+          "start": 140.7,
+          "end": 141.2
+        },
+        {
+          "text": "by",
+          "start": 141.2,
+          "end": 141.86
+        },
+        {
+          "text": "the",
+          "start": 141.86,
+          "end": 141.98
+        },
+        {
+          "text": "supported",
+          "start": 141.98,
+          "end": 142.34
+        },
+        {
+          "text": "peak",
+          "start": 142.34,
+          "end": 142.66
+        },
+        {
+          "text": "compute",
+          "start": 142.66,
+          "end": 143.08
+        },
+        {
+          "text": "rate.",
+          "start": 143.08,
+          "end": 143.34
+        },
+        {
+          "text": "Even",
+          "start": 143.98,
+          "end": 144.28
+        },
+        {
+          "text": "if",
+          "start": 144.28,
+          "end": 144.48
+        },
+        {
+          "text": "transfers",
+          "start": 144.48,
+          "end": 144.98
+        },
+        {
+          "text": "and",
+          "start": 144.98,
+          "end": 145.4
+        },
+        {
+          "text": "arithmetic",
+          "start": 145.4,
+          "end": 145.82
+        },
+        {
+          "text": "overlap",
+          "start": 145.82,
+          "end": 146.3
+        },
+        {
+          "text": "perfectly,",
+          "start": 146.3,
+          "end": 146.98
+        },
+        {
+          "text": "the",
+          "start": 147.5,
+          "end": 147.62
+        },
+        {
+          "text": "kernel",
+          "start": 147.62,
+          "end": 147.84
+        },
+        {
+          "text": "cannot",
+          "start": 147.84,
+          "end": 148.18
+        },
+        {
+          "text": "finish",
+          "start": 148.18,
+          "end": 148.6
+        },
+        {
+          "text": "before",
+          "start": 148.6,
+          "end": 148.94
+        },
+        {
+          "text": "the",
+          "start": 148.94,
+          "end": 149.14
+        },
+        {
+          "text": "slower",
+          "start": 149.14,
+          "end": 149.46
+        },
+        {
+          "text": "of",
+          "start": 149.46,
+          "end": 149.72
+        },
+        {
+          "text": "those",
+          "start": 149.72,
+          "end": 149.92
+        },
+        {
+          "text": "two",
+          "start": 149.92,
+          "end": 150.12
+        },
+        {
+          "text": "floors.",
+          "start": 150.12,
+          "end": 150.44
+        },
+        {
+          "text": "Neither",
+          "start": 151.26,
+          "end": 151.52
+        },
+        {
+          "text": "floor",
+          "start": 151.52,
+          "end": 151.88
+        },
+        {
+          "text": "includes",
+          "start": 151.88,
+          "end": 152.4
+        },
+        {
+          "text": "launch",
+          "start": 152.4,
+          "end": 152.8
+        },
+        {
+          "text": "overhead",
+          "start": 152.8,
+          "end": 153.28
+        },
+        {
+          "text": "or",
+          "start": 153.28,
+          "end": 153.84
+        },
+        {
+          "text": "guarantees",
+          "start": 153.84,
+          "end": 154.28
+        },
+        {
+          "text": "the",
+          "start": 154.28,
+          "end": 154.6
+        },
+        {
+          "text": "hardware",
+          "start": 154.6,
+          "end": 154.98
+        },
+        {
+          "text": "will",
+          "start": 154.98,
+          "end": 155.22
+        },
+        {
+          "text": "reach",
+          "start": 155.22,
+          "end": 155.48
+        },
+        {
+          "text": "its",
+          "start": 155.48,
+          "end": 155.66
+        },
+        {
+          "text": "advertised",
+          "start": 155.66,
+          "end": 156.12
+        },
+        {
+          "text": "rate.",
+          "start": 156.12,
+          "end": 156.64
+        },
+        {
+          "text": "At",
+          "start": 156.64,
+          "end": 157.76
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "At batch one, the memory floors are about sixty-seven microseconds on Compute machine and thirty-four on Bandwidth machine. The arithmetic floors are much smaller. Bandwidth machine has the better ideal bound, despite its lower arithmetic peak.",
+      "start": 157.22,
+      "end": 174.9,
+      "words": [
+        {
+          "text": "batch",
+          "start": 157.76,
+          "end": 157.98
+        },
+        {
+          "text": "one,",
+          "start": 157.98,
+          "end": 158.36
+        },
+        {
+          "text": "the",
+          "start": 158.84,
+          "end": 158.96
+        },
+        {
+          "text": "memory",
+          "start": 158.96,
+          "end": 159.28
+        },
+        {
+          "text": "floors",
+          "start": 159.28,
+          "end": 159.66
+        },
+        {
+          "text": "are",
+          "start": 159.66,
+          "end": 160.0
+        },
+        {
+          "text": "about",
+          "start": 160.0,
+          "end": 160.24
+        },
+        {
+          "text": "67",
+          "start": 160.24,
+          "end": 160.92
+        },
+        {
+          "text": "microseconds",
+          "start": 160.92,
+          "end": 161.86
+        },
+        {
+          "text": "on",
+          "start": 161.86,
+          "end": 162.06
+        },
+        {
+          "text": "compute",
+          "start": 162.06,
+          "end": 162.46
+        },
+        {
+          "text": "machine",
+          "start": 162.46,
+          "end": 163.0
+        },
+        {
+          "text": "and",
+          "start": 163.0,
+          "end": 163.58
+        },
+        {
+          "text": "34",
+          "start": 163.58,
+          "end": 163.96
+        },
+        {
+          "text": "on",
+          "start": 163.96,
+          "end": 164.44
+        },
+        {
+          "text": "bandwidth",
+          "start": 164.44,
+          "end": 164.84
+        },
+        {
+          "text": "machine.",
+          "start": 164.84,
+          "end": 165.42
+        },
+        {
+          "text": "The",
+          "start": 166.06,
+          "end": 166.24
+        },
+        {
+          "text": "arithmetic",
+          "start": 166.24,
+          "end": 166.6
+        },
+        {
+          "text": "floors",
+          "start": 166.6,
+          "end": 167.22
+        },
+        {
+          "text": "are",
+          "start": 167.22,
+          "end": 167.52
+        },
+        {
+          "text": "much",
+          "start": 167.52,
+          "end": 167.74
+        },
+        {
+          "text": "smaller.",
+          "start": 167.74,
+          "end": 168.32
+        },
+        {
+          "text": "Bandwidth",
+          "start": 168.94,
+          "end": 169.42
+        },
+        {
+          "text": "machine",
+          "start": 169.42,
+          "end": 169.94
+        },
+        {
+          "text": "has",
+          "start": 169.94,
+          "end": 170.24
+        },
+        {
+          "text": "the",
+          "start": 170.24,
+          "end": 170.46
+        },
+        {
+          "text": "better",
+          "start": 170.46,
+          "end": 170.72
+        },
+        {
+          "text": "ideal",
+          "start": 170.72,
+          "end": 171.16
+        },
+        {
+          "text": "bound,",
+          "start": 171.16,
+          "end": 171.56
+        },
+        {
+          "text": "despite",
+          "start": 172.08,
+          "end": 172.36
+        },
+        {
+          "text": "its",
+          "start": 172.36,
+          "end": 172.66
+        },
+        {
+          "text": "lower",
+          "start": 172.66,
+          "end": 173.06
+        },
+        {
+          "text": "arithmetic",
+          "start": 173.06,
+          "end": 173.66
+        },
+        {
+          "text": "peak.",
+          "start": 173.66,
+          "end": 174.2
+        }
+      ],
+      "visual": {
+        "src": "/study-audio/vol1/11-hw-acceleration/projection-time.svg",
+        "title": "Which device has the lower time floor?",
+        "alt": "At batch one, A takes at least 67.1 microseconds and B 33.6. At batch 256, A takes at least 85.9 microseconds and B 171.8. Shorter bars have the lower modeled time floor."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "At batch two hundred and fifty-six, Compute machine's arithmetic floor is about eighty-six microseconds and its transfer floor about seventy-five. Bandwidth machine needs at least about one hundred and seventy-two microseconds of arithmetic. Compute machine now has the better ideal bound. These are bounds for the whole batch, not measured request latencies.",
+      "start": 174.9,
+      "end": 197.58,
+      "words": [
+        {
+          "text": "At",
+          "start": 174.94,
+          "end": 175.3
+        },
+        {
+          "text": "batch",
+          "start": 175.3,
+          "end": 175.58
+        },
+        {
+          "text": "256,",
+          "start": 175.58,
+          "end": 176.7
+        },
+        {
+          "text": "compute",
+          "start": 177.46,
+          "end": 177.76
+        },
+        {
+          "text": "machine's",
+          "start": 177.76,
+          "end": 178.32
+        },
+        {
+          "text": "arithmetic",
+          "start": 178.32,
+          "end": 178.7
+        },
+        {
+          "text": "floor",
+          "start": 178.7,
+          "end": 179.2
+        },
+        {
+          "text": "is",
+          "start": 179.2,
+          "end": 179.62
+        },
+        {
+          "text": "about",
+          "start": 179.62,
+          "end": 179.82
+        },
+        {
+          "text": "86",
+          "start": 179.82,
+          "end": 180.34
+        },
+        {
+          "text": "microseconds",
+          "start": 180.34,
+          "end": 180.74
+        },
+        {
+          "text": "and",
+          "start": 181.24,
+          "end": 181.82
+        },
+        {
+          "text": "its",
+          "start": 181.82,
+          "end": 181.94
+        },
+        {
+          "text": "transfer",
+          "start": 181.94,
+          "end": 182.28
+        },
+        {
+          "text": "floor",
+          "start": 182.28,
+          "end": 182.62
+        },
+        {
+          "text": "about",
+          "start": 182.62,
+          "end": 182.96
+        },
+        {
+          "text": "75.",
+          "start": 182.96,
+          "end": 183.58
+        },
+        {
+          "text": "Bandwidth",
+          "start": 183.58,
+          "end": 184.88
+        },
+        {
+          "text": "machine",
+          "start": 184.88,
+          "end": 185.26
+        },
+        {
+          "text": "needs",
+          "start": 185.26,
+          "end": 185.68
+        },
+        {
+          "text": "at",
+          "start": 185.68,
+          "end": 185.9
+        },
+        {
+          "text": "least",
+          "start": 185.9,
+          "end": 186.12
+        },
+        {
+          "text": "about",
+          "start": 186.12,
+          "end": 186.4
+        },
+        {
+          "text": "172",
+          "start": 186.4,
+          "end": 188.06
+        },
+        {
+          "text": "microseconds",
+          "start": 188.06,
+          "end": 188.72
+        },
+        {
+          "text": "of",
+          "start": 188.72,
+          "end": 188.88
+        },
+        {
+          "text": "arithmetic.",
+          "start": 188.88,
+          "end": 189.24
+        },
+        {
+          "text": "Compute",
+          "start": 190.04,
+          "end": 190.54
+        },
+        {
+          "text": "machine",
+          "start": 190.54,
+          "end": 190.82
+        },
+        {
+          "text": "now",
+          "start": 190.82,
+          "end": 191.2
+        },
+        {
+          "text": "has",
+          "start": 191.2,
+          "end": 191.46
+        },
+        {
+          "text": "the",
+          "start": 191.46,
+          "end": 191.62
+        },
+        {
+          "text": "better",
+          "start": 191.62,
+          "end": 191.84
+        },
+        {
+          "text": "ideal",
+          "start": 191.84,
+          "end": 192.26
+        },
+        {
+          "text": "bound.",
+          "start": 192.26,
+          "end": 192.62
+        },
+        {
+          "text": "These",
+          "start": 193.3,
+          "end": 193.58
+        },
+        {
+          "text": "are",
+          "start": 193.58,
+          "end": 193.8
+        },
+        {
+          "text": "bounds",
+          "start": 193.8,
+          "end": 194.18
+        },
+        {
+          "text": "for",
+          "start": 194.18,
+          "end": 194.44
+        },
+        {
+          "text": "the",
+          "start": 194.44,
+          "end": 194.52
+        },
+        {
+          "text": "whole",
+          "start": 194.52,
+          "end": 194.72
+        },
+        {
+          "text": "batch,",
+          "start": 194.72,
+          "end": 195.1
+        },
+        {
+          "text": "not",
+          "start": 195.4,
+          "end": 195.64
+        },
+        {
+          "text": "measured",
+          "start": 195.64,
+          "end": 195.98
+        },
+        {
+          "text": "request",
+          "start": 195.98,
+          "end": 196.26
+        },
+        {
+          "text": "latencies.",
+          "start": 196.26,
+          "end": 196.92
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The same comparison has a picture called the roofline. Arithmetic intensity is operations per byte across a named boundary. Multiply intensity by bandwidth and you get the rate memory could feed. Compare that with the supported compute peak. The smaller rate is the ceiling.",
+      "start": 197.58,
+      "end": 217.1,
+      "eq": {
+        "id": "roofline",
+        "title": "Roofline and ridge point",
+        "latex": "R\\leq\\min(P,BI),\\qquad I_{\\mathrm{ridge}}=P/B"
+      },
+      "words": [
+        {
+          "text": "The",
+          "start": 197.6,
+          "end": 198.08
+        },
+        {
+          "text": "same",
+          "start": 198.08,
+          "end": 198.4
+        },
+        {
+          "text": "comparison",
+          "start": 198.4,
+          "end": 198.94
+        },
+        {
+          "text": "has",
+          "start": 198.94,
+          "end": 199.36
+        },
+        {
+          "text": "a",
+          "start": 199.36,
+          "end": 199.5
+        },
+        {
+          "text": "picture",
+          "start": 199.5,
+          "end": 199.78
+        },
+        {
+          "text": "called",
+          "start": 199.78,
+          "end": 200.2
+        },
+        {
+          "text": "the",
+          "start": 200.2,
+          "end": 200.44
+        },
+        {
+          "text": "roofline.",
+          "start": 200.44,
+          "end": 200.94
+        },
+        {
+          "text": "Arithmetic",
+          "start": 201.46,
+          "end": 201.88
+        },
+        {
+          "text": "intensity",
+          "start": 201.88,
+          "end": 202.62
+        },
+        {
+          "text": "is",
+          "start": 202.62,
+          "end": 203.1
+        },
+        {
+          "text": "operations",
+          "start": 203.1,
+          "end": 203.76
+        },
+        {
+          "text": "per",
+          "start": 203.76,
+          "end": 204.12
+        },
+        {
+          "text": "byte",
+          "start": 204.12,
+          "end": 204.42
+        },
+        {
+          "text": "across",
+          "start": 204.42,
+          "end": 204.7
+        },
+        {
+          "text": "a",
+          "start": 204.7,
+          "end": 205.02
+        },
+        {
+          "text": "named",
+          "start": 205.02,
+          "end": 205.32
+        },
+        {
+          "text": "boundary.",
+          "start": 205.32,
+          "end": 205.88
+        },
+        {
+          "text": "Multiply",
+          "start": 206.44,
+          "end": 207.12
+        },
+        {
+          "text": "intensity",
+          "start": 207.12,
+          "end": 207.7
+        },
+        {
+          "text": "by",
+          "start": 207.7,
+          "end": 208.14
+        },
+        {
+          "text": "bandwidth",
+          "start": 208.14,
+          "end": 208.64
+        },
+        {
+          "text": "and",
+          "start": 208.64,
+          "end": 209.08
+        },
+        {
+          "text": "you",
+          "start": 209.08,
+          "end": 209.2
+        },
+        {
+          "text": "get",
+          "start": 209.2,
+          "end": 209.38
+        },
+        {
+          "text": "the",
+          "start": 209.38,
+          "end": 209.52
+        },
+        {
+          "text": "rate",
+          "start": 209.52,
+          "end": 209.78
+        },
+        {
+          "text": "memory",
+          "start": 209.78,
+          "end": 210.16
+        },
+        {
+          "text": "could",
+          "start": 210.16,
+          "end": 210.46
+        },
+        {
+          "text": "feed.",
+          "start": 210.46,
+          "end": 210.86
+        },
+        {
+          "text": "Compare",
+          "start": 210.86,
+          "end": 211.82
+        },
+        {
+          "text": "that",
+          "start": 211.82,
+          "end": 212.24
+        },
+        {
+          "text": "with",
+          "start": 212.24,
+          "end": 212.46
+        },
+        {
+          "text": "the",
+          "start": 212.46,
+          "end": 212.64
+        },
+        {
+          "text": "supported",
+          "start": 212.64,
+          "end": 213.1
+        },
+        {
+          "text": "compute",
+          "start": 213.1,
+          "end": 213.52
+        },
+        {
+          "text": "peak.",
+          "start": 213.52,
+          "end": 213.9
+        },
+        {
+          "text": "The",
+          "start": 214.52,
+          "end": 214.68
+        },
+        {
+          "text": "smaller",
+          "start": 214.68,
+          "end": 215.08
+        },
+        {
+          "text": "rate",
+          "start": 215.08,
+          "end": 215.48
+        },
+        {
+          "text": "is",
+          "start": 215.48,
+          "end": 215.76
+        },
+        {
+          "text": "the",
+          "start": 215.76,
+          "end": 215.9
+        },
+        {
+          "text": "ceiling.",
+          "start": 215.9,
+          "end": 216.34
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Where those lines meet is the ridge point. Compute machine's ridge is two hundred operations per byte. Bandwidth machine's is fifty. Our batch-one example is well below both. At the larger batch it is above both, in this simplified accounting. Actual traffic, achieved rates, or a different bottleneck can put real execution somewhere else.",
+      "start": 217.1,
+      "end": 238.05,
+      "words": [
+        {
+          "text": "Where",
+          "start": 217.1,
+          "end": 217.48
+        },
+        {
+          "text": "those",
+          "start": 217.48,
+          "end": 217.68
+        },
+        {
+          "text": "lines",
+          "start": 217.68,
+          "end": 217.94
+        },
+        {
+          "text": "meet",
+          "start": 217.94,
+          "end": 218.32
+        },
+        {
+          "text": "is",
+          "start": 218.32,
+          "end": 218.6
+        },
+        {
+          "text": "the",
+          "start": 218.6,
+          "end": 218.74
+        },
+        {
+          "text": "ridge",
+          "start": 218.74,
+          "end": 218.92
+        },
+        {
+          "text": "point.",
+          "start": 218.92,
+          "end": 219.18
+        },
+        {
+          "text": "Compute",
+          "start": 219.82,
+          "end": 220.18
+        },
+        {
+          "text": "machine's",
+          "start": 220.18,
+          "end": 220.74
+        },
+        {
+          "text": "ridge",
+          "start": 220.74,
+          "end": 220.96
+        },
+        {
+          "text": "is",
+          "start": 220.96,
+          "end": 221.24
+        },
+        {
+          "text": "200",
+          "start": 221.24,
+          "end": 221.62
+        },
+        {
+          "text": "operations",
+          "start": 221.62,
+          "end": 222.16
+        },
+        {
+          "text": "per",
+          "start": 222.16,
+          "end": 222.56
+        },
+        {
+          "text": "byte.",
+          "start": 222.56,
+          "end": 222.82
+        },
+        {
+          "text": "Bandwidth",
+          "start": 223.44,
+          "end": 223.58
+        },
+        {
+          "text": "machine's",
+          "start": 223.58,
+          "end": 224.3
+        },
+        {
+          "text": "is",
+          "start": 224.3,
+          "end": 224.42
+        },
+        {
+          "text": "50.",
+          "start": 224.42,
+          "end": 224.74
+        },
+        {
+          "text": "Our",
+          "start": 225.42,
+          "end": 225.56
+        },
+        {
+          "text": "batch",
+          "start": 225.56,
+          "end": 225.82
+        },
+        {
+          "text": "one",
+          "start": 225.82,
+          "end": 225.96
+        },
+        {
+          "text": "example",
+          "start": 225.96,
+          "end": 226.32
+        },
+        {
+          "text": "is",
+          "start": 226.32,
+          "end": 226.62
+        },
+        {
+          "text": "well",
+          "start": 226.62,
+          "end": 226.84
+        },
+        {
+          "text": "below",
+          "start": 226.84,
+          "end": 227.14
+        },
+        {
+          "text": "both.",
+          "start": 227.14,
+          "end": 227.46
+        },
+        {
+          "text": "At",
+          "start": 228.02,
+          "end": 228.2
+        },
+        {
+          "text": "the",
+          "start": 228.2,
+          "end": 228.28
+        },
+        {
+          "text": "larger",
+          "start": 228.28,
+          "end": 228.5
+        },
+        {
+          "text": "batch",
+          "start": 228.5,
+          "end": 228.86
+        },
+        {
+          "text": "it",
+          "start": 228.86,
+          "end": 229.1
+        },
+        {
+          "text": "is",
+          "start": 229.1,
+          "end": 229.22
+        },
+        {
+          "text": "above",
+          "start": 229.22,
+          "end": 229.42
+        },
+        {
+          "text": "both",
+          "start": 229.42,
+          "end": 229.8
+        },
+        {
+          "text": "in",
+          "start": 229.8,
+          "end": 230.18
+        },
+        {
+          "text": "this",
+          "start": 230.18,
+          "end": 230.36
+        },
+        {
+          "text": "simplified",
+          "start": 230.36,
+          "end": 230.86
+        },
+        {
+          "text": "accounting.",
+          "start": 230.86,
+          "end": 231.34
+        },
+        {
+          "text": "Actual",
+          "start": 232.12,
+          "end": 232.52
+        },
+        {
+          "text": "traffic,",
+          "start": 232.52,
+          "end": 232.9
+        },
+        {
+          "text": "achieved",
+          "start": 233.34,
+          "end": 233.62
+        },
+        {
+          "text": "rates,",
+          "start": 233.62,
+          "end": 234.14
+        },
+        {
+          "text": "or",
+          "start": 234.4,
+          "end": 234.62
+        },
+        {
+          "text": "a",
+          "start": 234.62,
+          "end": 234.76
+        },
+        {
+          "text": "different",
+          "start": 234.76,
+          "end": 234.94
+        },
+        {
+          "text": "bottleneck",
+          "start": 234.94,
+          "end": 235.54
+        },
+        {
+          "text": "can",
+          "start": 235.54,
+          "end": 235.7
+        },
+        {
+          "text": "put",
+          "start": 235.7,
+          "end": 235.86
+        },
+        {
+          "text": "real",
+          "start": 235.86,
+          "end": 236.16
+        },
+        {
+          "text": "execution",
+          "start": 236.16,
+          "end": 236.66
+        },
+        {
+          "text": "somewhere",
+          "start": 236.66,
+          "end": 237.18
+        },
+        {
+          "text": "else.",
+          "start": 237.18,
+          "end": 237.5
+        },
+        {
+          "text": "So",
+          "start": 237.5,
+          "end": 238.56
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/device-rooflines.svg",
+        "title": "Two device rooflines and their crossover",
+        "alt": "The horizontal axis is arithmetic intensity in FLOPs per byte and the vertical axis is the roofline ceiling in teraFLOPs per second. Device A rises by 0.5 teraFLOP per second for each FLOP per byte until its 200-FLOP-per-byte ridge and 100-teraFLOP-per-second peak. Device B rises by one teraFLOP per second for each FLOP per byte until its 50-FLOP-per-byte ridge and 50-teraFLOP-per-second peak. Their ceilings cross at 100 FLOPs per byte and 50 teraFLOPs per second. For positive intensity, device B has the higher ceiling below the crossover; A has the higher ceiling above it."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "So how does hardware try to supply that work? A general CPU spends significant area on flexible control and caching. An accelerator devotes more resources to repeated parallel arithmetic and local operand storage. That trade pays when the operation, precision, layout, and shape are supported and there is enough work to use the array.",
+      "start": 238.05,
+      "end": 261.95,
+      "words": [
+        {
+          "text": "how",
+          "start": 238.56,
+          "end": 238.76
+        },
+        {
+          "text": "does",
+          "start": 238.76,
+          "end": 239.02
+        },
+        {
+          "text": "hardware",
+          "start": 239.02,
+          "end": 239.44
+        },
+        {
+          "text": "try",
+          "start": 239.44,
+          "end": 239.84
+        },
+        {
+          "text": "to",
+          "start": 239.84,
+          "end": 240.02
+        },
+        {
+          "text": "supply",
+          "start": 240.02,
+          "end": 240.36
+        },
+        {
+          "text": "that",
+          "start": 240.36,
+          "end": 240.62
+        },
+        {
+          "text": "work?",
+          "start": 240.62,
+          "end": 240.88
+        },
+        {
+          "text": "A",
+          "start": 241.54,
+          "end": 241.7
+        },
+        {
+          "text": "general",
+          "start": 241.7,
+          "end": 241.98
+        },
+        {
+          "text": "CPU",
+          "start": 241.98,
+          "end": 242.54
+        },
+        {
+          "text": "spends",
+          "start": 242.54,
+          "end": 243.2
+        },
+        {
+          "text": "significant",
+          "start": 243.2,
+          "end": 243.72
+        },
+        {
+          "text": "area",
+          "start": 243.72,
+          "end": 244.3
+        },
+        {
+          "text": "on",
+          "start": 244.3,
+          "end": 244.54
+        },
+        {
+          "text": "flexible",
+          "start": 244.54,
+          "end": 244.98
+        },
+        {
+          "text": "control",
+          "start": 244.98,
+          "end": 245.58
+        },
+        {
+          "text": "and",
+          "start": 245.58,
+          "end": 245.82
+        },
+        {
+          "text": "caching.",
+          "start": 245.82,
+          "end": 246.32
+        },
+        {
+          "text": "An",
+          "start": 246.9,
+          "end": 247.1
+        },
+        {
+          "text": "accelerator",
+          "start": 247.1,
+          "end": 247.54
+        },
+        {
+          "text": "devotes",
+          "start": 247.54,
+          "end": 248.26
+        },
+        {
+          "text": "more",
+          "start": 248.26,
+          "end": 248.48
+        },
+        {
+          "text": "resources",
+          "start": 248.48,
+          "end": 249.14
+        },
+        {
+          "text": "to",
+          "start": 249.14,
+          "end": 249.44
+        },
+        {
+          "text": "repeated",
+          "start": 249.44,
+          "end": 249.92
+        },
+        {
+          "text": "parallel",
+          "start": 249.92,
+          "end": 250.44
+        },
+        {
+          "text": "arithmetic",
+          "start": 250.44,
+          "end": 251.02
+        },
+        {
+          "text": "and",
+          "start": 251.02,
+          "end": 251.52
+        },
+        {
+          "text": "local",
+          "start": 251.52,
+          "end": 251.8
+        },
+        {
+          "text": "operand",
+          "start": 251.8,
+          "end": 252.38
+        },
+        {
+          "text": "storage.",
+          "start": 252.38,
+          "end": 252.82
+        },
+        {
+          "text": "That",
+          "start": 253.7,
+          "end": 253.88
+        },
+        {
+          "text": "trade",
+          "start": 253.88,
+          "end": 254.26
+        },
+        {
+          "text": "pays",
+          "start": 254.26,
+          "end": 254.72
+        },
+        {
+          "text": "when",
+          "start": 254.72,
+          "end": 254.92
+        },
+        {
+          "text": "the",
+          "start": 254.92,
+          "end": 255.04
+        },
+        {
+          "text": "operation,",
+          "start": 255.04,
+          "end": 255.5
+        },
+        {
+          "text": "precision,",
+          "start": 256.2,
+          "end": 256.54
+        },
+        {
+          "text": "layout",
+          "start": 257.12,
+          "end": 257.56
+        },
+        {
+          "text": "and",
+          "start": 257.56,
+          "end": 257.88
+        },
+        {
+          "text": "shape",
+          "start": 257.88,
+          "end": 258.2
+        },
+        {
+          "text": "are",
+          "start": 258.2,
+          "end": 258.4
+        },
+        {
+          "text": "supported",
+          "start": 258.4,
+          "end": 258.86
+        },
+        {
+          "text": "and",
+          "start": 258.86,
+          "end": 259.48
+        },
+        {
+          "text": "there",
+          "start": 259.48,
+          "end": 259.6
+        },
+        {
+          "text": "is",
+          "start": 259.6,
+          "end": 259.74
+        },
+        {
+          "text": "enough",
+          "start": 259.74,
+          "end": 259.96
+        },
+        {
+          "text": "work",
+          "start": 259.96,
+          "end": 260.24
+        },
+        {
+          "text": "to",
+          "start": 260.24,
+          "end": 260.44
+        },
+        {
+          "text": "use",
+          "start": 260.44,
+          "end": 260.72
+        },
+        {
+          "text": "the",
+          "start": 260.72,
+          "end": 260.9
+        },
+        {
+          "text": "array.",
+          "start": 260.9,
+          "end": 261.2
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/hardware-contract.svg",
+        "title": "When the matrix path is available",
+        "alt": "A supported matrix operation, precision, shape, layout and sufficient parallel work can select a matrix path; failed conditions require another path whose costs must be measured."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "A projection can map to a matrix unit. Element-wise operations and reductions often run on vector units, while functions such as exponentials may use special-function hardware. One unsupported operation might still have a device kernel. Another might fall back to the CPU, requiring synchronization and a transfer. Those are different kinds of fallback.",
+      "start": 261.95,
+      "end": 284.85,
+      "words": [
+        {
+          "text": "A",
+          "start": 261.96,
+          "end": 262.32
+        },
+        {
+          "text": "projection",
+          "start": 262.32,
+          "end": 262.64
+        },
+        {
+          "text": "can",
+          "start": 262.64,
+          "end": 263.0
+        },
+        {
+          "text": "map",
+          "start": 263.0,
+          "end": 263.3
+        },
+        {
+          "text": "to",
+          "start": 263.3,
+          "end": 263.52
+        },
+        {
+          "text": "a",
+          "start": 263.52,
+          "end": 263.64
+        },
+        {
+          "text": "matrix",
+          "start": 263.64,
+          "end": 263.84
+        },
+        {
+          "text": "unit.",
+          "start": 263.84,
+          "end": 264.22
+        },
+        {
+          "text": "Element",
+          "start": 264.22,
+          "end": 265.04
+        },
+        {
+          "text": "-wise",
+          "start": 265.04,
+          "end": 265.34
+        },
+        {
+          "text": "operations",
+          "start": 265.34,
+          "end": 265.9
+        },
+        {
+          "text": "and",
+          "start": 265.9,
+          "end": 266.28
+        },
+        {
+          "text": "reductions",
+          "start": 266.28,
+          "end": 266.66
+        },
+        {
+          "text": "often",
+          "start": 266.66,
+          "end": 267.34
+        },
+        {
+          "text": "run",
+          "start": 267.34,
+          "end": 267.66
+        },
+        {
+          "text": "on",
+          "start": 267.66,
+          "end": 267.9
+        },
+        {
+          "text": "vector",
+          "start": 267.9,
+          "end": 268.18
+        },
+        {
+          "text": "units",
+          "start": 268.18,
+          "end": 268.6
+        },
+        {
+          "text": "while",
+          "start": 268.6,
+          "end": 269.16
+        },
+        {
+          "text": "functions",
+          "start": 269.16,
+          "end": 269.6
+        },
+        {
+          "text": "such",
+          "start": 269.6,
+          "end": 269.98
+        },
+        {
+          "text": "as",
+          "start": 269.98,
+          "end": 270.12
+        },
+        {
+          "text": "exponentials",
+          "start": 270.12,
+          "end": 271.08
+        },
+        {
+          "text": "may",
+          "start": 271.08,
+          "end": 271.3
+        },
+        {
+          "text": "use",
+          "start": 271.3,
+          "end": 271.54
+        },
+        {
+          "text": "special",
+          "start": 271.54,
+          "end": 271.84
+        },
+        {
+          "text": "function",
+          "start": 271.84,
+          "end": 272.22
+        },
+        {
+          "text": "hardware.",
+          "start": 272.22,
+          "end": 272.78
+        },
+        {
+          "text": "One",
+          "start": 273.4,
+          "end": 273.78
+        },
+        {
+          "text": "unsupported",
+          "start": 273.78,
+          "end": 274.5
+        },
+        {
+          "text": "operation",
+          "start": 274.5,
+          "end": 275.08
+        },
+        {
+          "text": "might",
+          "start": 275.08,
+          "end": 275.44
+        },
+        {
+          "text": "still",
+          "start": 275.44,
+          "end": 275.7
+        },
+        {
+          "text": "have",
+          "start": 275.7,
+          "end": 275.94
+        },
+        {
+          "text": "a",
+          "start": 275.94,
+          "end": 276.04
+        },
+        {
+          "text": "device",
+          "start": 276.04,
+          "end": 276.28
+        },
+        {
+          "text": "kernel.",
+          "start": 276.28,
+          "end": 276.68
+        },
+        {
+          "text": "Another",
+          "start": 277.32,
+          "end": 277.64
+        },
+        {
+          "text": "might",
+          "start": 277.64,
+          "end": 277.94
+        },
+        {
+          "text": "fall",
+          "start": 277.94,
+          "end": 278.18
+        },
+        {
+          "text": "back",
+          "start": 278.18,
+          "end": 278.46
+        },
+        {
+          "text": "to",
+          "start": 278.46,
+          "end": 278.62
+        },
+        {
+          "text": "the",
+          "start": 278.62,
+          "end": 278.74
+        },
+        {
+          "text": "CPU",
+          "start": 278.74,
+          "end": 279.12
+        },
+        {
+          "text": "requiring",
+          "start": 279.12,
+          "end": 280.06
+        },
+        {
+          "text": "synchronization",
+          "start": 280.06,
+          "end": 280.92
+        },
+        {
+          "text": "and",
+          "start": 280.92,
+          "end": 281.36
+        },
+        {
+          "text": "a",
+          "start": 281.36,
+          "end": 281.48
+        },
+        {
+          "text": "transfer.",
+          "start": 281.48,
+          "end": 281.8
+        },
+        {
+          "text": "Those",
+          "start": 282.46,
+          "end": 282.76
+        },
+        {
+          "text": "are",
+          "start": 282.76,
+          "end": 283.0
+        },
+        {
+          "text": "different",
+          "start": 283.0,
+          "end": 283.24
+        },
+        {
+          "text": "kinds",
+          "start": 283.24,
+          "end": 283.62
+        },
+        {
+          "text": "of",
+          "start": 283.62,
+          "end": 283.86
+        },
+        {
+          "text": "fallback.",
+          "start": 283.86,
+          "end": 284.34
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/primitive-routing.svg",
+        "title": "A layer travels through several units",
+        "alt": "A projection can map to a matrix unit, normalization to vector and reduction hardware, and exponential calculations to special-function or vector paths. Actual placement depends on the device and compiler."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "In a matrix array, neighboring processing elements can pass operands and partial sums locally. Holding a weight close to a cell while different input values flow through lets that weight contribute repeatedly without every use returning to device memory. The exact arrangement depends on the chosen dataflow.",
+      "start": 284.85,
+      "end": 305.95,
+      "words": [
+        {
+          "text": "In",
+          "start": 284.76,
+          "end": 285.36
+        },
+        {
+          "text": "a",
+          "start": 285.36,
+          "end": 285.46
+        },
+        {
+          "text": "matrix",
+          "start": 285.46,
+          "end": 285.72
+        },
+        {
+          "text": "array,",
+          "start": 285.72,
+          "end": 286.2
+        },
+        {
+          "text": "neighboring",
+          "start": 286.66,
+          "end": 287.12
+        },
+        {
+          "text": "processing",
+          "start": 287.12,
+          "end": 287.58
+        },
+        {
+          "text": "elements",
+          "start": 287.58,
+          "end": 288.16
+        },
+        {
+          "text": "can",
+          "start": 288.16,
+          "end": 288.44
+        },
+        {
+          "text": "pass",
+          "start": 288.44,
+          "end": 288.84
+        },
+        {
+          "text": "operands",
+          "start": 288.84,
+          "end": 289.54
+        },
+        {
+          "text": "and",
+          "start": 289.54,
+          "end": 289.72
+        },
+        {
+          "text": "partial",
+          "start": 289.72,
+          "end": 290.12
+        },
+        {
+          "text": "sums",
+          "start": 290.12,
+          "end": 290.5
+        },
+        {
+          "text": "locally.",
+          "start": 290.5,
+          "end": 291.0
+        },
+        {
+          "text": "Holding",
+          "start": 291.0,
+          "end": 291.94
+        },
+        {
+          "text": "a",
+          "start": 291.94,
+          "end": 292.2
+        },
+        {
+          "text": "weight",
+          "start": 292.2,
+          "end": 292.38
+        },
+        {
+          "text": "close",
+          "start": 292.38,
+          "end": 292.72
+        },
+        {
+          "text": "to",
+          "start": 292.72,
+          "end": 293.0
+        },
+        {
+          "text": "a",
+          "start": 293.0,
+          "end": 293.16
+        },
+        {
+          "text": "cell",
+          "start": 293.16,
+          "end": 293.48
+        },
+        {
+          "text": "while",
+          "start": 293.48,
+          "end": 293.98
+        },
+        {
+          "text": "different",
+          "start": 293.98,
+          "end": 294.32
+        },
+        {
+          "text": "input",
+          "start": 294.32,
+          "end": 294.72
+        },
+        {
+          "text": "values",
+          "start": 294.72,
+          "end": 295.22
+        },
+        {
+          "text": "flow",
+          "start": 295.22,
+          "end": 295.7
+        },
+        {
+          "text": "through",
+          "start": 295.7,
+          "end": 296.14
+        },
+        {
+          "text": "lets",
+          "start": 296.14,
+          "end": 296.38
+        },
+        {
+          "text": "that",
+          "start": 296.38,
+          "end": 296.64
+        },
+        {
+          "text": "weight",
+          "start": 296.64,
+          "end": 296.88
+        },
+        {
+          "text": "contribute",
+          "start": 296.88,
+          "end": 297.48
+        },
+        {
+          "text": "repeatedly",
+          "start": 297.48,
+          "end": 298.24
+        },
+        {
+          "text": "without",
+          "start": 298.24,
+          "end": 298.96
+        },
+        {
+          "text": "every",
+          "start": 298.96,
+          "end": 299.38
+        },
+        {
+          "text": "use",
+          "start": 299.38,
+          "end": 299.72
+        },
+        {
+          "text": "returning",
+          "start": 299.72,
+          "end": 300.26
+        },
+        {
+          "text": "to",
+          "start": 300.26,
+          "end": 300.5
+        },
+        {
+          "text": "device",
+          "start": 300.5,
+          "end": 300.88
+        },
+        {
+          "text": "memory.",
+          "start": 300.88,
+          "end": 301.3
+        },
+        {
+          "text": "The",
+          "start": 302.0,
+          "end": 302.18
+        },
+        {
+          "text": "exact",
+          "start": 302.18,
+          "end": 302.6
+        },
+        {
+          "text": "arrangement",
+          "start": 302.6,
+          "end": 303.2
+        },
+        {
+          "text": "depends",
+          "start": 303.2,
+          "end": 303.64
+        },
+        {
+          "text": "on",
+          "start": 303.64,
+          "end": 304.02
+        },
+        {
+          "text": "the",
+          "start": 304.02,
+          "end": 304.12
+        },
+        {
+          "text": "chosen",
+          "start": 304.12,
+          "end": 304.54
+        },
+        {
+          "text": "data",
+          "start": 304.54,
+          "end": 304.86
+        },
+        {
+          "text": "flow.",
+          "start": 304.86,
+          "end": 305.2
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/local-reuse.svg",
+        "title": "A weight used twice without a second fetch",
+        "alt": "A weight value of three remains local. In the first step it multiplies two and adds a partial sum of one to produce seven. In the second it multiplies four and adds a partial sum of five to produce seventeen. The partial sums belong to different output columns."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "The location of a byte matters for energy as well as time. The book cites illustrative older process estimates: one thirty-two-bit DRAM access costs about six hundred and forty picojoules, versus about five to read a thirty-two-bit word from an eight-kilobyte SRAM. They are not universal costs for today's chips, but they make the reason for reuse visible.",
+      "start": 305.95,
+      "end": 328.4,
+      "words": [
+        {
+          "text": "The",
+          "start": 305.92,
+          "end": 306.32
+        },
+        {
+          "text": "location",
+          "start": 306.32,
+          "end": 306.74
+        },
+        {
+          "text": "of",
+          "start": 306.74,
+          "end": 307.0
+        },
+        {
+          "text": "a",
+          "start": 307.0,
+          "end": 307.08
+        },
+        {
+          "text": "byte",
+          "start": 307.08,
+          "end": 307.24
+        },
+        {
+          "text": "matters",
+          "start": 307.24,
+          "end": 307.6
+        },
+        {
+          "text": "for",
+          "start": 307.6,
+          "end": 307.84
+        },
+        {
+          "text": "energy",
+          "start": 307.84,
+          "end": 308.2
+        },
+        {
+          "text": "as",
+          "start": 308.2,
+          "end": 308.5
+        },
+        {
+          "text": "well",
+          "start": 308.5,
+          "end": 308.7
+        },
+        {
+          "text": "as",
+          "start": 308.7,
+          "end": 308.94
+        },
+        {
+          "text": "time.",
+          "start": 308.94,
+          "end": 309.22
+        },
+        {
+          "text": "The",
+          "start": 309.86,
+          "end": 310.06
+        },
+        {
+          "text": "book",
+          "start": 310.06,
+          "end": 310.22
+        },
+        {
+          "text": "cites",
+          "start": 310.22,
+          "end": 310.58
+        },
+        {
+          "text": "illustrative",
+          "start": 310.58,
+          "end": 311.2
+        },
+        {
+          "text": "older",
+          "start": 311.2,
+          "end": 311.58
+        },
+        {
+          "text": "process",
+          "start": 311.58,
+          "end": 312.04
+        },
+        {
+          "text": "estimates.",
+          "start": 312.04,
+          "end": 312.6
+        },
+        {
+          "text": "One",
+          "start": 313.14,
+          "end": 313.52
+        },
+        {
+          "text": "32",
+          "start": 313.52,
+          "end": 313.96
+        },
+        {
+          "text": "-bit",
+          "start": 313.96,
+          "end": 314.3
+        },
+        {
+          "text": "DRAM",
+          "start": 314.3,
+          "end": 314.72
+        },
+        {
+          "text": "access",
+          "start": 314.72,
+          "end": 315.06
+        },
+        {
+          "text": "costs",
+          "start": 315.06,
+          "end": 315.6
+        },
+        {
+          "text": "about",
+          "start": 315.6,
+          "end": 316.02
+        },
+        {
+          "text": "640",
+          "start": 316.02,
+          "end": 317.08
+        },
+        {
+          "text": "picojoules",
+          "start": 317.08,
+          "end": 318.12
+        },
+        {
+          "text": "versus",
+          "start": 318.12,
+          "end": 318.62
+        },
+        {
+          "text": "about",
+          "start": 318.62,
+          "end": 318.96
+        },
+        {
+          "text": "5",
+          "start": 318.96,
+          "end": 319.4
+        },
+        {
+          "text": "to",
+          "start": 319.4,
+          "end": 319.62
+        },
+        {
+          "text": "read",
+          "start": 319.62,
+          "end": 319.82
+        },
+        {
+          "text": "a",
+          "start": 319.82,
+          "end": 319.92
+        },
+        {
+          "text": "32",
+          "start": 319.92,
+          "end": 320.34
+        },
+        {
+          "text": "-bit",
+          "start": 320.34,
+          "end": 320.6
+        },
+        {
+          "text": "word",
+          "start": 320.6,
+          "end": 320.9
+        },
+        {
+          "text": "from",
+          "start": 320.9,
+          "end": 321.18
+        },
+        {
+          "text": "an",
+          "start": 321.18,
+          "end": 321.3
+        },
+        {
+          "text": "8",
+          "start": 321.3,
+          "end": 321.54
+        },
+        {
+          "text": "-kilobyte",
+          "start": 321.54,
+          "end": 322.12
+        },
+        {
+          "text": "SRAM.",
+          "start": 322.12,
+          "end": 322.46
+        },
+        {
+          "text": "They",
+          "start": 323.06,
+          "end": 323.28
+        },
+        {
+          "text": "are",
+          "start": 323.28,
+          "end": 323.36
+        },
+        {
+          "text": "not",
+          "start": 323.36,
+          "end": 323.56
+        },
+        {
+          "text": "universal",
+          "start": 323.56,
+          "end": 324.0
+        },
+        {
+          "text": "costs",
+          "start": 324.0,
+          "end": 324.54
+        },
+        {
+          "text": "for",
+          "start": 324.54,
+          "end": 324.76
+        },
+        {
+          "text": "today's",
+          "start": 324.76,
+          "end": 325.16
+        },
+        {
+          "text": "chips,",
+          "start": 325.16,
+          "end": 325.42
+        },
+        {
+          "text": "but",
+          "start": 325.74,
+          "end": 326.0
+        },
+        {
+          "text": "they",
+          "start": 326.0,
+          "end": 326.14
+        },
+        {
+          "text": "make",
+          "start": 326.14,
+          "end": 326.34
+        },
+        {
+          "text": "the",
+          "start": 326.34,
+          "end": 326.48
+        },
+        {
+          "text": "reason",
+          "start": 326.48,
+          "end": 326.82
+        },
+        {
+          "text": "for",
+          "start": 326.82,
+          "end": 327.02
+        },
+        {
+          "text": "reuse",
+          "start": 327.02,
+          "end": 327.38
+        },
+        {
+          "text": "visible.",
+          "start": 327.38,
+          "end": 327.74
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/traffic-boundaries.svg",
+        "title": "Where are the bytes counted?",
+        "alt": "Host memory connects through a host link to device memory. Device memory feeds local SRAM and registers. The projection calculation counts bytes crossing the device-memory boundary; a host transfer is a separate boundary, and reuse can prevent repeated device-memory reads."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Capacity and bandwidth answer different questions. The weights may fit in device memory and still have to cross that interface every token. Registers and on-chip SRAM are smaller, so software loads tiles and uses them before eviction. Physical traffic depends on what stays cached and which boundary we are measuring.",
+      "start": 328.4,
+      "end": 350.8,
+      "words": [
+        {
+          "text": "Capacity",
+          "start": 328.64,
+          "end": 329.32
+        },
+        {
+          "text": "and",
+          "start": 329.32,
+          "end": 329.58
+        },
+        {
+          "text": "bandwidth",
+          "start": 329.58,
+          "end": 330.06
+        },
+        {
+          "text": "answer",
+          "start": 330.06,
+          "end": 330.6
+        },
+        {
+          "text": "different",
+          "start": 330.6,
+          "end": 331.02
+        },
+        {
+          "text": "questions.",
+          "start": 331.02,
+          "end": 331.48
+        },
+        {
+          "text": "The",
+          "start": 332.22,
+          "end": 332.34
+        },
+        {
+          "text": "weights",
+          "start": 332.34,
+          "end": 332.56
+        },
+        {
+          "text": "may",
+          "start": 332.56,
+          "end": 332.82
+        },
+        {
+          "text": "fit",
+          "start": 332.82,
+          "end": 333.08
+        },
+        {
+          "text": "in",
+          "start": 333.08,
+          "end": 333.28
+        },
+        {
+          "text": "device",
+          "start": 333.28,
+          "end": 333.62
+        },
+        {
+          "text": "memory",
+          "start": 333.62,
+          "end": 334.1
+        },
+        {
+          "text": "and",
+          "start": 334.1,
+          "end": 334.64
+        },
+        {
+          "text": "still",
+          "start": 334.64,
+          "end": 334.88
+        },
+        {
+          "text": "have",
+          "start": 334.88,
+          "end": 335.1
+        },
+        {
+          "text": "to",
+          "start": 335.1,
+          "end": 335.26
+        },
+        {
+          "text": "cross",
+          "start": 335.26,
+          "end": 335.62
+        },
+        {
+          "text": "that",
+          "start": 335.62,
+          "end": 335.92
+        },
+        {
+          "text": "interface",
+          "start": 335.92,
+          "end": 336.36
+        },
+        {
+          "text": "every",
+          "start": 336.36,
+          "end": 336.8
+        },
+        {
+          "text": "token.",
+          "start": 336.8,
+          "end": 337.24
+        },
+        {
+          "text": "Registers",
+          "start": 337.92,
+          "end": 338.44
+        },
+        {
+          "text": "and",
+          "start": 338.44,
+          "end": 338.8
+        },
+        {
+          "text": "on",
+          "start": 338.8,
+          "end": 339.14
+        },
+        {
+          "text": "-chip",
+          "start": 339.14,
+          "end": 339.4
+        },
+        {
+          "text": "SRAM",
+          "start": 339.4,
+          "end": 339.98
+        },
+        {
+          "text": "are",
+          "start": 339.98,
+          "end": 340.18
+        },
+        {
+          "text": "smaller,",
+          "start": 340.18,
+          "end": 340.7
+        },
+        {
+          "text": "so",
+          "start": 341.06,
+          "end": 341.34
+        },
+        {
+          "text": "software",
+          "start": 341.34,
+          "end": 341.92
+        },
+        {
+          "text": "loads",
+          "start": 341.92,
+          "end": 342.34
+        },
+        {
+          "text": "tiles",
+          "start": 342.34,
+          "end": 342.74
+        },
+        {
+          "text": "and",
+          "start": 342.74,
+          "end": 343.08
+        },
+        {
+          "text": "uses",
+          "start": 343.08,
+          "end": 343.38
+        },
+        {
+          "text": "them",
+          "start": 343.38,
+          "end": 343.64
+        },
+        {
+          "text": "before",
+          "start": 343.64,
+          "end": 344.02
+        },
+        {
+          "text": "eviction.",
+          "start": 344.02,
+          "end": 344.58
+        },
+        {
+          "text": "Physical",
+          "start": 344.58,
+          "end": 345.56
+        },
+        {
+          "text": "traffic",
+          "start": 345.56,
+          "end": 346.16
+        },
+        {
+          "text": "depends",
+          "start": 346.16,
+          "end": 346.52
+        },
+        {
+          "text": "on",
+          "start": 346.52,
+          "end": 346.88
+        },
+        {
+          "text": "what",
+          "start": 346.88,
+          "end": 347.04
+        },
+        {
+          "text": "stays",
+          "start": 347.04,
+          "end": 347.38
+        },
+        {
+          "text": "cached",
+          "start": 347.38,
+          "end": 348.02
+        },
+        {
+          "text": "and",
+          "start": 348.02,
+          "end": 348.48
+        },
+        {
+          "text": "which",
+          "start": 348.48,
+          "end": 348.64
+        },
+        {
+          "text": "boundary",
+          "start": 348.64,
+          "end": 349.1
+        },
+        {
+          "text": "we",
+          "start": 349.1,
+          "end": 349.46
+        },
+        {
+          "text": "are",
+          "start": 349.46,
+          "end": 349.6
+        },
+        {
+          "text": "measuring.",
+          "start": 349.6,
+          "end": 350.1
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Let's budget one tile. Use a weight tile one hundred and twenty-eight by one hundred and twenty-eight, an input tile one hundred and twenty-eight by sixty-four, and a thirty-two-bit accumulator one hundred and twenty-eight by sixty-four. Together they need eighty kibibytes. If the local store has ninety-six kibibytes, the three fit in this simplified allocation.",
+      "start": 350.8,
+      "end": 372.67,
+      "eq": {
+        "id": "tile-capacity",
+        "title": "Live tile capacity",
+        "latex": "2m_tk_t+2k_tn_t+4m_tn_t\\leq C"
+      },
+      "words": [
+        {
+          "text": "Let's",
+          "start": 350.78,
+          "end": 351.36
+        },
+        {
+          "text": "budget",
+          "start": 351.36,
+          "end": 351.56
+        },
+        {
+          "text": "one",
+          "start": 351.56,
+          "end": 351.82
+        },
+        {
+          "text": "tile.",
+          "start": 351.82,
+          "end": 352.1
+        },
+        {
+          "text": "Use",
+          "start": 352.78,
+          "end": 352.94
+        },
+        {
+          "text": "a",
+          "start": 352.94,
+          "end": 353.06
+        },
+        {
+          "text": "weight",
+          "start": 353.06,
+          "end": 353.26
+        },
+        {
+          "text": "tile",
+          "start": 353.26,
+          "end": 353.52
+        },
+        {
+          "text": "128",
+          "start": 353.52,
+          "end": 354.54
+        },
+        {
+          "text": "by",
+          "start": 354.54,
+          "end": 355.0
+        },
+        {
+          "text": "128,",
+          "start": 355.0,
+          "end": 355.94
+        },
+        {
+          "text": "an",
+          "start": 356.6,
+          "end": 356.84
+        },
+        {
+          "text": "input",
+          "start": 356.84,
+          "end": 357.12
+        },
+        {
+          "text": "tile",
+          "start": 357.12,
+          "end": 357.42
+        },
+        {
+          "text": "128",
+          "start": 357.42,
+          "end": 358.14
+        },
+        {
+          "text": "by",
+          "start": 358.14,
+          "end": 358.94
+        },
+        {
+          "text": "64,",
+          "start": 358.94,
+          "end": 359.4
+        },
+        {
+          "text": "and",
+          "start": 359.92,
+          "end": 360.14
+        },
+        {
+          "text": "a",
+          "start": 360.14,
+          "end": 360.22
+        },
+        {
+          "text": "32",
+          "start": 360.22,
+          "end": 360.6
+        },
+        {
+          "text": "-bit",
+          "start": 360.6,
+          "end": 360.9
+        },
+        {
+          "text": "accumulator",
+          "start": 360.9,
+          "end": 361.58
+        },
+        {
+          "text": "128",
+          "start": 361.58,
+          "end": 362.32
+        },
+        {
+          "text": "by",
+          "start": 362.32,
+          "end": 363.24
+        },
+        {
+          "text": "64.",
+          "start": 363.24,
+          "end": 363.72
+        },
+        {
+          "text": "Together,",
+          "start": 364.44,
+          "end": 364.88
+        },
+        {
+          "text": "they",
+          "start": 365.22,
+          "end": 365.38
+        },
+        {
+          "text": "need",
+          "start": 365.38,
+          "end": 365.68
+        },
+        {
+          "text": "80",
+          "start": 365.68,
+          "end": 365.96
+        },
+        {
+          "text": "kibabytes.",
+          "start": 365.96,
+          "end": 366.4
+        },
+        {
+          "text": "If",
+          "start": 367.08,
+          "end": 367.24
+        },
+        {
+          "text": "the",
+          "start": 367.24,
+          "end": 367.36
+        },
+        {
+          "text": "local",
+          "start": 367.36,
+          "end": 367.58
+        },
+        {
+          "text": "store",
+          "start": 367.58,
+          "end": 367.94
+        },
+        {
+          "text": "has",
+          "start": 367.94,
+          "end": 368.2
+        },
+        {
+          "text": "96",
+          "start": 368.2,
+          "end": 368.76
+        },
+        {
+          "text": "kibabytes,",
+          "start": 368.76,
+          "end": 369.38
+        },
+        {
+          "text": "the",
+          "start": 369.68,
+          "end": 369.84
+        },
+        {
+          "text": "three",
+          "start": 369.84,
+          "end": 370.12
+        },
+        {
+          "text": "fit",
+          "start": 370.12,
+          "end": 370.46
+        },
+        {
+          "text": "in",
+          "start": 370.46,
+          "end": 370.72
+        },
+        {
+          "text": "this",
+          "start": 370.72,
+          "end": 370.84
+        },
+        {
+          "text": "simplified",
+          "start": 370.84,
+          "end": 371.34
+        },
+        {
+          "text": "allocation.",
+          "start": 371.34,
+          "end": 372.0
+        },
+        {
+          "text": "But",
+          "start": 372.0,
+          "end": 373.14
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "But double-buffering both input tiles and weight tiles adds another forty-eight kibibytes. Now the example needs one hundred and twenty-eight, which exceeds the stated store. A pipeline that overlaps fetching the next tile with computing the current one still has to fit its buffers. Registers, alignment, workspace, and occupancy matter too.",
+      "start": 372.67,
+      "end": 395.45,
+      "words": [
+        {
+          "text": "double",
+          "start": 373.14,
+          "end": 373.42
+        },
+        {
+          "text": "buffering",
+          "start": 373.42,
+          "end": 373.92
+        },
+        {
+          "text": "both",
+          "start": 373.92,
+          "end": 374.18
+        },
+        {
+          "text": "input",
+          "start": 374.18,
+          "end": 374.68
+        },
+        {
+          "text": "tiles",
+          "start": 374.68,
+          "end": 375.08
+        },
+        {
+          "text": "and",
+          "start": 375.08,
+          "end": 375.38
+        },
+        {
+          "text": "weight",
+          "start": 375.38,
+          "end": 375.64
+        },
+        {
+          "text": "tiles",
+          "start": 375.64,
+          "end": 376.08
+        },
+        {
+          "text": "adds",
+          "start": 376.08,
+          "end": 376.46
+        },
+        {
+          "text": "another",
+          "start": 376.46,
+          "end": 376.72
+        },
+        {
+          "text": "48",
+          "start": 376.72,
+          "end": 377.36
+        },
+        {
+          "text": "kibabytes.",
+          "start": 377.36,
+          "end": 377.88
+        },
+        {
+          "text": "Now",
+          "start": 378.48,
+          "end": 378.84
+        },
+        {
+          "text": "the",
+          "start": 378.84,
+          "end": 379.0
+        },
+        {
+          "text": "example",
+          "start": 379.0,
+          "end": 379.44
+        },
+        {
+          "text": "needs",
+          "start": 379.44,
+          "end": 379.78
+        },
+        {
+          "text": "128,",
+          "start": 379.78,
+          "end": 380.9
+        },
+        {
+          "text": "which",
+          "start": 381.46,
+          "end": 381.76
+        },
+        {
+          "text": "exceeds",
+          "start": 381.76,
+          "end": 382.22
+        },
+        {
+          "text": "the",
+          "start": 382.22,
+          "end": 382.5
+        },
+        {
+          "text": "stated",
+          "start": 382.5,
+          "end": 382.82
+        },
+        {
+          "text": "store.",
+          "start": 382.82,
+          "end": 383.28
+        },
+        {
+          "text": "A",
+          "start": 383.94,
+          "end": 384.12
+        },
+        {
+          "text": "pipeline",
+          "start": 384.12,
+          "end": 384.52
+        },
+        {
+          "text": "that",
+          "start": 384.52,
+          "end": 384.86
+        },
+        {
+          "text": "overlaps",
+          "start": 384.86,
+          "end": 385.44
+        },
+        {
+          "text": "fetching",
+          "start": 385.44,
+          "end": 385.88
+        },
+        {
+          "text": "the",
+          "start": 385.88,
+          "end": 385.98
+        },
+        {
+          "text": "next",
+          "start": 385.98,
+          "end": 386.18
+        },
+        {
+          "text": "tile",
+          "start": 386.18,
+          "end": 386.56
+        },
+        {
+          "text": "with",
+          "start": 386.56,
+          "end": 386.76
+        },
+        {
+          "text": "computing",
+          "start": 386.76,
+          "end": 387.18
+        },
+        {
+          "text": "the",
+          "start": 387.18,
+          "end": 387.4
+        },
+        {
+          "text": "current",
+          "start": 387.4,
+          "end": 387.7
+        },
+        {
+          "text": "one",
+          "start": 387.7,
+          "end": 387.94
+        },
+        {
+          "text": "still",
+          "start": 387.94,
+          "end": 388.3
+        },
+        {
+          "text": "has",
+          "start": 388.3,
+          "end": 388.58
+        },
+        {
+          "text": "to",
+          "start": 388.58,
+          "end": 388.76
+        },
+        {
+          "text": "fit",
+          "start": 388.76,
+          "end": 388.98
+        },
+        {
+          "text": "its",
+          "start": 388.98,
+          "end": 389.12
+        },
+        {
+          "text": "buffers.",
+          "start": 389.12,
+          "end": 389.64
+        },
+        {
+          "text": "Registers,",
+          "start": 390.3,
+          "end": 390.92
+        },
+        {
+          "text": "alignment,",
+          "start": 391.46,
+          "end": 391.86
+        },
+        {
+          "text": "workspace,",
+          "start": 392.44,
+          "end": 392.78
+        },
+        {
+          "text": "and",
+          "start": 393.2,
+          "end": 393.28
+        },
+        {
+          "text": "occupancy",
+          "start": 393.28,
+          "end": 393.92
+        },
+        {
+          "text": "matter",
+          "start": 393.92,
+          "end": 394.34
+        },
+        {
+          "text": "too.",
+          "start": 394.34,
+          "end": 394.74
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/tile-budget.svg",
+        "title": "Three live tiles and a second buffer",
+        "alt": "With a ninety-six-kibibyte local store, the weight tile uses thirty-two kibibytes, the input tile sixteen, and the accumulator thirty-two: eighty total. A second weight and input tile adds forty-eight, taking the allocation to one hundred and twenty-eight kibibytes, above the limit."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "Loop order chooses what stays nearby. A weight-stationary schedule reuses a weight tile across input columns. An output-stationary schedule keeps partial sums while it walks the reduction dimension. An input-stationary schedule reuses an input tile across output features. Which choice moves fewer bytes depends on shapes and available storage.",
+      "start": 395.45,
+      "end": 417.82,
+      "words": [
+        {
+          "text": "Loop",
+          "start": 395.62,
+          "end": 395.94
+        },
+        {
+          "text": "order",
+          "start": 395.94,
+          "end": 396.26
+        },
+        {
+          "text": "chooses",
+          "start": 396.26,
+          "end": 396.68
+        },
+        {
+          "text": "what",
+          "start": 396.68,
+          "end": 396.98
+        },
+        {
+          "text": "stays",
+          "start": 396.98,
+          "end": 397.26
+        },
+        {
+          "text": "nearby.",
+          "start": 397.26,
+          "end": 397.66
+        },
+        {
+          "text": "A",
+          "start": 397.66,
+          "end": 398.48
+        },
+        {
+          "text": "wait",
+          "start": 398.48,
+          "end": 398.66
+        },
+        {
+          "text": "stationary",
+          "start": 398.66,
+          "end": 399.0
+        },
+        {
+          "text": "schedule",
+          "start": 399.0,
+          "end": 399.62
+        },
+        {
+          "text": "reuses",
+          "start": 399.62,
+          "end": 400.3
+        },
+        {
+          "text": "a",
+          "start": 400.3,
+          "end": 400.52
+        },
+        {
+          "text": "weight",
+          "start": 400.52,
+          "end": 400.76
+        },
+        {
+          "text": "tile",
+          "start": 400.76,
+          "end": 401.12
+        },
+        {
+          "text": "across",
+          "start": 401.12,
+          "end": 401.54
+        },
+        {
+          "text": "input",
+          "start": 401.54,
+          "end": 402.0
+        },
+        {
+          "text": "columns.",
+          "start": 402.0,
+          "end": 402.48
+        },
+        {
+          "text": "An",
+          "start": 403.16,
+          "end": 403.26
+        },
+        {
+          "text": "output",
+          "start": 403.26,
+          "end": 403.52
+        },
+        {
+          "text": "stationary",
+          "start": 403.52,
+          "end": 404.04
+        },
+        {
+          "text": "schedule",
+          "start": 404.04,
+          "end": 404.54
+        },
+        {
+          "text": "keeps",
+          "start": 404.54,
+          "end": 404.94
+        },
+        {
+          "text": "partial",
+          "start": 404.94,
+          "end": 405.38
+        },
+        {
+          "text": "sums",
+          "start": 405.38,
+          "end": 405.78
+        },
+        {
+          "text": "while",
+          "start": 405.78,
+          "end": 406.26
+        },
+        {
+          "text": "it",
+          "start": 406.26,
+          "end": 406.38
+        },
+        {
+          "text": "walks",
+          "start": 406.38,
+          "end": 406.54
+        },
+        {
+          "text": "the",
+          "start": 406.54,
+          "end": 406.8
+        },
+        {
+          "text": "reduction",
+          "start": 406.8,
+          "end": 407.12
+        },
+        {
+          "text": "dimension.",
+          "start": 407.12,
+          "end": 407.58
+        },
+        {
+          "text": "An",
+          "start": 408.32,
+          "end": 408.42
+        },
+        {
+          "text": "input",
+          "start": 408.42,
+          "end": 408.64
+        },
+        {
+          "text": "stationary",
+          "start": 408.64,
+          "end": 409.18
+        },
+        {
+          "text": "schedule",
+          "start": 409.18,
+          "end": 409.72
+        },
+        {
+          "text": "reuses",
+          "start": 409.72,
+          "end": 410.38
+        },
+        {
+          "text": "an",
+          "start": 410.38,
+          "end": 410.62
+        },
+        {
+          "text": "input",
+          "start": 410.62,
+          "end": 410.96
+        },
+        {
+          "text": "tile",
+          "start": 410.96,
+          "end": 411.34
+        },
+        {
+          "text": "across",
+          "start": 411.34,
+          "end": 411.7
+        },
+        {
+          "text": "output",
+          "start": 411.7,
+          "end": 412.24
+        },
+        {
+          "text": "features.",
+          "start": 412.24,
+          "end": 412.6
+        },
+        {
+          "text": "Which",
+          "start": 413.38,
+          "end": 413.56
+        },
+        {
+          "text": "choice",
+          "start": 413.56,
+          "end": 413.84
+        },
+        {
+          "text": "moves",
+          "start": 413.84,
+          "end": 414.28
+        },
+        {
+          "text": "fewer",
+          "start": 414.28,
+          "end": 414.62
+        },
+        {
+          "text": "bytes",
+          "start": 414.62,
+          "end": 414.92
+        },
+        {
+          "text": "depends",
+          "start": 414.92,
+          "end": 415.2
+        },
+        {
+          "text": "on",
+          "start": 415.2,
+          "end": 415.6
+        },
+        {
+          "text": "shapes",
+          "start": 415.6,
+          "end": 416.02
+        },
+        {
+          "text": "and",
+          "start": 416.02,
+          "end": 416.34
+        },
+        {
+          "text": "available",
+          "start": 416.34,
+          "end": 416.68
+        },
+        {
+          "text": "storage.",
+          "start": 416.68,
+          "end": 417.18
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/stationary-choices.svg",
+        "title": "Choose which operand to keep",
+        "alt": "For Y sub i j equals the sum over k of W sub i k times X sub k j, weight stationary holds W while varying j, input stationary holds X while varying i, and output stationary holds Y while varying k."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "The compiler makes many of those choices. It can fold constants, fuse operators, select kernels, schedule tiles, and plan buffers from tensor lifetimes. The runtime then dispatches compatible variants for the shapes actually seen and manages device memory and dependencies. A dynamic batch can select a different kernel or expose an inefficient shape.",
+      "start": 417.82,
+      "end": 442.22,
+      "words": [
+        {
+          "text": "The",
+          "start": 417.82,
+          "end": 418.28
+        },
+        {
+          "text": "compiler",
+          "start": 418.28,
+          "end": 418.58
+        },
+        {
+          "text": "makes",
+          "start": 418.58,
+          "end": 418.96
+        },
+        {
+          "text": "many",
+          "start": 418.96,
+          "end": 419.28
+        },
+        {
+          "text": "of",
+          "start": 419.28,
+          "end": 419.44
+        },
+        {
+          "text": "those",
+          "start": 419.44,
+          "end": 419.62
+        },
+        {
+          "text": "choices.",
+          "start": 419.62,
+          "end": 420.1
+        },
+        {
+          "text": "It",
+          "start": 420.1,
+          "end": 420.86
+        },
+        {
+          "text": "can",
+          "start": 420.86,
+          "end": 421.0
+        },
+        {
+          "text": "fold",
+          "start": 421.0,
+          "end": 421.34
+        },
+        {
+          "text": "constants,",
+          "start": 421.34,
+          "end": 421.88
+        },
+        {
+          "text": "fuse",
+          "start": 422.5,
+          "end": 422.74
+        },
+        {
+          "text": "operators,",
+          "start": 422.74,
+          "end": 423.32
+        },
+        {
+          "text": "select",
+          "start": 423.88,
+          "end": 424.18
+        },
+        {
+          "text": "kernels,",
+          "start": 424.18,
+          "end": 424.74
+        },
+        {
+          "text": "schedule",
+          "start": 425.06,
+          "end": 425.36
+        },
+        {
+          "text": "tiles,",
+          "start": 425.36,
+          "end": 425.82
+        },
+        {
+          "text": "and",
+          "start": 426.16,
+          "end": 426.24
+        },
+        {
+          "text": "plan",
+          "start": 426.24,
+          "end": 426.56
+        },
+        {
+          "text": "buffers",
+          "start": 426.56,
+          "end": 427.02
+        },
+        {
+          "text": "from",
+          "start": 427.02,
+          "end": 427.2
+        },
+        {
+          "text": "tensor",
+          "start": 427.2,
+          "end": 427.56
+        },
+        {
+          "text": "lifetimes.",
+          "start": 427.56,
+          "end": 428.26
+        },
+        {
+          "text": "The",
+          "start": 428.88,
+          "end": 429.08
+        },
+        {
+          "text": "runtime",
+          "start": 429.08,
+          "end": 429.38
+        },
+        {
+          "text": "then",
+          "start": 429.38,
+          "end": 429.8
+        },
+        {
+          "text": "dispatches",
+          "start": 429.8,
+          "end": 430.48
+        },
+        {
+          "text": "compatible",
+          "start": 430.48,
+          "end": 430.9
+        },
+        {
+          "text": "variants",
+          "start": 430.9,
+          "end": 431.64
+        },
+        {
+          "text": "for",
+          "start": 431.64,
+          "end": 431.88
+        },
+        {
+          "text": "the",
+          "start": 431.88,
+          "end": 432.0
+        },
+        {
+          "text": "shapes",
+          "start": 432.0,
+          "end": 432.3
+        },
+        {
+          "text": "actually",
+          "start": 432.3,
+          "end": 432.86
+        },
+        {
+          "text": "seen",
+          "start": 432.86,
+          "end": 433.3
+        },
+        {
+          "text": "and",
+          "start": 433.3,
+          "end": 433.72
+        },
+        {
+          "text": "manages",
+          "start": 433.72,
+          "end": 434.18
+        },
+        {
+          "text": "device",
+          "start": 434.18,
+          "end": 434.64
+        },
+        {
+          "text": "memory",
+          "start": 434.64,
+          "end": 435.2
+        },
+        {
+          "text": "and",
+          "start": 435.2,
+          "end": 435.5
+        },
+        {
+          "text": "dependencies.",
+          "start": 435.5,
+          "end": 436.04
+        },
+        {
+          "text": "A",
+          "start": 436.8,
+          "end": 437.0
+        },
+        {
+          "text": "dynamic",
+          "start": 437.0,
+          "end": 437.34
+        },
+        {
+          "text": "batch",
+          "start": 437.34,
+          "end": 437.74
+        },
+        {
+          "text": "can",
+          "start": 437.74,
+          "end": 438.06
+        },
+        {
+          "text": "select",
+          "start": 438.06,
+          "end": 438.4
+        },
+        {
+          "text": "a",
+          "start": 438.4,
+          "end": 438.64
+        },
+        {
+          "text": "different",
+          "start": 438.64,
+          "end": 438.86
+        },
+        {
+          "text": "kernel",
+          "start": 438.86,
+          "end": 439.3
+        },
+        {
+          "text": "or",
+          "start": 439.3,
+          "end": 439.6
+        },
+        {
+          "text": "expose",
+          "start": 439.6,
+          "end": 440.04
+        },
+        {
+          "text": "an",
+          "start": 440.04,
+          "end": 440.54
+        },
+        {
+          "text": "inefficient",
+          "start": 440.54,
+          "end": 441.0
+        },
+        {
+          "text": "shape.",
+          "start": 441.0,
+          "end": 441.48
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/compile-path.svg",
+        "title": "Follow the graph into a trace",
+        "alt": "A model graph is optimized, lowered to target kernels and tiles, and dispatched by a runtime. Inspect the execution trace for selected device kernels and any unsupported operation that runs on the host."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "Fusion is not free either. Keeping an intermediate on chip can remove an expensive read and write, but the extra live values can increase register pressure and reduce the number of active blocks. The practical test is the compiled trace and timing, not the number of operators in the source graph.",
+      "start": 442.22,
+      "end": 461.07,
+      "words": [
+        {
+          "text": "Fusion",
+          "start": 442.26,
+          "end": 442.78
+        },
+        {
+          "text": "is",
+          "start": 442.78,
+          "end": 443.16
+        },
+        {
+          "text": "not",
+          "start": 443.16,
+          "end": 443.38
+        },
+        {
+          "text": "free",
+          "start": 443.38,
+          "end": 443.66
+        },
+        {
+          "text": "either.",
+          "start": 443.66,
+          "end": 443.94
+        },
+        {
+          "text": "Keeping",
+          "start": 443.94,
+          "end": 444.8
+        },
+        {
+          "text": "an",
+          "start": 444.8,
+          "end": 445.04
+        },
+        {
+          "text": "intermediate",
+          "start": 445.04,
+          "end": 445.44
+        },
+        {
+          "text": "on",
+          "start": 445.44,
+          "end": 445.78
+        },
+        {
+          "text": "chip",
+          "start": 445.78,
+          "end": 446.02
+        },
+        {
+          "text": "can",
+          "start": 446.02,
+          "end": 446.52
+        },
+        {
+          "text": "remove",
+          "start": 446.52,
+          "end": 446.9
+        },
+        {
+          "text": "an",
+          "start": 446.9,
+          "end": 447.1
+        },
+        {
+          "text": "expensive",
+          "start": 447.1,
+          "end": 447.56
+        },
+        {
+          "text": "read",
+          "start": 447.56,
+          "end": 448.06
+        },
+        {
+          "text": "and",
+          "start": 448.06,
+          "end": 448.3
+        },
+        {
+          "text": "write,",
+          "start": 448.3,
+          "end": 448.56
+        },
+        {
+          "text": "but",
+          "start": 449.06,
+          "end": 449.22
+        },
+        {
+          "text": "the",
+          "start": 449.22,
+          "end": 449.34
+        },
+        {
+          "text": "extra",
+          "start": 449.34,
+          "end": 449.72
+        },
+        {
+          "text": "live",
+          "start": 449.72,
+          "end": 449.98
+        },
+        {
+          "text": "values",
+          "start": 449.98,
+          "end": 450.46
+        },
+        {
+          "text": "can",
+          "start": 450.46,
+          "end": 450.78
+        },
+        {
+          "text": "increase",
+          "start": 450.78,
+          "end": 451.16
+        },
+        {
+          "text": "register",
+          "start": 451.16,
+          "end": 451.66
+        },
+        {
+          "text": "pressure",
+          "start": 451.66,
+          "end": 452.08
+        },
+        {
+          "text": "and",
+          "start": 452.08,
+          "end": 452.64
+        },
+        {
+          "text": "reduce",
+          "start": 452.64,
+          "end": 452.98
+        },
+        {
+          "text": "the",
+          "start": 452.98,
+          "end": 453.24
+        },
+        {
+          "text": "number",
+          "start": 453.24,
+          "end": 453.48
+        },
+        {
+          "text": "of",
+          "start": 453.48,
+          "end": 453.7
+        },
+        {
+          "text": "active",
+          "start": 453.7,
+          "end": 454.02
+        },
+        {
+          "text": "blocks.",
+          "start": 454.02,
+          "end": 454.38
+        },
+        {
+          "text": "The",
+          "start": 455.14,
+          "end": 455.28
+        },
+        {
+          "text": "practical",
+          "start": 455.28,
+          "end": 455.66
+        },
+        {
+          "text": "test",
+          "start": 455.66,
+          "end": 456.16
+        },
+        {
+          "text": "is",
+          "start": 456.16,
+          "end": 456.46
+        },
+        {
+          "text": "the",
+          "start": 456.46,
+          "end": 456.58
+        },
+        {
+          "text": "compiled",
+          "start": 456.58,
+          "end": 456.96
+        },
+        {
+          "text": "trace",
+          "start": 456.96,
+          "end": 457.34
+        },
+        {
+          "text": "and",
+          "start": 457.34,
+          "end": 457.66
+        },
+        {
+          "text": "timing,",
+          "start": 457.66,
+          "end": 458.0
+        },
+        {
+          "text": "not",
+          "start": 458.38,
+          "end": 458.66
+        },
+        {
+          "text": "the",
+          "start": 458.66,
+          "end": 458.8
+        },
+        {
+          "text": "number",
+          "start": 458.8,
+          "end": 459.0
+        },
+        {
+          "text": "of",
+          "start": 459.0,
+          "end": 459.12
+        },
+        {
+          "text": "operators",
+          "start": 459.12,
+          "end": 459.54
+        },
+        {
+          "text": "in",
+          "start": 459.54,
+          "end": 459.84
+        },
+        {
+          "text": "the",
+          "start": 459.84,
+          "end": 459.94
+        },
+        {
+          "text": "source",
+          "start": 459.94,
+          "end": 460.1
+        },
+        {
+          "text": "graph.",
+          "start": 460.1,
+          "end": 460.42
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Now zoom out from a kernel to a request. In a separate illustrative serial request, the baseline takes two hundred microseconds, of which eighty are in the projection. Halving only that stage saves forty microseconds, so the request takes one hundred and sixty. That is a one point two five times improvement, even though the stage is twice as fast.",
+      "start": 461.07,
+      "end": 485.05,
+      "eq": {
+        "id": "amdahl",
+        "title": "Serial request speedup",
+        "latex": "S=\\frac{1}{(1-f)+f/G}"
+      },
+      "words": [
+        {
+          "text": "Now",
+          "start": 461.12,
+          "end": 461.7
+        },
+        {
+          "text": "zoom",
+          "start": 461.7,
+          "end": 462.02
+        },
+        {
+          "text": "out",
+          "start": 462.02,
+          "end": 462.3
+        },
+        {
+          "text": "from",
+          "start": 462.3,
+          "end": 462.5
+        },
+        {
+          "text": "a",
+          "start": 462.5,
+          "end": 462.68
+        },
+        {
+          "text": "kernel",
+          "start": 462.68,
+          "end": 462.92
+        },
+        {
+          "text": "to",
+          "start": 462.92,
+          "end": 463.14
+        },
+        {
+          "text": "a",
+          "start": 463.14,
+          "end": 463.26
+        },
+        {
+          "text": "request.",
+          "start": 463.26,
+          "end": 463.58
+        },
+        {
+          "text": "In",
+          "start": 464.32,
+          "end": 464.5
+        },
+        {
+          "text": "a",
+          "start": 464.5,
+          "end": 464.58
+        },
+        {
+          "text": "separate",
+          "start": 464.58,
+          "end": 465.0
+        },
+        {
+          "text": "illustrative",
+          "start": 465.0,
+          "end": 465.68
+        },
+        {
+          "text": "serial",
+          "start": 465.68,
+          "end": 466.1
+        },
+        {
+          "text": "request,",
+          "start": 466.1,
+          "end": 466.64
+        },
+        {
+          "text": "the",
+          "start": 467.18,
+          "end": 467.3
+        },
+        {
+          "text": "baseline",
+          "start": 467.3,
+          "end": 467.72
+        },
+        {
+          "text": "takes",
+          "start": 467.72,
+          "end": 468.18
+        },
+        {
+          "text": "200",
+          "start": 468.18,
+          "end": 468.64
+        },
+        {
+          "text": "microseconds,",
+          "start": 468.64,
+          "end": 469.6
+        },
+        {
+          "text": "of",
+          "start": 469.92,
+          "end": 470.16
+        },
+        {
+          "text": "which",
+          "start": 470.16,
+          "end": 470.32
+        },
+        {
+          "text": "80",
+          "start": 470.32,
+          "end": 470.66
+        },
+        {
+          "text": "are",
+          "start": 470.66,
+          "end": 470.98
+        },
+        {
+          "text": "in",
+          "start": 470.98,
+          "end": 471.08
+        },
+        {
+          "text": "the",
+          "start": 471.08,
+          "end": 471.16
+        },
+        {
+          "text": "projection.",
+          "start": 471.16,
+          "end": 471.6
+        },
+        {
+          "text": "Having",
+          "start": 471.6,
+          "end": 472.56
+        },
+        {
+          "text": "only",
+          "start": 472.56,
+          "end": 472.92
+        },
+        {
+          "text": "that",
+          "start": 472.92,
+          "end": 473.2
+        },
+        {
+          "text": "stage",
+          "start": 473.2,
+          "end": 473.58
+        },
+        {
+          "text": "saves",
+          "start": 473.58,
+          "end": 474.14
+        },
+        {
+          "text": "40",
+          "start": 474.14,
+          "end": 474.5
+        },
+        {
+          "text": "microseconds,",
+          "start": 474.5,
+          "end": 475.36
+        },
+        {
+          "text": "so",
+          "start": 475.74,
+          "end": 476.0
+        },
+        {
+          "text": "the",
+          "start": 476.0,
+          "end": 476.16
+        },
+        {
+          "text": "request",
+          "start": 476.16,
+          "end": 476.48
+        },
+        {
+          "text": "takes",
+          "start": 476.48,
+          "end": 476.84
+        },
+        {
+          "text": "160.",
+          "start": 476.84,
+          "end": 477.84
+        },
+        {
+          "text": "That",
+          "start": 478.76,
+          "end": 479.0
+        },
+        {
+          "text": "is",
+          "start": 479.0,
+          "end": 479.14
+        },
+        {
+          "text": "a",
+          "start": 479.14,
+          "end": 479.26
+        },
+        {
+          "text": "1",
+          "start": 479.26,
+          "end": 479.5
+        },
+        {
+          "text": ".25",
+          "start": 479.5,
+          "end": 480.08
+        },
+        {
+          "text": "times",
+          "start": 480.08,
+          "end": 480.78
+        },
+        {
+          "text": "improvement,",
+          "start": 480.78,
+          "end": 481.52
+        },
+        {
+          "text": "even",
+          "start": 481.9,
+          "end": 482.28
+        },
+        {
+          "text": "though",
+          "start": 482.28,
+          "end": 482.54
+        },
+        {
+          "text": "the",
+          "start": 482.54,
+          "end": 482.7
+        },
+        {
+          "text": "stage",
+          "start": 482.7,
+          "end": 483.08
+        },
+        {
+          "text": "is",
+          "start": 483.08,
+          "end": 483.32
+        },
+        {
+          "text": "twice",
+          "start": 483.32,
+          "end": 483.64
+        },
+        {
+          "text": "as",
+          "start": 483.64,
+          "end": 483.94
+        },
+        {
+          "text": "fast.",
+          "start": 483.94,
+          "end": 484.28
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "If that projection became instantaneous, the unchanged one hundred and twenty microseconds would remain. And if stages overlap, we cannot just add their timings. We need a trace of the critical path and must account for what the actual change accelerates.",
+      "start": 485.05,
+      "end": 501.35,
+      "words": [
+        {
+          "text": "If",
+          "start": 485.0,
+          "end": 485.46
+        },
+        {
+          "text": "that",
+          "start": 485.46,
+          "end": 485.68
+        },
+        {
+          "text": "projection",
+          "start": 485.68,
+          "end": 486.12
+        },
+        {
+          "text": "became",
+          "start": 486.12,
+          "end": 486.56
+        },
+        {
+          "text": "instantaneous,",
+          "start": 486.56,
+          "end": 487.36
+        },
+        {
+          "text": "the",
+          "start": 488.12,
+          "end": 488.18
+        },
+        {
+          "text": "unchanged",
+          "start": 488.18,
+          "end": 488.68
+        },
+        {
+          "text": "120",
+          "start": 488.68,
+          "end": 489.66
+        },
+        {
+          "text": "microseconds",
+          "start": 489.66,
+          "end": 490.74
+        },
+        {
+          "text": "would",
+          "start": 490.74,
+          "end": 490.96
+        },
+        {
+          "text": "remain.",
+          "start": 490.96,
+          "end": 491.34
+        },
+        {
+          "text": "And",
+          "start": 491.92,
+          "end": 492.22
+        },
+        {
+          "text": "if",
+          "start": 492.22,
+          "end": 492.34
+        },
+        {
+          "text": "stages",
+          "start": 492.34,
+          "end": 492.68
+        },
+        {
+          "text": "overlap,",
+          "start": 492.68,
+          "end": 493.22
+        },
+        {
+          "text": "we",
+          "start": 493.7,
+          "end": 493.86
+        },
+        {
+          "text": "cannot",
+          "start": 493.86,
+          "end": 494.08
+        },
+        {
+          "text": "just",
+          "start": 494.08,
+          "end": 494.4
+        },
+        {
+          "text": "add",
+          "start": 494.4,
+          "end": 494.68
+        },
+        {
+          "text": "their",
+          "start": 494.68,
+          "end": 494.84
+        },
+        {
+          "text": "timings.",
+          "start": 494.84,
+          "end": 495.32
+        },
+        {
+          "text": "We",
+          "start": 495.82,
+          "end": 496.1
+        },
+        {
+          "text": "need",
+          "start": 496.1,
+          "end": 496.28
+        },
+        {
+          "text": "a",
+          "start": 496.28,
+          "end": 496.38
+        },
+        {
+          "text": "trace",
+          "start": 496.38,
+          "end": 496.7
+        },
+        {
+          "text": "of",
+          "start": 496.7,
+          "end": 496.88
+        },
+        {
+          "text": "the",
+          "start": 496.88,
+          "end": 496.98
+        },
+        {
+          "text": "critical",
+          "start": 496.98,
+          "end": 497.28
+        },
+        {
+          "text": "path",
+          "start": 497.28,
+          "end": 497.74
+        },
+        {
+          "text": "and",
+          "start": 497.74,
+          "end": 498.18
+        },
+        {
+          "text": "must",
+          "start": 498.18,
+          "end": 498.38
+        },
+        {
+          "text": "account",
+          "start": 498.38,
+          "end": 498.76
+        },
+        {
+          "text": "for",
+          "start": 498.76,
+          "end": 499.0
+        },
+        {
+          "text": "what",
+          "start": 499.0,
+          "end": 499.12
+        },
+        {
+          "text": "the",
+          "start": 499.12,
+          "end": 499.24
+        },
+        {
+          "text": "actual",
+          "start": 499.24,
+          "end": 499.64
+        },
+        {
+          "text": "change",
+          "start": 499.64,
+          "end": 500.04
+        },
+        {
+          "text": "accelerates.",
+          "start": 500.04,
+          "end": 500.78
+        },
+        {
+          "text": "The",
+          "start": 500.78,
+          "end": 501.82
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The boundaries get wider with more devices. Partitioning a projection can reduce each device's arithmetic, but intermediate results may need to cross a chip or network link. A transfer hidden under independent work has a different cost from one exposed on the critical path. Measure the latter against the computation saved.",
+      "start": 501.35,
+      "end": 523.75,
+      "words": [
+        {
+          "text": "boundaries",
+          "start": 501.82,
+          "end": 502.3
+        },
+        {
+          "text": "get",
+          "start": 502.3,
+          "end": 502.64
+        },
+        {
+          "text": "wider",
+          "start": 502.64,
+          "end": 503.06
+        },
+        {
+          "text": "with",
+          "start": 503.06,
+          "end": 503.32
+        },
+        {
+          "text": "more",
+          "start": 503.32,
+          "end": 503.58
+        },
+        {
+          "text": "devices.",
+          "start": 503.58,
+          "end": 504.12
+        },
+        {
+          "text": "Partitioning",
+          "start": 504.8,
+          "end": 505.48
+        },
+        {
+          "text": "a",
+          "start": 505.48,
+          "end": 505.6
+        },
+        {
+          "text": "projection",
+          "start": 505.6,
+          "end": 505.94
+        },
+        {
+          "text": "can",
+          "start": 505.94,
+          "end": 506.36
+        },
+        {
+          "text": "reduce",
+          "start": 506.36,
+          "end": 506.86
+        },
+        {
+          "text": "each",
+          "start": 506.86,
+          "end": 507.22
+        },
+        {
+          "text": "device's",
+          "start": 507.22,
+          "end": 507.94
+        },
+        {
+          "text": "arithmetic,",
+          "start": 507.94,
+          "end": 508.36
+        },
+        {
+          "text": "but",
+          "start": 509.02,
+          "end": 509.24
+        },
+        {
+          "text": "intermediate",
+          "start": 509.24,
+          "end": 509.68
+        },
+        {
+          "text": "results",
+          "start": 509.68,
+          "end": 510.34
+        },
+        {
+          "text": "may",
+          "start": 510.34,
+          "end": 510.74
+        },
+        {
+          "text": "need",
+          "start": 510.74,
+          "end": 511.0
+        },
+        {
+          "text": "to",
+          "start": 511.0,
+          "end": 511.14
+        },
+        {
+          "text": "cross",
+          "start": 511.14,
+          "end": 511.38
+        },
+        {
+          "text": "a",
+          "start": 511.38,
+          "end": 511.64
+        },
+        {
+          "text": "chip",
+          "start": 511.64,
+          "end": 511.92
+        },
+        {
+          "text": "or",
+          "start": 511.92,
+          "end": 512.34
+        },
+        {
+          "text": "network",
+          "start": 512.34,
+          "end": 512.66
+        },
+        {
+          "text": "link.",
+          "start": 512.66,
+          "end": 513.02
+        },
+        {
+          "text": "A",
+          "start": 513.72,
+          "end": 513.82
+        },
+        {
+          "text": "transfer",
+          "start": 513.82,
+          "end": 514.22
+        },
+        {
+          "text": "hidden",
+          "start": 514.22,
+          "end": 514.64
+        },
+        {
+          "text": "under",
+          "start": 514.64,
+          "end": 514.98
+        },
+        {
+          "text": "independent",
+          "start": 514.98,
+          "end": 515.46
+        },
+        {
+          "text": "work",
+          "start": 515.46,
+          "end": 515.98
+        },
+        {
+          "text": "has",
+          "start": 515.98,
+          "end": 516.46
+        },
+        {
+          "text": "a",
+          "start": 516.46,
+          "end": 516.62
+        },
+        {
+          "text": "different",
+          "start": 516.62,
+          "end": 516.9
+        },
+        {
+          "text": "cost",
+          "start": 516.9,
+          "end": 517.34
+        },
+        {
+          "text": "from",
+          "start": 517.34,
+          "end": 517.6
+        },
+        {
+          "text": "one",
+          "start": 517.6,
+          "end": 517.82
+        },
+        {
+          "text": "exposed",
+          "start": 517.82,
+          "end": 518.28
+        },
+        {
+          "text": "on",
+          "start": 518.28,
+          "end": 518.76
+        },
+        {
+          "text": "the",
+          "start": 518.76,
+          "end": 518.88
+        },
+        {
+          "text": "critical",
+          "start": 518.88,
+          "end": 519.18
+        },
+        {
+          "text": "path.",
+          "start": 519.18,
+          "end": 519.66
+        },
+        {
+          "text": "Measure",
+          "start": 520.22,
+          "end": 520.58
+        },
+        {
+          "text": "the",
+          "start": 520.58,
+          "end": 520.82
+        },
+        {
+          "text": "latter",
+          "start": 520.82,
+          "end": 521.18
+        },
+        {
+          "text": "against",
+          "start": 521.18,
+          "end": 521.6
+        },
+        {
+          "text": "the",
+          "start": 521.6,
+          "end": 521.82
+        },
+        {
+          "text": "computation",
+          "start": 521.82,
+          "end": 522.4
+        },
+        {
+          "text": "saved.",
+          "start": 522.4,
+          "end": 522.96
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/partition-boundary.svg",
+        "title": "Can saved compute pay for the link?",
+        "alt": "A toy serial critical path takes one hundred microseconds on one device. Two devices reduce computation to sixty microseconds but add fifty microseconds of exposed communication, for a total of one hundred and ten. If the communication were fully overlapped, the ideal combined time could be sixty microseconds."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "On a phone, CPU, GPU, and neural engine may share physical memory and a power budget. Shared memory avoids some explicit copies, but layouts, cache coordination, and bandwidth contention can still cost time. Sustained heat can also change the clocks. Measure the whole workload after warm-up, not just a cold burst.",
+      "start": 523.75,
+      "end": 544.62,
+      "words": [
+        {
+          "text": "On",
+          "start": 523.68,
+          "end": 524.14
+        },
+        {
+          "text": "a",
+          "start": 524.14,
+          "end": 524.24
+        },
+        {
+          "text": "phone,",
+          "start": 524.24,
+          "end": 524.56
+        },
+        {
+          "text": "CPU,",
+          "start": 524.92,
+          "end": 525.16
+        },
+        {
+          "text": "GPU",
+          "start": 525.72,
+          "end": 525.96
+        },
+        {
+          "text": "and",
+          "start": 525.96,
+          "end": 526.56
+        },
+        {
+          "text": "neural",
+          "start": 526.56,
+          "end": 526.82
+        },
+        {
+          "text": "engine",
+          "start": 526.82,
+          "end": 527.22
+        },
+        {
+          "text": "may",
+          "start": 527.22,
+          "end": 527.46
+        },
+        {
+          "text": "share",
+          "start": 527.46,
+          "end": 527.72
+        },
+        {
+          "text": "physical",
+          "start": 527.72,
+          "end": 528.04
+        },
+        {
+          "text": "memory",
+          "start": 528.04,
+          "end": 528.44
+        },
+        {
+          "text": "and",
+          "start": 528.44,
+          "end": 528.7
+        },
+        {
+          "text": "a",
+          "start": 528.7,
+          "end": 528.8
+        },
+        {
+          "text": "power",
+          "start": 528.8,
+          "end": 529.08
+        },
+        {
+          "text": "budget.",
+          "start": 529.08,
+          "end": 529.46
+        },
+        {
+          "text": "Shared",
+          "start": 529.46,
+          "end": 530.48
+        },
+        {
+          "text": "memory",
+          "start": 530.48,
+          "end": 530.82
+        },
+        {
+          "text": "avoids",
+          "start": 530.82,
+          "end": 531.4
+        },
+        {
+          "text": "some",
+          "start": 531.4,
+          "end": 531.56
+        },
+        {
+          "text": "explicit",
+          "start": 531.56,
+          "end": 532.0
+        },
+        {
+          "text": "copies,",
+          "start": 532.0,
+          "end": 532.44
+        },
+        {
+          "text": "but",
+          "start": 532.9,
+          "end": 533.02
+        },
+        {
+          "text": "layouts,",
+          "start": 533.02,
+          "end": 533.36
+        },
+        {
+          "text": "cash",
+          "start": 533.84,
+          "end": 534.12
+        },
+        {
+          "text": "coordination",
+          "start": 534.12,
+          "end": 534.54
+        },
+        {
+          "text": "and",
+          "start": 534.54,
+          "end": 535.06
+        },
+        {
+          "text": "bandwidth",
+          "start": 535.06,
+          "end": 535.38
+        },
+        {
+          "text": "contention",
+          "start": 535.38,
+          "end": 535.96
+        },
+        {
+          "text": "can",
+          "start": 535.96,
+          "end": 536.24
+        },
+        {
+          "text": "still",
+          "start": 536.24,
+          "end": 536.52
+        },
+        {
+          "text": "cost",
+          "start": 536.52,
+          "end": 536.84
+        },
+        {
+          "text": "time.",
+          "start": 536.84,
+          "end": 537.26
+        },
+        {
+          "text": "Sustained",
+          "start": 537.86,
+          "end": 538.32
+        },
+        {
+          "text": "heat",
+          "start": 538.32,
+          "end": 538.58
+        },
+        {
+          "text": "can",
+          "start": 538.58,
+          "end": 538.8
+        },
+        {
+          "text": "also",
+          "start": 538.8,
+          "end": 539.06
+        },
+        {
+          "text": "change",
+          "start": 539.06,
+          "end": 539.42
+        },
+        {
+          "text": "the",
+          "start": 539.42,
+          "end": 539.64
+        },
+        {
+          "text": "clocks.",
+          "start": 539.64,
+          "end": 539.94
+        },
+        {
+          "text": "Measure",
+          "start": 540.56,
+          "end": 540.88
+        },
+        {
+          "text": "the",
+          "start": 540.88,
+          "end": 541.1
+        },
+        {
+          "text": "whole",
+          "start": 541.1,
+          "end": 541.34
+        },
+        {
+          "text": "workload",
+          "start": 541.34,
+          "end": 541.82
+        },
+        {
+          "text": "after",
+          "start": 541.82,
+          "end": 542.2
+        },
+        {
+          "text": "warm",
+          "start": 542.2,
+          "end": 542.44
+        },
+        {
+          "text": "-up,",
+          "start": 542.44,
+          "end": 542.66
+        },
+        {
+          "text": "not",
+          "start": 542.9,
+          "end": 543.14
+        },
+        {
+          "text": "just",
+          "start": 543.14,
+          "end": 543.34
+        },
+        {
+          "text": "a",
+          "start": 543.34,
+          "end": 543.5
+        },
+        {
+          "text": "cold",
+          "start": 543.5,
+          "end": 543.66
+        },
+        {
+          "text": "burst.",
+          "start": 543.66,
+          "end": 544.0
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/soc-budget.svg",
+        "title": "Shared memory and power on a phone",
+        "alt": "CPU, GPU and neural engine share physical memory and a power and thermal budget on this illustrative system-on-chip. Shared access avoids some copies but does not remove layout changes, cache coordination, memory contention or power limits."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Power alone does not settle efficiency. Imagine one complete system averages two hundred watts while finishing one thousand equivalent results per second. It uses zero point two joules per result. Another averages one hundred and fifty watts but finishes only five hundred per second, or zero point three joules per result.",
+      "start": 544.62,
+      "end": 566.92,
+      "eq": {
+        "id": "energy-per-result",
+        "title": "Energy per completed result",
+        "latex": "E_{\\mathrm{result}}=P_{\\mathrm{system}}/r"
+      },
+      "words": [
+        {
+          "text": "Power",
+          "start": 544.76,
+          "end": 545.26
+        },
+        {
+          "text": "alone",
+          "start": 545.26,
+          "end": 545.68
+        },
+        {
+          "text": "does",
+          "start": 545.68,
+          "end": 546.14
+        },
+        {
+          "text": "not",
+          "start": 546.14,
+          "end": 546.34
+        },
+        {
+          "text": "settle",
+          "start": 546.34,
+          "end": 546.72
+        },
+        {
+          "text": "efficiency.",
+          "start": 546.72,
+          "end": 547.32
+        },
+        {
+          "text": "Imagine",
+          "start": 548.06,
+          "end": 548.44
+        },
+        {
+          "text": "one",
+          "start": 548.44,
+          "end": 548.82
+        },
+        {
+          "text": "complete",
+          "start": 548.82,
+          "end": 549.22
+        },
+        {
+          "text": "system",
+          "start": 549.22,
+          "end": 549.7
+        },
+        {
+          "text": "averages",
+          "start": 549.7,
+          "end": 550.22
+        },
+        {
+          "text": "200",
+          "start": 550.22,
+          "end": 550.8
+        },
+        {
+          "text": "watts",
+          "start": 550.8,
+          "end": 551.22
+        },
+        {
+          "text": "while",
+          "start": 551.22,
+          "end": 551.68
+        },
+        {
+          "text": "finishing",
+          "start": 551.68,
+          "end": 552.04
+        },
+        {
+          "text": "1000",
+          "start": 552.04,
+          "end": 552.82
+        },
+        {
+          "text": "equivalent",
+          "start": 552.82,
+          "end": 553.28
+        },
+        {
+          "text": "results",
+          "start": 553.28,
+          "end": 553.82
+        },
+        {
+          "text": "per",
+          "start": 553.82,
+          "end": 554.1
+        },
+        {
+          "text": "second.",
+          "start": 554.1,
+          "end": 554.46
+        },
+        {
+          "text": "It",
+          "start": 555.04,
+          "end": 555.3
+        },
+        {
+          "text": "uses",
+          "start": 555.3,
+          "end": 555.62
+        },
+        {
+          "text": "0",
+          "start": 555.62,
+          "end": 556.04
+        },
+        {
+          "text": ".2",
+          "start": 556.04,
+          "end": 556.68
+        },
+        {
+          "text": "joules",
+          "start": 556.68,
+          "end": 557.14
+        },
+        {
+          "text": "per",
+          "start": 557.14,
+          "end": 557.34
+        },
+        {
+          "text": "result.",
+          "start": 557.34,
+          "end": 557.76
+        },
+        {
+          "text": "Another",
+          "start": 557.76,
+          "end": 558.7
+        },
+        {
+          "text": "averages",
+          "start": 558.7,
+          "end": 559.32
+        },
+        {
+          "text": "150",
+          "start": 559.32,
+          "end": 560.06
+        },
+        {
+          "text": "watts",
+          "start": 560.06,
+          "end": 560.78
+        },
+        {
+          "text": "but",
+          "start": 560.78,
+          "end": 561.1
+        },
+        {
+          "text": "finishes",
+          "start": 561.1,
+          "end": 561.52
+        },
+        {
+          "text": "only",
+          "start": 561.52,
+          "end": 561.88
+        },
+        {
+          "text": "500",
+          "start": 561.88,
+          "end": 562.44
+        },
+        {
+          "text": "per",
+          "start": 562.44,
+          "end": 562.9
+        },
+        {
+          "text": "second,",
+          "start": 562.9,
+          "end": 563.34
+        },
+        {
+          "text": "or",
+          "start": 563.6,
+          "end": 563.96
+        },
+        {
+          "text": "0",
+          "start": 563.96,
+          "end": 564.36
+        },
+        {
+          "text": ".3",
+          "start": 564.36,
+          "end": 565.08
+        },
+        {
+          "text": "joules",
+          "start": 565.08,
+          "end": 565.58
+        },
+        {
+          "text": "per",
+          "start": 565.58,
+          "end": 565.78
+        },
+        {
+          "text": "result.",
+          "start": 565.78,
+          "end": 566.24
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Compare those figures at the same quality and with the same measurement boundary, and also check capacity, cost, tail latency, software support, and the real arrival pattern. Batching can raise throughput while waiting for enough requests increases latency. A better kernel bound is useful only if it survives these constraints.",
+      "start": 566.92,
+      "end": 587.47,
+      "words": [
+        {
+          "text": "Compare",
+          "start": 566.96,
+          "end": 567.46
+        },
+        {
+          "text": "those",
+          "start": 567.46,
+          "end": 567.76
+        },
+        {
+          "text": "figures",
+          "start": 567.76,
+          "end": 568.08
+        },
+        {
+          "text": "at",
+          "start": 568.08,
+          "end": 568.32
+        },
+        {
+          "text": "the",
+          "start": 568.32,
+          "end": 568.4
+        },
+        {
+          "text": "same",
+          "start": 568.4,
+          "end": 568.7
+        },
+        {
+          "text": "quality",
+          "start": 568.7,
+          "end": 569.06
+        },
+        {
+          "text": "and",
+          "start": 569.06,
+          "end": 569.42
+        },
+        {
+          "text": "with",
+          "start": 569.42,
+          "end": 569.54
+        },
+        {
+          "text": "the",
+          "start": 569.54,
+          "end": 569.66
+        },
+        {
+          "text": "same",
+          "start": 569.66,
+          "end": 569.92
+        },
+        {
+          "text": "measurement",
+          "start": 569.92,
+          "end": 570.34
+        },
+        {
+          "text": "boundary",
+          "start": 570.34,
+          "end": 570.76
+        },
+        {
+          "text": "and",
+          "start": 570.76,
+          "end": 571.34
+        },
+        {
+          "text": "also",
+          "start": 571.34,
+          "end": 571.64
+        },
+        {
+          "text": "check",
+          "start": 571.64,
+          "end": 571.96
+        },
+        {
+          "text": "capacity,",
+          "start": 571.96,
+          "end": 572.52
+        },
+        {
+          "text": "cost,",
+          "start": 572.96,
+          "end": 573.24
+        },
+        {
+          "text": "tail",
+          "start": 573.74,
+          "end": 573.92
+        },
+        {
+          "text": "latency,",
+          "start": 573.92,
+          "end": 574.34
+        },
+        {
+          "text": "software",
+          "start": 574.88,
+          "end": 575.26
+        },
+        {
+          "text": "support",
+          "start": 575.26,
+          "end": 575.62
+        },
+        {
+          "text": "and",
+          "start": 575.62,
+          "end": 576.26
+        },
+        {
+          "text": "the",
+          "start": 576.26,
+          "end": 576.38
+        },
+        {
+          "text": "real",
+          "start": 576.38,
+          "end": 576.68
+        },
+        {
+          "text": "arrival",
+          "start": 576.68,
+          "end": 577.0
+        },
+        {
+          "text": "pattern.",
+          "start": 577.0,
+          "end": 577.46
+        },
+        {
+          "text": "Batching",
+          "start": 578.22,
+          "end": 578.6
+        },
+        {
+          "text": "can",
+          "start": 578.6,
+          "end": 578.88
+        },
+        {
+          "text": "raise",
+          "start": 578.88,
+          "end": 579.14
+        },
+        {
+          "text": "throughput",
+          "start": 579.14,
+          "end": 579.6
+        },
+        {
+          "text": "while",
+          "start": 579.6,
+          "end": 579.98
+        },
+        {
+          "text": "waiting",
+          "start": 579.98,
+          "end": 580.3
+        },
+        {
+          "text": "for",
+          "start": 580.3,
+          "end": 580.56
+        },
+        {
+          "text": "enough",
+          "start": 580.56,
+          "end": 580.78
+        },
+        {
+          "text": "requests",
+          "start": 580.78,
+          "end": 581.26
+        },
+        {
+          "text": "increases",
+          "start": 581.26,
+          "end": 581.8
+        },
+        {
+          "text": "latency.",
+          "start": 581.8,
+          "end": 582.36
+        },
+        {
+          "text": "A",
+          "start": 583.02,
+          "end": 583.28
+        },
+        {
+          "text": "better",
+          "start": 583.28,
+          "end": 583.48
+        },
+        {
+          "text": "kernel",
+          "start": 583.48,
+          "end": 583.78
+        },
+        {
+          "text": "bound",
+          "start": 583.78,
+          "end": 584.1
+        },
+        {
+          "text": "is",
+          "start": 584.1,
+          "end": 584.4
+        },
+        {
+          "text": "useful",
+          "start": 584.4,
+          "end": 584.74
+        },
+        {
+          "text": "only",
+          "start": 584.74,
+          "end": 585.22
+        },
+        {
+          "text": "if",
+          "start": 585.22,
+          "end": 585.46
+        },
+        {
+          "text": "it",
+          "start": 585.46,
+          "end": 585.56
+        },
+        {
+          "text": "survives",
+          "start": 585.56,
+          "end": 585.88
+        },
+        {
+          "text": "these",
+          "start": 585.88,
+          "end": 586.28
+        },
+        {
+          "text": "constraints.",
+          "start": 586.28,
+          "end": 586.76
+        },
+        {
+          "text": "So",
+          "start": 586.76,
+          "end": 587.98
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/11-hw-acceleration/diagrams/diagnostic-order.svg",
+        "title": "Start with the exposed work",
+        "alt": "Start with a request trace, inspect device and fallback placement, count physical bytes at the relevant interface, compare compute and movement floors, and test a change while measuring the complete request again."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "So the opening question has two answers. For our fictional projection at batch one, the bandwidth machine has the better modeled floor. At batch two hundred and fifty-six, the compute machine does. Before buying either, verify the traffic, chosen kernels, sustained rates, and full request on the actual workload.",
+      "start": 587.47,
+      "end": 608.9,
+      "words": [
+        {
+          "text": "the",
+          "start": 587.98,
+          "end": 588.18
+        },
+        {
+          "text": "opening",
+          "start": 588.18,
+          "end": 588.46
+        },
+        {
+          "text": "question",
+          "start": 588.46,
+          "end": 588.92
+        },
+        {
+          "text": "has",
+          "start": 588.92,
+          "end": 589.26
+        },
+        {
+          "text": "two",
+          "start": 589.26,
+          "end": 589.5
+        },
+        {
+          "text": "answers.",
+          "start": 589.5,
+          "end": 590.06
+        },
+        {
+          "text": "For",
+          "start": 590.74,
+          "end": 590.9
+        },
+        {
+          "text": "our",
+          "start": 590.9,
+          "end": 591.02
+        },
+        {
+          "text": "fictional",
+          "start": 591.02,
+          "end": 591.32
+        },
+        {
+          "text": "projection",
+          "start": 591.32,
+          "end": 591.92
+        },
+        {
+          "text": "at",
+          "start": 591.92,
+          "end": 592.18
+        },
+        {
+          "text": "batch",
+          "start": 592.18,
+          "end": 592.34
+        },
+        {
+          "text": "one,",
+          "start": 592.34,
+          "end": 592.74
+        },
+        {
+          "text": "the",
+          "start": 593.24,
+          "end": 593.3
+        },
+        {
+          "text": "bandwidth",
+          "start": 593.3,
+          "end": 593.66
+        },
+        {
+          "text": "machine",
+          "start": 593.66,
+          "end": 594.24
+        },
+        {
+          "text": "has",
+          "start": 594.24,
+          "end": 594.54
+        },
+        {
+          "text": "the",
+          "start": 594.54,
+          "end": 594.72
+        },
+        {
+          "text": "better",
+          "start": 594.72,
+          "end": 595.0
+        },
+        {
+          "text": "modeled",
+          "start": 595.0,
+          "end": 595.46
+        },
+        {
+          "text": "floor.",
+          "start": 595.46,
+          "end": 595.88
+        },
+        {
+          "text": "At",
+          "start": 596.68,
+          "end": 596.8
+        },
+        {
+          "text": "batch",
+          "start": 596.8,
+          "end": 597.08
+        },
+        {
+          "text": "256,",
+          "start": 597.08,
+          "end": 598.24
+        },
+        {
+          "text": "the",
+          "start": 598.92,
+          "end": 599.0
+        },
+        {
+          "text": "compute",
+          "start": 599.0,
+          "end": 599.3
+        },
+        {
+          "text": "machine",
+          "start": 599.3,
+          "end": 599.76
+        },
+        {
+          "text": "does.",
+          "start": 599.76,
+          "end": 600.12
+        },
+        {
+          "text": "Before",
+          "start": 600.86,
+          "end": 601.14
+        },
+        {
+          "text": "buying",
+          "start": 601.14,
+          "end": 601.56
+        },
+        {
+          "text": "either,",
+          "start": 601.56,
+          "end": 601.94
+        },
+        {
+          "text": "verify",
+          "start": 602.36,
+          "end": 602.58
+        },
+        {
+          "text": "the",
+          "start": 602.58,
+          "end": 602.88
+        },
+        {
+          "text": "traffic,",
+          "start": 602.88,
+          "end": 603.36
+        },
+        {
+          "text": "chosen",
+          "start": 603.76,
+          "end": 604.16
+        },
+        {
+          "text": "kernels,",
+          "start": 604.16,
+          "end": 604.78
+        },
+        {
+          "text": "sustained",
+          "start": 605.02,
+          "end": 605.34
+        },
+        {
+          "text": "rates",
+          "start": 605.34,
+          "end": 605.88
+        },
+        {
+          "text": "and",
+          "start": 605.88,
+          "end": 606.18
+        },
+        {
+          "text": "full",
+          "start": 606.18,
+          "end": 606.42
+        },
+        {
+          "text": "request",
+          "start": 606.42,
+          "end": 606.84
+        },
+        {
+          "text": "on",
+          "start": 606.84,
+          "end": 607.12
+        },
+        {
+          "text": "the",
+          "start": 607.12,
+          "end": 607.24
+        },
+        {
+          "text": "actual",
+          "start": 607.24,
+          "end": 607.6
+        },
+        {
+          "text": "workload.",
+          "start": 607.6,
+          "end": 608.02
+        }
+      ],
+      "visual": {
+        "src": "/study-audio/vol1/11-hw-acceleration/projection-time.svg",
+        "title": "Which device has the lower time floor?",
+        "alt": "At batch one, A takes at least 67.1 microseconds and B 33.6. At batch 256, A takes at least 85.9 microseconds and B 171.8. Shorter bars have the lower modeled time floor."
+      }
+    }
+  ]
+}

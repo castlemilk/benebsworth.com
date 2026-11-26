@@ -1,0 +1,38 @@
+[
+ {
+  "id": "book-five-levels",
+  "file": "five-level-model.svg",
+  "title": "The five-level model (book)",
+  "caption": "The book's layered map: wire/link, transport, topology, fabric behavior, cluster design. The packet follows the same order; each level is where a different assumption from generic networking breaks."
+ },
+ {
+  "id": "book-pam4",
+  "file": "pam4-vs-nrz.svg",
+  "title": "PAM4 vs NRZ (book)",
+  "caption": "Four levels carry 2 bits per symbol where NRZ carried 1, at the price of a third of the SNR margin, which is why FEC is now mandatory and costs hundreds of nanoseconds."
+ },
+ {
+  "id": "book-reach-ladder",
+  "file": "network_fabrics_physical_reach_ladder.svg",
+  "title": "Physical reach ladder (book)",
+  "caption": "Package at millimeters, DAC at 1-3 m, AOC at 3-30 m, optics past 30 m. The packet uses the ladder to explain why spine links are pairs of ~20 W pluggable modules."
+ },
+ {
+  "id": "book-gpudirect",
+  "file": "gpudirect-data-path.svg",
+  "title": "GPUDirect data path (book)",
+  "caption": "The NIC reading and writing GPU HBM directly, no CPU staging. The packet's Level 2 keeps this as the reason RDMA collectives can reach line rate at all."
+ },
+ {
+  "id": "book-rail-optimized",
+  "file": "rail-optimized.svg",
+  "title": "Rail-optimized topology (book)",
+  "caption": "The book's rail diagram: same-index GPUs share a switch path, collapsing 3 hops to 1 for traffic the layout localizes. Our cut figure draws the cost side (oversubscription) of the same design space."
+ },
+ {
+  "id": "book-incast",
+  "file": "incast-flow.svg",
+  "title": "Incast flow (book)",
+  "caption": "The book's many-to-one incast illustration with 256 senders. Ours recomposes the same event as a buffer-survival timeline: 640 us of hold against a <5 us overflow."
+ }
+]

@@ -9,7 +9,7 @@ import { Reveal } from '@/components/motion/reveal';
 import { suiteForSlug, tasksForSuite, HARNESS_SUITES } from '@/lib/lab/harness-eval/registry';
 import { ALL_SUMMARIES } from '@/lib/lab/harness-eval/results';
 import { loadSuiteContent } from '@/lib/lab/harness-eval/content';
-import { Terminal, ArrowRight } from 'lucide-react';
+import { Terminal } from 'lucide-react';
 
 export function generateStaticParams() {
   return HARNESS_SUITES.map((s) => ({ suite: s.slug }));

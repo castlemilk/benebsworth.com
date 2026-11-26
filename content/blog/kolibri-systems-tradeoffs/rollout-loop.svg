@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 358" role="img" aria-labelledby="title desc">
+<title id="title">From rollout scores to group-relative advantages</title><desc id="desc">Four rewards are 1, 1, 0 and 0. Subtract the mean of 0.5 to get positive advantages for the first two attempts and negative advantages for the other two.</desc>
+<style>
+text{font:22px system-ui,sans-serif;fill:#202d2c} .title{font-size:25px;font-weight:700} .small{font-size:19px;fill:#495a57} .label{font-weight:600} .card{fill:#e7eeeb;stroke:#8a9c98} .accent{fill:#bce5d8;stroke:#257660;stroke-width:2} .arrow{fill:none;stroke:#257660;stroke-width:2.5;marker-end:url(#head)}
+</style>
+<defs><marker id="head" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L7 3L0 6z" fill="#257660"/></marker></defs>
+<rect width="600" height="358" rx="12" fill="#f8faf9"/>
+<text x="26" y="43" class="title" text-anchor="start">One prompt, four graded attempts</text>
+<text x="26" y="77" class="small" text-anchor="start">A simplified rollout group</text>
+<rect x="26" y="104" width="129" height="90" rx="9" class="accent"/>
+<text x="90" y="137" class="small" text-anchor="middle">Reward 1</text>
+<text x="90" y="174" class="label" text-anchor="middle">+0.5</text>
+<rect x="165" y="104" width="129" height="90" rx="9" class="accent"/>
+<text x="229" y="137" class="small" text-anchor="middle">Reward 1</text>
+<text x="229" y="174" class="label" text-anchor="middle">+0.5</text>
+<rect x="304" y="104" width="129" height="90" rx="9" class="card"/>
+<text x="368" y="137" class="small" text-anchor="middle">Reward 0</text>
+<text x="368" y="174" class="label" text-anchor="middle">−0.5</text>
+<rect x="443" y="104" width="129" height="90" rx="9" class="card"/>
+<text x="507" y="137" class="small" text-anchor="middle">Reward 0</text>
+<text x="507" y="174" class="label" text-anchor="middle">−0.5</text>
+<path class="arrow" d="M300 208v25"/>
+<rect x="26" y="240" width="548" height="59" rx="9" class="card"/>
+<text x="300" y="276" class="small" text-anchor="middle">Advantage = reward − group mean (0.5)</text>
+<text x="26" y="335" class="small" text-anchor="start">The trainer uses the differences to update the model.</text>
+</svg>

@@ -1,0 +1,214 @@
+[
+ {
+  "id": "false-wake-budget",
+  "number": 1,
+  "title": "The false-wake budget: per-window false-positive bound",
+  "latex": "\\mathrm{FPR}_{win} \\leq \\frac{\\mathrm{FW}_{budget}}{W_{month}} \\approx \\frac{1}{2.59\\times 10^{6}} \\approx 3.9\\times 10^{-7}",
+  "caption": "An always-on detector budgets one expected false wake per month. With ~1 non-keyword classification window per second, W_month is ~2.59M windows — so each window may false-fire at most ~4 times in ten million. Expected values add across correlated windows, so the bound holds even though neighboring windows aren't independent.",
+  "symbols": [
+   {
+    "symbol": "\\mathrm{FPR}_{win}",
+    "name": "per-window false-positive rate",
+    "meaning": "probability a single non-keyword window triggers a wake"
+   },
+   {
+    "symbol": "\\mathrm{FW}_{budget}",
+    "name": "false-wake budget",
+    "meaning": "expected false wakes allowed per month (here: 1)"
+   },
+   {
+    "symbol": "W_{month}",
+    "name": "windows per month",
+    "meaning": "non-keyword classification windows evaluated monthly (~2.59M at 1/s)"
+   }
+  ]
+ },
+ {
+  "id": "rule-of-three",
+  "number": 2,
+  "title": "Rule of three: evidence for a zero-event claim",
+  "latex": "\\lambda_{95} \\approx \\frac{3}{n} \\quad\\Longrightarrow\\quad T_{listen} \\approx \\frac{3}{\\lambda_{target}}",
+  "caption": "If zero events are observed in n independent trials, the one-sided ~95% upper bound on the true rate is about 3/n. Claiming one false wake per month therefore needs ~3 months of representative listening with zero observed wakes — fewer hours establishes a weaker claim, not a pass.",
+  "symbols": [
+   {
+    "symbol": "\\lambda_{95}",
+    "name": "rate upper bound",
+    "meaning": "~95% one-sided upper bound on the true event rate after zero observations"
+   },
+   {
+    "symbol": "n",
+    "name": "trials observed",
+    "meaning": "independent windows / listening units with zero events"
+   },
+   {
+    "symbol": "T_{listen}",
+    "name": "required listening duration",
+    "meaning": "representative audio needed before a rate claim can be accepted"
+   },
+   {
+    "symbol": "\\lambda_{target}",
+    "name": "target event rate",
+    "meaning": "the rate being claimed (e.g. 1 false wake per month)"
+   }
+  ]
+ },
+ {
+  "id": "cohens-kappa",
+  "number": 3,
+  "title": "Cohen's kappa: chance-corrected annotator agreement",
+  "latex": "\\kappa = \\frac{p_o - p_e}{1 - p_e}",
+  "caption": "Raw agreement lies on skewed classes: two annotators agreeing 90% on a 90/10 class split agree mostly by chance. Kappa discounts the expected chance agreement, so label quality is judged against what guessing would already score.",
+  "symbols": [
+   {
+    "symbol": "\\kappa",
+    "name": "Cohen's kappa",
+    "meaning": "agreement beyond chance; 1 = perfect, 0 = chance-level, <0 = worse than chance"
+   },
+   {
+    "symbol": "p_o",
+    "name": "observed agreement",
+    "meaning": "fraction of items both annotators labeled identically"
+   },
+   {
+    "symbol": "p_e",
+    "name": "expected agreement",
+    "meaning": "agreement expected if each annotator labeled independently at their own class rates"
+   }
+  ]
+ },
+ {
+  "id": "label-entropy",
+  "number": 4,
+  "title": "Predictive entropy: a supervision-quality signal",
+  "latex": "H_{label} = -\\sum_i p_i \\ln p_i",
+  "caption": "Entropy of a trained model's predictive distribution. Inconsistent labels train the model to spread probability across competing classes, so rising entropy flags supervision problems — trustworthy only if the model is calibrated, and ambiguous with hard inputs, shift, or calibration drift as alternative causes.",
+  "symbols": [
+   {
+    "symbol": "H_{label}",
+    "name": "predictive entropy",
+    "meaning": "spread of the model's predicted class distribution; rises on contradictory supervision"
+   },
+   {
+    "symbol": "p_i",
+    "name": "predicted class probability",
+    "meaning": "model probability assigned to class i for a given input"
+   }
+  ]
+ },
+ {
+  "id": "psi",
+  "number": 5,
+  "title": "Population Stability Index: binned-distribution drift",
+  "latex": "\\mathrm{PSI} = \\sum_i \\left( A_i - E_i \\right) \\ln\\!\\left(\\frac{A_i}{E_i}\\right)",
+  "caption": "Bins a feature by the baseline distribution (typically deciles) and scores how the current distribution reweights each bin. Conventional bands: <0.1 stable, 0.1–0.25 moderate shift, >0.25 investigate — conventions to calibrate per deployment, not physical limits.",
+  "symbols": [
+   {
+    "symbol": "A_i",
+    "name": "actual share",
+    "meaning": "fraction of current/production observations falling in bin i"
+   },
+   {
+    "symbol": "E_i",
+    "name": "expected share",
+    "meaning": "fraction of baseline/training observations falling in bin i"
+   },
+   {
+    "symbol": "\\mathrm{PSI}",
+    "name": "population stability index",
+    "meaning": "single divergence score for a binned feature; larger = more reweighting vs baseline"
+   }
+  ]
+ },
+ {
+  "id": "ks-test",
+  "number": 6,
+  "title": "Kolmogorov–Smirnov: max-gap drift statistic",
+  "latex": "D_{KS} = \\max_x \\lvert F_P(x) - F_Q(x) \\rvert, \\qquad D_{crit} \\approx 1.36\\sqrt{\\frac{n_P + n_Q}{n_P n_Q}}",
+  "caption": "Nonparametric: compares the empirical CDFs of a baseline batch P and a current batch Q without assuming a distribution family. Exceeding the critical distance at a chosen significance level is an investigation trigger for a univariate continuous feature — not a universal failure rule.",
+  "symbols": [
+   {
+    "symbol": "D_{KS}",
+    "name": "K-S statistic",
+    "meaning": "largest vertical gap between the two empirical CDFs"
+   },
+   {
+    "symbol": "F_P, F_Q",
+    "name": "empirical CDFs",
+    "meaning": "cumulative distributions of the baseline (P) and current (Q) samples"
+   },
+   {
+    "symbol": "D_{crit}",
+    "name": "critical distance",
+    "meaning": "threshold at ~5% significance; shrinks as either sample grows"
+   },
+   {
+    "symbol": "n_P, n_Q",
+    "name": "sample sizes",
+    "meaning": "observation counts in the two compared batches"
+   }
+  ]
+ },
+ {
+  "id": "feeding-bound",
+  "number": 7,
+  "title": "The feeding bound: min of compute and supply",
+  "latex": "T_{step} = \\max(T_{compute},\\, T_{IO}), \\qquad R_{supply} = \\mathrm{BW}_{phys} \\cdot \\eta_{fmt} \\cdot (1 - \\varepsilon_{ovh})",
+  "caption": "Step time is set by the slower of compute and input — feeding loss is the idle fraction when IO wins. The supply rate is physical bandwidth discounted by format efficiency (columnar vs row parsing) and loader/decode overhead; every discount is a stage in the input path.",
+  "symbols": [
+   {
+    "symbol": "T_{step}",
+    "name": "step time",
+    "meaning": "wall-clock duration of one training step"
+   },
+   {
+    "symbol": "T_{IO}",
+    "name": "input time",
+    "meaning": "time to read, decode, transform, and transfer one step's batch"
+   },
+   {
+    "symbol": "R_{supply}",
+    "name": "data supply rate",
+    "meaning": "usable bytes/samples the input path delivers per second"
+   },
+   {
+    "symbol": "\\eta_{fmt}",
+    "name": "format efficiency",
+    "meaning": "fraction of physical bandwidth surviving the container format (Parquet columnar >> CSV/JSON row parse)"
+   },
+   {
+    "symbol": "\\varepsilon_{ovh}",
+    "name": "pipeline overhead",
+    "meaning": "fraction lost to decode, transform, and transfer work in the loader path"
+   }
+  ]
+ },
+ {
+  "id": "debt-compound",
+  "number": 8,
+  "title": "Data debt compounding",
+  "latex": "\\mathrm{Debt}_n \\approx \\mathrm{Debt}_0 \\times (1 + r)^n",
+  "caption": "Debt measured as the engineer-hours needed to bring every debt metric below its warning threshold, growing at a net rate r per planning period. A planning heuristic, not a physical law — real backlogs jump at discrete upstream migrations, and pseudo-label loops make debt compound into dependent systems.",
+  "symbols": [
+   {
+    "symbol": "\\mathrm{Debt}_n",
+    "name": "debt after n periods",
+    "meaning": "projected remediation backlog in engineer-hours"
+   },
+   {
+    "symbol": "\\mathrm{Debt}_0",
+    "name": "current debt",
+    "meaning": "today's remediation backlog — hours to clear all warning thresholds"
+   },
+   {
+    "symbol": "r",
+    "name": "net growth rate",
+    "meaning": "fraction the backlog grows per planning period, net of remediation"
+   },
+   {
+    "symbol": "n",
+    "name": "elapsed periods",
+    "meaning": "planning periods since the Debt_0 measurement"
+   }
+  ]
+ }
+]

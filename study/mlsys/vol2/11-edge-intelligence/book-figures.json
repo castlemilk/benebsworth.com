@@ -1,0 +1,37 @@
+[
+  {
+    "id": "book-edge-architectures",
+    "file": "edge-learning-architectures.svg",
+    "title": "Learning architectures",
+    "caption": "The book's comparison of local-only, centralized-cloud and federated learning by what crosses the device boundary. Our boundary-map redraws the same decision in a compact lane form.",
+    "alt": "Three architectures showing data or model updates crossing a device boundary"
+  },
+  {
+    "id": "book-training-memory",
+    "file": "training-memory-amplifier.svg",
+    "title": "Training memory amplifier",
+    "caption": "The book's memory-amplifier figure. Our version keeps the 40/40/80/200 MB composition but places it directly against the 200-300 MB background allowance.",
+    "alt": "Stacked training memory bar beside a smaller inference weight bar"
+  },
+  {
+    "id": "book-fl-tradeoff",
+    "file": "fl-communication-computation.svg",
+    "title": "Communication-computation trade-off",
+    "caption": "The book's illustrative local-epoch cost curves. We quote only the fast/slow optimum shift and preserve the warning that the curves are not measured convergence results.",
+    "alt": "Curves showing optimal local epochs shifting right as bandwidth decreases"
+  },
+  {
+    "id": "book-secure-aggregation",
+    "file": "secure-aggregation.svg",
+    "title": "Secure aggregation",
+    "caption": "The book's secure-aggregation mechanism, including mask cancellation, dropout recovery and participation floor. We keep those constraints in prose and cite the original mechanism here.",
+    "alt": "Clients masking updates so the coordinator sees only an aggregate"
+  },
+  {
+    "id": "book-edge-lifecycle",
+    "file": "edge-mlops-lifecycle.svg",
+    "title": "Edge MLOps lifecycle",
+    "caption": "The book's cloud-to-device lifecycle across pretraining, compression, rollout, adaptation and privacy-controlled telemetry. Our packet compresses the operational lesson into release-bundle, shadow-gate and rollback rules.",
+    "alt": "Lifecycle pipeline linking cloud training, deployment, device adaptation and telemetry"
+  }
+]

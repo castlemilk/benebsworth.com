@@ -1,0 +1,78 @@
+[
+  {
+    "id": "job-mix",
+    "kind": "BAR_STACKED",
+    "title": "Two populations share one fleet",
+    "caption": "Kalos language-model cluster trace, 19,907 jobs: single-GPU jobs are 86% of submissions but about 0.1% of GPU-time, while 256+-GPU jobs are ~4% of submissions and ~96% of GPU-time. The scheduler's fairness problem is that the two bars describe the same fleet.",
+    "xLabel": "Population share",
+    "yLabel": "Share (%)",
+    "xPoints": [
+      "Share of job count",
+      "Share of GPU time"
+    ],
+    "series": [
+      {
+        "key": "small",
+        "label": "1-GPU jobs",
+        "color": "var(--chart-2)",
+        "values": [
+          86,
+          0.1
+        ]
+      },
+      {
+        "key": "mid",
+        "label": "2-255-GPU jobs",
+        "color": "var(--chart-4)",
+        "values": [
+          10,
+          3.9
+        ]
+      },
+      {
+        "key": "large",
+        "label": "256+-GPU jobs",
+        "color": "var(--chart-1)",
+        "values": [
+          4,
+          96
+        ]
+      }
+    ]
+  },
+  {
+    "id": "interruption-tax",
+    "kind": "BAR_STACKED",
+    "title": "The interruption tax on spot savings",
+    "caption": "Illustrative billed-hour split per retained training hour, middle bar anchored to the chapter scenario: \\$344,064 on-demand vs \\$161,567 spot for the same run \u2014 a nominal 65% discount settling to ~52%, an overhead ratio near 0.37. Rare interruptions keep the discount nearly whole; frequent ones can erase it.",
+    "xLabel": "Interruption frequency",
+    "yLabel": "Billed hours per retained hour",
+    "xPoints": [
+      "Rare (weekly)",
+      "Chapter scenario",
+      "Frequent (4x/day)"
+    ],
+    "series": [
+      {
+        "key": "retained",
+        "label": "Retained training work",
+        "color": "var(--chart-2)",
+        "values": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "key": "overhead",
+        "label": "Checkpoint + restart + replay",
+        "color": "var(--chart-1)",
+        "values": [
+          0.05,
+          0.37,
+          0.8
+        ]
+      }
+    ]
+  }
+]

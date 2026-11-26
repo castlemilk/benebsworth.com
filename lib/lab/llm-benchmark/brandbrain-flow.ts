@@ -305,10 +305,6 @@ function artifactLocator(text: string): { kind: 'url'; url: string } | { kind: '
   return digest ? { kind: 'digest', id: digest } : undefined
 }
 
-/** First http(s) artifact URL in a tool's text. */
-function firstUrl(text: string): string | undefined {
-  return /https?:\/\/[^\s"'<>)]+/.exec(text)?.[0]
-}
 
 /**
  * Run one BrandBrain flow and bring one generated picture back to disk.

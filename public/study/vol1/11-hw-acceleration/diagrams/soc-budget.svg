@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ha-soc-budget" class="study-fig-fit" viewBox="0 0 420 290" role="img" aria-labelledby="ha-soc-budget-title ha-soc-budget-desc">
+<title id="ha-soc-budget-title">Shared memory still has constraints</title>
+<desc id="ha-soc-budget-desc">CPU, GPU and neural engine share physical memory and a power and thermal budget on this illustrative system-on-chip. Shared access avoids some copies but does not remove layout changes, cache coordination, memory contention or power limits.</desc>
+<style>
+  #ha-soc-budget { font-family: system-ui, sans-serif; }
+  .dark #ha-soc-budget [fill="#fbf7f0"] { fill: #201a17; }
+  .dark #ha-soc-budget [fill="#eee5da"] { fill: #332b26; }
+  .dark #ha-soc-budget [fill="#29231e"] { fill: #f7eee3; }
+  .dark #ha-soc-budget [fill="#6f6055"] { fill: #c8b8aa; }
+  .dark #ha-soc-budget [fill="#9a3d1d"] { fill: #f2a276; }
+  .dark #ha-soc-budget [stroke="#b8a89c"] { stroke: #72665c; }
+  .dark #ha-soc-budget [stroke="#6f6055"] { stroke: #ad9d8f; }
+  .dark #ha-soc-budget [stroke="#9a3d1d"] { stroke: #f2a276; }
+</style>
+<rect width="420" height="290" rx="12" fill="#fbf7f0"/>
+<text x="22" y="36" fill="#29231e" font-size="21" font-weight="650">Shared memory, shared limits</text>
+<rect x="22" y="56" width="110" height="48" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="77" y="87" fill="#29231e" font-size="19" font-weight="650" text-anchor="middle">CPU</text>
+<path d="M77 104L77 142" fill="none" stroke="#6f6055" stroke-width="2"/>
+<rect x="155" y="56" width="110" height="48" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="210" y="87" fill="#29231e" font-size="19" font-weight="650" text-anchor="middle">GPU</text>
+<path d="M210 104L210 142" fill="none" stroke="#6f6055" stroke-width="2"/>
+<rect x="288" y="56" width="110" height="48" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="343" y="87" fill="#29231e" font-size="19" font-weight="650" text-anchor="middle">NPU</text>
+<path d="M343 104L343 142" fill="none" stroke="#6f6055" stroke-width="2"/>
+<rect x="22" y="142" width="376" height="55" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="210" y="165" fill="#9a3d1d" font-size="17" font-weight="650" text-anchor="middle">SHARED MEMORY</text>
+<text x="210" y="185" fill="#6f6055" font-size="15" text-anchor="middle">traffic, layouts, cache coordination</text>
+<rect x="22" y="213" width="376" height="50" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="210" y="233" fill="#9a3d1d" font-size="15" font-weight="650" text-anchor="middle">SHARED POWER + THERMAL BUDGET</text>
+<text x="210" y="253" fill="#6f6055" font-size="15" text-anchor="middle">sustained clocks can change</text>
+</svg>

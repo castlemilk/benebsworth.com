@@ -140,6 +140,22 @@ message TranscriptEquation {
   string latex = 3;  // raw TeX, no $$ delimiters
 }
 
+// One word inside a transcript segment, with absolute seconds in the joined
+// .m4a as measured by whisper alignment (scripts/study-align.py). Optional —
+// the karaoke sweep interpolates across characters when absent.
+message TranscriptWord {
+  string text = 1;  // the spoken word as transcribed
+  double start = 2; // seconds
+  double end = 3;   // seconds
+}
+
+// Still image displayed from this turn until the next visual or equation cue.
+message TranscriptVisual {
+  string src = 1;   // site-root URL of the published image
+  string title = 2;
+  string alt = 3;
+}
+
 // One utterance in the audio-overview transcript. start/end are seconds in
 // the joined .m4a; the generator measures them from each segment's WAV.
 message TranscriptSegment {
@@ -148,6 +164,8 @@ message TranscriptSegment {
   double start = 3;   // seconds
   double end = 4;     // seconds
   TranscriptEquation eq = 5; // set when the utterance names an equation
+  repeated TranscriptWord words = 6; // aligned word timings when study-align ran
+  optional TranscriptVisual visual = 7;
 }
 
 // transcript.json beside podcast.md — drives the karaoke read-along in the

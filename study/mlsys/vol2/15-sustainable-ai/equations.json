@@ -1,0 +1,105 @@
+[
+  {
+    "id": "fleet-energy-identity",
+    "number": 1,
+    "title": "Fleet energy identity",
+    "latex": "E_{\\mathrm{fleet}}=e_{\\mathrm{task}}\\times Q",
+    "caption": "Total energy is energy per completed task times the number of completed tasks. Cut per-task energy fourfold while volume rises twentyfold and fleet energy rises fivefold. Efficiency per task and absolute demand are separate variables, which is why efficiency targets need an absolute resource budget.",
+    "symbols": [
+      {"symbol": "e_{\\mathrm{task}}", "name": "energy per task", "meaning": "Measured energy of one completed unit of useful work at a stated boundary"},
+      {"symbol": "Q", "name": "task volume", "meaning": "Number of completed tasks over the observation period"},
+      {"symbol": "E_{\\mathrm{fleet}}", "name": "fleet energy", "meaning": "Total energy the fleet consumes in the period"}
+    ]
+  },
+  {
+    "id": "cmos-power",
+    "number": 2,
+    "title": "CMOS power equation",
+    "latex": "P=\\alpha C V^{2}f+V\\,I_{\\mathrm{leak}}",
+    "caption": "Dynamic power scales with the square of supply voltage, which is why voltage is the strongest chip-level lever and why the end of Dennard scaling removed automatic per-node savings. Static leakage flows even when nothing switches, and it can rise with temperature, so cooling and leakage feed back on each other.",
+    "symbols": [
+      {"symbol": "\\alpha", "name": "activity factor", "meaning": "Capacitance-weighted switching per clock cycle; not useful-work utilization"},
+      {"symbol": "C", "name": "switched capacitance", "meaning": "Effective load capacitance of the circuits being switched"},
+      {"symbol": "V", "name": "supply voltage", "meaning": "Rail voltage; enters the dynamic term quadratically"},
+      {"symbol": "f", "name": "clock frequency", "meaning": "Rate of switching opportunities"},
+      {"symbol": "I_{\\mathrm{leak}}", "name": "leakage current", "meaning": "Current flowing while transistors are nominally off"}
+    ]
+  },
+  {
+    "id": "pue",
+    "number": 3,
+    "title": "Power usage effectiveness",
+    "latex": "\\mathrm{PUE}=\\frac{P_{\\mathrm{facility}}}{P_{\\mathrm{IT}}}",
+    "caption": "The ratio of total facility power to IT-equipment power. A value of 1.1 means ten watts of non-IT overhead per hundred watts of IT load. PUE measures overhead only: idle servers stay inside the IT denominator, and a coal-powered site can beat a solar-powered one on PUE while emitting far more carbon.",
+    "symbols": [
+      {"symbol": "P_{\\mathrm{facility}}", "name": "facility power", "meaning": "Total power at the facility boundary including cooling and facility-side losses"},
+      {"symbol": "P_{\\mathrm{IT}}", "name": "IT power", "meaning": "Power inside the IT equipment boundary, including idle and stalled machines"},
+      {"symbol": "\\mathrm{PUE}", "name": "power usage effectiveness", "meaning": "Overhead multiplier converting IT energy to facility energy"}
+    ]
+  },
+  {
+    "id": "operational-carbon",
+    "number": 4,
+    "title": "Operational carbon attribution",
+    "latex": "C_{\\mathrm{op}}=E_{\\mathrm{facility}}\\times \\mathrm{CI}_{\\mathrm{grid}}",
+    "caption": "Emissions equal facility energy times the grid carbon intensity. Holding 2,000 MWh fixed, a 400 g/kWh grid attributes about 800 tonnes against about 40 on a 20 g/kWh hydro grid, a twentyfold spread from placement alone. Attributional accounting uses average factors; consequential scheduling needs the marginal generator.",
+    "symbols": [
+      {"symbol": "E_{\\mathrm{facility}}", "name": "facility energy", "meaning": "Energy measured at the facility boundary over the workload interval"},
+      {"symbol": "\\mathrm{CI}_{\\mathrm{grid}}", "name": "grid carbon intensity", "meaning": "Grams of CO2 emitted per kilowatt-hour delivered, average or marginal"},
+      {"symbol": "C_{\\mathrm{op}}", "name": "operational carbon", "meaning": "Emissions attributed to the workload's electricity use"}
+    ]
+  },
+  {
+    "id": "step-energy",
+    "number": 5,
+    "title": "Distributed step energy",
+    "latex": "E_{\\mathrm{step}}\\approx \\bar{P}\\,\\Big(\\tfrac{T_{\\mathrm{comp}}}{N}+T_{\\mathrm{comm}}(N)+T_{\\mathrm{sync}}(N)-T_{\\mathrm{overlap}}\\Big)",
+    "caption": "The Fleet Law with a power meter attached: every exposed second of communication or synchronization is a block of joules because the fleet keeps drawing power while it waits. A quarter of the step in unhidden communication is a quarter of its energy only if power is flat across the step, so the share must be read from a power trace.",
+    "symbols": [
+      {"symbol": "\\bar{P}", "name": "average fleet power", "meaning": "Mean power draw across the step interval"},
+      {"symbol": "T_{\\mathrm{comp}}", "name": "compute time", "meaning": "Local arithmetic work divided across N devices"},
+      {"symbol": "T_{\\mathrm{comm}}", "name": "communication time", "meaning": "Exposed collective and transfer time at scale N"},
+      {"symbol": "T_{\\mathrm{sync}}", "name": "synchronization time", "meaning": "Waiting at barriers, including straggler exposure"},
+      {"symbol": "T_{\\mathrm{overlap}}", "name": "overlapped time", "meaning": "Communication hidden under computation"}
+    ]
+  },
+  {
+    "id": "cascade-energy",
+    "number": 6,
+    "title": "Cascade inference energy",
+    "latex": "E_{\\mathrm{cascade}}=E_{\\mathrm{local}}+p\\,(E_{\\mathrm{tx}}+E_{\\mathrm{cloud}})",
+    "caption": "A small edge model filters inputs and escalates a fraction p to the cloud. Because radio transmission dwarfs local arithmetic by orders of magnitude per bit, the escalation probability is the lever: the architecture saves energy only when the avoided transfers and cloud work exceed the device's added computation and idle power. Accuracy is a separate test.",
+    "symbols": [
+      {"symbol": "E_{\\mathrm{local}}", "name": "local energy", "meaning": "Edge inference energy per input, always paid"},
+      {"symbol": "p", "name": "escalation probability", "meaning": "Fraction of inputs escalated to the cloud, measured on the deployment distribution"},
+      {"symbol": "E_{\\mathrm{tx}}", "name": "transmission energy", "meaning": "Radio energy of sending one input uplink"},
+      {"symbol": "E_{\\mathrm{cloud}}", "name": "cloud inference energy", "meaning": "Server-side energy per escalated input"}
+    ]
+  },
+  {
+    "id": "federated-energy",
+    "number": 7,
+    "title": "Federated versus centralized energy",
+    "latex": "E_{\\mathrm{fed}}=R\\big[K(E_{\\mathrm{train}}+E_{\\mathrm{dl}}+E_{\\mathrm{ul}})+E_{\\mathrm{agg}}\\big]\\quad\\mathrm{vs}\\quad E_{\\mathrm{cent}}=K\\,E_{\\mathrm{raw}}+E_{\\mathrm{cloud}}",
+    "caption": "Federated training pays model downloads and update uploads once per client per round, so communication recurs hundreds of times. It wins on energy only when that repeated communication plus local training beats one raw-data upload per client plus the centralized run. Privacy and energy benefits each need separate evidence.",
+    "symbols": [
+      {"symbol": "R", "name": "rounds", "meaning": "Federated averaging rounds to reach the quality target"},
+      {"symbol": "K", "name": "clients per round", "meaning": "Participating clients in each round"},
+      {"symbol": "E_{\\mathrm{dl}},E_{\\mathrm{ul}}", "name": "transfer energies", "meaning": "Model download and update upload energy per client per round"},
+      {"symbol": "E_{\\mathrm{raw}}", "name": "raw-data upload", "meaning": "One client's cost of uploading its raw training data once"},
+      {"symbol": "E_{\\mathrm{agg}}", "name": "aggregation energy", "meaning": "Server aggregation cost per round"}
+    ]
+  },
+  {
+    "id": "embodied-amortization",
+    "number": 8,
+    "title": "Amortized embodied carbon",
+    "latex": "c_{\\mathrm{annual}}=\\frac{C_{\\mathrm{mfg}}}{Y}",
+    "caption": "Manufacturing emissions are incurred before the first job runs and are amortized over useful service life. Extending life from three years to five cuts the annualized allocation by 40 percent. Retiring functional hardware for modest efficiency gains can cost more in new manufacturing than it saves in operation; the break-even depends on utilization and grid intensity.",
+    "symbols": [
+      {"symbol": "C_{\\mathrm{mfg}}", "name": "manufacturing carbon", "meaning": "Embodied emissions from fabrication, packaging, and transport"},
+      {"symbol": "Y", "name": "service years", "meaning": "Useful lifetime over which the burden is spread"},
+      {"symbol": "c_{\\mathrm{annual}}", "name": "annualized share", "meaning": "Embodied carbon allocated to each year of service"}
+    ]
+  }
+]

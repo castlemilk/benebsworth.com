@@ -1,0 +1,100 @@
+[
+  {
+    "id": "book-attack-surface-taxonomy",
+    "file": "attack-surface-taxonomy.svg",
+    "title": "Book attack-surface taxonomy",
+    "caption": "The book's four-layer map of data, model, interface and infrastructure threats with their defenses. Our attack-surface sketch reorganizes the same material along the lifecycle stages the fleet already operates.",
+    "alt": "Four-layer attack surface taxonomy with threats and defenses per layer"
+  },
+  {
+    "id": "book-threat-prioritization-matrix",
+    "file": "threat-prioritization-matrix.svg",
+    "title": "Book likelihood-impact matrix",
+    "caption": "The book's 2x2 placing untrusted pickles and poisoning in the critical quadrant, fault injection in prepare, API extraction in mitigate. Our packet keeps the placement rule and drops the matrix itself.",
+    "alt": "Two-by-two matrix of threats by likelihood and impact"
+  },
+  {
+    "id": "book-model-theft-types",
+    "file": "model-theft-types.svg",
+    "title": "Book model-theft split",
+    "caption": "The book's two-panel comparison of exact artifact theft versus approximate behavioral theft. Our extraction-budget sketch adds the lifetime-budget gate that the book's cost-regime figure illustrates separately.",
+    "alt": "Two panels comparing artifact theft and query-based extraction"
+  },
+  {
+    "id": "book-extraction-cost-regimes",
+    "file": "fig-extraction-cost-regimes",
+    "title": "Book extraction cost regimes",
+    "caption": "The book's generated figure plotting cumulative attacker bill against queries collected for pay-as-you-go, paid-tier and lifetime-budget regimes against the training-cost line. Our packet carries the same break-even arithmetic in the extraction-economics equation.",
+    "alt": "Cumulative extraction cost curves for three billing regimes crossing the training cost line"
+  },
+  {
+    "id": "book-mia-audit-dp-bound",
+    "file": "fig-mia-audit-dp-bound",
+    "title": "Book audit versus DP bound",
+    "caption": "The book's ROC-plane figure showing an empirical membership-inference audit curve beneath the epsilon = 1 DP ceiling. Our packet states the same lower-bound/upper-bound relationship in prose with the ceiling equation.",
+    "alt": "ROC plane with audit curve below the differential-privacy ceiling"
+  },
+  {
+    "id": "book-diffusion-memorization",
+    "file": "diffusion_memorization_new.png",
+    "title": "Book diffusion memorization",
+    "caption": "The book's side-by-side of an original image and a near-identical diffusion output reproducing a training photo. Verbatim memorization is the strongest form of authorized-output leakage.",
+    "alt": "Original photo beside a nearly identical AI-generated reproduction"
+  },
+  {
+    "id": "book-poisoning-dose-grid",
+    "file": "poisoning_example.png",
+    "title": "Book Nightshade dose-response",
+    "caption": "The book's 4-by-8 grid of Stable Diffusion outputs across poison doses and prompt concepts, morphing toward destination concepts at a few hundred samples. Clean labels keep every caption correct.",
+    "alt": "Grid of generated images shifting concept as poisoning dose increases"
+  },
+  {
+    "id": "book-poisoning-attack",
+    "file": "poisoning-attack.svg",
+    "title": "Book federated poisoning",
+    "caption": "The book's diagram of a malicious client tilting the weighted federated aggregate. Our packet carries the same weighted-mean update inline in the poisoning section.",
+    "alt": "Federated aggregation diagram with one malicious client"
+  },
+  {
+    "id": "book-privacy-utility-frontier",
+    "file": "fig-privacy-utility-frontier",
+    "title": "Book privacy-utility frontier",
+    "caption": "The book's log-epsilon plot of published MNIST and CIFAR-10 accuracy points against nonprivate baselines. Our accuracy-cost chart plots the same gaps as bar heights in points below baseline.",
+    "alt": "Accuracy versus privacy budget scatter with MNIST and CIFAR-10 series"
+  },
+  {
+    "id": "book-hw-supply-chain",
+    "file": "hw-supply-chain.svg",
+    "title": "Book hardware supply chain",
+    "caption": "The book's five-stage lifecycle from design through deployment with a threat and assurance gate per stage. Our hardware section compresses the same sequence into prose.",
+    "alt": "Five-stage hardware supply chain with threats and gates"
+  },
+  {
+    "id": "book-defenese-stack",
+    "file": "defense-stack.svg",
+    "title": "Book defense stack",
+    "caption": "The book's four-tier control stack from hardware foundations through platform, model and data techniques. Our defense-stack sketch keeps the tiers and names the trust boundary each owns.",
+    "alt": "Four-tier defense architecture stack"
+  },
+  {
+    "id": "book-stuxnet",
+    "file": "stuxnet.svg",
+    "title": "Book Stuxnet chain",
+    "caption": "The book's diagram of the Stuxnet infection chain and its ML supply-chain analog. Our breach section keeps the 807 to 1410 Hz and thousand-rotor numbers in prose.",
+    "alt": "Stuxnet attack chain diagram with ML analog"
+  },
+  {
+    "id": "book-fault-injection-assembly",
+    "file": "fault-injection-assembly.svg",
+    "title": "Book ReLU fault injection",
+    "caption": "The book's assembly listing where a laser fault skips the jump guarding ReLU's zeroing block. Our packet describes the mechanism in prose and defers the listing to this reference.",
+    "alt": "Assembly code listing with laser fault injection point"
+  },
+  {
+    "id": "book-power-analysis",
+    "file": "power_analysis_of_an_encryption_device_with_a_partially_wrong_password.png",
+    "title": "Book power-analysis trace",
+    "caption": "The book's power trace showing byte-at-a-time leakage from a partially wrong password. Our side-channel section carries the 256-to-the-5 collapse arithmetic in prose.",
+    "alt": "Power consumption trace revealing password prefix length"
+  }
+]

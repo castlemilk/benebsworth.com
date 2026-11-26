@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="mc-camera-release-gates" class="study-fig-fit" viewBox="0 0 408 268" role="img" aria-labelledby="mc-camera-release-title mc-camera-release-desc">
+  <title id="mc-camera-release-title">The camera’s frame-time gate and night-recall gate</title>
+  <desc id="mc-camera-release-desc">FP32 on CPU has at least 42 milliseconds frame p95 and 97-percent night recall. INT8 PTQ has 26 milliseconds and 93-percent recall. Mixed precision has 30 milliseconds and 96-percent recall. Only the mixed candidate clears both the 33.3-millisecond maximum and the 95-percent minimum.</desc>
+  <style>
+    #mc-camera-release-gates { font-family: system-ui, sans-serif; }
+    .dark #mc-camera-release-gates [fill="#fbf7f0"] { fill: #201a17; }
+    .dark #mc-camera-release-gates [fill="#29231e"] { fill: #f7eee3; }
+    .dark #mc-camera-release-gates [fill="#6f6055"] { fill: #c8b8aa; }
+    .dark #mc-camera-release-gates [fill="#f0e6db"] { fill: #3b3028; }
+    .dark #mc-camera-release-gates [fill="#9a3d1d"] { fill: #f2a276; }
+    .dark #mc-camera-release-gates [stroke="#b8a89c"] { stroke: #72665c; }
+  </style>
+  <rect width="408" height="268" rx="12" fill="#fbf7f0"/>
+  <g fill="#29231e" font-size="20" font-weight="650">
+    <text x="24" y="40">Candidate</text>
+    <text x="213" y="40" text-anchor="middle">Frame p95</text>
+    <text x="338" y="40" text-anchor="middle">Night recall</text>
+  </g>
+  <g fill="#6f6055" font-size="18" text-anchor="middle">
+    <text x="213" y="65">≤33.3 ms</text>
+    <text x="338" y="65">≥95%</text>
+  </g>
+  <path d="M24 78H384M24 132H384M24 185H384" stroke="#b8a89c" fill="none"/>
+  <rect x="16" y="191" width="376" height="49" rx="7" fill="#f0e6db"/>
+  <g fill="#29231e" font-size="22">
+    <text x="24" y="111">FP32 CPU</text>
+    <text x="24" y="163">INT8 PTQ</text>
+    <text x="24" y="221" font-weight="680">Mixed</text>
+    <g text-anchor="middle" font-weight="620">
+      <text x="213" y="101" fill="#9a3d1d">≥42 ms</text>
+      <text x="338" y="111">97%</text>
+      <text x="213" y="163">26 ms</text>
+      <text x="338" y="154" fill="#9a3d1d">93%</text>
+      <text x="213" y="221">30 ms</text>
+      <text x="338" y="221">96%</text>
+    </g>
+  </g>
+  <g fill="#9a3d1d" font-size="17" text-anchor="middle">
+    <text x="213" y="127">Late</text>
+    <text x="338" y="180">Low recall</text>
+  </g>
+  <text x="24" y="258" fill="#6f6055" font-size="18">Mixed clears both gates.</text>
+</svg>

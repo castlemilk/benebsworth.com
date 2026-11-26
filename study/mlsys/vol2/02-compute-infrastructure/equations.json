@@ -1,0 +1,74 @@
+[
+  {
+    "id": "roofline-bound",
+    "number": 1,
+    "title": "Roofline time bound",
+    "latex": "T \\geq \\max\\!\\left(\\frac{F}{r_{peak}},\\ \\frac{B}{BW_{mem}}\\right)",
+    "caption": "A kernel's time is bounded by the worse of its compute term and its memory term. Below the ridge intensity the bandwidth term governs — the nameplate rate is unreachable no matter how the kernel is tuned.",
+    "symbols": [
+      {"symbol": "T", "meaning": "kernel or step wall-clock time"},
+      {"symbol": "F", "meaning": "FLOPs the workload performs"},
+      {"symbol": "B", "meaning": "bytes the workload must move"},
+      {"symbol": "r_{peak}", "meaning": "device peak compute rate (the nameplate)"},
+      {"symbol": "BW_{mem}", "meaning": "memory bandwidth to the operands"}
+    ]
+  },
+  {
+    "id": "ridge-intensity",
+    "number": 2,
+    "title": "Ridge-point intensity",
+    "latex": "I^{*} = \\frac{r_{peak}}{BW_{mem}} \\approx 295\\ \\mathrm{FLOP/byte} \\ \\text{(H100 FP16)}",
+    "caption": "The arithmetic intensity where compute time and memory time balance. Workloads below I* are memory-bound; above it, compute-bound. Compute growing 18× against bandwidth's 8.9× pushes the ridge right each generation — the same part needs ~2× the intensity to stay fed.",
+    "symbols": [
+      {"symbol": "I^{*}", "meaning": "ridge intensity in FLOP per byte — the compute/memory crossover"},
+      {"symbol": "r_{peak}", "meaning": "peak compute rate, e.g. ~989 TFLOP/s dense FP16 on H100"},
+      {"symbol": "BW_{mem}", "meaning": "memory bandwidth, e.g. 3.35 TB/s HBM3 on H100"}
+    ]
+  },
+  {
+    "id": "decode-floor",
+    "number": 3,
+    "title": "Decode latency floor",
+    "latex": "t_{token} \\geq \\frac{W_{bytes}}{BW_{mem}}",
+    "caption": "At batch 1 every token re-reads all weights, so the floor is weight bytes divided by bandwidth. A 2 TB model: ~250 ms/token on ~8 TB/s HBM3, ~125 ms on HBM4. FLOPs never enter the formula — the opening question's answer.",
+    "symbols": [
+      {"symbol": "t_{token}", "meaning": "minimum per-token decode latency"},
+      {"symbol": "W_{bytes}", "meaning": "weight bytes read per token (full model at batch 1)"},
+      {"symbol": "BW_{mem}", "meaning": "aggregate memory bandwidth"}
+    ]
+  },
+  {
+    "id": "state-budget",
+    "number": 4,
+    "title": "Static training state",
+    "latex": "S_{static} \\approx 12 \\times P\\ \\mathrm{bytes}",
+    "caption": "FP16 weights (2 B/param) + FP16 gradients (2 B/param) + FP32 optimizer moments and master weights (~8 B/param): ~12 bytes per parameter before activations. 175B params → ~2.1 TB against 640 GiB of node HBM — sharding is mandatory, and the optimizer term dominates.",
+    "symbols": [
+      {"symbol": "S_{static}", "meaning": "resident bytes of training state, excluding activations"},
+      {"symbol": "P", "meaning": "parameter count"}
+    ]
+  },
+  {
+    "id": "sustained-hours",
+    "number": 5,
+    "title": "Sustained GPU-hours",
+    "latex": "H_{needed} = \\frac{H_{peak}}{MFU}",
+    "caption": "Peak-rate estimates are optimistic by 1/MFU. A job quoted at 1,000 GPU-hours from the nameplate books 2,500 real hours at MFU 0.4 — before a single interruption. Plans priced at peak under-budget the run.",
+    "symbols": [
+      {"symbol": "H_{needed}", "meaning": "GPU-hours the schedule must actually reserve"},
+      {"symbol": "H_{peak}", "meaning": "GPU-hours implied by dividing work by peak rate"},
+      {"symbol": "MFU", "meaning": "model FLOPs usage: achieved rate ÷ nameplate"}
+    ]
+  },
+  {
+    "id": "node-mtbf",
+    "number": 6,
+    "title": "Composite node failure rate",
+    "latex": "\\lambda_{node} = \\sum_{i} \\lambda_{i} \\ \\Rightarrow\\ MTBF_{node} < MTBF_{component}",
+    "caption": "Every component in the node — GPU, CPU, NIC, drive, PSU — adds its own failure rate. An eight-GPU node interrupts more often than any part inside it, which is why health monitoring and replacement run at node granularity and why the pod composes to a ~5 h job MTBF.",
+    "symbols": [
+      {"symbol": "\\lambda_{node}", "meaning": "node-level failure rate, the sum of component rates"},
+      {"symbol": "\\lambda_{i}", "meaning": "failure rate of component i"}
+    ]
+  }
+]

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 423" role="img" aria-labelledby="title desc">
+  <title id="title">Reported scores before and after reinforcement learning</title>
+  <desc id="desc">Four selected results from Table 25. IFBench rises from 48.2 to 78.1; banking from 13.1 to 38.1; LiveCodeBench from 75.3 to 85.9; BFCL overall from 57.1 to 61.4. The checkpoints use different sampling settings.</desc>
+  <style>
+    text {font:22px system-ui,sans-serif;fill:#202d2c}
+    .title {font-size:26px;font-weight:700}
+    .label {font-weight:650}
+    .small {font-size:20px;fill:#394e49}
+    .gain {font-weight:700;fill:#185e50;text-anchor:end}
+    .rail {stroke:#cbd7d4;stroke-width:2}
+    .range {stroke:#257660;stroke-width:5;stroke-linecap:round}
+    .before {fill:#f8faf9;stroke:#3c5f58;stroke-width:2.5}
+    .after {fill:#257660}
+  </style>
+  <rect width="600" height="423" rx="12" fill="#f8faf9"/>
+  <text x="27" y="42" class="title">Benchmark scores from SFT to release</text>
+  <circle cx="33" cy="74" r="6" class="before"/>
+  <text x="49" y="81" class="small">SFT checkpoint</text>
+  <rect x="234" y="68" width="12" height="12" rx="2" class="after"/>
+  <text x="257" y="81" class="small">Released checkpoint</text>
+  <g>
+    <text x="27" y="127" class="label">IFBench</text>
+    <text x="573" y="127" class="gain">+29.9 pts</text>
+    <path class="rail" d="M32 147h536"/>
+    <path class="range" d="M290.35 147h160.26"/>
+    <circle cx="290.35" cy="147" r="7" class="before"/>
+    <rect x="443.62" y="140" width="14" height="14" rx="2" class="after"/>
+  </g>
+  <g>
+    <text x="27" y="191" class="label">τ³-bench Banking</text>
+    <text x="573" y="191" class="gain">+25.0 pts</text>
+    <path class="rail" d="M32 211h536"/>
+    <path class="range" d="M102.22 211h134"/>
+    <circle cx="102.22" cy="211" r="7" class="before"/>
+    <rect x="229.22" y="204" width="14" height="14" rx="2" class="after"/>
+  </g>
+  <g>
+    <text x="27" y="255" class="label">LiveCodeBench v6</text>
+    <text x="573" y="255" class="gain">+10.6 pts</text>
+    <path class="rail" d="M32 275h536"/>
+    <path class="range" d="M435.61 275h56.82"/>
+    <circle cx="435.61" cy="275" r="7" class="before"/>
+    <rect x="485.42" y="268" width="14" height="14" rx="2" class="after"/>
+  </g>
+  <g>
+    <text x="27" y="319" class="label">BFCL v4 overall</text>
+    <text x="573" y="319" class="gain">+4.3 pts</text>
+    <path class="rail" d="M32 339h536"/>
+    <path class="range" d="M338.06 339h23.04"/>
+    <circle cx="338.06" cy="339" r="7" class="before"/>
+    <rect x="354.1" y="332" width="14" height="14" rx="2" class="after"/>
+  </g>
+  <text x="32" y="374" class="small">0%</text>
+  <text x="300" y="374" text-anchor="middle" class="small">50%</text>
+  <text x="568" y="374" text-anchor="end" class="small">100%</text>
+  <text x="32" y="404" class="small">Report Table 25 · sampling differs by checkpoint</text>
+</svg>

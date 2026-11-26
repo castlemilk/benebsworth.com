@@ -88,12 +88,12 @@ export function checkKVL(circuit: Circuit, tolerance = 1e-6): { vsId: string; su
 /**
  * Verify power conservation: power supplied by sources = power dissipated by loads.
  */
-export function checkPowerConservation(circuit: Circuit, tolerance = 1e-6): { supplied: number; dissipated: number; diff: number } | null {
+export function checkPowerConservation(circuit: Circuit, _tolerance = 1e-6): { supplied: number; dissipated: number; diff: number } | null {
   const dc = solveDC(circuit)
   if (!dc) return null
 
-  let supplied = 0
-  let dissipated = 0
+  let _supplied = 0
+  let _dissipated = 0
 
   for (const c of circuit.components) {
     const vA = dc[c.nodeA] ?? 0
@@ -102,11 +102,11 @@ export function checkPowerConservation(circuit: Circuit, tolerance = 1e-6): { su
 
     if (c.type === 'R') {
       const i = vDiff / c.value
-      dissipated += Math.abs(vDiff * i) // P = V*I = I²R = V²/R
+      _dissipated += Math.abs(vDiff * i) // P = V*I = I²R = V²/R
     } else if (c.type === 'V') {
       // Power supplied = V * I (signed — negative if consuming)
       // We compute current through external path? For now just check V matches
-      supplied += Math.abs(vDiff * c.value) // approximate: V * (V/R_eq)? Not exact
+      _supplied += Math.abs(vDiff * c.value) // approximate: V * (V/R_eq)? Not exact
     }
   }
 

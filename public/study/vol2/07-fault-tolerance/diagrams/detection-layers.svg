@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="detection-layers" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="dl-title dl-desc">
+  <title id="dl-title">Detection layers</title>
+  <desc id="dl-desc">Four escalating detection layers. Liveness probes catch dead processes, heartbeat timeouts catch hangs, inference checks catch wrong answers, and progress-median comparison catches the straggler that passes every liveness check while halving the job.</desc>
+  <style>
+    .dark #detection-layers { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#detection-layers { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Detection layers</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">each layer catches a class the one above lets through</text>
+
+    <!-- layer rows: y 62, 122, 182, 242 ; each ~52 high -->
+    <g>
+      <rect x="20" y="62" width="120" height="52" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.5"/>
+      <text x="30" y="84" font-size="10" font-weight="650">liveness probe</text>
+      <text x="30" y="98" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">is the process up?</text>
+      <text x="150" y="84" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">catches: fail-stop crash</text>
+      <text x="150" y="98" font-size="8" fill="var(--fig-mark, #b4571f)">misses: hang, wrong, slow</text>
+    </g>
+    <g>
+      <rect x="20" y="122" width="120" height="52" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.5"/>
+      <text x="30" y="144" font-size="10" font-weight="650">heartbeat + timeout</text>
+      <text x="30" y="158" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">H + k·σ_d window</text>
+      <text x="150" y="144" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">catches: silent hang</text>
+      <text x="150" y="158" font-size="8" fill="var(--fig-mark, #b4571f)">misses: wrong answers, slow</text>
+    </g>
+    <g>
+      <rect x="20" y="182" width="120" height="52" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.5"/>
+      <text x="30" y="204" font-size="10" font-weight="650">inference check</text>
+      <text x="30" y="218" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">known input → expected output</text>
+      <text x="150" y="204" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">catches: healthy-but-wrong</text>
+      <text x="150" y="218" font-size="8" fill="var(--fig-mark, #b4571f)">misses: SDC in training state, slow</text>
+    </g>
+    <g>
+      <rect x="20" y="242" width="120" height="52" rx="4" fill="var(--fig-mark, #b4571f)" opacity="0.45"/>
+      <text x="30" y="264" font-size="10" font-weight="650">progress median</text>
+      <text x="30" y="278" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">rank step time vs peer median</text>
+      <text x="150" y="264" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">catches: the half-speed straggler</text>
+      <text x="150" y="278" font-size="8" fill="var(--fig-mark, #b4571f)">50% throughput tax, alive the whole time</text>
+    </g>
+
+    <!-- arrows between layers -->
+    <line x1="80" y1="114" x2="80" y2="122" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1"/>
+    <line x1="80" y1="174" x2="80" y2="182" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1"/>
+    <line x1="80" y1="234" x2="80" y2="242" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1"/>
+    <text x="200" y="120" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">5 s probe · 3 misses → out in 12–17 s</text>
+  </g>
+</svg>

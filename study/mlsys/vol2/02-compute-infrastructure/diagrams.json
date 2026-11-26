@@ -1,0 +1,26 @@
+[
+  {
+    "id": "bandwidth-staircase",
+    "file": "bandwidth-staircase.svg",
+    "title": "Four tiers, three falls",
+    "caption": "Per-GPU bandwidth down the hierarchy: HBM3 3.35 TB/s, NVLink 900 GB/s (7.4× down), InfiniBand NDR 50 GB/s (9×), storage 7 GB/s (7.1×). Each step also raises latency. Parallelism maps onto the stairs: TP stays inside NVLink, PP crosses nodes, DP tolerates the fabric."
+  },
+  {
+    "id": "ridge-map",
+    "file": "ridge-map.svg",
+    "title": "Below the ridge the nameplate is fiction",
+    "caption": "Roofline landscape: the ridge sits at ~295 FLOP/byte on H100 FP16. Batch-1 decode (1 FLOP/B) uses ~0.34% of peak; batch-32 decode and the CNN point still sit below; 512-token prefill and training clear it. The workload, not the chip, picks the wall."
+  },
+  {
+    "id": "state-budget",
+    "file": "state-budget.svg",
+    "title": "2.1 TB of state against 640 GiB of node",
+    "caption": "The 175B reference job's static state: ~350 GB weights + ~350 GB gradients + ~1.4 TB FP32 optimizer state, against 8×80 GB of node HBM. ZeRO-3 inside one node still leaves each GPU holding over 3× its capacity — the optimizer term is the one that breaks the budget."
+  },
+  {
+    "id": "power-ladder",
+    "file": "power-ladder.svg",
+    "title": "Power compounds up the hierarchy",
+    "caption": "700 W at the die becomes ~10 kW at the node, 33.5 kW at the rack, and ~8 MW at the pod. Each rung is a different engineering discipline: transistor, chassis, cooling loop, facility."
+  }
+]

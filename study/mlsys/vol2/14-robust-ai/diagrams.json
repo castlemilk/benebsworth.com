@@ -1,0 +1,30 @@
+[
+  {
+    "id": "silent-failure-triangle",
+    "file": "silent-failure-triangle.svg",
+    "title": "Three pillars, three evidence families",
+    "caption": "Environmental shifts produce statistical evidence, input-level attacks produce adversarial evidence, and system-level faults corrupt the machinery that produces both. The evaluation matrix needs one row per pillar plus a per-request competence row, because a passed test in one row proves nothing about another.",
+    "alt": "Three columns for environmental shifts, input-level attacks and system-level faults, each with its evidence family and first defense"
+  },
+  {
+    "id": "risk-coverage",
+    "file": "risk-coverage.svg",
+    "title": "The risk-coverage curve is the serving contract",
+    "caption": "Raising the acceptance threshold moves along the curve: lower accepted risk at lower coverage, but only when the score orders requests by error well. The rejected tail prices the fallback path in queue and reviewer capacity.",
+    "alt": "Curve of selective risk against coverage with a threshold point and rejected-traffic fallback arrow"
+  },
+  {
+    "id": "drift-decision",
+    "file": "drift-decision.svg",
+    "title": "A fired metric is not a retraining command",
+    "caption": "The three-level framework: calibrated alerts automate detection only; performance correlation splits investigation into three cases; the decision rules pick among update, investigate-first and continue-monitoring. Statistical significance alone never commands a weight update.",
+    "alt": "Flow from drift alert through performance correlation to three decision outcomes"
+  },
+  {
+    "id": "fault-masquerade",
+    "file": "fault-masquerade.svg",
+    "title": "Three signals separate the masquerade",
+    "caption": "The same symptom, falling accuracy with green health, can come from any pillar. Timing against deployment boundaries, reproducibility under fixed-input replay, and cross-layer correlation with infrastructure telemetry separate a software fault from drift or attack before choosing the intervention.",
+    "alt": "Three diagnostic lenses converging on a falling-accuracy symptom: timing, replay and telemetry correlation"
+  }
+]

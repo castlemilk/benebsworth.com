@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 380" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#bfdbfe"]{fill:#1e3a5f}
+    .dark [fill="#dbeafe"]{fill:#1e3a5f}
+    .dark [fill="#d1fae5"]{fill:#123a2b}
+    .dark [fill="#fef3c7"]{fill:#453007}
+    .dark [fill="#fee2e2"]{fill:#451a1a}
+    .dark [fill="#f3f4f6"]{fill:#1f2937}
+    .dark [fill="#ffffff"]{fill:#161a22}
+    .dark rect.bg{fill:#0f1115}
+    .dark [fill="none"]{fill:none}
+  </style>
+  <rect class="bg" x="0" y="0" width="700" height="380" fill="#ffffff"/>
+
+  <text x="28" y="38" font-size="16" fill="#374151" font-weight="600">prepaid once versus paid per task — total GPU-hours</text>
+  <text x="28" y="60" font-size="11" fill="#6b7280">from-scratch 1,000/task &#183; pretrained 10,000 once + 50/task (book's worked scenario)</text>
+
+  <!-- axes -->
+  <line x1="70" y1="320" x2="660" y2="320" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="70" y1="320" x2="70" y2="90" stroke="#9ca3af" stroke-width="1"/>
+  <text x="365" y="348" font-size="10" fill="#6b7280" text-anchor="middle">downstream tasks N &#8594;</text>
+  <text x="46" y="205" font-size="10" fill="#6b7280" transform="rotate(-90 46 205)" text-anchor="middle">total GPU-hours &#8594;</text>
+
+  <!-- y ticks: scale 20k -> 250px => 80px per 1k -->
+  <text x="60" y="324" font-size="9" fill="#6b7280" text-anchor="end">0</text>
+  <text x="60" y="244" font-size="9" fill="#6b7280" text-anchor="end">10k</text>
+  <text x="60" y="164" font-size="9" fill="#6b7280" text-anchor="end">20k</text>
+  <line x1="66" y1="240" x2="70" y2="240" stroke="#9ca3af"/>
+  <line x1="66" y1="160" x2="70" y2="160" stroke="#9ca3af"/>
+
+  <!-- x ticks: 20 tasks -> 590px => 29.5px per task; N=11 at x=394 -->
+  <text x="70" y="334" font-size="9" fill="#6b7280" text-anchor="middle">0</text>
+  <text x="365" y="334" font-size="9" fill="#6b7280" text-anchor="middle">10</text>
+  <text x="660" y="334" font-size="9" fill="#6b7280" text-anchor="middle">20</text>
+
+  <!-- scratch line: 1000N -> at N=20, 20,000h -> y=320-20k*0.008=160 -->
+  <line x1="70" y1="320" x2="660" y2="160" stroke="#b91c1c" stroke-width="2.5"/>
+  <text x="540" y="150" font-size="10" fill="#b91c1c" font-weight="600">scratch: 1,000 &#215; N</text>
+
+  <!-- pretrained line: 10000 + 50N -> y(0)=320-80=240; y(20)=320-88=232 -->
+  <line x1="70" y1="240" x2="660" y2="232" stroke="#047857" stroke-width="2.5"/>
+  <text x="510" y="218" font-size="10" fill="#047857" font-weight="600">pretrained: 10,000 + 50 &#215; N</text>
+
+  <!-- crossing at N≈10.5 -> x=70+10.5*29.5=380, y=320-10,526*0.008≈236 -->
+  <line x1="380" y1="236" x2="380" y2="320" stroke="#92400e" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="380" cy="236" r="4" fill="#d97706"/>
+  <text x="380" y="312" font-size="10" fill="#92400e" text-anchor="middle" font-weight="600">N &#8776; 10.5 &#8594; integer 11</text>
+
+  <!-- regions -->
+  <text x="225" y="120" font-size="10" fill="#b91c1c" text-anchor="middle">few tasks &#8594; scratch cheaper</text>
+  <text x="530" y="290" font-size="10" fill="#047857" text-anchor="middle">many tasks &#8594; prepaid wins (~20x marginal)</text>
+</svg>

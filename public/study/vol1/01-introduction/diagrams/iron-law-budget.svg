@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 330" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#059669"]{fill:#34d399}
+    .dark [stroke="#059669"]{stroke:#34d399}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b45309"]{fill:#fbbf24}
+    .dark [stroke="#b45309"]{stroke:#fbbf24}
+    .dark [fill="#f59e0b"]{fill:#fbbf24}
+    .dark [stroke="#f59e0b"]{stroke:#fbbf24}
+  </style>
+
+  <!-- Iron law: sequential budget vs overlapped bound (worked numbers) -->
+  <!-- scale: 4 px per ms, x0 = 150 -->
+
+  <text x="390" y="30" text-anchor="middle" font-size="13" fill="#4b5563" font-weight="600">where the milliseconds go: 20 GB · 40 GFLOP · 5 ms overhead</text>
+
+  <!-- ===== Row 1: sequential ===== -->
+  <text x="140" y="85" text-anchor="end" font-size="12" fill="#4b5563" font-weight="600">sequential</text>
+  <text x="140" y="101" text-anchor="end" font-size="10.5" fill="#9ca3af">T = mem + compute + L</text>
+  <rect x="150" y="72" width="100" height="34" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b"/>
+  <text x="200" y="94" text-anchor="middle" font-size="11" fill="#b45309">mem 25</text>
+  <rect x="250" y="72" width="400" height="34" fill="#34d399" fill-opacity="0.2" stroke="#34d399"/>
+  <text x="450" y="94" text-anchor="middle" font-size="11" fill="#059669">compute 100</text>
+  <rect x="650" y="72" width="20" height="34" fill="#9ca3af" fill-opacity="0.3" stroke="#6b7280"/>
+  <text x="660" y="122" text-anchor="middle" font-size="10" fill="#6b7280">L</text>
+  <text x="678" y="94" font-size="12" fill="#4b5563" font-weight="700">= 130 ms</text>
+
+  <!-- ===== Row 2: overlapped bound ===== -->
+  <text x="140" y="165" text-anchor="end" font-size="12" fill="#4b5563" font-weight="600">overlapped</text>
+  <text x="140" y="181" text-anchor="end" font-size="10" fill="#9ca3af">T ≥ max(mem, comp) + L</text>
+  <rect x="150" y="152" width="400" height="34" fill="#34d399" fill-opacity="0.2" stroke="#34d399"/>
+  <rect x="150" y="159" width="100" height="20" fill="none" stroke="#f59e0b" stroke-dasharray="5 4"/>
+  <text x="200" y="173" text-anchor="middle" font-size="10" fill="#b45309">mem hides</text>
+  <text x="450" y="175" text-anchor="middle" font-size="11" fill="#059669">compute still 100</text>
+  <rect x="550" y="152" width="20" height="34" fill="#9ca3af" fill-opacity="0.3" stroke="#6b7280"/>
+  <text x="578" y="175" font-size="12" fill="#4b5563" font-weight="700">= 105 ms</text>
+
+  <!-- ===== Row 3: after 2× arithmetic ===== -->
+  <text x="140" y="245" text-anchor="end" font-size="12" fill="#4b5563" font-weight="600">2× arithmetic</text>
+  <text x="140" y="261" text-anchor="end" font-size="10.5" fill="#9ca3af">compute term halves</text>
+  <rect x="150" y="232" width="100" height="34" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b"/>
+  <text x="200" y="254" text-anchor="middle" font-size="11" fill="#b45309">mem 25</text>
+  <rect x="250" y="232" width="200" height="34" fill="#34d399" fill-opacity="0.2" stroke="#34d399"/>
+  <text x="350" y="254" text-anchor="middle" font-size="11" fill="#059669">compute 50</text>
+  <rect x="450" y="232" width="20" height="34" fill="#9ca3af" fill-opacity="0.3" stroke="#6b7280"/>
+  <text x="478" y="254" font-size="12" fill="#4b5563" font-weight="700">= 80 ms</text>
+
+  <!-- lesson -->
+  <text x="390" y="308" text-anchor="middle" font-size="12" fill="#4b5563">you only ever gain through the term that dominates: upgrade the 100, not the 25</text>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-failed-gate-diagnostic-loop-title" aria-describedby="study-svg-failed-gate-diagnostic-loop-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-failed-gate-diagnostic-loop-title">From a failed metric to a targeted experiment</title>
+  <desc id="study-svg-failed-gate-diagnostic-loop-desc">Changing one suspected cause and rechecking the full workload helps distinguish a local improvement from a deployment gain. Reproduce the failure: Use the exported artifact and the inputs that miss the gate. Then Locate the divergence: Align baseline and candidate traces or compare their activations. Then Change one cause: Test a kernel, range, or pruning change that addresses the evidence. Then Repeat acceptance: Check the original failure and the other release gates.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Reproduce the failure</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Use the exported artifact and the</tspan>
+    <tspan x="19" y="64">inputs that miss the gate.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Locate the divergence</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Align baseline and candidate traces</tspan>
+    <tspan x="19" y="165">or compare their activations.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Change one cause</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Test a kernel, range, or pruning</tspan>
+    <tspan x="19" y="266">change that addresses the evidence.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Repeat acceptance</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Check the original failure and the</tspan>
+    <tspan x="19" y="367">other release gates.</tspan></text>
+  </g>
+</svg>

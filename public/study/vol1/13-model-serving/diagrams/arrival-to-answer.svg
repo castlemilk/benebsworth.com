@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="sv-arrival" class="study-fig-fit" viewBox="0 0 408 300" role="img" aria-labelledby="sv-arr-title sv-arr-desc">
+  <title id="sv-arr-title">The request path, stage by stage</title>
+  <desc id="sv-arr-desc">A request travels seven stages from ingress to dispatch. Each stage adds latency and its own queue; the forward pass is only one of them.</desc>
+  <style>
+    #sv-arrival { font-family: system-ui, sans-serif; }
+    .dark #sv-arrival [fill="#fbf7f0"] { fill: #201a17; }
+    .dark #sv-arrival [fill="#29231e"] { fill: #f7eee3; }
+    .dark #sv-arrival [fill="#6f6055"] { fill: #c8b8aa; }
+    .dark #sv-arrival [fill="#cfc1b2"] { fill: #8b7f73; }
+    .dark #sv-arrival [fill="#cf8359"] { fill: #d99066; }
+    .dark #sv-arrival [stroke="#b8a89c"] { stroke: #72665c; }
+  </style>
+  <rect width="408" height="300" rx="12" fill="#fbf7f0"/>
+  <text x="24" y="38" fill="#29231e" font-size="20" font-weight="650">The model is one stage of the request</text>
+  <text x="24" y="59" fill="#6f6055" font-size="13">each stage adds latency · each stage adds a queue</text>
+
+  <g font-size="12.5" fill="#29231e">
+    <rect x="24" y="84" width="88" height="30" rx="6" fill="#cfc1b2"/>
+    <text x="32" y="103">ingress</text>
+    <rect x="118" y="84" width="88" height="30" rx="6" fill="#cfc1b2"/>
+    <text x="126" y="103">parse</text>
+    <rect x="212" y="84" width="88" height="30" rx="6" fill="#cfc1b2"/>
+    <text x="220" y="103">preprocess</text>
+    <rect x="306" y="84" width="78" height="30" rx="6" fill="#cfc1b2"/>
+    <text x="314" y="103">batch</text>
+  </g>
+  <g font-size="12.5" fill="#29231e">
+    <rect x="24" y="132" width="88" height="30" rx="6" fill="#cf8359"/>
+    <text x="32" y="151">execute</text>
+    <rect x="118" y="132" width="88" height="30" rx="6" fill="#cfc1b2"/>
+    <text x="126" y="151">postprocess</text>
+    <rect x="212" y="132" width="88" height="30" rx="6" fill="#cfc1b2"/>
+    <text x="220" y="151">dispatch</text>
+  </g>
+  <g fill="#cf8359">
+    <rect x="24" y="116" width="14" height="4" rx="2"/>
+    <rect x="118" y="116" width="10" height="4" rx="2"/>
+    <rect x="212" y="116" width="20" height="4" rx="2"/>
+    <rect x="306" y="116" width="26" height="4" rx="2"/>
+  </g>
+  <g fill="#6f6055" font-size="11.5">
+    <text x="306" y="141">Queue time</text>
+    <path d="M319 129v-8" fill="none" stroke="#6f6055"/>
+    <text x="24" y="180">the forward pass</text>
+    <text x="24" y="196">(accent)</text>
+  </g>
+  <path d="M70 132v-18h266v18" fill="none" stroke="#b8a89c" stroke-width="1.5"/>
+  <text x="210" y="222" text-anchor="middle" fill="#6f6055" font-size="12.5">one path · serial stages · the model is the accent term</text>
+  <text x="210" y="246" text-anchor="middle" fill="#29231e" font-size="12.5">a request waits on every stage before it sees the model</text>
+  <text x="210" y="272" text-anchor="middle" fill="#cf8359" font-size="12.5" font-weight="600">per-stage overheads are the killer microseconds</text>
+</svg>

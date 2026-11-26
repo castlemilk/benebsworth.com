@@ -1,5 +1,5 @@
 import type { BenchmarkTask } from '../types'
-import type { CheckContext, CheckFn, CheckResult } from './sandbox'
+import type { CheckContext, CheckFn } from './sandbox'
 import { pluginChecks } from '../plugins'
 
 /**

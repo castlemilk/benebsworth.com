@@ -6,6 +6,7 @@ description: >-
   Working React Hooks examples: a stale-closure-proof counter and a custom
   useResizeObserver: plus when useReducer replaces Redux and why ResizeObserver
   beats IntersectionObserver.
+heroImage: /blog/common-hooks/hero.webp
 labels: 'technology,react'
 keywords: null
 release: true

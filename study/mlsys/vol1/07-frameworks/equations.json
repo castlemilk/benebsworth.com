@@ -1,0 +1,118 @@
+[
+  {
+    "id": "fusion-traffic",
+    "number": 1,
+    "title": "Fusion traffic cut",
+    "latex": "B_{\\text{unfused}} = 2kNB \\quad\\xrightarrow{\\text{fuse}}\\quad B_{\\text{fused}} = 2NB",
+    "caption": "A chain of k elementwise kernels round-trips an N-element tensor of B-byte values per kernel: each of the k ops reads and writes the full buffer. One fused kernel reads once and writes once. For the LayerNorm + dropout + activation chain (k = 3) the idealized traffic cut is ~3x, before counting the k - 1 launches it also removes.",
+    "symbols": [
+      { "symbol": "B_{\\text{unfused}}", "name": "unfused traffic", "meaning": "total buffer bytes moved when each op in the chain is its own kernel" },
+      { "symbol": "B_{\\text{fused}}", "name": "fused traffic", "meaning": "buffer bytes moved by the single fused kernel" },
+      { "symbol": "k", "name": "chain length", "meaning": "number of elementwise or normalization ops fused into one kernel" },
+      { "symbol": "N", "name": "element count", "meaning": "elements in the tensor the chain operates on" },
+      { "symbol": "B", "name": "element width", "meaning": "bytes per element (4 for FP32, 2 for FP16)" },
+      { "symbol": "2NB", "name": "one round-trip", "meaning": "one full read plus one full write of the N-element, B-byte-per-element tensor" }
+    ]
+  },
+  {
+    "id": "dispatch-law",
+    "number": 2,
+    "title": "Dispatch overhead law",
+    "latex": "R = \\frac{N_{\\text{op}}\\cdot o}{t_{\\text{compute}} + t_{\\text{memory}}}, \\qquad \\text{overhead-bound when } R > 1",
+    "caption": "N_op dispatched operations each pay a fixed host cost o; the device owes t_compute + t_memory under the additive no-overlap model. When R exceeds 1 the accelerator waits on Python. Every lever is named: fusion and capture shrink N_op, graph replay shrinks o, a larger batch grows the denominator. Dispatch share of step time is R/(1 + R).",
+    "symbols": [
+      { "symbol": "R", "name": "overhead ratio", "meaning": "host issue time divided by ideal device time; above 1 the step is dispatch-bound" },
+      { "symbol": "N_{\\text{op}}", "name": "operation count", "meaning": "dispatched operations in one step (the MNIST step models 5 Python entries, 9 driver launches)" },
+      { "symbol": "o", "name": "per-op host cost", "meaning": "Python dispatch plus kernel-launch overhead per operation, ~15 us in the chapter's illustrative model" },
+      { "symbol": "t_{\\text{compute}}", "name": "compute time", "meaning": "device time at the peak rate for the step's FLOPs" },
+      { "symbol": "t_{\\text{memory}}", "name": "memory time", "meaning": "device time at memory bandwidth for the step's modeled traffic" },
+      { "symbol": "N_{\\text{op}}\\cdot o", "name": "host issue time", "meaning": "total software time to dispatch and launch the step's operations" }
+    ]
+  },
+  {
+    "id": "compile-benefit",
+    "number": 3,
+    "title": "Compilation benefit",
+    "latex": "\\text{Benefit} = \\frac{P\\,(t_{\\text{eager}} - t_{\\text{compiled}})}{T_{\\text{compile}} + D\\cdot T_{\\text{compile}}}, \\qquad \\text{compile when } > 1",
+    "caption": "P production executions each save (t_eager - t_compiled); the setup cost is one compilation plus D development recompilations. Above 1 the capture pays for itself. The book's cost model puts the eager-to-JIT crossover near 2x10^6 executions and JIT-to-AOT near 6.7x10^6; ResNet-50 serving at ~47% speedup breaks even near 135K images.",
+    "symbols": [
+      { "symbol": "P", "name": "production executions", "meaning": "inference requests or training steps the compiled artifact will serve" },
+      { "symbol": "D", "name": "development iterations", "meaning": "code changes that each force a recompilation" },
+      { "symbol": "t_{\\text{eager}}", "name": "eager time", "meaning": "per-execution time with op-at-a-time dispatch" },
+      { "symbol": "t_{\\text{compiled}}", "name": "compiled time", "meaning": "per-execution time of the captured or exported artifact" },
+      { "symbol": "T_{\\text{compile}}", "name": "compile time", "meaning": "cost of one compilation or recompilation, assumed constant" },
+      { "symbol": "t_{\\text{eager}} - t_{\\text{compiled}}", "name": "per-run saving", "meaning": "time recovered on each execution after compiling" }
+    ]
+  },
+  {
+    "id": "saved-activations",
+    "number": 4,
+    "title": "Saved-activation memory",
+    "latex": "A \\approx B_{\\text{batch}} \\cdot L \\cdot S \\cdot d \\cdot k \\cdot e",
+    "caption": "Each of the L layers saves about k tensors of B x S x d activations at e bytes per element until the backward sweep unwinds past it. Linear in batch and depth; a non-sequence model drops S, a conv net replaces S x d with feature-map H x W x C. This is the term that makes the ResNet-50 training peak 82-121x its weight storage.",
+    "symbols": [
+      { "symbol": "A", "name": "saved memory", "meaning": "bytes of forward activations retained for the backward pass" },
+      { "symbol": "B_{\\text{batch}}", "name": "batch size", "meaning": "samples per step; scales the retained tensors linearly" },
+      { "symbol": "L", "name": "depth", "meaning": "layers that each hold saved tensors until backward reaches them" },
+      { "symbol": "S", "name": "sequence length", "meaning": "token positions per sample; absent for non-sequence models" },
+      { "symbol": "d", "name": "width", "meaning": "hidden dimension (feature-map H x W x C in conv nets)" },
+      { "symbol": "k", "name": "tensors per layer", "meaning": "count of forward values each layer's backward rule must read" },
+      { "symbol": "e", "name": "element width", "meaning": "bytes per stored activation element" }
+    ]
+  },
+  {
+    "id": "jacobian-memory",
+    "number": 5,
+    "title": "The Jacobian reverse mode never builds",
+    "latex": "J \\in \\mathbb{R}^{m \\times n}: \\quad 10^{5} \\times 10^{5} \\times 4\\,\\text{B} = 40\\,\\text{GB}",
+    "caption": "A Jacobian for a 100,000-by-100,000 map has 10^10 entries - 40 GB in FP32, larger than most models. Reverse mode instead propagates adjoints as vector-Jacobian products from the scalar loss: every gradient in one backward sweep at a small constant multiple of forward cost. Forward mode would need one sweep per input direction.",
+    "symbols": [
+      { "symbol": "J", "name": "Jacobian", "meaning": "matrix of every output's derivative with respect to every input" },
+      { "symbol": "m \\times n", "name": "Jacobian shape", "meaning": "outputs by inputs; 10^10 entries for the 100K-wide pair" },
+      { "symbol": "4\\,\\text{B}", "name": "entry width", "meaning": "bytes per FP32 derivative" },
+      { "symbol": "40\\,\\text{GB}", "name": "materialized cost", "meaning": "why no framework materializes J: it would not fit beside the model" },
+      { "symbol": "\\bar{y}^T J", "name": "vector-Jacobian product", "meaning": "what reverse mode actually computes per node - the adjoint times the local Jacobian, as a small matrix-vector product" }
+    ]
+  },
+  {
+    "id": "dense-training-ratio",
+    "number": 6,
+    "title": "Dense backward work",
+    "latex": "W_{\\text{train}} = 3\\,W_{\\text{fwd}} - W_{\\text{mm}_1} \\;\\approx\\; 2.013\\,W_{\\text{fwd}}",
+    "caption": "Each dense layer's backward runs two forward-sized GEMMs (the weight gradient and the input gradient), except the first layer, whose input gradient nobody requests. For the 784->128->10 step the dense training work is ~2.013x the forward - ch5's three-product rule with its input-gradient exception applied.",
+    "symbols": [
+      { "symbol": "W_{\\text{train}}", "name": "training dense work", "meaning": "total GEMM MACs in the forward plus backward passes" },
+      { "symbol": "W_{\\text{fwd}}", "name": "forward dense work", "meaning": "MACs of the forward dense layers" },
+      { "symbol": "3\\,W_{\\text{fwd}}", "name": "three-product rule", "meaning": "forward GEMMs plus two backward GEMMs per layer" },
+      { "symbol": "W_{\\text{mm}_1}", "name": "first-layer exception", "meaning": "the input-gradient GEMM for layer 1, omitted because the raw input needs no gradient" },
+      { "symbol": "2.013", "name": "worked ratio", "meaning": "the 784-128-10 step's actual dense multiplier once the exception is removed" }
+    ]
+  },
+  {
+    "id": "adam-bytes",
+    "number": 7,
+    "title": "Adam step traffic",
+    "latex": "B_{\\text{Adam}} = 7 \\cdot e \\cdot P = 28\\,\\text{B/param}",
+    "caption": "FP32 Adam reads p, g, m, v and writes p, m, v: seven values at four bytes each per parameter. For the 101,770-parameter MLP that is ~2.85 MB - more traffic than the entire modeled forward-plus-backward step, and the term small training loops forget to count.",
+    "symbols": [
+      { "symbol": "B_{\\text{Adam}}", "name": "optimizer traffic", "meaning": "bytes moved by one Adam update step" },
+      { "symbol": "7", "name": "values touched", "meaning": "reads of p, g, m, v plus writes of p, m, v" },
+      { "symbol": "e", "name": "value width", "meaning": "bytes per value, 4 in FP32" },
+      { "symbol": "P", "name": "parameter count", "meaning": "trainable weights (101,770 for the worked MLP)" },
+      { "symbol": "p, g, m, v", "name": "Adam state", "meaning": "parameter, gradient, first moment, second moment" }
+    ]
+  },
+  {
+    "id": "overhead-share",
+    "number": 8,
+    "title": "Dispatch share of step time",
+    "latex": "\\text{Share} = \\frac{R}{1 + R}",
+    "caption": "The fraction of step time the host spends issuing work. R = 15.7 for a 1-us kernel gives 94% - the eager gantt's idle gaps made quantitative. R = 0.15 for a ~100-us GEMM gives 13%. The same per-op cost is everything for small ops and nothing for large ones.",
+    "symbols": [
+      { "symbol": "\\text{Share}", "name": "dispatch fraction", "meaning": "portion of total step time spent in Python dispatch and launches" },
+      { "symbol": "R", "name": "overhead ratio", "meaning": "host issue time over ideal device time, from the dispatch overhead law" },
+      { "symbol": "1 + R", "name": "step total", "meaning": "device time plus host issue time, normalized to device time" },
+      { "symbol": "94\\% \\,/\\, 13\\%", "name": "worked ends", "meaning": "small-op and large-op dispatch shares in the chapter's model" }
+    ]
+  }
+]

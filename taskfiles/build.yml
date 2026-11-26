@@ -55,6 +55,7 @@ tasks:
       - lib/**/*
       - content/**/*
       - study/mlsys/**/*
+      - study/research/**/*
       - public/**/*
       - exclude: public/blog/*/index.md
       - exclude: public/lab-data/**/*
@@ -80,6 +81,7 @@ tasks:
     cmds:
       - task: gen:grounded
       - task: gen:md
+      - task: gen:study-md
       - task: gen:outputs
       - '{{.BIN}}/next build'
       - task: post
@@ -98,6 +100,7 @@ tasks:
       - rm -rf .next {{.OUT_DIR}}
       - task: gen:grounded
       - task: gen:md
+      - task: gen:study-md
       - task: gen:outputs
       - '{{.BIN}}/next build'
       - task: post
@@ -164,6 +167,42 @@ tasks:
       - public/blog/*/index.md
     cmds:
       - node scripts/gen-md-siblings.mjs
+
+  gen:study-md:
+    desc: Generate LLM-friendly .md siblings for every study packet
+    summary: |
+      scripts/gen-study-md.mjs reads each study/mlsys/<vol>/<slug>/packet.md
+      plus its manifests, resolves the packet-only syntax into plain markdown
+      (::eq → Eq breadcrumb + $$ block, ::fig → published-SVG image link or
+      book-source link, ::chart → a data table, ==mark=={gloss} → bold +
+      parenthetical, [!kind] callouts → bold), appends Key equations /
+      Charts / From the book / Self-test / Audio sections, and writes
+      public/study/<vol>/<slug>/index.md — served at
+      /study/<vol>/<slug>/index.md and advertised via
+      <link rel="alternate" type="text/markdown">.
+      Original-sketch SVGs are copied to public/study/<vol>/<slug>/diagrams/
+      so the markdown's image links resolve.
+
+      INPUT   study/mlsys/<vol>/<slug>/{packet.md,equations,charts,diagrams,book-figures}.json
+              public/study-audio/<vol>/<slug>.m4a
+      OUTPUT  public/study/<vol>/<slug>/index.md + diagrams/*.svg (COMMITTED)
+
+      Runs automatically as part of `task build`. Run it standalone after
+      editing a packet to review the generated sibling before committing.
+    sources:
+      - study/mlsys/**/packet.md
+      - study/mlsys/**/equations.json
+      - study/mlsys/**/charts.json
+      - study/mlsys/**/diagrams.json
+      - study/mlsys/**/book-figures.json
+      - study/mlsys/**/quiz.md
+      - study/mlsys/**/diagrams/*.svg
+      - scripts/gen-study-md.mjs
+    generates:
+      - public/study/*/index.md
+      - public/study/*/diagrams/*.svg
+    cmds:
+      - node scripts/gen-study-md.mjs
 
   gen:outputs:
     desc: Publish benchmark result outputs as static JSON/HTML artifacts

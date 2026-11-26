@@ -54,7 +54,6 @@ const N = 40 // diffusion sample trajectories
 const K = 32 // number of reverse diffusion steps (slider runs K → 0)
 
 // ── colour encodings (accent is always the post desk colour via --color-blog)
-const ACCENT = 'var(--color-blog)' // green desk accent (clean modes / samples)
 const COL_START = '#2dd4bf' // teal start dot
 const COL_GOAL = '#f59e0b' // orange goal dot
 const COL_OBSTACLE = '#a855f7' // purple obstacle

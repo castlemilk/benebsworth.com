@@ -1,0 +1,56 @@
+[
+ {
+  "id": "expansion-tradeoff",
+  "kind": "BAR_STACKED",
+  "title": "Doubling the cluster: what halves and what grows",
+  "caption": "Ideal step time halves while failure exposure doubles and checkpoint overhead climbs with the square root of fleet size. Normalized to the 1,024-GPU baseline.",
+  "xLabel": "quantity",
+  "yLabel": "relative to baseline",
+  "xPoints": [
+   "ideal step time",
+   "job MTBF",
+   "checkpoint overhead",
+   "accelerator-hours"
+  ],
+  "series": [
+   {
+    "key": "v",
+    "label": "2,048 vs 1,024 GPUs",
+    "color": "var(--chart-1)",
+    "values": [
+     50,
+     50,
+     141,
+     100.7
+    ]
+   }
+  ]
+ },
+ {
+  "id": "fanout-tail-curve",
+  "kind": "BAR_STACKED",
+  "title": "Fan-out tail exposure by leaf count",
+  "caption": "Probability of hitting at least one slow leaf when every leaf is fast at its own ninety-ninth percentile. Exposure is structural and grows with the fan-out.",
+  "xLabel": "leaves in fan-out",
+  "yLabel": "percent",
+  "xPoints": [
+   "1 leaf",
+   "10 leaves",
+   "50 leaves",
+   "100 leaves"
+  ],
+  "series": [
+   {
+    "key": "p",
+    "label": "tail-hit probability",
+    "color": "var(--chart-1)",
+    "values": [
+     1,
+     9.6,
+     39.5,
+     63.4
+    ]
+   }
+  ]
+ }
+]

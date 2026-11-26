@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ckpt-staging" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="cs-title cs-desc">
+  <title id="cs-title">Pause for the shard, publish the manifest</title>
+  <desc id="cs-desc">Four timeline lanes: training pauses briefly for the local NVMe write, an asynchronous copy to the parallel file system runs much longer, checksum verification follows, and the coordinator publishes the manifest last. A bracket marks the staged window between local write and manifest where the new generation is not yet restorable.</desc>
+  <style>
+    .dark #ckpt-staging { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#ckpt-staging { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">Pause for the shard, publish the manifest</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">two-phase checkpoint · not to scale (0.34 s vs 600 s)</text>
+
+    <!-- lanes -->
+    <g font-size="9" fill="var(--fig-rule, #6e6a5b)">
+      <text x="20" y="86">training</text>
+      <text x="20" y="122">local NVMe</text>
+      <text x="20" y="158">parallel FS</text>
+      <text x="20" y="194">coordinator</text>
+    </g>
+    <g stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8" opacity="0.5">
+      <path d="M96 76 V222"/><path d="M96 76 H368"/>
+    </g>
+
+    <!-- training lane -->
+    <rect x="96" y="72" width="30" height="14" rx="2" fill="var(--fig-mark, #b4571f)" opacity="0.85"/>
+    <text x="111" y="82" font-size="7.5" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">pause</text>
+    <rect x="126" y="72" width="242" height="14" rx="2" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1"/>
+    <text x="247" y="82" font-size="7.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">steps continue</text>
+
+    <!-- local NVMe lane -->
+    <rect x="96" y="108" width="30" height="14" rx="2" fill="none" stroke="var(--fig-mark, #b4571f)" stroke-width="1.3"/>
+    <text x="134" y="118" font-size="8" fill="var(--fig-mark, #b4571f)">shard write ~9.6 GB · ≈0.34 s pause</text>
+
+    <!-- PFS lane -->
+    <rect x="126" y="144" width="150" height="14" rx="2" fill="var(--fig-outline, #364c50)" opacity="0.3"/>
+    <text x="201" y="154" font-size="7.5" text-anchor="middle">async durable copy ≈2.45 s</text>
+    <rect x="280" y="144" width="52" height="14" rx="2" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1"/>
+    <text x="306" y="154" font-size="7" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">checksum</text>
+
+    <!-- coordinator lane -->
+    <rect x="332" y="180" width="36" height="14" rx="2" fill="var(--fig-mark, #b4571f)"/>
+    <text x="350" y="190" font-size="7" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">manifest</text>
+
+    <!-- t0..t3 ticks -->
+    <g font-size="8" fill="var(--fig-rule, #6e6a5b)">
+      <text x="96" y="234" text-anchor="middle">t0</text>
+      <text x="126" y="234" text-anchor="middle">t1</text>
+      <text x="332" y="234" text-anchor="middle">t3</text>
+    </g>
+    <path d="M96 220 v-4 M126 226 v-10 M332 226 v-32" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1" fill="none"/>
+
+    <!-- staged / restorable brackets -->
+    <path d="M126 252 h206" stroke="var(--fig-mark, #b4571f)" stroke-width="1.2" fill="none"/>
+    <path d="M126 248 v8 M332 248 v8" stroke="var(--fig-mark, #b4571f)" stroke-width="1.2" fill="none"/>
+    <text x="229" y="266" font-size="8.5" text-anchor="middle" fill="var(--fig-mark, #b4571f)">staged — not yet restorable</text>
+    <path d="M332 278 h36" stroke="var(--fig-outline, #364c50)" stroke-width="1.2" fill="none"/>
+    <text x="350" y="292" font-size="8.5" text-anchor="middle" fill="var(--fig-outline, #364c50)">restorable</text>
+    <text x="229" y="290" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">previous committed generation is the restore point until t3</text>
+  </g>
+</svg>

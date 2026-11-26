@@ -1,0 +1,7381 @@
+{
+  "hosts": {
+    "A": "Marcus",
+    "B": "Iris"
+  },
+  "segments": [
+    {
+      "speaker": "A",
+      "text": "Welcome back to the study sessions for Machine Learning Systems. I'm Marcus.",
+      "start": 0.0,
+      "end": 5.5,
+      "words": [
+        {
+          "text": "Welcome",
+          "start": 0.0,
+          "end": 0.66
+        },
+        {
+          "text": "back",
+          "start": 0.66,
+          "end": 1.08
+        },
+        {
+          "text": "to",
+          "start": 1.08,
+          "end": 1.28
+        },
+        {
+          "text": "the",
+          "start": 1.28,
+          "end": 1.4
+        },
+        {
+          "text": "study",
+          "start": 1.4,
+          "end": 1.62
+        },
+        {
+          "text": "sessions",
+          "start": 1.62,
+          "end": 2.08
+        },
+        {
+          "text": "for",
+          "start": 2.08,
+          "end": 2.32
+        },
+        {
+          "text": "machine",
+          "start": 2.32,
+          "end": 2.66
+        },
+        {
+          "text": "learning",
+          "start": 2.66,
+          "end": 3.04
+        },
+        {
+          "text": "systems.",
+          "start": 3.04,
+          "end": 3.48
+        },
+        {
+          "text": "I'm",
+          "start": 4.12,
+          "end": 4.42
+        },
+        {
+          "text": "Marcus.",
+          "start": 4.42,
+          "end": 4.74
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/08-training/cover.webp",
+        "title": "Model training",
+        "alt": "Model training"
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "And I'm Iris. Today is chapter eight - Model Training. This is the big one: everything from the last seven chapters converges here.",
+      "start": 5.5,
+      "end": 14.1,
+      "words": [
+        {
+          "text": "And",
+          "start": 5.8,
+          "end": 5.96
+        },
+        {
+          "text": "I'm",
+          "start": 5.96,
+          "end": 6.14
+        },
+        {
+          "text": "Iris.",
+          "start": 6.14,
+          "end": 6.4
+        },
+        {
+          "text": "Today",
+          "start": 6.98,
+          "end": 7.16
+        },
+        {
+          "text": "is",
+          "start": 7.16,
+          "end": 7.48
+        },
+        {
+          "text": "chapter",
+          "start": 7.48,
+          "end": 7.76
+        },
+        {
+          "text": "8",
+          "start": 7.76,
+          "end": 8.12
+        },
+        {
+          "text": "model",
+          "start": 8.12,
+          "end": 8.5
+        },
+        {
+          "text": "training.",
+          "start": 8.5,
+          "end": 8.88
+        },
+        {
+          "text": "This",
+          "start": 9.48,
+          "end": 9.74
+        },
+        {
+          "text": "is",
+          "start": 9.74,
+          "end": 9.88
+        },
+        {
+          "text": "the",
+          "start": 9.88,
+          "end": 10.02
+        },
+        {
+          "text": "big",
+          "start": 10.02,
+          "end": 10.22
+        },
+        {
+          "text": "one.",
+          "start": 10.22,
+          "end": 10.44
+        },
+        {
+          "text": "Everything",
+          "start": 10.86,
+          "end": 11.14
+        },
+        {
+          "text": "from",
+          "start": 11.14,
+          "end": 11.48
+        },
+        {
+          "text": "the",
+          "start": 11.48,
+          "end": 11.58
+        },
+        {
+          "text": "last",
+          "start": 11.58,
+          "end": 11.86
+        },
+        {
+          "text": "seven",
+          "start": 11.86,
+          "end": 12.24
+        },
+        {
+          "text": "chapters",
+          "start": 12.24,
+          "end": 12.72
+        },
+        {
+          "text": "converges",
+          "start": 12.72,
+          "end": 13.26
+        },
+        {
+          "text": "here.",
+          "start": 13.26,
+          "end": 13.54
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And it opens with scale. Remember the little two-layer MNIST network from the frameworks chapter? A hundred thousand parameters, a few gigaflops per example.",
+      "start": 14.1,
+      "end": 25.7,
+      "words": [
+        {
+          "text": "And",
+          "start": 14.46,
+          "end": 14.6
+        },
+        {
+          "text": "it",
+          "start": 14.6,
+          "end": 14.7
+        },
+        {
+          "text": "opens",
+          "start": 14.7,
+          "end": 15.02
+        },
+        {
+          "text": "with",
+          "start": 15.02,
+          "end": 15.36
+        },
+        {
+          "text": "scale.",
+          "start": 15.36,
+          "end": 15.74
+        },
+        {
+          "text": "Remember",
+          "start": 16.4,
+          "end": 16.78
+        },
+        {
+          "text": "the",
+          "start": 16.78,
+          "end": 17.1
+        },
+        {
+          "text": "little",
+          "start": 17.1,
+          "end": 17.32
+        },
+        {
+          "text": "two",
+          "start": 17.32,
+          "end": 17.58
+        },
+        {
+          "text": "-layer",
+          "start": 17.58,
+          "end": 18.02
+        },
+        {
+          "text": "MNIST",
+          "start": 18.02,
+          "end": 18.72
+        },
+        {
+          "text": "network",
+          "start": 18.72,
+          "end": 19.28
+        },
+        {
+          "text": "from",
+          "start": 19.28,
+          "end": 19.5
+        },
+        {
+          "text": "the",
+          "start": 19.5,
+          "end": 19.66
+        },
+        {
+          "text": "framework's",
+          "start": 19.66,
+          "end": 20.18
+        },
+        {
+          "text": "chapter.",
+          "start": 20.18,
+          "end": 20.52
+        },
+        {
+          "text": "100",
+          "start": 21.1,
+          "end": 21.52
+        },
+        {
+          "text": ",000",
+          "start": 21.52,
+          "end": 22.1
+        },
+        {
+          "text": "parameters.",
+          "start": 22.1,
+          "end": 22.58
+        },
+        {
+          "text": "A",
+          "start": 23.22,
+          "end": 23.34
+        },
+        {
+          "text": "few",
+          "start": 23.34,
+          "end": 23.6
+        },
+        {
+          "text": "gigaflops",
+          "start": 23.6,
+          "end": 24.24
+        },
+        {
+          "text": "per",
+          "start": 24.24,
+          "end": 24.48
+        },
+        {
+          "text": "example.",
+          "start": 24.48,
+          "end": 24.96
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And now we're training GPT-2 XL?",
+      "start": 25.7,
+      "end": 28.57,
+      "words": [
+        {
+          "text": "And",
+          "start": 25.82,
+          "end": 26.1
+        },
+        {
+          "text": "now",
+          "start": 26.1,
+          "end": 26.28
+        },
+        {
+          "text": "we're",
+          "start": 26.28,
+          "end": 26.42
+        },
+        {
+          "text": "training",
+          "start": 26.42,
+          "end": 26.68
+        },
+        {
+          "text": "GPT2",
+          "start": 26.68,
+          "end": 27.5
+        },
+        {
+          "text": "XL.",
+          "start": 27.5,
+          "end": 27.82
+        },
+        {
+          "text": "The",
+          "start": 27.82,
+          "end": 29.02
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The GPT-2 XL training step is about fifteen million times that arithmetic and carries ten thousand times the resident state. The full run needs about one point five times ten to the twenty-one FLOPs.",
+      "start": 28.57,
+      "end": 44.23,
+      "words": [
+        {
+          "text": "GPT2",
+          "start": 29.02,
+          "end": 30.04
+        },
+        {
+          "text": "XL",
+          "start": 30.04,
+          "end": 30.56
+        },
+        {
+          "text": "training",
+          "start": 30.56,
+          "end": 31.06
+        },
+        {
+          "text": "step",
+          "start": 31.06,
+          "end": 31.4
+        },
+        {
+          "text": "is",
+          "start": 31.4,
+          "end": 31.86
+        },
+        {
+          "text": "about",
+          "start": 31.86,
+          "end": 32.1
+        },
+        {
+          "text": "15",
+          "start": 32.1,
+          "end": 32.7
+        },
+        {
+          "text": "million",
+          "start": 32.7,
+          "end": 33.1
+        },
+        {
+          "text": "times",
+          "start": 33.1,
+          "end": 33.64
+        },
+        {
+          "text": "that",
+          "start": 33.64,
+          "end": 33.94
+        },
+        {
+          "text": "arithmetic",
+          "start": 33.94,
+          "end": 34.38
+        },
+        {
+          "text": "and",
+          "start": 34.38,
+          "end": 35.22
+        },
+        {
+          "text": "carries",
+          "start": 35.22,
+          "end": 35.64
+        },
+        {
+          "text": "10",
+          "start": 35.64,
+          "end": 36.02
+        },
+        {
+          "text": ",000",
+          "start": 36.02,
+          "end": 36.52
+        },
+        {
+          "text": "times",
+          "start": 36.52,
+          "end": 36.96
+        },
+        {
+          "text": "the",
+          "start": 36.96,
+          "end": 37.22
+        },
+        {
+          "text": "resident",
+          "start": 37.22,
+          "end": 37.56
+        },
+        {
+          "text": "state.",
+          "start": 37.56,
+          "end": 37.98
+        },
+        {
+          "text": "The",
+          "start": 38.76,
+          "end": 38.92
+        },
+        {
+          "text": "full",
+          "start": 38.92,
+          "end": 39.18
+        },
+        {
+          "text": "run",
+          "start": 39.18,
+          "end": 39.48
+        },
+        {
+          "text": "needs",
+          "start": 39.48,
+          "end": 39.92
+        },
+        {
+          "text": "about",
+          "start": 39.92,
+          "end": 40.18
+        },
+        {
+          "text": "1",
+          "start": 40.18,
+          "end": 40.56
+        },
+        {
+          "text": ".5",
+          "start": 40.56,
+          "end": 41.32
+        },
+        {
+          "text": "times",
+          "start": 41.32,
+          "end": 41.62
+        },
+        {
+          "text": "10",
+          "start": 41.62,
+          "end": 42.18
+        },
+        {
+          "text": "to",
+          "start": 42.18,
+          "end": 42.44
+        },
+        {
+          "text": "the",
+          "start": 42.44,
+          "end": 42.54
+        },
+        {
+          "text": "21",
+          "start": 42.54,
+          "end": 42.96
+        },
+        {
+          "text": "flops.",
+          "start": 42.96,
+          "end": 43.64
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Twenty-one zeros. What does that buy you on real hardware?",
+      "start": 44.23,
+      "end": 48.2,
+      "words": [
+        {
+          "text": "21",
+          "start": 44.44,
+          "end": 44.74
+        },
+        {
+          "text": "zeros.",
+          "start": 44.74,
+          "end": 45.3
+        },
+        {
+          "text": "What",
+          "start": 45.78,
+          "end": 45.96
+        },
+        {
+          "text": "does",
+          "start": 45.96,
+          "end": 46.08
+        },
+        {
+          "text": "that",
+          "start": 46.08,
+          "end": 46.24
+        },
+        {
+          "text": "buy",
+          "start": 46.24,
+          "end": 46.46
+        },
+        {
+          "text": "you",
+          "start": 46.46,
+          "end": 46.68
+        },
+        {
+          "text": "on",
+          "start": 46.68,
+          "end": 46.88
+        },
+        {
+          "text": "real",
+          "start": 46.88,
+          "end": 47.1
+        },
+        {
+          "text": "hardware?",
+          "start": 47.1,
+          "end": 47.58
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "At an assumed fifty percent utilization - a round number at the high end of what big runs sustain - about five point one million steps of zero point six seconds each. Thirty-five days on one H100.",
+      "start": 48.2,
+      "end": 63.85,
+      "words": [
+        {
+          "text": "At",
+          "start": 48.26,
+          "end": 48.72
+        },
+        {
+          "text": "an",
+          "start": 48.72,
+          "end": 48.82
+        },
+        {
+          "text": "assumed",
+          "start": 48.82,
+          "end": 49.2
+        },
+        {
+          "text": "50",
+          "start": 49.2,
+          "end": 49.64
+        },
+        {
+          "text": "%",
+          "start": 49.64,
+          "end": 50.04
+        },
+        {
+          "text": "utilization,",
+          "start": 50.04,
+          "end": 50.8
+        },
+        {
+          "text": "a",
+          "start": 51.38,
+          "end": 51.58
+        },
+        {
+          "text": "round",
+          "start": 51.58,
+          "end": 51.84
+        },
+        {
+          "text": "number",
+          "start": 51.84,
+          "end": 52.26
+        },
+        {
+          "text": "at",
+          "start": 52.26,
+          "end": 52.42
+        },
+        {
+          "text": "the",
+          "start": 52.42,
+          "end": 52.52
+        },
+        {
+          "text": "high",
+          "start": 52.52,
+          "end": 52.8
+        },
+        {
+          "text": "end",
+          "start": 52.8,
+          "end": 53.18
+        },
+        {
+          "text": "of",
+          "start": 53.18,
+          "end": 53.38
+        },
+        {
+          "text": "what",
+          "start": 53.38,
+          "end": 53.54
+        },
+        {
+          "text": "big",
+          "start": 53.54,
+          "end": 53.82
+        },
+        {
+          "text": "runs",
+          "start": 53.82,
+          "end": 54.18
+        },
+        {
+          "text": "sustain,",
+          "start": 54.18,
+          "end": 54.72
+        },
+        {
+          "text": "about",
+          "start": 54.72,
+          "end": 55.52
+        },
+        {
+          "text": "5",
+          "start": 55.52,
+          "end": 56.02
+        },
+        {
+          "text": ".1",
+          "start": 56.02,
+          "end": 56.64
+        },
+        {
+          "text": "million",
+          "start": 56.64,
+          "end": 57.02
+        },
+        {
+          "text": "steps",
+          "start": 57.02,
+          "end": 57.48
+        },
+        {
+          "text": "of",
+          "start": 57.48,
+          "end": 57.82
+        },
+        {
+          "text": "0",
+          "start": 57.82,
+          "end": 58.3
+        },
+        {
+          "text": ".6",
+          "start": 58.3,
+          "end": 58.98
+        },
+        {
+          "text": "seconds",
+          "start": 58.98,
+          "end": 59.42
+        },
+        {
+          "text": "each.",
+          "start": 59.42,
+          "end": 59.78
+        },
+        {
+          "text": "35",
+          "start": 60.54,
+          "end": 60.98
+        },
+        {
+          "text": "days",
+          "start": 60.98,
+          "end": 61.58
+        },
+        {
+          "text": "on",
+          "start": 61.58,
+          "end": 61.92
+        },
+        {
+          "text": "1H100.",
+          "start": 61.92,
+          "end": 63.12
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And the chapter turns that into a law.",
+      "start": 63.85,
+      "end": 66.45,
+      "words": [
+        {
+          "text": "And",
+          "start": 63.86,
+          "end": 64.24
+        },
+        {
+          "text": "the",
+          "start": 64.24,
+          "end": 64.32
+        },
+        {
+          "text": "chapter",
+          "start": 64.32,
+          "end": 64.6
+        },
+        {
+          "text": "turns",
+          "start": 64.6,
+          "end": 64.98
+        },
+        {
+          "text": "that",
+          "start": 64.98,
+          "end": 65.22
+        },
+        {
+          "text": "into",
+          "start": 65.22,
+          "end": 65.5
+        },
+        {
+          "text": "a",
+          "start": 65.5,
+          "end": 65.64
+        },
+        {
+          "text": "law.",
+          "start": 65.64,
+          "end": 65.88
+        }
+      ],
+      "eq": {
+        "id": "training-time-law",
+        "title": "The training-time law",
+        "latex": "T_{\\mathrm{train}} = \\frac{O}{R_{\\mathrm{peak}} \\times \\eta_{\\mathrm{hw}}}"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "The training-time law: T equals O over R-peak times eta. The run's operation count O is six-P-D - six FLOPs per parameter per token, forward plus backward. Divide by the peak rate and the utilization factor, and you get the calendar.",
+      "start": 66.45,
+      "end": 84.22,
+      "words": [
+        {
+          "text": "The",
+          "start": 66.62,
+          "end": 66.9
+        },
+        {
+          "text": "training",
+          "start": 66.9,
+          "end": 67.18
+        },
+        {
+          "text": "time",
+          "start": 67.18,
+          "end": 67.5
+        },
+        {
+          "text": "law,",
+          "start": 67.5,
+          "end": 67.86
+        },
+        {
+          "text": "T",
+          "start": 68.3,
+          "end": 68.58
+        },
+        {
+          "text": "equals",
+          "start": 68.58,
+          "end": 69.0
+        },
+        {
+          "text": "O",
+          "start": 69.0,
+          "end": 69.4
+        },
+        {
+          "text": "over",
+          "start": 69.4,
+          "end": 69.7
+        },
+        {
+          "text": "rpeak",
+          "start": 69.7,
+          "end": 70.18
+        },
+        {
+          "text": "times",
+          "start": 70.18,
+          "end": 70.42
+        },
+        {
+          "text": "eta.",
+          "start": 70.42,
+          "end": 70.8
+        },
+        {
+          "text": "The",
+          "start": 71.46,
+          "end": 71.64
+        },
+        {
+          "text": "runs",
+          "start": 71.64,
+          "end": 71.92
+        },
+        {
+          "text": "operation",
+          "start": 71.92,
+          "end": 72.54
+        },
+        {
+          "text": "count",
+          "start": 72.54,
+          "end": 72.94
+        },
+        {
+          "text": "O",
+          "start": 72.94,
+          "end": 73.38
+        },
+        {
+          "text": "is",
+          "start": 73.38,
+          "end": 73.64
+        },
+        {
+          "text": "6",
+          "start": 73.64,
+          "end": 73.94
+        },
+        {
+          "text": "BD,",
+          "start": 73.94,
+          "end": 74.36
+        },
+        {
+          "text": "6",
+          "start": 74.68,
+          "end": 74.86
+        },
+        {
+          "text": "flops",
+          "start": 74.86,
+          "end": 75.3
+        },
+        {
+          "text": "per",
+          "start": 75.3,
+          "end": 75.52
+        },
+        {
+          "text": "parameter",
+          "start": 75.52,
+          "end": 76.0
+        },
+        {
+          "text": "per",
+          "start": 76.0,
+          "end": 76.3
+        },
+        {
+          "text": "token,",
+          "start": 76.3,
+          "end": 76.68
+        },
+        {
+          "text": "forward",
+          "start": 77.06,
+          "end": 77.48
+        },
+        {
+          "text": "plus",
+          "start": 77.48,
+          "end": 77.84
+        },
+        {
+          "text": "backward.",
+          "start": 77.84,
+          "end": 78.38
+        },
+        {
+          "text": "Divide",
+          "start": 78.88,
+          "end": 79.5
+        },
+        {
+          "text": "by",
+          "start": 79.5,
+          "end": 79.72
+        },
+        {
+          "text": "the",
+          "start": 79.72,
+          "end": 79.88
+        },
+        {
+          "text": "peak",
+          "start": 79.88,
+          "end": 80.1
+        },
+        {
+          "text": "rate",
+          "start": 80.1,
+          "end": 80.5
+        },
+        {
+          "text": "and",
+          "start": 80.5,
+          "end": 80.7
+        },
+        {
+          "text": "the",
+          "start": 80.7,
+          "end": 80.82
+        },
+        {
+          "text": "utilization",
+          "start": 80.82,
+          "end": 81.3
+        },
+        {
+          "text": "factor,",
+          "start": 81.3,
+          "end": 81.98
+        },
+        {
+          "text": "and",
+          "start": 82.24,
+          "end": 82.58
+        },
+        {
+          "text": "you",
+          "start": 82.58,
+          "end": 82.7
+        },
+        {
+          "text": "get",
+          "start": 82.7,
+          "end": 82.86
+        },
+        {
+          "text": "the",
+          "start": 82.86,
+          "end": 83.0
+        },
+        {
+          "text": "calendar.",
+          "start": 83.0,
+          "end": 83.44
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Three levers, and only three: shrink the work, raise the peak, or raise the utilization.",
+      "start": 84.22,
+      "end": 89.95,
+      "words": [
+        {
+          "text": "Three",
+          "start": 84.12,
+          "end": 84.68
+        },
+        {
+          "text": "levers",
+          "start": 84.68,
+          "end": 84.96
+        },
+        {
+          "text": "and",
+          "start": 84.96,
+          "end": 85.32
+        },
+        {
+          "text": "only",
+          "start": 85.32,
+          "end": 85.54
+        },
+        {
+          "text": "three.",
+          "start": 85.54,
+          "end": 85.78
+        },
+        {
+          "text": "Shrink",
+          "start": 86.28,
+          "end": 86.58
+        },
+        {
+          "text": "the",
+          "start": 86.58,
+          "end": 86.74
+        },
+        {
+          "text": "work,",
+          "start": 86.74,
+          "end": 86.98
+        },
+        {
+          "text": "raise",
+          "start": 87.24,
+          "end": 87.38
+        },
+        {
+          "text": "the",
+          "start": 87.38,
+          "end": 87.6
+        },
+        {
+          "text": "peak,",
+          "start": 87.6,
+          "end": 87.8
+        },
+        {
+          "text": "or",
+          "start": 88.08,
+          "end": 88.16
+        },
+        {
+          "text": "raise",
+          "start": 88.16,
+          "end": 88.48
+        },
+        {
+          "text": "the",
+          "start": 88.48,
+          "end": 88.68
+        },
+        {
+          "text": "utilization.",
+          "start": 88.68,
+          "end": 89.26
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Right. And here's the subtle part - memory doesn't appear in the law at all.",
+      "start": 89.95,
+      "end": 95.0,
+      "words": [
+        {
+          "text": "Right,",
+          "start": 90.28,
+          "end": 90.56
+        },
+        {
+          "text": "and",
+          "start": 90.94,
+          "end": 91.08
+        },
+        {
+          "text": "here's",
+          "start": 91.08,
+          "end": 91.44
+        },
+        {
+          "text": "the",
+          "start": 91.44,
+          "end": 91.56
+        },
+        {
+          "text": "subtle",
+          "start": 91.56,
+          "end": 91.84
+        },
+        {
+          "text": "part",
+          "start": 91.84,
+          "end": 92.14
+        },
+        {
+          "text": "memory",
+          "start": 92.14,
+          "end": 92.48
+        },
+        {
+          "text": "doesn't",
+          "start": 92.48,
+          "end": 93.04
+        },
+        {
+          "text": "appear",
+          "start": 93.04,
+          "end": 93.34
+        },
+        {
+          "text": "in",
+          "start": 93.34,
+          "end": 93.52
+        },
+        {
+          "text": "the",
+          "start": 93.52,
+          "end": 93.6
+        },
+        {
+          "text": "law",
+          "start": 93.6,
+          "end": 93.88
+        },
+        {
+          "text": "at",
+          "start": 93.88,
+          "end": 94.04
+        },
+        {
+          "text": "all.",
+          "start": 94.04,
+          "end": 94.32
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "How can the biggest constraint not be a term?",
+      "start": 95.0,
+      "end": 97.72,
+      "words": [
+        {
+          "text": "How",
+          "start": 95.22,
+          "end": 95.46
+        },
+        {
+          "text": "can",
+          "start": 95.46,
+          "end": 95.66
+        },
+        {
+          "text": "the",
+          "start": 95.66,
+          "end": 95.76
+        },
+        {
+          "text": "biggest",
+          "start": 95.76,
+          "end": 95.94
+        },
+        {
+          "text": "constraint",
+          "start": 95.94,
+          "end": 96.42
+        },
+        {
+          "text": "not",
+          "start": 96.42,
+          "end": 96.68
+        },
+        {
+          "text": "be",
+          "start": 96.68,
+          "end": 96.82
+        },
+        {
+          "text": "a",
+          "start": 96.82,
+          "end": 96.94
+        },
+        {
+          "text": "term?",
+          "start": 96.94,
+          "end": 97.12
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Because memory isn't a speed factor - it's a feasibility constraint. A step that doesn't fit doesn't run slowly. It doesn't run. So every plan starts by fitting the state, and only then does the utilization factor become the engineering target.",
+      "start": 97.72,
+      "end": 115.22,
+      "words": [
+        {
+          "text": "Because",
+          "start": 98.0,
+          "end": 98.36
+        },
+        {
+          "text": "memory",
+          "start": 98.36,
+          "end": 98.8
+        },
+        {
+          "text": "isn't",
+          "start": 98.8,
+          "end": 99.3
+        },
+        {
+          "text": "a",
+          "start": 99.3,
+          "end": 99.42
+        },
+        {
+          "text": "speed",
+          "start": 99.42,
+          "end": 99.76
+        },
+        {
+          "text": "factor,",
+          "start": 99.76,
+          "end": 100.22
+        },
+        {
+          "text": "it's",
+          "start": 100.7,
+          "end": 100.9
+        },
+        {
+          "text": "a",
+          "start": 100.9,
+          "end": 100.98
+        },
+        {
+          "text": "feasibility",
+          "start": 100.98,
+          "end": 101.7
+        },
+        {
+          "text": "constraint.",
+          "start": 101.7,
+          "end": 102.18
+        },
+        {
+          "text": "A",
+          "start": 102.94,
+          "end": 103.16
+        },
+        {
+          "text": "step",
+          "start": 103.16,
+          "end": 103.42
+        },
+        {
+          "text": "that",
+          "start": 103.42,
+          "end": 103.66
+        },
+        {
+          "text": "doesn't",
+          "start": 103.66,
+          "end": 104.0
+        },
+        {
+          "text": "fit",
+          "start": 104.0,
+          "end": 104.3
+        },
+        {
+          "text": "doesn't",
+          "start": 104.3,
+          "end": 104.76
+        },
+        {
+          "text": "run",
+          "start": 104.76,
+          "end": 104.96
+        },
+        {
+          "text": "slowly.",
+          "start": 104.96,
+          "end": 105.46
+        },
+        {
+          "text": "It",
+          "start": 106.12,
+          "end": 106.24
+        },
+        {
+          "text": "doesn't",
+          "start": 106.24,
+          "end": 106.56
+        },
+        {
+          "text": "run.",
+          "start": 106.56,
+          "end": 106.84
+        },
+        {
+          "text": "So",
+          "start": 106.84,
+          "end": 107.66
+        },
+        {
+          "text": "every",
+          "start": 107.66,
+          "end": 108.06
+        },
+        {
+          "text": "plan",
+          "start": 108.06,
+          "end": 108.46
+        },
+        {
+          "text": "starts",
+          "start": 108.46,
+          "end": 108.82
+        },
+        {
+          "text": "by",
+          "start": 108.82,
+          "end": 109.16
+        },
+        {
+          "text": "fitting",
+          "start": 109.16,
+          "end": 109.46
+        },
+        {
+          "text": "the",
+          "start": 109.46,
+          "end": 109.7
+        },
+        {
+          "text": "state,",
+          "start": 109.7,
+          "end": 110.0
+        },
+        {
+          "text": "and",
+          "start": 110.36,
+          "end": 110.54
+        },
+        {
+          "text": "only",
+          "start": 110.54,
+          "end": 110.82
+        },
+        {
+          "text": "then",
+          "start": 110.82,
+          "end": 111.1
+        },
+        {
+          "text": "does",
+          "start": 111.1,
+          "end": 111.34
+        },
+        {
+          "text": "the",
+          "start": 111.34,
+          "end": 111.5
+        },
+        {
+          "text": "utilization",
+          "start": 111.5,
+          "end": 111.98
+        },
+        {
+          "text": "factor",
+          "start": 111.98,
+          "end": 112.66
+        },
+        {
+          "text": "become",
+          "start": 112.66,
+          "end": 113.14
+        },
+        {
+          "text": "the",
+          "start": 113.14,
+          "end": 113.36
+        },
+        {
+          "text": "engineering",
+          "start": 113.36,
+          "end": 113.98
+        },
+        {
+          "text": "target.",
+          "start": 113.98,
+          "end": 114.5
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Which brings us to the four-term budget.",
+      "start": 115.22,
+      "end": 117.7,
+      "words": [
+        {
+          "text": "Which",
+          "start": 115.28,
+          "end": 115.64
+        },
+        {
+          "text": "brings",
+          "start": 115.64,
+          "end": 115.96
+        },
+        {
+          "text": "us",
+          "start": 115.96,
+          "end": 116.18
+        },
+        {
+          "text": "to",
+          "start": 116.18,
+          "end": 116.32
+        },
+        {
+          "text": "the",
+          "start": 116.32,
+          "end": 116.4
+        },
+        {
+          "text": "four",
+          "start": 116.4,
+          "end": 116.56
+        },
+        {
+          "text": "term",
+          "start": 116.56,
+          "end": 116.74
+        },
+        {
+          "text": "budget.",
+          "start": 116.74,
+          "end": 117.06
+        }
+      ],
+      "eq": {
+        "id": "memory-budget",
+        "title": "The four-term memory budget",
+        "latex": "M_{\\mathrm{train}} = W + G + S_{\\mathrm{opt}} + A_{\\mathrm{saved}}"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Weights, gradients, optimizer state, saved activations. Under the standard mixed-precision Adam recipe, the static terms alone cost sixteen bytes per parameter - eight times the inference weights.",
+      "start": 117.7,
+      "end": 132.15,
+      "words": [
+        {
+          "text": "Weights,",
+          "start": 118.18,
+          "end": 118.5
+        },
+        {
+          "text": "gradients,",
+          "start": 118.72,
+          "end": 119.18
+        },
+        {
+          "text": "optimizer",
+          "start": 119.54,
+          "end": 120.16
+        },
+        {
+          "text": "state,",
+          "start": 120.16,
+          "end": 120.56
+        },
+        {
+          "text": "saved",
+          "start": 120.98,
+          "end": 121.26
+        },
+        {
+          "text": "activations.",
+          "start": 121.26,
+          "end": 122.06
+        },
+        {
+          "text": "Under",
+          "start": 122.72,
+          "end": 122.98
+        },
+        {
+          "text": "the",
+          "start": 122.98,
+          "end": 123.12
+        },
+        {
+          "text": "standard",
+          "start": 123.12,
+          "end": 123.58
+        },
+        {
+          "text": "mixed",
+          "start": 123.58,
+          "end": 123.88
+        },
+        {
+          "text": "precision",
+          "start": 123.88,
+          "end": 124.44
+        },
+        {
+          "text": "atom",
+          "start": 124.44,
+          "end": 124.8
+        },
+        {
+          "text": "recipe,",
+          "start": 124.8,
+          "end": 125.36
+        },
+        {
+          "text": "the",
+          "start": 125.92,
+          "end": 126.02
+        },
+        {
+          "text": "static",
+          "start": 126.02,
+          "end": 126.36
+        },
+        {
+          "text": "terms",
+          "start": 126.36,
+          "end": 126.8
+        },
+        {
+          "text": "alone",
+          "start": 126.8,
+          "end": 127.24
+        },
+        {
+          "text": "cost",
+          "start": 127.24,
+          "end": 127.7
+        },
+        {
+          "text": "16",
+          "start": 127.7,
+          "end": 128.36
+        },
+        {
+          "text": "bytes",
+          "start": 128.36,
+          "end": 128.76
+        },
+        {
+          "text": "per",
+          "start": 128.76,
+          "end": 129.08
+        },
+        {
+          "text": "parameter",
+          "start": 129.08,
+          "end": 129.62
+        },
+        {
+          "text": "8",
+          "start": 129.62,
+          "end": 130.0
+        },
+        {
+          "text": "times",
+          "start": 130.0,
+          "end": 130.44
+        },
+        {
+          "text": "the",
+          "start": 130.44,
+          "end": 130.68
+        },
+        {
+          "text": "inference",
+          "start": 130.68,
+          "end": 130.98
+        },
+        {
+          "text": "weights.",
+          "start": 130.98,
+          "end": 131.38
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Sixteen bytes. Walk me through it.",
+      "start": 132.15,
+      "end": 134.85,
+      "words": [
+        {
+          "text": "16",
+          "start": 132.38,
+          "end": 132.74
+        },
+        {
+          "text": "bytes,",
+          "start": 132.74,
+          "end": 133.14
+        },
+        {
+          "text": "walk",
+          "start": 133.48,
+          "end": 133.74
+        },
+        {
+          "text": "me",
+          "start": 133.74,
+          "end": 133.94
+        },
+        {
+          "text": "through",
+          "start": 133.94,
+          "end": 134.12
+        },
+        {
+          "text": "it.",
+          "start": 134.12,
+          "end": 134.38
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Two for the FP16 kernel weights, two for FP16 gradients, four for the FP32 master copy, and eight for Adam's two FP32 moments. At GPT-2 XL's one point five billion parameters that's twenty-four gigabytes before a single activation is stored.",
+      "start": 134.85,
+      "end": 156.47,
+      "words": [
+        {
+          "text": "Two",
+          "start": 134.38,
+          "end": 135.42
+        },
+        {
+          "text": "for",
+          "start": 135.42,
+          "end": 135.72
+        },
+        {
+          "text": "the",
+          "start": 135.72,
+          "end": 135.84
+        },
+        {
+          "text": "FP16",
+          "start": 135.84,
+          "end": 136.82
+        },
+        {
+          "text": "kernel",
+          "start": 136.82,
+          "end": 137.14
+        },
+        {
+          "text": "weights,",
+          "start": 137.14,
+          "end": 137.52
+        },
+        {
+          "text": "two",
+          "start": 138.04,
+          "end": 138.38
+        },
+        {
+          "text": "for",
+          "start": 138.38,
+          "end": 138.7
+        },
+        {
+          "text": "FP16",
+          "start": 138.7,
+          "end": 139.54
+        },
+        {
+          "text": "gradients,",
+          "start": 139.54,
+          "end": 140.2
+        },
+        {
+          "text": "four",
+          "start": 140.6,
+          "end": 141.04
+        },
+        {
+          "text": "for",
+          "start": 141.04,
+          "end": 141.3
+        },
+        {
+          "text": "the",
+          "start": 141.3,
+          "end": 141.4
+        },
+        {
+          "text": "FP32",
+          "start": 141.4,
+          "end": 142.32
+        },
+        {
+          "text": "master",
+          "start": 142.32,
+          "end": 142.64
+        },
+        {
+          "text": "copy,",
+          "start": 142.64,
+          "end": 143.2
+        },
+        {
+          "text": "and",
+          "start": 143.76,
+          "end": 143.92
+        },
+        {
+          "text": "eight",
+          "start": 143.92,
+          "end": 144.18
+        },
+        {
+          "text": "for",
+          "start": 144.18,
+          "end": 144.42
+        },
+        {
+          "text": "atoms",
+          "start": 144.42,
+          "end": 144.74
+        },
+        {
+          "text": "two",
+          "start": 144.74,
+          "end": 145.16
+        },
+        {
+          "text": "FP32",
+          "start": 145.16,
+          "end": 146.2
+        },
+        {
+          "text": "moments.",
+          "start": 146.2,
+          "end": 146.78
+        },
+        {
+          "text": "At",
+          "start": 147.44,
+          "end": 147.78
+        },
+        {
+          "text": "GPT2,",
+          "start": 147.78,
+          "end": 148.76
+        },
+        {
+          "text": "excels",
+          "start": 149.0,
+          "end": 149.48
+        },
+        {
+          "text": "1",
+          "start": 149.48,
+          "end": 149.9
+        },
+        {
+          "text": ".5",
+          "start": 149.9,
+          "end": 150.68
+        },
+        {
+          "text": "billion",
+          "start": 150.68,
+          "end": 151.04
+        },
+        {
+          "text": "parameters",
+          "start": 151.04,
+          "end": 151.72
+        },
+        {
+          "text": "that's",
+          "start": 151.72,
+          "end": 152.24
+        },
+        {
+          "text": "24",
+          "start": 152.24,
+          "end": 152.78
+        },
+        {
+          "text": "gigabytes",
+          "start": 152.78,
+          "end": 153.12
+        },
+        {
+          "text": "before",
+          "start": 153.12,
+          "end": 153.7
+        },
+        {
+          "text": "a",
+          "start": 153.7,
+          "end": 153.98
+        },
+        {
+          "text": "single",
+          "start": 153.98,
+          "end": 154.3
+        },
+        {
+          "text": "activation",
+          "start": 154.3,
+          "end": 155.0
+        },
+        {
+          "text": "is",
+          "start": 155.0,
+          "end": 155.34
+        },
+        {
+          "text": "stored.",
+          "start": 155.34,
+          "end": 155.74
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And a seven-billion model?",
+      "start": 156.47,
+      "end": 158.65,
+      "words": [
+        {
+          "text": "And",
+          "start": 156.42,
+          "end": 156.9
+        },
+        {
+          "text": "a",
+          "start": 156.9,
+          "end": 157.06
+        },
+        {
+          "text": "7",
+          "start": 157.06,
+          "end": 157.32
+        },
+        {
+          "text": "billion",
+          "start": 157.32,
+          "end": 157.64
+        },
+        {
+          "text": "model.",
+          "start": 157.64,
+          "end": 158.1
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "A hundred twelve gigabytes of static state. Over one eighty-gigabyte H100 with zero activations. The model never made it to the interesting part.",
+      "start": 158.65,
+      "end": 170.05,
+      "words": [
+        {
+          "text": "112",
+          "start": 158.1,
+          "end": 159.46
+        },
+        {
+          "text": "gigabytes",
+          "start": 159.46,
+          "end": 160.34
+        },
+        {
+          "text": "of",
+          "start": 160.34,
+          "end": 160.6
+        },
+        {
+          "text": "static",
+          "start": 160.6,
+          "end": 161.0
+        },
+        {
+          "text": "state,",
+          "start": 161.0,
+          "end": 161.44
+        },
+        {
+          "text": "over",
+          "start": 162.06,
+          "end": 162.34
+        },
+        {
+          "text": "180",
+          "start": 162.34,
+          "end": 163.06
+        },
+        {
+          "text": "gigabyte",
+          "start": 163.06,
+          "end": 163.76
+        },
+        {
+          "text": "H100",
+          "start": 163.76,
+          "end": 164.7
+        },
+        {
+          "text": "with",
+          "start": 164.7,
+          "end": 165.12
+        },
+        {
+          "text": "zero",
+          "start": 165.12,
+          "end": 165.46
+        },
+        {
+          "text": "activations.",
+          "start": 165.46,
+          "end": 166.32
+        },
+        {
+          "text": "The",
+          "start": 166.86,
+          "end": 167.06
+        },
+        {
+          "text": "model",
+          "start": 167.06,
+          "end": 167.38
+        },
+        {
+          "text": "never",
+          "start": 167.38,
+          "end": 167.74
+        },
+        {
+          "text": "made",
+          "start": 167.74,
+          "end": 168.14
+        },
+        {
+          "text": "it",
+          "start": 168.14,
+          "end": 168.26
+        },
+        {
+          "text": "to",
+          "start": 168.26,
+          "end": 168.4
+        },
+        {
+          "text": "the",
+          "start": 168.4,
+          "end": 168.52
+        },
+        {
+          "text": "interesting",
+          "start": 168.52,
+          "end": 168.98
+        },
+        {
+          "text": "part.",
+          "start": 168.98,
+          "end": 169.36
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "So only the activation term scales with batch and sequence. And GPT-2 XL at batch thirty-two stores...",
+      "start": 170.05,
+      "end": 177.6,
+      "words": [
+        {
+          "text": "So",
+          "start": 170.38,
+          "end": 170.48
+        },
+        {
+          "text": "only",
+          "start": 170.48,
+          "end": 170.76
+        },
+        {
+          "text": "the",
+          "start": 170.76,
+          "end": 170.9
+        },
+        {
+          "text": "activation",
+          "start": 170.9,
+          "end": 171.38
+        },
+        {
+          "text": "term",
+          "start": 171.38,
+          "end": 171.72
+        },
+        {
+          "text": "scales",
+          "start": 171.72,
+          "end": 172.22
+        },
+        {
+          "text": "with",
+          "start": 172.22,
+          "end": 172.5
+        },
+        {
+          "text": "batch",
+          "start": 172.5,
+          "end": 172.84
+        },
+        {
+          "text": "and",
+          "start": 172.84,
+          "end": 173.04
+        },
+        {
+          "text": "sequence,",
+          "start": 173.04,
+          "end": 173.36
+        },
+        {
+          "text": "and",
+          "start": 173.86,
+          "end": 174.1
+        },
+        {
+          "text": "GPT2",
+          "start": 174.1,
+          "end": 174.98
+        },
+        {
+          "text": "excels",
+          "start": 174.98,
+          "end": 175.58
+        },
+        {
+          "text": "at",
+          "start": 175.58,
+          "end": 175.86
+        },
+        {
+          "text": "batch",
+          "start": 175.86,
+          "end": 176.12
+        },
+        {
+          "text": "32",
+          "start": 176.12,
+          "end": 176.54
+        },
+        {
+          "text": "stores.",
+          "start": 176.54,
+          "end": 176.96
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Two hundred eighty-seven gigabytes of FP16 activations. And here's the kicker - about seventy percent of that is the quadratic attention-score matrices. Two hundred gigabytes of scores.",
+      "start": 177.6,
+      "end": 192.03,
+      "words": [
+        {
+          "text": "287",
+          "start": 178.52,
+          "end": 179.36
+        },
+        {
+          "text": "gigabytes",
+          "start": 179.36,
+          "end": 179.88
+        },
+        {
+          "text": "of",
+          "start": 179.88,
+          "end": 180.18
+        },
+        {
+          "text": "FP16",
+          "start": 180.18,
+          "end": 181.38
+        },
+        {
+          "text": "activations.",
+          "start": 181.38,
+          "end": 182.32
+        },
+        {
+          "text": "And",
+          "start": 182.32,
+          "end": 183.1
+        },
+        {
+          "text": "here's",
+          "start": 183.1,
+          "end": 183.5
+        },
+        {
+          "text": "the",
+          "start": 183.5,
+          "end": 183.62
+        },
+        {
+          "text": "kicker,",
+          "start": 183.62,
+          "end": 184.06
+        },
+        {
+          "text": "about",
+          "start": 184.44,
+          "end": 184.66
+        },
+        {
+          "text": "70",
+          "start": 184.66,
+          "end": 185.22
+        },
+        {
+          "text": "%",
+          "start": 185.22,
+          "end": 185.6
+        },
+        {
+          "text": "of",
+          "start": 185.6,
+          "end": 185.78
+        },
+        {
+          "text": "that",
+          "start": 185.78,
+          "end": 186.02
+        },
+        {
+          "text": "is",
+          "start": 186.02,
+          "end": 186.38
+        },
+        {
+          "text": "the",
+          "start": 186.38,
+          "end": 186.52
+        },
+        {
+          "text": "quadratic",
+          "start": 186.52,
+          "end": 186.98
+        },
+        {
+          "text": "attention",
+          "start": 186.98,
+          "end": 187.64
+        },
+        {
+          "text": "score",
+          "start": 187.64,
+          "end": 188.06
+        },
+        {
+          "text": "matrices.",
+          "start": 188.06,
+          "end": 188.62
+        },
+        {
+          "text": "200",
+          "start": 189.4,
+          "end": 189.86
+        },
+        {
+          "text": "gigabytes",
+          "start": 189.86,
+          "end": 190.28
+        },
+        {
+          "text": "of",
+          "start": 190.28,
+          "end": 190.74
+        },
+        {
+          "text": "scores.",
+          "start": 190.74,
+          "end": 191.14
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/08-training/diagrams/memory-staircase.svg",
+        "title": "The staircase into one H100",
+        "alt": "The walkthrough as a descent into the capacity box: each intervention removes a labelled slice of activation memory while the 24 GB static floor never moves. FP32's 574 GB of activations halves to 287 GB under mixed precision, loses ~201 GB of score matrices to FlashAttention, and halves again under the 16-sequence micro-batch -- 598 GB to 66.8 GB, nine times smaller, now inside 80 GB. The dashed checkpoint path shows the alternative: all 32 sequences in ~35.5 GB, paid for with ~33% more step arithmetic."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "That's what FlashAttention exists for.",
+      "start": 192.03,
+      "end": 194.62,
+      "words": [
+        {
+          "text": "That's",
+          "start": 192.04,
+          "end": 192.64
+        },
+        {
+          "text": "what",
+          "start": 192.64,
+          "end": 192.74
+        },
+        {
+          "text": "flash",
+          "start": 192.74,
+          "end": 192.96
+        },
+        {
+          "text": "attention",
+          "start": 192.96,
+          "end": 193.24
+        },
+        {
+          "text": "exists",
+          "start": 193.24,
+          "end": 193.68
+        },
+        {
+          "text": "for.",
+          "start": 193.68,
+          "end": 194.1
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Exactly. IO-aware attention: tiles the computation through on-chip SRAM with online-softmax statistics and recomputes tiles during backward instead of storing them. Stored attention state drops from quadratic to linear in sequence.",
+      "start": 194.62,
+      "end": 211.68,
+      "words": [
+        {
+          "text": "Exactly.",
+          "start": 194.96,
+          "end": 195.44
+        },
+        {
+          "text": "IOWARE",
+          "start": 196.18,
+          "end": 196.76
+        },
+        {
+          "text": "attention,",
+          "start": 196.76,
+          "end": 197.1
+        },
+        {
+          "text": "tiles",
+          "start": 197.68,
+          "end": 198.02
+        },
+        {
+          "text": "the",
+          "start": 198.02,
+          "end": 198.26
+        },
+        {
+          "text": "computation",
+          "start": 198.26,
+          "end": 198.88
+        },
+        {
+          "text": "through",
+          "start": 198.88,
+          "end": 199.24
+        },
+        {
+          "text": "on",
+          "start": 199.24,
+          "end": 199.58
+        },
+        {
+          "text": "-chip",
+          "start": 199.58,
+          "end": 199.9
+        },
+        {
+          "text": "SRAM",
+          "start": 199.9,
+          "end": 200.48
+        },
+        {
+          "text": "with",
+          "start": 200.48,
+          "end": 200.68
+        },
+        {
+          "text": "online",
+          "start": 200.68,
+          "end": 201.08
+        },
+        {
+          "text": "softmax",
+          "start": 201.08,
+          "end": 201.64
+        },
+        {
+          "text": "statistics",
+          "start": 201.64,
+          "end": 202.26
+        },
+        {
+          "text": "and",
+          "start": 202.26,
+          "end": 202.9
+        },
+        {
+          "text": "recomputes",
+          "start": 202.9,
+          "end": 203.56
+        },
+        {
+          "text": "tiles",
+          "start": 203.56,
+          "end": 203.86
+        },
+        {
+          "text": "during",
+          "start": 203.86,
+          "end": 204.28
+        },
+        {
+          "text": "backward",
+          "start": 204.28,
+          "end": 204.78
+        },
+        {
+          "text": "instead",
+          "start": 204.78,
+          "end": 205.3
+        },
+        {
+          "text": "of",
+          "start": 205.3,
+          "end": 205.5
+        },
+        {
+          "text": "storing",
+          "start": 205.5,
+          "end": 205.88
+        },
+        {
+          "text": "them.",
+          "start": 205.88,
+          "end": 206.2
+        },
+        {
+          "text": "Stored",
+          "start": 206.8,
+          "end": 207.24
+        },
+        {
+          "text": "attention",
+          "start": 207.24,
+          "end": 207.62
+        },
+        {
+          "text": "state",
+          "start": 207.62,
+          "end": 208.14
+        },
+        {
+          "text": "drops",
+          "start": 208.14,
+          "end": 208.6
+        },
+        {
+          "text": "from",
+          "start": 208.6,
+          "end": 208.9
+        },
+        {
+          "text": "quadratic",
+          "start": 208.9,
+          "end": 209.38
+        },
+        {
+          "text": "to",
+          "start": 209.38,
+          "end": 209.82
+        },
+        {
+          "text": "linear",
+          "start": 209.82,
+          "end": 210.22
+        },
+        {
+          "text": "in",
+          "start": 210.22,
+          "end": 210.46
+        },
+        {
+          "text": "sequence.",
+          "start": 210.46,
+          "end": 210.82
+        },
+        {
+          "text": "The",
+          "start": 210.82,
+          "end": 212.02
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The book's number is striking - sixty-seven megabytes down to three per head.",
+      "start": 211.68,
+      "end": 216.5,
+      "words": [
+        {
+          "text": "books",
+          "start": 212.02,
+          "end": 212.22
+        },
+        {
+          "text": "number",
+          "start": 212.22,
+          "end": 212.5
+        },
+        {
+          "text": "is",
+          "start": 212.5,
+          "end": 212.78
+        },
+        {
+          "text": "striking",
+          "start": 212.78,
+          "end": 213.14
+        },
+        {
+          "text": "67",
+          "start": 213.14,
+          "end": 214.12
+        },
+        {
+          "text": "megabytes",
+          "start": 214.12,
+          "end": 214.74
+        },
+        {
+          "text": "down",
+          "start": 214.74,
+          "end": 215.14
+        },
+        {
+          "text": "to",
+          "start": 215.14,
+          "end": 215.3
+        },
+        {
+          "text": "three",
+          "start": 215.3,
+          "end": 215.54
+        },
+        {
+          "text": "per",
+          "start": 215.54,
+          "end": 215.72
+        },
+        {
+          "text": "head.",
+          "start": 215.72,
+          "end": 216.0
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "A twenty-one-times cut, and it changes zero model FLOPs. Same math, different memory traffic.",
+      "start": 216.5,
+      "end": 223.55,
+      "words": [
+        {
+          "text": "A",
+          "start": 216.52,
+          "end": 216.96
+        },
+        {
+          "text": "21",
+          "start": 216.96,
+          "end": 217.34
+        },
+        {
+          "text": "times",
+          "start": 217.34,
+          "end": 217.7
+        },
+        {
+          "text": "cut",
+          "start": 217.7,
+          "end": 218.14
+        },
+        {
+          "text": "and",
+          "start": 218.14,
+          "end": 218.42
+        },
+        {
+          "text": "it",
+          "start": 218.42,
+          "end": 218.54
+        },
+        {
+          "text": "changes",
+          "start": 218.54,
+          "end": 218.86
+        },
+        {
+          "text": "zero",
+          "start": 218.86,
+          "end": 219.32
+        },
+        {
+          "text": "model",
+          "start": 219.32,
+          "end": 219.76
+        },
+        {
+          "text": "flops.",
+          "start": 219.76,
+          "end": 220.3
+        },
+        {
+          "text": "Same",
+          "start": 220.72,
+          "end": 221.1
+        },
+        {
+          "text": "math,",
+          "start": 221.1,
+          "end": 221.54
+        },
+        {
+          "text": "different",
+          "start": 221.76,
+          "end": 221.96
+        },
+        {
+          "text": "memory",
+          "start": 221.96,
+          "end": 222.32
+        },
+        {
+          "text": "traffic.",
+          "start": 222.32,
+          "end": 222.82
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Okay, so we've got the memory story. But before the techniques - how do you know which problem you have?",
+      "start": 223.55,
+      "end": 229.68,
+      "words": [
+        {
+          "text": "Okay,",
+          "start": 223.68,
+          "end": 224.16
+        },
+        {
+          "text": "so",
+          "start": 224.28,
+          "end": 224.48
+        },
+        {
+          "text": "we've",
+          "start": 224.48,
+          "end": 224.7
+        },
+        {
+          "text": "got",
+          "start": 224.7,
+          "end": 224.82
+        },
+        {
+          "text": "the",
+          "start": 224.82,
+          "end": 224.96
+        },
+        {
+          "text": "memory",
+          "start": 224.96,
+          "end": 225.2
+        },
+        {
+          "text": "story.",
+          "start": 225.2,
+          "end": 225.64
+        },
+        {
+          "text": "But",
+          "start": 226.16,
+          "end": 226.32
+        },
+        {
+          "text": "before",
+          "start": 226.32,
+          "end": 226.58
+        },
+        {
+          "text": "the",
+          "start": 226.58,
+          "end": 226.78
+        },
+        {
+          "text": "techniques,",
+          "start": 226.78,
+          "end": 227.16
+        },
+        {
+          "text": "how",
+          "start": 227.6,
+          "end": 227.78
+        },
+        {
+          "text": "do",
+          "start": 227.78,
+          "end": 227.88
+        },
+        {
+          "text": "you",
+          "start": 227.88,
+          "end": 227.96
+        },
+        {
+          "text": "know",
+          "start": 227.96,
+          "end": 228.08
+        },
+        {
+          "text": "which",
+          "start": 228.08,
+          "end": 228.28
+        },
+        {
+          "text": "problem",
+          "start": 228.28,
+          "end": 228.64
+        },
+        {
+          "text": "you",
+          "start": 228.64,
+          "end": 228.84
+        },
+        {
+          "text": "have?",
+          "start": 228.84,
+          "end": 229.04
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "That's the MFU section, and it's the chapter's most useful calibration. Three different numbers all get called \"utilization,\" and only one is honest.",
+      "start": 229.68,
+      "end": 240.58,
+      "words": [
+        {
+          "text": "That's",
+          "start": 229.82,
+          "end": 230.38
+        },
+        {
+          "text": "the",
+          "start": 230.38,
+          "end": 230.52
+        },
+        {
+          "text": "MFU",
+          "start": 230.52,
+          "end": 231.16
+        },
+        {
+          "text": "section,",
+          "start": 231.16,
+          "end": 231.48
+        },
+        {
+          "text": "and",
+          "start": 231.92,
+          "end": 232.14
+        },
+        {
+          "text": "it's",
+          "start": 232.14,
+          "end": 232.3
+        },
+        {
+          "text": "the",
+          "start": 232.3,
+          "end": 232.46
+        },
+        {
+          "text": "chapter's",
+          "start": 232.46,
+          "end": 233.02
+        },
+        {
+          "text": "most",
+          "start": 233.02,
+          "end": 233.22
+        },
+        {
+          "text": "useful",
+          "start": 233.22,
+          "end": 233.82
+        },
+        {
+          "text": "calibration.",
+          "start": 233.82,
+          "end": 234.44
+        },
+        {
+          "text": "Three",
+          "start": 235.24,
+          "end": 235.56
+        },
+        {
+          "text": "different",
+          "start": 235.56,
+          "end": 235.86
+        },
+        {
+          "text": "numbers",
+          "start": 235.86,
+          "end": 236.28
+        },
+        {
+          "text": "all",
+          "start": 236.28,
+          "end": 236.58
+        },
+        {
+          "text": "get",
+          "start": 236.58,
+          "end": 236.78
+        },
+        {
+          "text": "called",
+          "start": 236.78,
+          "end": 237.2
+        },
+        {
+          "text": "utilization,",
+          "start": 237.2,
+          "end": 237.82
+        },
+        {
+          "text": "and",
+          "start": 238.44,
+          "end": 238.68
+        },
+        {
+          "text": "only",
+          "start": 238.68,
+          "end": 238.96
+        },
+        {
+          "text": "one",
+          "start": 238.96,
+          "end": 239.26
+        },
+        {
+          "text": "is",
+          "start": 239.26,
+          "end": 239.44
+        },
+        {
+          "text": "honest.",
+          "start": 239.44,
+          "end": 239.82
+        },
+        {
+          "text": "NVIDIA",
+          "start": 239.82,
+          "end": 241.24
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "nvidia-smi's busy percentage is the trap.",
+      "start": 240.58,
+      "end": 243.7,
+      "words": [
+        {
+          "text": "SMI's",
+          "start": 241.24,
+          "end": 241.66
+        },
+        {
+          "text": "busy",
+          "start": 241.66,
+          "end": 241.84
+        },
+        {
+          "text": "percentage",
+          "start": 241.84,
+          "end": 242.34
+        },
+        {
+          "text": "is",
+          "start": 242.34,
+          "end": 242.74
+        },
+        {
+          "text": "the",
+          "start": 242.74,
+          "end": 242.86
+        },
+        {
+          "text": "trap.",
+          "start": 242.86,
+          "end": 243.22
+        }
+      ],
+      "eq": {
+        "id": "mfu",
+        "title": "Model FLOPs utilization",
+        "latex": "\\eta_{\\mathrm{MFU}} = \\frac{O_{\\mathrm{model}}}{R_{\\mathrm{peak}} \\cdot T_{\\mathrm{step}}}"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "A kernel stalled on HBM, padding a tile, or recomputing a discarded activation all report busy. Busy time is an upper bound, never evidence. MFU is the honest estimator - useful model FLOPs per step over the peak rate times measured step time.",
+      "start": 243.7,
+      "end": 263.35,
+      "words": [
+        {
+          "text": "A",
+          "start": 244.08,
+          "end": 244.16
+        },
+        {
+          "text": "kernel",
+          "start": 244.16,
+          "end": 244.46
+        },
+        {
+          "text": "stalled",
+          "start": 244.46,
+          "end": 244.96
+        },
+        {
+          "text": "on",
+          "start": 244.96,
+          "end": 245.14
+        },
+        {
+          "text": "HBM,",
+          "start": 245.14,
+          "end": 245.94
+        },
+        {
+          "text": "padding",
+          "start": 246.4,
+          "end": 246.74
+        },
+        {
+          "text": "a",
+          "start": 246.74,
+          "end": 246.94
+        },
+        {
+          "text": "tile,",
+          "start": 246.94,
+          "end": 247.3
+        },
+        {
+          "text": "or",
+          "start": 247.82,
+          "end": 247.9
+        },
+        {
+          "text": "recomputing",
+          "start": 247.9,
+          "end": 248.66
+        },
+        {
+          "text": "a",
+          "start": 248.66,
+          "end": 248.82
+        },
+        {
+          "text": "discarded",
+          "start": 248.82,
+          "end": 249.26
+        },
+        {
+          "text": "activation",
+          "start": 249.26,
+          "end": 250.0
+        },
+        {
+          "text": "all",
+          "start": 250.0,
+          "end": 250.36
+        },
+        {
+          "text": "report",
+          "start": 250.36,
+          "end": 250.76
+        },
+        {
+          "text": "busy.",
+          "start": 250.76,
+          "end": 251.1
+        },
+        {
+          "text": "Busy",
+          "start": 251.78,
+          "end": 252.18
+        },
+        {
+          "text": "time",
+          "start": 252.18,
+          "end": 252.5
+        },
+        {
+          "text": "is",
+          "start": 252.5,
+          "end": 252.76
+        },
+        {
+          "text": "an",
+          "start": 252.76,
+          "end": 252.9
+        },
+        {
+          "text": "upper",
+          "start": 252.9,
+          "end": 253.14
+        },
+        {
+          "text": "bound,",
+          "start": 253.14,
+          "end": 253.66
+        },
+        {
+          "text": "never",
+          "start": 254.14,
+          "end": 254.36
+        },
+        {
+          "text": "evidence.",
+          "start": 254.36,
+          "end": 254.9
+        },
+        {
+          "text": "MFU",
+          "start": 255.66,
+          "end": 256.28
+        },
+        {
+          "text": "is",
+          "start": 256.28,
+          "end": 256.54
+        },
+        {
+          "text": "the",
+          "start": 256.54,
+          "end": 256.68
+        },
+        {
+          "text": "honest",
+          "start": 256.68,
+          "end": 257.1
+        },
+        {
+          "text": "estimator,",
+          "start": 257.1,
+          "end": 257.94
+        },
+        {
+          "text": "useful",
+          "start": 258.12,
+          "end": 258.4
+        },
+        {
+          "text": "model",
+          "start": 258.4,
+          "end": 258.86
+        },
+        {
+          "text": "flops",
+          "start": 258.86,
+          "end": 259.36
+        },
+        {
+          "text": "per",
+          "start": 259.36,
+          "end": 259.56
+        },
+        {
+          "text": "step",
+          "start": 259.56,
+          "end": 259.88
+        },
+        {
+          "text": "over",
+          "start": 259.88,
+          "end": 260.34
+        },
+        {
+          "text": "the",
+          "start": 260.34,
+          "end": 260.5
+        },
+        {
+          "text": "peak",
+          "start": 260.5,
+          "end": 260.74
+        },
+        {
+          "text": "rate",
+          "start": 260.74,
+          "end": 261.02
+        },
+        {
+          "text": "times",
+          "start": 261.02,
+          "end": 261.46
+        },
+        {
+          "text": "measured",
+          "start": 261.46,
+          "end": 261.92
+        },
+        {
+          "text": "step",
+          "start": 261.92,
+          "end": 262.22
+        },
+        {
+          "text": "time.",
+          "start": 262.22,
+          "end": 262.66
+        },
+        {
+          "text": "And",
+          "start": 262.66,
+          "end": 263.72
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And the published numbers are sobering. MT-NLG trained at thirty percent MFU. PaLM at forty-six.",
+      "start": 263.35,
+      "end": 270.73,
+      "words": [
+        {
+          "text": "the",
+          "start": 263.72,
+          "end": 263.82
+        },
+        {
+          "text": "published",
+          "start": 263.82,
+          "end": 264.1
+        },
+        {
+          "text": "numbers",
+          "start": 264.1,
+          "end": 264.52
+        },
+        {
+          "text": "are",
+          "start": 264.52,
+          "end": 264.76
+        },
+        {
+          "text": "sobering.",
+          "start": 264.76,
+          "end": 265.32
+        },
+        {
+          "text": "MTNLG",
+          "start": 265.74,
+          "end": 266.46
+        },
+        {
+          "text": "trained",
+          "start": 266.46,
+          "end": 266.88
+        },
+        {
+          "text": "at",
+          "start": 266.88,
+          "end": 267.08
+        },
+        {
+          "text": "30",
+          "start": 267.08,
+          "end": 267.4
+        },
+        {
+          "text": "%",
+          "start": 267.4,
+          "end": 267.76
+        },
+        {
+          "text": "MFU,",
+          "start": 267.76,
+          "end": 268.38
+        },
+        {
+          "text": "PILM",
+          "start": 268.86,
+          "end": 269.38
+        },
+        {
+          "text": "at",
+          "start": 269.38,
+          "end": 269.58
+        },
+        {
+          "text": "46.",
+          "start": 269.58,
+          "end": 270.0
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "World-class engineering, half the peak. The Megatron-LM figure looks higher because it counts recomputation in the numerator - the convention moves the number too.",
+      "start": 270.73,
+      "end": 282.48,
+      "words": [
+        {
+          "text": "World",
+          "start": 271.12,
+          "end": 271.42
+        },
+        {
+          "text": "-class",
+          "start": 271.42,
+          "end": 271.82
+        },
+        {
+          "text": "engineering,",
+          "start": 271.82,
+          "end": 272.62
+        },
+        {
+          "text": "half",
+          "start": 273.08,
+          "end": 273.34
+        },
+        {
+          "text": "the",
+          "start": 273.34,
+          "end": 273.52
+        },
+        {
+          "text": "peak.",
+          "start": 273.52,
+          "end": 273.78
+        },
+        {
+          "text": "The",
+          "start": 274.44,
+          "end": 274.54
+        },
+        {
+          "text": "Megatron",
+          "start": 274.54,
+          "end": 275.04
+        },
+        {
+          "text": "LM",
+          "start": 275.04,
+          "end": 275.32
+        },
+        {
+          "text": "figure",
+          "start": 275.32,
+          "end": 275.78
+        },
+        {
+          "text": "looks",
+          "start": 275.78,
+          "end": 276.12
+        },
+        {
+          "text": "higher",
+          "start": 276.12,
+          "end": 276.54
+        },
+        {
+          "text": "because",
+          "start": 276.54,
+          "end": 276.84
+        },
+        {
+          "text": "it",
+          "start": 276.84,
+          "end": 277.04
+        },
+        {
+          "text": "counts",
+          "start": 277.04,
+          "end": 277.38
+        },
+        {
+          "text": "recomputation",
+          "start": 277.38,
+          "end": 278.3
+        },
+        {
+          "text": "in",
+          "start": 278.3,
+          "end": 278.58
+        },
+        {
+          "text": "the",
+          "start": 278.58,
+          "end": 278.68
+        },
+        {
+          "text": "numerator.",
+          "start": 278.68,
+          "end": 279.04
+        },
+        {
+          "text": "The",
+          "start": 279.74,
+          "end": 279.84
+        },
+        {
+          "text": "convention",
+          "start": 279.84,
+          "end": 280.3
+        },
+        {
+          "text": "moves",
+          "start": 280.3,
+          "end": 280.94
+        },
+        {
+          "text": "the",
+          "start": 280.94,
+          "end": 281.16
+        },
+        {
+          "text": "number",
+          "start": 281.16,
+          "end": 281.4
+        },
+        {
+          "text": "two.",
+          "start": 281.4,
+          "end": 281.8
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Meanwhile the pipeline sits underneath all of this.",
+      "start": 282.48,
+      "end": 285.65,
+      "words": [
+        {
+          "text": "Meanwhile,",
+          "start": 282.72,
+          "end": 283.1
+        },
+        {
+          "text": "the",
+          "start": 283.26,
+          "end": 283.36
+        },
+        {
+          "text": "pipeline",
+          "start": 283.36,
+          "end": 283.64
+        },
+        {
+          "text": "sits",
+          "start": 283.64,
+          "end": 284.06
+        },
+        {
+          "text": "underneath",
+          "start": 284.06,
+          "end": 284.42
+        },
+        {
+          "text": "all",
+          "start": 284.42,
+          "end": 284.8
+        },
+        {
+          "text": "of",
+          "start": 284.8,
+          "end": 284.92
+        },
+        {
+          "text": "this.",
+          "start": 284.92,
+          "end": 285.12
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/08-training/diagrams/overlap-timeline.svg",
+        "title": "Serial cost is the sum; overlapped cost is the max",
+        "alt": "Three dependent stages -- 30 ms prepare, 10 ms transfer, 50 ms compute -- cost 90 ms serially. With prefetch buffers and pinned memory, batch n+1's preparation hides under batch n's compute and the steady-state interval falls to the slowest stage: 50 ms, a 1.8x throughput gain bought entirely with staging buffers. The residual bubbles show what overlap cannot remove: the slowest stage itself."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Three stages per step: host preparation, host-to-device transfer, device compute. Serial, they cost the sum - thirty plus ten plus fifty is ninety milliseconds. Overlapped correctly, the interval becomes the maximum - fifty milliseconds.",
+      "start": 285.65,
+      "end": 303.0,
+      "words": [
+        {
+          "text": "Three",
+          "start": 285.9,
+          "end": 286.22
+        },
+        {
+          "text": "stages",
+          "start": 286.22,
+          "end": 286.62
+        },
+        {
+          "text": "per",
+          "start": 286.62,
+          "end": 286.9
+        },
+        {
+          "text": "step.",
+          "start": 286.9,
+          "end": 287.22
+        },
+        {
+          "text": "Host",
+          "start": 287.76,
+          "end": 287.92
+        },
+        {
+          "text": "preparation,",
+          "start": 287.92,
+          "end": 288.5
+        },
+        {
+          "text": "host",
+          "start": 289.04,
+          "end": 289.22
+        },
+        {
+          "text": "to",
+          "start": 289.22,
+          "end": 289.4
+        },
+        {
+          "text": "device",
+          "start": 289.4,
+          "end": 289.66
+        },
+        {
+          "text": "transfer,",
+          "start": 289.66,
+          "end": 290.2
+        },
+        {
+          "text": "device",
+          "start": 290.54,
+          "end": 290.82
+        },
+        {
+          "text": "compute.",
+          "start": 290.82,
+          "end": 291.36
+        },
+        {
+          "text": "Serial,",
+          "start": 291.36,
+          "end": 292.68
+        },
+        {
+          "text": "they",
+          "start": 292.84,
+          "end": 292.94
+        },
+        {
+          "text": "cost",
+          "start": 292.94,
+          "end": 293.28
+        },
+        {
+          "text": "the",
+          "start": 293.28,
+          "end": 293.48
+        },
+        {
+          "text": "sum",
+          "start": 293.48,
+          "end": 293.8
+        },
+        {
+          "text": "30",
+          "start": 293.8,
+          "end": 294.24
+        },
+        {
+          "text": "plus",
+          "start": 294.24,
+          "end": 294.54
+        },
+        {
+          "text": "10",
+          "start": 294.54,
+          "end": 294.92
+        },
+        {
+          "text": "plus",
+          "start": 294.92,
+          "end": 295.22
+        },
+        {
+          "text": "50",
+          "start": 295.22,
+          "end": 295.66
+        },
+        {
+          "text": "is",
+          "start": 295.66,
+          "end": 295.94
+        },
+        {
+          "text": "90",
+          "start": 295.94,
+          "end": 296.32
+        },
+        {
+          "text": "milliseconds.",
+          "start": 296.32,
+          "end": 296.92
+        },
+        {
+          "text": "Overlapped",
+          "start": 297.52,
+          "end": 298.24
+        },
+        {
+          "text": "correctly,",
+          "start": 298.24,
+          "end": 298.74
+        },
+        {
+          "text": "the",
+          "start": 299.26,
+          "end": 299.36
+        },
+        {
+          "text": "interval",
+          "start": 299.36,
+          "end": 299.66
+        },
+        {
+          "text": "becomes",
+          "start": 299.66,
+          "end": 300.14
+        },
+        {
+          "text": "the",
+          "start": 300.14,
+          "end": 300.4
+        },
+        {
+          "text": "maximum",
+          "start": 300.4,
+          "end": 300.86
+        },
+        {
+          "text": "50",
+          "start": 300.86,
+          "end": 301.44
+        },
+        {
+          "text": "milliseconds.",
+          "start": 301.44,
+          "end": 302.14
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "A one-point-eight-times gain bought entirely with staging buffers. And ResNet-50 makes the point viscerally.",
+      "start": 303.0,
+      "end": 310.15,
+      "words": [
+        {
+          "text": "A",
+          "start": 303.1,
+          "end": 303.36
+        },
+        {
+          "text": "1",
+          "start": 303.36,
+          "end": 303.58
+        },
+        {
+          "text": ".8",
+          "start": 303.58,
+          "end": 304.06
+        },
+        {
+          "text": "times",
+          "start": 304.06,
+          "end": 304.36
+        },
+        {
+          "text": "gain",
+          "start": 304.36,
+          "end": 304.7
+        },
+        {
+          "text": "bought",
+          "start": 304.7,
+          "end": 305.04
+        },
+        {
+          "text": "entirely",
+          "start": 305.04,
+          "end": 305.64
+        },
+        {
+          "text": "with",
+          "start": 305.64,
+          "end": 305.98
+        },
+        {
+          "text": "staging",
+          "start": 305.98,
+          "end": 306.32
+        },
+        {
+          "text": "buffers,",
+          "start": 306.32,
+          "end": 306.84
+        },
+        {
+          "text": "and",
+          "start": 307.16,
+          "end": 307.52
+        },
+        {
+          "text": "RAISNET",
+          "start": 307.52,
+          "end": 307.88
+        },
+        {
+          "text": "50",
+          "start": 307.88,
+          "end": 308.3
+        },
+        {
+          "text": "makes",
+          "start": 308.3,
+          "end": 308.66
+        },
+        {
+          "text": "the",
+          "start": 308.66,
+          "end": 308.84
+        },
+        {
+          "text": "point",
+          "start": 308.84,
+          "end": 309.08
+        },
+        {
+          "text": "viscerally.",
+          "start": 309.08,
+          "end": 309.62
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The H100 could chew forty thousand images a second, but the host cores can't decode fast enough. The accelerator sits busy about half the time, idle the other half. A faster GPU would be starved harder.",
+      "start": 310.15,
+      "end": 326.05,
+      "words": [
+        {
+          "text": "The",
+          "start": 310.48,
+          "end": 310.66
+        },
+        {
+          "text": "H100",
+          "start": 310.66,
+          "end": 311.52
+        },
+        {
+          "text": "could",
+          "start": 311.52,
+          "end": 311.78
+        },
+        {
+          "text": "chew",
+          "start": 311.78,
+          "end": 312.06
+        },
+        {
+          "text": "40",
+          "start": 312.06,
+          "end": 312.54
+        },
+        {
+          "text": ",000",
+          "start": 312.54,
+          "end": 313.14
+        },
+        {
+          "text": "images",
+          "start": 313.14,
+          "end": 313.62
+        },
+        {
+          "text": "a",
+          "start": 313.62,
+          "end": 313.94
+        },
+        {
+          "text": "second,",
+          "start": 313.94,
+          "end": 314.26
+        },
+        {
+          "text": "but",
+          "start": 314.58,
+          "end": 314.8
+        },
+        {
+          "text": "the",
+          "start": 314.8,
+          "end": 314.94
+        },
+        {
+          "text": "host",
+          "start": 314.94,
+          "end": 315.18
+        },
+        {
+          "text": "cores",
+          "start": 315.18,
+          "end": 315.58
+        },
+        {
+          "text": "can't",
+          "start": 315.58,
+          "end": 316.06
+        },
+        {
+          "text": "decode",
+          "start": 316.06,
+          "end": 316.48
+        },
+        {
+          "text": "fast",
+          "start": 316.48,
+          "end": 316.86
+        },
+        {
+          "text": "enough.",
+          "start": 316.86,
+          "end": 317.22
+        },
+        {
+          "text": "The",
+          "start": 317.22,
+          "end": 318.02
+        },
+        {
+          "text": "accelerator",
+          "start": 318.02,
+          "end": 318.5
+        },
+        {
+          "text": "sits",
+          "start": 318.5,
+          "end": 319.0
+        },
+        {
+          "text": "busy",
+          "start": 319.0,
+          "end": 319.44
+        },
+        {
+          "text": "about",
+          "start": 319.44,
+          "end": 319.7
+        },
+        {
+          "text": "half",
+          "start": 319.7,
+          "end": 320.06
+        },
+        {
+          "text": "the",
+          "start": 320.06,
+          "end": 320.2
+        },
+        {
+          "text": "time,",
+          "start": 320.2,
+          "end": 320.6
+        },
+        {
+          "text": "idle",
+          "start": 321.0,
+          "end": 321.26
+        },
+        {
+          "text": "the",
+          "start": 321.26,
+          "end": 321.5
+        },
+        {
+          "text": "other",
+          "start": 321.5,
+          "end": 321.68
+        },
+        {
+          "text": "half.",
+          "start": 321.68,
+          "end": 322.1
+        },
+        {
+          "text": "A",
+          "start": 322.74,
+          "end": 322.84
+        },
+        {
+          "text": "faster",
+          "start": 322.84,
+          "end": 323.26
+        },
+        {
+          "text": "GPU",
+          "start": 323.26,
+          "end": 323.88
+        },
+        {
+          "text": "would",
+          "start": 323.88,
+          "end": 324.3
+        },
+        {
+          "text": "be",
+          "start": 324.3,
+          "end": 324.46
+        },
+        {
+          "text": "starved",
+          "start": 324.46,
+          "end": 325.0
+        },
+        {
+          "text": "harder.",
+          "start": 325.0,
+          "end": 325.36
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Data-bound stalls are the most misdiagnosed because they show up as idle gaps, not saturated units.",
+      "start": 326.05,
+      "end": 332.75,
+      "words": [
+        {
+          "text": "Data",
+          "start": 326.36,
+          "end": 326.58
+        },
+        {
+          "text": "bound",
+          "start": 326.58,
+          "end": 326.9
+        },
+        {
+          "text": "stalls",
+          "start": 326.9,
+          "end": 327.16
+        },
+        {
+          "text": "are",
+          "start": 327.16,
+          "end": 327.52
+        },
+        {
+          "text": "the",
+          "start": 327.52,
+          "end": 327.62
+        },
+        {
+          "text": "most",
+          "start": 327.62,
+          "end": 327.82
+        },
+        {
+          "text": "misdiagnosed",
+          "start": 327.82,
+          "end": 328.7
+        },
+        {
+          "text": "because",
+          "start": 328.7,
+          "end": 329.06
+        },
+        {
+          "text": "they",
+          "start": 329.06,
+          "end": 329.26
+        },
+        {
+          "text": "show",
+          "start": 329.26,
+          "end": 329.54
+        },
+        {
+          "text": "up",
+          "start": 329.54,
+          "end": 329.72
+        },
+        {
+          "text": "as",
+          "start": 329.72,
+          "end": 329.86
+        },
+        {
+          "text": "idle",
+          "start": 329.86,
+          "end": 330.16
+        },
+        {
+          "text": "gaps,",
+          "start": 330.16,
+          "end": 330.58
+        },
+        {
+          "text": "not",
+          "start": 330.98,
+          "end": 331.22
+        },
+        {
+          "text": "saturated",
+          "start": 331.22,
+          "end": 331.66
+        },
+        {
+          "text": "units.",
+          "start": 331.66,
+          "end": 332.1
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Which is why the chapter gives you the D-A-M triage table: compute-bound is an algorithm fix, memory-bound is a machine fix, data-bound is a data fix. Profile first.",
+      "start": 332.75,
+      "end": 345.9,
+      "words": [
+        {
+          "text": "Which",
+          "start": 333.12,
+          "end": 333.32
+        },
+        {
+          "text": "is",
+          "start": 333.32,
+          "end": 333.48
+        },
+        {
+          "text": "why",
+          "start": 333.48,
+          "end": 333.76
+        },
+        {
+          "text": "the",
+          "start": 333.76,
+          "end": 333.94
+        },
+        {
+          "text": "chapter",
+          "start": 333.94,
+          "end": 334.3
+        },
+        {
+          "text": "gives",
+          "start": 334.3,
+          "end": 334.66
+        },
+        {
+          "text": "you",
+          "start": 334.66,
+          "end": 334.82
+        },
+        {
+          "text": "the",
+          "start": 334.82,
+          "end": 334.96
+        },
+        {
+          "text": "DAM",
+          "start": 334.96,
+          "end": 335.62
+        },
+        {
+          "text": "triage",
+          "start": 335.62,
+          "end": 336.26
+        },
+        {
+          "text": "table.",
+          "start": 336.26,
+          "end": 336.7
+        },
+        {
+          "text": "Compute",
+          "start": 337.24,
+          "end": 337.66
+        },
+        {
+          "text": "bound",
+          "start": 337.66,
+          "end": 337.94
+        },
+        {
+          "text": "is",
+          "start": 337.94,
+          "end": 338.22
+        },
+        {
+          "text": "an",
+          "start": 338.22,
+          "end": 338.34
+        },
+        {
+          "text": "algorithm",
+          "start": 338.34,
+          "end": 338.74
+        },
+        {
+          "text": "fix.",
+          "start": 338.74,
+          "end": 339.2
+        },
+        {
+          "text": "Memory",
+          "start": 339.8,
+          "end": 340.04
+        },
+        {
+          "text": "bound",
+          "start": 340.04,
+          "end": 340.44
+        },
+        {
+          "text": "is",
+          "start": 340.44,
+          "end": 340.74
+        },
+        {
+          "text": "a",
+          "start": 340.74,
+          "end": 340.84
+        },
+        {
+          "text": "machine",
+          "start": 340.84,
+          "end": 341.14
+        },
+        {
+          "text": "fix.",
+          "start": 341.14,
+          "end": 341.54
+        },
+        {
+          "text": "Data",
+          "start": 342.08,
+          "end": 342.28
+        },
+        {
+          "text": "bound",
+          "start": 342.28,
+          "end": 342.68
+        },
+        {
+          "text": "is",
+          "start": 342.68,
+          "end": 342.94
+        },
+        {
+          "text": "a",
+          "start": 342.94,
+          "end": 343.06
+        },
+        {
+          "text": "data",
+          "start": 343.06,
+          "end": 343.3
+        },
+        {
+          "text": "fix.",
+          "start": 343.3,
+          "end": 343.74
+        },
+        {
+          "text": "Profile",
+          "start": 344.34,
+          "end": 344.76
+        },
+        {
+          "text": "first.",
+          "start": 344.76,
+          "end": 345.12
+        },
+        {
+          "text": "Now",
+          "start": 345.12,
+          "end": 346.34
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Now the walkthrough - this is where it all lands. GPT-2 XL, batch thirty-two, one H100.",
+      "start": 345.9,
+      "end": 353.02,
+      "words": [
+        {
+          "text": "the",
+          "start": 346.34,
+          "end": 346.54
+        },
+        {
+          "text": "walkthrough,",
+          "start": 346.54,
+          "end": 346.96
+        },
+        {
+          "text": "this",
+          "start": 347.16,
+          "end": 347.3
+        },
+        {
+          "text": "is",
+          "start": 347.3,
+          "end": 347.46
+        },
+        {
+          "text": "where",
+          "start": 347.46,
+          "end": 347.62
+        },
+        {
+          "text": "it",
+          "start": 347.62,
+          "end": 347.78
+        },
+        {
+          "text": "all",
+          "start": 347.78,
+          "end": 347.92
+        },
+        {
+          "text": "lands.",
+          "start": 347.92,
+          "end": 348.28
+        },
+        {
+          "text": "GPT",
+          "start": 348.88,
+          "end": 349.4
+        },
+        {
+          "text": "-2XL",
+          "start": 349.4,
+          "end": 350.26
+        },
+        {
+          "text": "batch",
+          "start": 350.26,
+          "end": 350.54
+        },
+        {
+          "text": "32,",
+          "start": 350.54,
+          "end": 351.04
+        },
+        {
+          "text": "1H100.",
+          "start": 351.38,
+          "end": 352.38
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/08-training/diagrams/memory-staircase.svg",
+        "title": "The staircase into one H100",
+        "alt": "The walkthrough as a descent into the capacity box: each intervention removes a labelled slice of activation memory while the 24 GB static floor never moves. FP32's 574 GB of activations halves to 287 GB under mixed precision, loses ~201 GB of score matrices to FlashAttention, and halves again under the 16-sequence micro-batch -- 598 GB to 66.8 GB, nine times smaller, now inside 80 GB. The dashed checkpoint path shows the alternative: all 32 sequences in ~35.5 GB, paid for with ~33% more step arithmetic."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "FP32 baseline: twenty-four gigabytes of static state plus five hundred seventy-four gigabytes of activations. Five hundred ninety-eight total - seven times the H100's capacity. The run fails before throughput matters.",
+      "start": 353.02,
+      "end": 370.47,
+      "words": [
+        {
+          "text": "FP32",
+          "start": 353.56,
+          "end": 354.42
+        },
+        {
+          "text": "baseline,",
+          "start": 354.42,
+          "end": 354.92
+        },
+        {
+          "text": "24",
+          "start": 355.58,
+          "end": 356.1
+        },
+        {
+          "text": "gigabytes",
+          "start": 356.1,
+          "end": 356.46
+        },
+        {
+          "text": "of",
+          "start": 356.46,
+          "end": 356.88
+        },
+        {
+          "text": "static",
+          "start": 356.88,
+          "end": 357.28
+        },
+        {
+          "text": "state",
+          "start": 357.28,
+          "end": 357.72
+        },
+        {
+          "text": "plus",
+          "start": 357.72,
+          "end": 358.04
+        },
+        {
+          "text": "574",
+          "start": 358.04,
+          "end": 359.46
+        },
+        {
+          "text": "gigabytes",
+          "start": 359.46,
+          "end": 359.86
+        },
+        {
+          "text": "of",
+          "start": 359.86,
+          "end": 360.18
+        },
+        {
+          "text": "activations.",
+          "start": 360.18,
+          "end": 361.0
+        },
+        {
+          "text": "598",
+          "start": 361.78,
+          "end": 362.74
+        },
+        {
+          "text": "total,",
+          "start": 362.74,
+          "end": 363.28
+        },
+        {
+          "text": "7",
+          "start": 363.8,
+          "end": 364.12
+        },
+        {
+          "text": "times",
+          "start": 364.12,
+          "end": 364.72
+        },
+        {
+          "text": "the",
+          "start": 364.72,
+          "end": 364.9
+        },
+        {
+          "text": "H100's",
+          "start": 364.9,
+          "end": 366.1
+        },
+        {
+          "text": "capacity.",
+          "start": 366.1,
+          "end": 366.64
+        },
+        {
+          "text": "The",
+          "start": 367.3,
+          "end": 367.44
+        },
+        {
+          "text": "run",
+          "start": 367.44,
+          "end": 367.76
+        },
+        {
+          "text": "fails",
+          "start": 367.76,
+          "end": 368.3
+        },
+        {
+          "text": "before",
+          "start": 368.3,
+          "end": 368.68
+        },
+        {
+          "text": "throughput",
+          "start": 368.68,
+          "end": 369.22
+        },
+        {
+          "text": "matters.",
+          "start": 369.22,
+          "end": 369.68
+        },
+        {
+          "text": "Step",
+          "start": 369.68,
+          "end": 370.9
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Step one, mixed precision.",
+      "start": 370.47,
+      "end": 372.72,
+      "words": [
+        {
+          "text": "1,",
+          "start": 370.9,
+          "end": 371.26
+        },
+        {
+          "text": "mixed",
+          "start": 371.42,
+          "end": 371.62
+        },
+        {
+          "text": "precision.",
+          "start": 371.62,
+          "end": 372.16
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Halves the activations to two hundred eighty-seven gigabytes. Total three hundred eleven - still three point six times over. Feasibility work, not yet feasible.",
+      "start": 372.72,
+      "end": 384.37,
+      "words": [
+        {
+          "text": "Haves",
+          "start": 373.22,
+          "end": 373.38
+        },
+        {
+          "text": "the",
+          "start": 373.38,
+          "end": 373.52
+        },
+        {
+          "text": "activations",
+          "start": 373.52,
+          "end": 374.3
+        },
+        {
+          "text": "to",
+          "start": 374.3,
+          "end": 374.48
+        },
+        {
+          "text": "287",
+          "start": 374.48,
+          "end": 375.76
+        },
+        {
+          "text": "gigabytes.",
+          "start": 375.76,
+          "end": 376.18
+        },
+        {
+          "text": "Total",
+          "start": 376.84,
+          "end": 377.24
+        },
+        {
+          "text": "311,",
+          "start": 377.24,
+          "end": 378.12
+        },
+        {
+          "text": "still",
+          "start": 378.56,
+          "end": 378.92
+        },
+        {
+          "text": "3",
+          "start": 378.92,
+          "end": 379.34
+        },
+        {
+          "text": ".6",
+          "start": 379.34,
+          "end": 379.98
+        },
+        {
+          "text": "times",
+          "start": 379.98,
+          "end": 380.28
+        },
+        {
+          "text": "over.",
+          "start": 380.28,
+          "end": 380.72
+        },
+        {
+          "text": "Feasibility",
+          "start": 381.38,
+          "end": 382.0
+        },
+        {
+          "text": "work,",
+          "start": 382.0,
+          "end": 382.38
+        },
+        {
+          "text": "not",
+          "start": 382.68,
+          "end": 382.88
+        },
+        {
+          "text": "yet",
+          "start": 382.88,
+          "end": 383.1
+        },
+        {
+          "text": "feasible.",
+          "start": 383.1,
+          "end": 383.6
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Step two, FlashAttention.",
+      "start": 384.37,
+      "end": 386.57,
+      "words": [
+        {
+          "text": "Step",
+          "start": 384.62,
+          "end": 384.86
+        },
+        {
+          "text": "2,",
+          "start": 384.86,
+          "end": 385.2
+        },
+        {
+          "text": "flash",
+          "start": 385.46,
+          "end": 385.56
+        },
+        {
+          "text": "attention.",
+          "start": 385.56,
+          "end": 385.9
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Removes the two hundred gigabytes of score matrices. Activations drop to eighty-five point six, total one hundred nine point six - still twenty-four gigabytes over the line. Largest resident batch is about twenty-three sequences.",
+      "start": 386.57,
+      "end": 403.47,
+      "words": [
+        {
+          "text": "Removes",
+          "start": 385.9,
+          "end": 387.42
+        },
+        {
+          "text": "the",
+          "start": 387.42,
+          "end": 387.58
+        },
+        {
+          "text": "200",
+          "start": 387.58,
+          "end": 388.08
+        },
+        {
+          "text": "gigabytes",
+          "start": 388.08,
+          "end": 388.6
+        },
+        {
+          "text": "of",
+          "start": 388.6,
+          "end": 388.92
+        },
+        {
+          "text": "score",
+          "start": 388.92,
+          "end": 389.26
+        },
+        {
+          "text": "matrices.",
+          "start": 389.26,
+          "end": 389.8
+        },
+        {
+          "text": "Activations",
+          "start": 390.42,
+          "end": 391.28
+        },
+        {
+          "text": "drop",
+          "start": 391.28,
+          "end": 391.6
+        },
+        {
+          "text": "to",
+          "start": 391.6,
+          "end": 391.82
+        },
+        {
+          "text": "85",
+          "start": 391.82,
+          "end": 392.42
+        },
+        {
+          "text": ".6,",
+          "start": 392.42,
+          "end": 393.32
+        },
+        {
+          "text": "total",
+          "start": 393.72,
+          "end": 394.14
+        },
+        {
+          "text": "109",
+          "start": 394.14,
+          "end": 395.02
+        },
+        {
+          "text": ".6,",
+          "start": 395.02,
+          "end": 395.78
+        },
+        {
+          "text": "still",
+          "start": 396.2,
+          "end": 396.64
+        },
+        {
+          "text": "24",
+          "start": 396.64,
+          "end": 397.26
+        },
+        {
+          "text": "gigabytes",
+          "start": 397.26,
+          "end": 397.78
+        },
+        {
+          "text": "over",
+          "start": 397.78,
+          "end": 398.12
+        },
+        {
+          "text": "the",
+          "start": 398.12,
+          "end": 398.28
+        },
+        {
+          "text": "line.",
+          "start": 398.28,
+          "end": 398.64
+        },
+        {
+          "text": "Largest",
+          "start": 399.32,
+          "end": 399.78
+        },
+        {
+          "text": "resident",
+          "start": 399.78,
+          "end": 400.24
+        },
+        {
+          "text": "batch",
+          "start": 400.24,
+          "end": 400.6
+        },
+        {
+          "text": "is",
+          "start": 400.6,
+          "end": 400.96
+        },
+        {
+          "text": "about",
+          "start": 400.96,
+          "end": 401.22
+        },
+        {
+          "text": "23",
+          "start": 401.22,
+          "end": 401.94
+        },
+        {
+          "text": "sequences.",
+          "start": 401.94,
+          "end": 402.6
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Step three, fit the batch. Two options.",
+      "start": 403.47,
+      "end": 406.4,
+      "words": [
+        {
+          "text": "Step",
+          "start": 403.9,
+          "end": 403.9
+        },
+        {
+          "text": "3,",
+          "start": 403.9,
+          "end": 404.24
+        },
+        {
+          "text": "fit",
+          "start": 404.36,
+          "end": 404.42
+        },
+        {
+          "text": "the",
+          "start": 404.42,
+          "end": 404.54
+        },
+        {
+          "text": "batch,",
+          "start": 404.54,
+          "end": 404.88
+        },
+        {
+          "text": "two",
+          "start": 405.16,
+          "end": 405.32
+        },
+        {
+          "text": "options.",
+          "start": 405.32,
+          "end": 405.8
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Accumulate two micro-batches of sixteen - same arithmetic per update, sixty-six point eight gigabytes resident. Or segment checkpointing - all thirty-two sequences in thirty-five point five gigabytes, but you pay about thirty-three percent more step arithmetic.",
+      "start": 406.4,
+      "end": 425.05,
+      "words": [
+        {
+          "text": "Accumulate",
+          "start": 405.8,
+          "end": 407.38
+        },
+        {
+          "text": "two",
+          "start": 407.38,
+          "end": 407.66
+        },
+        {
+          "text": "microbatches",
+          "start": 407.66,
+          "end": 408.7
+        },
+        {
+          "text": "of",
+          "start": 408.7,
+          "end": 408.86
+        },
+        {
+          "text": "16",
+          "start": 408.86,
+          "end": 409.5
+        },
+        {
+          "text": "same",
+          "start": 409.5,
+          "end": 409.96
+        },
+        {
+          "text": "arithmetic",
+          "start": 409.96,
+          "end": 410.62
+        },
+        {
+          "text": "per",
+          "start": 410.62,
+          "end": 410.98
+        },
+        {
+          "text": "update,",
+          "start": 410.98,
+          "end": 411.44
+        },
+        {
+          "text": "66",
+          "start": 411.9,
+          "end": 412.44
+        },
+        {
+          "text": ".8",
+          "start": 412.44,
+          "end": 413.2
+        },
+        {
+          "text": "gigabytes",
+          "start": 413.2,
+          "end": 413.5
+        },
+        {
+          "text": "resident.",
+          "start": 413.5,
+          "end": 414.24
+        },
+        {
+          "text": "Or",
+          "start": 414.94,
+          "end": 415.1
+        },
+        {
+          "text": "segment",
+          "start": 415.1,
+          "end": 415.48
+        },
+        {
+          "text": "check",
+          "start": 415.48,
+          "end": 415.78
+        },
+        {
+          "text": "-pointing,",
+          "start": 415.78,
+          "end": 416.24
+        },
+        {
+          "text": "all",
+          "start": 416.68,
+          "end": 416.98
+        },
+        {
+          "text": "32",
+          "start": 416.98,
+          "end": 417.48
+        },
+        {
+          "text": "sequences",
+          "start": 417.48,
+          "end": 418.2
+        },
+        {
+          "text": "in",
+          "start": 418.2,
+          "end": 418.5
+        },
+        {
+          "text": "35",
+          "start": 418.5,
+          "end": 419.0
+        },
+        {
+          "text": ".5",
+          "start": 419.0,
+          "end": 419.94
+        },
+        {
+          "text": "gigabytes,",
+          "start": 419.94,
+          "end": 420.46
+        },
+        {
+          "text": "but",
+          "start": 420.92,
+          "end": 421.18
+        },
+        {
+          "text": "you",
+          "start": 421.18,
+          "end": 421.32
+        },
+        {
+          "text": "pay",
+          "start": 421.32,
+          "end": 421.56
+        },
+        {
+          "text": "about",
+          "start": 421.56,
+          "end": 421.84
+        },
+        {
+          "text": "33",
+          "start": 421.84,
+          "end": 422.4
+        },
+        {
+          "text": "percent",
+          "start": 422.4,
+          "end": 423.06
+        },
+        {
+          "text": "more",
+          "start": 423.06,
+          "end": 423.3
+        },
+        {
+          "text": "step",
+          "start": 423.3,
+          "end": 423.62
+        },
+        {
+          "text": "arithmetic.",
+          "start": 423.62,
+          "end": 424.28
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The walkthrough takes accumulation because the batch it needs fits without recompute. Nine times smaller than baseline, inside eighty gigabytes.",
+      "start": 425.05,
+      "end": 434.27,
+      "words": [
+        {
+          "text": "The",
+          "start": 425.18,
+          "end": 425.42
+        },
+        {
+          "text": "walkthrough",
+          "start": 425.42,
+          "end": 425.82
+        },
+        {
+          "text": "takes",
+          "start": 425.82,
+          "end": 426.08
+        },
+        {
+          "text": "accumulation",
+          "start": 426.08,
+          "end": 426.62
+        },
+        {
+          "text": "because",
+          "start": 426.62,
+          "end": 427.36
+        },
+        {
+          "text": "the",
+          "start": 427.36,
+          "end": 427.56
+        },
+        {
+          "text": "batch",
+          "start": 427.56,
+          "end": 427.82
+        },
+        {
+          "text": "it",
+          "start": 427.82,
+          "end": 427.94
+        },
+        {
+          "text": "needs",
+          "start": 427.94,
+          "end": 428.12
+        },
+        {
+          "text": "fits",
+          "start": 428.12,
+          "end": 428.4
+        },
+        {
+          "text": "without",
+          "start": 428.4,
+          "end": 428.8
+        },
+        {
+          "text": "recompute.",
+          "start": 428.8,
+          "end": 429.42
+        },
+        {
+          "text": "9",
+          "start": 429.94,
+          "end": 430.32
+        },
+        {
+          "text": "times",
+          "start": 430.32,
+          "end": 430.66
+        },
+        {
+          "text": "smaller",
+          "start": 430.66,
+          "end": 431.1
+        },
+        {
+          "text": "than",
+          "start": 431.1,
+          "end": 431.4
+        },
+        {
+          "text": "baseline,",
+          "start": 431.4,
+          "end": 431.78
+        },
+        {
+          "text": "inside",
+          "start": 432.26,
+          "end": 432.72
+        },
+        {
+          "text": "80",
+          "start": 432.72,
+          "end": 433.14
+        },
+        {
+          "text": "gigabytes.",
+          "start": 433.14,
+          "end": 433.56
+        },
+        {
+          "text": "Then",
+          "start": 433.56,
+          "end": 434.8
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Then fix the feed: eight workers, pinned memory, prefetch queue - and the host preparation disappears into the compute's shadow. Device busy the whole step, in the ideal model.",
+      "start": 434.27,
+      "end": 446.57,
+      "words": [
+        {
+          "text": "fix",
+          "start": 434.8,
+          "end": 435.1
+        },
+        {
+          "text": "the",
+          "start": 435.1,
+          "end": 435.32
+        },
+        {
+          "text": "feed.",
+          "start": 435.32,
+          "end": 435.64
+        },
+        {
+          "text": "8",
+          "start": 436.2,
+          "end": 436.4
+        },
+        {
+          "text": "workers,",
+          "start": 436.4,
+          "end": 436.84
+        },
+        {
+          "text": "pinned",
+          "start": 437.1,
+          "end": 437.34
+        },
+        {
+          "text": "memory,",
+          "start": 437.34,
+          "end": 437.8
+        },
+        {
+          "text": "prefetch",
+          "start": 438.08,
+          "end": 438.46
+        },
+        {
+          "text": "queue,",
+          "start": 438.46,
+          "end": 438.88
+        },
+        {
+          "text": "and",
+          "start": 439.24,
+          "end": 439.32
+        },
+        {
+          "text": "the",
+          "start": 439.32,
+          "end": 439.44
+        },
+        {
+          "text": "host",
+          "start": 439.44,
+          "end": 439.68
+        },
+        {
+          "text": "preparation",
+          "start": 439.68,
+          "end": 440.18
+        },
+        {
+          "text": "disappears",
+          "start": 440.18,
+          "end": 440.86
+        },
+        {
+          "text": "into",
+          "start": 440.86,
+          "end": 441.24
+        },
+        {
+          "text": "the",
+          "start": 441.24,
+          "end": 441.38
+        },
+        {
+          "text": "compute's",
+          "start": 441.38,
+          "end": 441.92
+        },
+        {
+          "text": "shadow.",
+          "start": 441.92,
+          "end": 442.22
+        },
+        {
+          "text": "Device",
+          "start": 442.9,
+          "end": 443.24
+        },
+        {
+          "text": "busy",
+          "start": 443.24,
+          "end": 443.72
+        },
+        {
+          "text": "the",
+          "start": 443.72,
+          "end": 443.94
+        },
+        {
+          "text": "whole",
+          "start": 443.94,
+          "end": 444.16
+        },
+        {
+          "text": "step",
+          "start": 444.16,
+          "end": 444.54
+        },
+        {
+          "text": "in",
+          "start": 444.54,
+          "end": 444.94
+        },
+        {
+          "text": "the",
+          "start": 444.94,
+          "end": 445.04
+        },
+        {
+          "text": "ideal",
+          "start": 445.04,
+          "end": 445.46
+        },
+        {
+          "text": "model.",
+          "start": 445.46,
+          "end": 445.92
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/08-training/diagrams/overlap-timeline.svg",
+        "title": "Serial cost is the sum; overlapped cost is the max",
+        "alt": "Three dependent stages -- 30 ms prepare, 10 ms transfer, 50 ms compute -- cost 90 ms serially. With prefetch buffers and pinned memory, batch n+1's preparation hides under batch n's compute and the steady-state interval falls to the slowest stage: 50 ms, a 1.8x throughput gain bought entirely with staging buffers. The residual bubbles show what overlap cannot remove: the slowest stage itself."
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "Result: zero point six seconds a step, fifty-five thousand tokens a second, thirty-five days, and the energy bill.",
+      "start": 446.57,
+      "end": 454.7,
+      "words": [
+        {
+          "text": "Result,",
+          "start": 446.88,
+          "end": 447.28
+        },
+        {
+          "text": "0",
+          "start": 447.64,
+          "end": 447.96
+        },
+        {
+          "text": ".6",
+          "start": 447.96,
+          "end": 448.52
+        },
+        {
+          "text": "seconds",
+          "start": 448.52,
+          "end": 448.96
+        },
+        {
+          "text": "a",
+          "start": 448.96,
+          "end": 449.18
+        },
+        {
+          "text": "step,",
+          "start": 449.18,
+          "end": 449.46
+        },
+        {
+          "text": "55",
+          "start": 449.86,
+          "end": 450.2
+        },
+        {
+          "text": ",000",
+          "start": 450.2,
+          "end": 450.82
+        },
+        {
+          "text": "tokens",
+          "start": 450.82,
+          "end": 451.18
+        },
+        {
+          "text": "a",
+          "start": 451.18,
+          "end": 451.48
+        },
+        {
+          "text": "second,",
+          "start": 451.48,
+          "end": 451.8
+        },
+        {
+          "text": "35",
+          "start": 452.18,
+          "end": 452.5
+        },
+        {
+          "text": "days,",
+          "start": 452.5,
+          "end": 452.98
+        },
+        {
+          "text": "and",
+          "start": 453.32,
+          "end": 453.44
+        },
+        {
+          "text": "the",
+          "start": 453.44,
+          "end": 453.54
+        },
+        {
+          "text": "energy",
+          "start": 453.54,
+          "end": 453.8
+        },
+        {
+          "text": "bill.",
+          "start": 453.8,
+          "end": 454.14
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Five hundred ninety kilowatt-hours at the accelerator - seven hundred watts times the run. Six hundred sixty-one at the facility after the power overhead. Seventy-nine dollars of electricity, a quarter ton of carbon.",
+      "start": 454.7,
+      "end": 470.72,
+      "words": [
+        {
+          "text": "590",
+          "start": 455.32,
+          "end": 456.16
+        },
+        {
+          "text": "kilowatt",
+          "start": 456.16,
+          "end": 456.8
+        },
+        {
+          "text": "hours",
+          "start": 456.8,
+          "end": 457.18
+        },
+        {
+          "text": "at",
+          "start": 457.18,
+          "end": 457.38
+        },
+        {
+          "text": "the",
+          "start": 457.38,
+          "end": 457.5
+        },
+        {
+          "text": "accelerator",
+          "start": 457.5,
+          "end": 458.08
+        },
+        {
+          "text": "700",
+          "start": 458.08,
+          "end": 458.92
+        },
+        {
+          "text": "watts",
+          "start": 458.92,
+          "end": 459.54
+        },
+        {
+          "text": "times",
+          "start": 459.54,
+          "end": 459.98
+        },
+        {
+          "text": "the",
+          "start": 459.98,
+          "end": 460.26
+        },
+        {
+          "text": "run.",
+          "start": 460.26,
+          "end": 460.62
+        },
+        {
+          "text": "661",
+          "start": 461.74,
+          "end": 462.58
+        },
+        {
+          "text": "at",
+          "start": 462.58,
+          "end": 462.88
+        },
+        {
+          "text": "the",
+          "start": 462.88,
+          "end": 463.0
+        },
+        {
+          "text": "facility",
+          "start": 463.0,
+          "end": 463.48
+        },
+        {
+          "text": "after",
+          "start": 463.48,
+          "end": 464.02
+        },
+        {
+          "text": "the",
+          "start": 464.02,
+          "end": 464.16
+        },
+        {
+          "text": "power",
+          "start": 464.16,
+          "end": 464.5
+        },
+        {
+          "text": "overhead.",
+          "start": 464.5,
+          "end": 465.1
+        },
+        {
+          "text": "$79",
+          "start": 465.88,
+          "end": 466.56
+        },
+        {
+          "text": "of",
+          "start": 466.56,
+          "end": 467.38
+        },
+        {
+          "text": "electricity,",
+          "start": 467.38,
+          "end": 467.78
+        },
+        {
+          "text": "a",
+          "start": 468.52,
+          "end": 468.66
+        },
+        {
+          "text": "quarter",
+          "start": 468.66,
+          "end": 468.98
+        },
+        {
+          "text": "ton",
+          "start": 468.98,
+          "end": 469.34
+        },
+        {
+          "text": "of",
+          "start": 469.34,
+          "end": 469.58
+        },
+        {
+          "text": "carbon.",
+          "start": 469.58,
+          "end": 470.0
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Checkpointing the same run costs forty-seven days - that's what the memory actually costs in calendar time.",
+      "start": 470.72,
+      "end": 477.82,
+      "words": [
+        {
+          "text": "Check",
+          "start": 470.84,
+          "end": 471.16
+        },
+        {
+          "text": "-pointing",
+          "start": 471.16,
+          "end": 471.58
+        },
+        {
+          "text": "the",
+          "start": 471.58,
+          "end": 471.72
+        },
+        {
+          "text": "same",
+          "start": 471.72,
+          "end": 472.02
+        },
+        {
+          "text": "run",
+          "start": 472.02,
+          "end": 472.28
+        },
+        {
+          "text": "costs",
+          "start": 472.28,
+          "end": 472.72
+        },
+        {
+          "text": "47",
+          "start": 472.72,
+          "end": 473.28
+        },
+        {
+          "text": "days.",
+          "start": 473.28,
+          "end": 473.7
+        },
+        {
+          "text": "That's",
+          "start": 474.28,
+          "end": 474.66
+        },
+        {
+          "text": "what",
+          "start": 474.66,
+          "end": 474.76
+        },
+        {
+          "text": "the",
+          "start": 474.76,
+          "end": 474.86
+        },
+        {
+          "text": "memory",
+          "start": 474.86,
+          "end": 475.14
+        },
+        {
+          "text": "actually",
+          "start": 475.14,
+          "end": 475.62
+        },
+        {
+          "text": "costs",
+          "start": 475.62,
+          "end": 476.1
+        },
+        {
+          "text": "in",
+          "start": 476.1,
+          "end": 476.5
+        },
+        {
+          "text": "calendar",
+          "start": 476.5,
+          "end": 476.84
+        },
+        {
+          "text": "time.",
+          "start": 476.84,
+          "end": 477.26
+        },
+        {
+          "text": "And",
+          "start": 477.26,
+          "end": 478.3
+        }
+      ],
+      "visual": {
+        "src": "/study/vol1/08-training/diagrams/checkpoint-sqrt.svg",
+        "title": "sqrt(L) anchors, recompute the rest",
+        "alt": "Activation checkpointing on a 48-layer network: seven segment-boundary tensors are retained through forward, and each ~7-layer segment interior is re-run during backward to regenerate the tensors its backward rules need. Stored activations fall from O(L) to kA + (L/k)A, minimized at k = sqrt(L) -- about 14 layers' worth instead of 48, ~71% saved, paid for with roughly one extra forward pass per step."
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "And then you hit the wall anyway: one accelerator, thirty-five days. Scaling beyond it buys arithmetic with synchronization.",
+      "start": 477.82,
+      "end": 487.27,
+      "words": [
+        {
+          "text": "then",
+          "start": 478.3,
+          "end": 478.48
+        },
+        {
+          "text": "you",
+          "start": 478.48,
+          "end": 478.64
+        },
+        {
+          "text": "hit",
+          "start": 478.64,
+          "end": 478.84
+        },
+        {
+          "text": "the",
+          "start": 478.84,
+          "end": 479.0
+        },
+        {
+          "text": "wall",
+          "start": 479.0,
+          "end": 479.22
+        },
+        {
+          "text": "anyway.",
+          "start": 479.22,
+          "end": 479.56
+        },
+        {
+          "text": "One",
+          "start": 480.18,
+          "end": 480.44
+        },
+        {
+          "text": "accelerator,",
+          "start": 480.44,
+          "end": 480.9
+        },
+        {
+          "text": "35",
+          "start": 481.48,
+          "end": 481.88
+        },
+        {
+          "text": "days.",
+          "start": 481.88,
+          "end": 482.46
+        },
+        {
+          "text": "Scaling",
+          "start": 483.1,
+          "end": 483.62
+        },
+        {
+          "text": "beyond",
+          "start": 483.62,
+          "end": 484.12
+        },
+        {
+          "text": "it",
+          "start": 484.12,
+          "end": 484.38
+        },
+        {
+          "text": "buys",
+          "start": 484.38,
+          "end": 484.66
+        },
+        {
+          "text": "arithmetic",
+          "start": 484.66,
+          "end": 485.34
+        },
+        {
+          "text": "with",
+          "start": 485.34,
+          "end": 485.74
+        },
+        {
+          "text": "synchronization.",
+          "start": 485.74,
+          "end": 486.54
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Data parallelism - replicate the model, split the data, average the gradients with ring AllReduce.",
+      "start": 487.27,
+      "end": 494.05,
+      "words": [
+        {
+          "text": "Data",
+          "start": 487.36,
+          "end": 487.82
+        },
+        {
+          "text": "parallelism,",
+          "start": 487.82,
+          "end": 488.66
+        },
+        {
+          "text": "replicate",
+          "start": 488.98,
+          "end": 489.32
+        },
+        {
+          "text": "the",
+          "start": 489.32,
+          "end": 489.6
+        },
+        {
+          "text": "model,",
+          "start": 489.6,
+          "end": 489.88
+        },
+        {
+          "text": "split",
+          "start": 490.26,
+          "end": 490.46
+        },
+        {
+          "text": "the",
+          "start": 490.46,
+          "end": 490.64
+        },
+        {
+          "text": "data,",
+          "start": 490.64,
+          "end": 490.9
+        },
+        {
+          "text": "average",
+          "start": 491.28,
+          "end": 491.64
+        },
+        {
+          "text": "the",
+          "start": 491.64,
+          "end": 491.88
+        },
+        {
+          "text": "gradients",
+          "start": 491.88,
+          "end": 492.32
+        },
+        {
+          "text": "with",
+          "start": 492.32,
+          "end": 492.54
+        },
+        {
+          "text": "ring",
+          "start": 492.54,
+          "end": 492.9
+        },
+        {
+          "text": "or",
+          "start": 492.9,
+          "end": 493.08
+        },
+        {
+          "text": "reduce.",
+          "start": 493.08,
+          "end": 493.38
+        }
+      ],
+      "eq": {
+        "id": "ring-allreduce",
+        "title": "Ring AllReduce per-device volume",
+        "latex": "V_{\\mathrm{sent}} = 2\\,\\frac{N-1}{N} \\cdot P \\cdot B_{\\mathrm{bytes}}"
+      }
+    },
+    {
+      "speaker": "A",
+      "text": "Two phases on the ring - scatter-reduce, then all-gather. Each device sends two times N-minus-one over N of the gradient volume - one point seven-five times at eight accelerators, about twelve milliseconds on the book's numbers.",
+      "start": 494.05,
+      "end": 510.25,
+      "words": [
+        {
+          "text": "Two",
+          "start": 494.14,
+          "end": 494.56
+        },
+        {
+          "text": "phases",
+          "start": 494.56,
+          "end": 495.06
+        },
+        {
+          "text": "on",
+          "start": 495.06,
+          "end": 495.34
+        },
+        {
+          "text": "the",
+          "start": 495.34,
+          "end": 495.46
+        },
+        {
+          "text": "ring",
+          "start": 495.46,
+          "end": 495.7
+        },
+        {
+          "text": "scatter",
+          "start": 495.7,
+          "end": 496.06
+        },
+        {
+          "text": "reduce,",
+          "start": 496.06,
+          "end": 496.54
+        },
+        {
+          "text": "then",
+          "start": 496.9,
+          "end": 497.18
+        },
+        {
+          "text": "all",
+          "start": 497.18,
+          "end": 497.48
+        },
+        {
+          "text": "gather.",
+          "start": 497.48,
+          "end": 497.8
+        },
+        {
+          "text": "Each",
+          "start": 497.8,
+          "end": 498.76
+        },
+        {
+          "text": "device",
+          "start": 498.76,
+          "end": 499.2
+        },
+        {
+          "text": "sends",
+          "start": 499.2,
+          "end": 499.68
+        },
+        {
+          "text": "2",
+          "start": 499.68,
+          "end": 500.02
+        },
+        {
+          "text": "times",
+          "start": 500.02,
+          "end": 500.36
+        },
+        {
+          "text": "n",
+          "start": 500.36,
+          "end": 500.64
+        },
+        {
+          "text": "minus",
+          "start": 500.64,
+          "end": 500.94
+        },
+        {
+          "text": "1",
+          "start": 500.94,
+          "end": 501.3
+        },
+        {
+          "text": "over",
+          "start": 501.3,
+          "end": 501.58
+        },
+        {
+          "text": "n",
+          "start": 501.58,
+          "end": 501.96
+        },
+        {
+          "text": "of",
+          "start": 501.96,
+          "end": 502.08
+        },
+        {
+          "text": "the",
+          "start": 502.08,
+          "end": 502.16
+        },
+        {
+          "text": "gradient",
+          "start": 502.16,
+          "end": 502.4
+        },
+        {
+          "text": "volume,",
+          "start": 502.4,
+          "end": 503.04
+        },
+        {
+          "text": "1",
+          "start": 503.48,
+          "end": 503.9
+        },
+        {
+          "text": ".75",
+          "start": 503.9,
+          "end": 504.86
+        },
+        {
+          "text": "times",
+          "start": 504.86,
+          "end": 505.52
+        },
+        {
+          "text": "at",
+          "start": 505.52,
+          "end": 505.72
+        },
+        {
+          "text": "8",
+          "start": 505.72,
+          "end": 505.98
+        },
+        {
+          "text": "accelerators,",
+          "start": 505.98,
+          "end": 506.72
+        },
+        {
+          "text": "about",
+          "start": 507.2,
+          "end": 507.44
+        },
+        {
+          "text": "12",
+          "start": 507.44,
+          "end": 507.88
+        },
+        {
+          "text": "milliseconds",
+          "start": 507.88,
+          "end": 508.46
+        },
+        {
+          "text": "on",
+          "start": 508.46,
+          "end": 508.72
+        },
+        {
+          "text": "the",
+          "start": 508.72,
+          "end": 508.82
+        },
+        {
+          "text": "book's",
+          "start": 508.82,
+          "end": 509.14
+        },
+        {
+          "text": "numbers.",
+          "start": 509.14,
+          "end": 509.48
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And here's the trap the fallacy section warns about.",
+      "start": 510.25,
+      "end": 513.72,
+      "words": [
+        {
+          "text": "And",
+          "start": 510.2,
+          "end": 510.68
+        },
+        {
+          "text": "here's",
+          "start": 510.68,
+          "end": 510.98
+        },
+        {
+          "text": "the",
+          "start": 510.98,
+          "end": 511.1
+        },
+        {
+          "text": "trap",
+          "start": 511.1,
+          "end": 511.36
+        },
+        {
+          "text": "the",
+          "start": 511.36,
+          "end": 511.76
+        },
+        {
+          "text": "fallacy",
+          "start": 511.76,
+          "end": 512.12
+        },
+        {
+          "text": "section",
+          "start": 512.12,
+          "end": 512.54
+        },
+        {
+          "text": "warns",
+          "start": 512.54,
+          "end": 512.96
+        },
+        {
+          "text": "about.",
+          "start": 512.96,
+          "end": 513.18
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Replicate the full batch and sync is two percent of the step. Split the same batch eight ways - four sequences per replica - and each device's compute shrinks while the gradient bytes stay fixed. The unhidden sync share grows to fourteen percent.",
+      "start": 513.72,
+      "end": 530.62,
+      "words": [
+        {
+          "text": "Replicate",
+          "start": 513.98,
+          "end": 514.66
+        },
+        {
+          "text": "the",
+          "start": 514.66,
+          "end": 514.82
+        },
+        {
+          "text": "full",
+          "start": 514.82,
+          "end": 515.08
+        },
+        {
+          "text": "batch",
+          "start": 515.08,
+          "end": 515.4
+        },
+        {
+          "text": "in",
+          "start": 515.4,
+          "end": 515.58
+        },
+        {
+          "text": "sync",
+          "start": 515.58,
+          "end": 515.88
+        },
+        {
+          "text": "is",
+          "start": 515.88,
+          "end": 516.12
+        },
+        {
+          "text": "2",
+          "start": 516.12,
+          "end": 516.36
+        },
+        {
+          "text": "%",
+          "start": 516.36,
+          "end": 516.74
+        },
+        {
+          "text": "of",
+          "start": 516.74,
+          "end": 516.88
+        },
+        {
+          "text": "the",
+          "start": 516.88,
+          "end": 516.96
+        },
+        {
+          "text": "step.",
+          "start": 516.96,
+          "end": 517.26
+        },
+        {
+          "text": "Split",
+          "start": 517.9,
+          "end": 518.2
+        },
+        {
+          "text": "the",
+          "start": 518.2,
+          "end": 518.44
+        },
+        {
+          "text": "same",
+          "start": 518.44,
+          "end": 518.7
+        },
+        {
+          "text": "batch",
+          "start": 518.7,
+          "end": 519.02
+        },
+        {
+          "text": "eight",
+          "start": 519.02,
+          "end": 519.36
+        },
+        {
+          "text": "ways",
+          "start": 519.36,
+          "end": 519.7
+        },
+        {
+          "text": "four",
+          "start": 519.7,
+          "end": 520.1
+        },
+        {
+          "text": "sequences",
+          "start": 520.1,
+          "end": 520.68
+        },
+        {
+          "text": "per",
+          "start": 520.68,
+          "end": 521.0
+        },
+        {
+          "text": "replica,",
+          "start": 521.0,
+          "end": 521.48
+        },
+        {
+          "text": "and",
+          "start": 521.94,
+          "end": 522.2
+        },
+        {
+          "text": "each",
+          "start": 522.2,
+          "end": 522.54
+        },
+        {
+          "text": "device's",
+          "start": 522.54,
+          "end": 523.18
+        },
+        {
+          "text": "compute",
+          "start": 523.18,
+          "end": 523.42
+        },
+        {
+          "text": "shrinks",
+          "start": 523.42,
+          "end": 524.02
+        },
+        {
+          "text": "while",
+          "start": 524.02,
+          "end": 524.5
+        },
+        {
+          "text": "the",
+          "start": 524.5,
+          "end": 524.64
+        },
+        {
+          "text": "gradient",
+          "start": 524.64,
+          "end": 524.96
+        },
+        {
+          "text": "bytes",
+          "start": 524.96,
+          "end": 525.32
+        },
+        {
+          "text": "stay",
+          "start": 525.32,
+          "end": 525.76
+        },
+        {
+          "text": "fixed.",
+          "start": 525.76,
+          "end": 526.22
+        },
+        {
+          "text": "The",
+          "start": 526.22,
+          "end": 527.04
+        },
+        {
+          "text": "unhidden",
+          "start": 527.04,
+          "end": 527.48
+        },
+        {
+          "text": "sync",
+          "start": 527.48,
+          "end": 527.84
+        },
+        {
+          "text": "share",
+          "start": 527.84,
+          "end": 528.18
+        },
+        {
+          "text": "grows",
+          "start": 528.18,
+          "end": 528.62
+        },
+        {
+          "text": "to",
+          "start": 528.62,
+          "end": 528.86
+        },
+        {
+          "text": "14%.",
+          "start": 528.86,
+          "end": 530.1
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Arithmetic divides. The AllReduce bill doesn't.",
+      "start": 530.62,
+      "end": 534.12,
+      "words": [
+        {
+          "text": "Arithmetic",
+          "start": 530.1,
+          "end": 531.26
+        },
+        {
+          "text": "divides,",
+          "start": 531.26,
+          "end": 531.76
+        },
+        {
+          "text": "the",
+          "start": 532.32,
+          "end": 532.44
+        },
+        {
+          "text": "all",
+          "start": 532.44,
+          "end": 532.64
+        },
+        {
+          "text": "-reduced",
+          "start": 532.64,
+          "end": 532.98
+        },
+        {
+          "text": "bill",
+          "start": 532.98,
+          "end": 533.18
+        },
+        {
+          "text": "doesn't.",
+          "start": 533.18,
+          "end": 533.72
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And when even the state doesn't fit per-replica - ZeRO shards it. Optimizer state first, then gradients, then parameters. Llama three eight-B under ZeRO-three across eight accelerators drops to sixteen gigabytes of static state each.",
+      "start": 534.12,
+      "end": 550.92,
+      "words": [
+        {
+          "text": "And",
+          "start": 534.44,
+          "end": 534.6
+        },
+        {
+          "text": "when",
+          "start": 534.6,
+          "end": 534.7
+        },
+        {
+          "text": "even",
+          "start": 534.7,
+          "end": 535.0
+        },
+        {
+          "text": "the",
+          "start": 535.0,
+          "end": 535.16
+        },
+        {
+          "text": "state",
+          "start": 535.16,
+          "end": 535.42
+        },
+        {
+          "text": "doesn't",
+          "start": 535.42,
+          "end": 535.8
+        },
+        {
+          "text": "fit",
+          "start": 535.8,
+          "end": 536.0
+        },
+        {
+          "text": "per",
+          "start": 536.0,
+          "end": 536.22
+        },
+        {
+          "text": "replica,",
+          "start": 536.22,
+          "end": 536.6
+        },
+        {
+          "text": "ZRO",
+          "start": 536.96,
+          "end": 537.42
+        },
+        {
+          "text": "shards",
+          "start": 537.42,
+          "end": 537.94
+        },
+        {
+          "text": "it.",
+          "start": 537.94,
+          "end": 538.12
+        },
+        {
+          "text": "Optimize",
+          "start": 538.68,
+          "end": 539.2
+        },
+        {
+          "text": "your",
+          "start": 539.2,
+          "end": 539.32
+        },
+        {
+          "text": "state",
+          "start": 539.32,
+          "end": 539.6
+        },
+        {
+          "text": "first,",
+          "start": 539.6,
+          "end": 539.98
+        },
+        {
+          "text": "then",
+          "start": 540.46,
+          "end": 540.68
+        },
+        {
+          "text": "gradients,",
+          "start": 540.68,
+          "end": 541.28
+        },
+        {
+          "text": "then",
+          "start": 541.58,
+          "end": 541.68
+        },
+        {
+          "text": "parameters.",
+          "start": 541.68,
+          "end": 542.12
+        },
+        {
+          "text": "Lama",
+          "start": 543.1,
+          "end": 543.38
+        },
+        {
+          "text": "3",
+          "start": 543.38,
+          "end": 543.7
+        },
+        {
+          "text": "8B",
+          "start": 543.7,
+          "end": 544.28
+        },
+        {
+          "text": "under",
+          "start": 544.28,
+          "end": 544.58
+        },
+        {
+          "text": "ZRO",
+          "start": 544.58,
+          "end": 545.08
+        },
+        {
+          "text": "3",
+          "start": 545.08,
+          "end": 545.46
+        },
+        {
+          "text": "across",
+          "start": 545.46,
+          "end": 545.9
+        },
+        {
+          "text": "8",
+          "start": 545.9,
+          "end": 546.4
+        },
+        {
+          "text": "accelerators",
+          "start": 546.4,
+          "end": 547.14
+        },
+        {
+          "text": "drops",
+          "start": 547.14,
+          "end": 547.5
+        },
+        {
+          "text": "to",
+          "start": 547.5,
+          "end": 547.8
+        },
+        {
+          "text": "16",
+          "start": 547.8,
+          "end": 548.34
+        },
+        {
+          "text": "gigabytes",
+          "start": 548.34,
+          "end": 548.76
+        },
+        {
+          "text": "of",
+          "start": 548.76,
+          "end": 549.08
+        },
+        {
+          "text": "static",
+          "start": 549.08,
+          "end": 549.48
+        },
+        {
+          "text": "state",
+          "start": 549.48,
+          "end": 549.82
+        },
+        {
+          "text": "each.",
+          "start": 549.82,
+          "end": 550.22
+        },
+        {
+          "text": "The",
+          "start": 550.22,
+          "end": 551.28
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The node boundary is where physics changes again. NVLink inside - nine hundred gigabytes a second. Between nodes, ten to a hundred times lower.",
+      "start": 550.92,
+      "end": 561.02,
+      "words": [
+        {
+          "text": "node",
+          "start": 551.28,
+          "end": 551.52
+        },
+        {
+          "text": "boundary",
+          "start": 551.52,
+          "end": 552.0
+        },
+        {
+          "text": "is",
+          "start": 552.0,
+          "end": 552.28
+        },
+        {
+          "text": "where",
+          "start": 552.28,
+          "end": 552.42
+        },
+        {
+          "text": "physics",
+          "start": 552.42,
+          "end": 552.72
+        },
+        {
+          "text": "changes",
+          "start": 552.72,
+          "end": 553.2
+        },
+        {
+          "text": "again.",
+          "start": 553.2,
+          "end": 553.56
+        },
+        {
+          "text": "NV",
+          "start": 554.2,
+          "end": 554.46
+        },
+        {
+          "text": "link",
+          "start": 554.46,
+          "end": 554.8
+        },
+        {
+          "text": "inside",
+          "start": 554.8,
+          "end": 555.24
+        },
+        {
+          "text": "900",
+          "start": 555.24,
+          "end": 556.02
+        },
+        {
+          "text": "gigabytes",
+          "start": 556.02,
+          "end": 556.28
+        },
+        {
+          "text": "a",
+          "start": 556.28,
+          "end": 556.66
+        },
+        {
+          "text": "second,",
+          "start": 556.66,
+          "end": 556.94
+        },
+        {
+          "text": "between",
+          "start": 557.46,
+          "end": 557.76
+        },
+        {
+          "text": "nodes",
+          "start": 557.76,
+          "end": 558.26
+        },
+        {
+          "text": "10",
+          "start": 558.26,
+          "end": 558.88
+        },
+        {
+          "text": "to",
+          "start": 558.88,
+          "end": 559.22
+        },
+        {
+          "text": "100",
+          "start": 559.22,
+          "end": 559.64
+        },
+        {
+          "text": "times",
+          "start": 559.64,
+          "end": 560.0
+        },
+        {
+          "text": "lower.",
+          "start": 560.0,
+          "end": 560.36
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Keep tensor parallelism's chatter inside the node; let data parallelism's once-per-step gradient exchange cross the slow link. And at scale, failure becomes routine - checkpoint cadence is a throughput decision, not an ops nicety.",
+      "start": 561.02,
+      "end": 577.85,
+      "words": [
+        {
+          "text": "Keep",
+          "start": 561.28,
+          "end": 561.56
+        },
+        {
+          "text": "tensor",
+          "start": 561.56,
+          "end": 561.98
+        },
+        {
+          "text": "parallelisms",
+          "start": 561.98,
+          "end": 562.86
+        },
+        {
+          "text": "chatter",
+          "start": 562.86,
+          "end": 563.26
+        },
+        {
+          "text": "inside",
+          "start": 563.26,
+          "end": 563.84
+        },
+        {
+          "text": "the",
+          "start": 563.84,
+          "end": 564.06
+        },
+        {
+          "text": "node.",
+          "start": 564.06,
+          "end": 564.4
+        },
+        {
+          "text": "Let",
+          "start": 564.98,
+          "end": 565.14
+        },
+        {
+          "text": "data",
+          "start": 565.14,
+          "end": 565.48
+        },
+        {
+          "text": "parallelisms",
+          "start": 565.48,
+          "end": 566.32
+        },
+        {
+          "text": "once",
+          "start": 566.32,
+          "end": 566.64
+        },
+        {
+          "text": "per",
+          "start": 566.64,
+          "end": 566.92
+        },
+        {
+          "text": "step",
+          "start": 566.92,
+          "end": 567.16
+        },
+        {
+          "text": "gradient",
+          "start": 567.16,
+          "end": 567.58
+        },
+        {
+          "text": "exchange",
+          "start": 567.58,
+          "end": 568.2
+        },
+        {
+          "text": "cross",
+          "start": 568.2,
+          "end": 568.62
+        },
+        {
+          "text": "the",
+          "start": 568.62,
+          "end": 568.92
+        },
+        {
+          "text": "slow",
+          "start": 568.92,
+          "end": 569.22
+        },
+        {
+          "text": "link.",
+          "start": 569.22,
+          "end": 569.56
+        },
+        {
+          "text": "And",
+          "start": 570.1,
+          "end": 570.34
+        },
+        {
+          "text": "at",
+          "start": 570.34,
+          "end": 570.46
+        },
+        {
+          "text": "scale,",
+          "start": 570.46,
+          "end": 570.92
+        },
+        {
+          "text": "failure",
+          "start": 571.46,
+          "end": 571.88
+        },
+        {
+          "text": "becomes",
+          "start": 571.88,
+          "end": 572.34
+        },
+        {
+          "text": "routine",
+          "start": 572.34,
+          "end": 572.98
+        },
+        {
+          "text": "checkpoint",
+          "start": 572.98,
+          "end": 573.52
+        },
+        {
+          "text": "cadence",
+          "start": 573.52,
+          "end": 574.0
+        },
+        {
+          "text": "is",
+          "start": 574.0,
+          "end": 574.3
+        },
+        {
+          "text": "a",
+          "start": 574.3,
+          "end": 574.42
+        },
+        {
+          "text": "throughput",
+          "start": 574.42,
+          "end": 574.84
+        },
+        {
+          "text": "decision,",
+          "start": 574.84,
+          "end": 575.4
+        },
+        {
+          "text": "not",
+          "start": 575.86,
+          "end": 576.12
+        },
+        {
+          "text": "an",
+          "start": 576.12,
+          "end": 576.28
+        },
+        {
+          "text": "ops",
+          "start": 576.28,
+          "end": 576.58
+        },
+        {
+          "text": "nicety.",
+          "start": 576.58,
+          "end": 577.14
+        },
+        {
+          "text": "End",
+          "start": 577.14,
+          "end": 578.34
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "End with the ceiling.",
+      "start": 577.85,
+      "end": 579.62,
+      "words": [
+        {
+          "text": "with",
+          "start": 578.34,
+          "end": 578.52
+        },
+        {
+          "text": "the",
+          "start": 578.52,
+          "end": 578.68
+        },
+        {
+          "text": "ceiling.",
+          "start": 578.68,
+          "end": 578.96
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "A ten-to-the-twenty-four-FLOP run at a sustained petaflop per second on one device is about thirty-two years. No memory fix moves that - only more realized FLOP-per-second. The thousand-twenty-four-GPU reference run compresses it to about twenty-three hours.",
+      "start": 579.62,
+      "end": 598.97,
+      "words": [
+        {
+          "text": "A",
+          "start": 580.02,
+          "end": 580.1
+        },
+        {
+          "text": "10",
+          "start": 580.1,
+          "end": 580.32
+        },
+        {
+          "text": "to",
+          "start": 580.32,
+          "end": 580.42
+        },
+        {
+          "text": "the",
+          "start": 580.42,
+          "end": 580.52
+        },
+        {
+          "text": "24",
+          "start": 580.52,
+          "end": 581.0
+        },
+        {
+          "text": "flop",
+          "start": 581.0,
+          "end": 581.44
+        },
+        {
+          "text": "run",
+          "start": 581.44,
+          "end": 581.88
+        },
+        {
+          "text": "at",
+          "start": 581.88,
+          "end": 582.14
+        },
+        {
+          "text": "a",
+          "start": 582.14,
+          "end": 582.26
+        },
+        {
+          "text": "sustained",
+          "start": 582.26,
+          "end": 582.66
+        },
+        {
+          "text": "petaflop",
+          "start": 582.66,
+          "end": 583.44
+        },
+        {
+          "text": "per",
+          "start": 583.44,
+          "end": 583.66
+        },
+        {
+          "text": "second",
+          "start": 583.66,
+          "end": 584.04
+        },
+        {
+          "text": "on",
+          "start": 584.04,
+          "end": 584.26
+        },
+        {
+          "text": "one",
+          "start": 584.26,
+          "end": 584.54
+        },
+        {
+          "text": "device",
+          "start": 584.54,
+          "end": 584.94
+        },
+        {
+          "text": "is",
+          "start": 584.94,
+          "end": 585.48
+        },
+        {
+          "text": "about",
+          "start": 585.48,
+          "end": 585.74
+        },
+        {
+          "text": "32",
+          "start": 585.74,
+          "end": 586.38
+        },
+        {
+          "text": "years.",
+          "start": 586.38,
+          "end": 586.92
+        },
+        {
+          "text": "No",
+          "start": 587.6,
+          "end": 587.88
+        },
+        {
+          "text": "memory",
+          "start": 587.88,
+          "end": 588.24
+        },
+        {
+          "text": "fix",
+          "start": 588.24,
+          "end": 588.6
+        },
+        {
+          "text": "moves",
+          "start": 588.6,
+          "end": 589.12
+        },
+        {
+          "text": "that",
+          "start": 589.12,
+          "end": 589.44
+        },
+        {
+          "text": "only",
+          "start": 589.44,
+          "end": 590.14
+        },
+        {
+          "text": "more",
+          "start": 590.14,
+          "end": 590.42
+        },
+        {
+          "text": "realized",
+          "start": 590.42,
+          "end": 591.04
+        },
+        {
+          "text": "flop",
+          "start": 591.04,
+          "end": 591.38
+        },
+        {
+          "text": "per",
+          "start": 591.38,
+          "end": 591.64
+        },
+        {
+          "text": "second.",
+          "start": 591.64,
+          "end": 591.98
+        },
+        {
+          "text": "The",
+          "start": 592.68,
+          "end": 592.82
+        },
+        {
+          "text": "1024",
+          "start": 592.82,
+          "end": 593.68
+        },
+        {
+          "text": "GPU",
+          "start": 593.68,
+          "end": 594.28
+        },
+        {
+          "text": "reference",
+          "start": 594.28,
+          "end": 594.96
+        },
+        {
+          "text": "run",
+          "start": 594.96,
+          "end": 595.46
+        },
+        {
+          "text": "compresses",
+          "start": 595.46,
+          "end": 596.28
+        },
+        {
+          "text": "it",
+          "start": 596.28,
+          "end": 596.42
+        },
+        {
+          "text": "to",
+          "start": 596.42,
+          "end": 596.6
+        },
+        {
+          "text": "about",
+          "start": 596.6,
+          "end": 596.9
+        },
+        {
+          "text": "23",
+          "start": 596.9,
+          "end": 597.62
+        },
+        {
+          "text": "hours.",
+          "start": 597.62,
+          "end": 598.16
+        }
+      ],
+      "eq": {
+        "id": "training-time-law",
+        "title": "The training-time law",
+        "latex": "T_{\\mathrm{train}} = \\frac{O}{R_{\\mathrm{peak}} \\times \\eta_{\\mathrm{hw}}}"
+      }
+    },
+    {
+      "speaker": "B",
+      "text": "And seventeen thousand kilowatt-hours - nineteen months of household electricity for a day of compute.",
+      "start": 598.97,
+      "end": 605.8,
+      "words": [
+        {
+          "text": "And",
+          "start": 599.16,
+          "end": 599.4
+        },
+        {
+          "text": "17",
+          "start": 599.4,
+          "end": 599.92
+        },
+        {
+          "text": ",000",
+          "start": 599.92,
+          "end": 600.46
+        },
+        {
+          "text": "kilowatt",
+          "start": 600.46,
+          "end": 600.88
+        },
+        {
+          "text": "hours,",
+          "start": 600.88,
+          "end": 601.2
+        },
+        {
+          "text": "19",
+          "start": 601.68,
+          "end": 602.08
+        },
+        {
+          "text": "months",
+          "start": 602.08,
+          "end": 602.48
+        },
+        {
+          "text": "of",
+          "start": 602.48,
+          "end": 602.7
+        },
+        {
+          "text": "household",
+          "start": 602.7,
+          "end": 603.12
+        },
+        {
+          "text": "electricity",
+          "start": 603.12,
+          "end": 603.72
+        },
+        {
+          "text": "for",
+          "start": 603.72,
+          "end": 604.3
+        },
+        {
+          "text": "a",
+          "start": 604.3,
+          "end": 604.42
+        },
+        {
+          "text": "day",
+          "start": 604.42,
+          "end": 604.58
+        },
+        {
+          "text": "of",
+          "start": 604.58,
+          "end": 604.76
+        },
+        {
+          "text": "compute.",
+          "start": 604.76,
+          "end": 605.1
+        },
+        {
+          "text": "So",
+          "start": 605.1,
+          "end": 606.26
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "So the chapter's discipline, compressed: fit the step into memory first, because infeasible has no profile. Then profile, find the limiting term on the D-A-M axes, fix that one, and re-profile.",
+      "start": 605.8,
+      "end": 620.05,
+      "words": [
+        {
+          "text": "the",
+          "start": 606.26,
+          "end": 606.48
+        },
+        {
+          "text": "chapter's",
+          "start": 606.48,
+          "end": 607.0
+        },
+        {
+          "text": "discipline",
+          "start": 607.0,
+          "end": 607.46
+        },
+        {
+          "text": "compressed.",
+          "start": 607.46,
+          "end": 608.12
+        },
+        {
+          "text": "Fit",
+          "start": 608.6,
+          "end": 608.88
+        },
+        {
+          "text": "the",
+          "start": 608.88,
+          "end": 609.06
+        },
+        {
+          "text": "step",
+          "start": 609.06,
+          "end": 609.32
+        },
+        {
+          "text": "into",
+          "start": 609.32,
+          "end": 609.54
+        },
+        {
+          "text": "memory",
+          "start": 609.54,
+          "end": 609.84
+        },
+        {
+          "text": "first",
+          "start": 609.84,
+          "end": 610.32
+        },
+        {
+          "text": "because",
+          "start": 610.32,
+          "end": 610.78
+        },
+        {
+          "text": "infeasible",
+          "start": 610.78,
+          "end": 611.6
+        },
+        {
+          "text": "has",
+          "start": 611.6,
+          "end": 611.88
+        },
+        {
+          "text": "no",
+          "start": 611.88,
+          "end": 612.1
+        },
+        {
+          "text": "profile.",
+          "start": 612.1,
+          "end": 612.58
+        },
+        {
+          "text": "Then",
+          "start": 613.22,
+          "end": 613.46
+        },
+        {
+          "text": "profile,",
+          "start": 613.46,
+          "end": 613.9
+        },
+        {
+          "text": "find",
+          "start": 614.38,
+          "end": 614.64
+        },
+        {
+          "text": "the",
+          "start": 614.64,
+          "end": 614.82
+        },
+        {
+          "text": "limiting",
+          "start": 614.82,
+          "end": 615.1
+        },
+        {
+          "text": "term",
+          "start": 615.1,
+          "end": 615.58
+        },
+        {
+          "text": "on",
+          "start": 615.58,
+          "end": 615.84
+        },
+        {
+          "text": "the",
+          "start": 615.84,
+          "end": 615.96
+        },
+        {
+          "text": "D",
+          "start": 615.96,
+          "end": 616.2
+        },
+        {
+          "text": ".A",
+          "start": 616.2,
+          "end": 616.38
+        },
+        {
+          "text": ".M.",
+          "start": 616.38,
+          "end": 616.62
+        },
+        {
+          "text": "axes,",
+          "start": 616.68,
+          "end": 617.04
+        },
+        {
+          "text": "fix",
+          "start": 617.6,
+          "end": 617.86
+        },
+        {
+          "text": "that",
+          "start": 617.86,
+          "end": 618.14
+        },
+        {
+          "text": "one",
+          "start": 618.14,
+          "end": 618.42
+        },
+        {
+          "text": "and",
+          "start": 618.42,
+          "end": 618.68
+        },
+        {
+          "text": "reprofile.",
+          "start": 618.68,
+          "end": 619.42
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Scale only when one node is truly exhausted - the least distributed configuration that meets memory, throughput, and schedule.",
+      "start": 620.05,
+      "end": 628.47,
+      "words": [
+        {
+          "text": "Scale",
+          "start": 620.3,
+          "end": 620.58
+        },
+        {
+          "text": "only",
+          "start": 620.58,
+          "end": 621.0
+        },
+        {
+          "text": "when",
+          "start": 621.0,
+          "end": 621.2
+        },
+        {
+          "text": "one",
+          "start": 621.2,
+          "end": 621.46
+        },
+        {
+          "text": "node",
+          "start": 621.46,
+          "end": 621.74
+        },
+        {
+          "text": "is",
+          "start": 621.74,
+          "end": 621.98
+        },
+        {
+          "text": "truly",
+          "start": 621.98,
+          "end": 622.32
+        },
+        {
+          "text": "exhausted.",
+          "start": 622.32,
+          "end": 622.9
+        },
+        {
+          "text": "The",
+          "start": 623.56,
+          "end": 623.68
+        },
+        {
+          "text": "least",
+          "start": 623.68,
+          "end": 623.92
+        },
+        {
+          "text": "distributed",
+          "start": 623.92,
+          "end": 624.5
+        },
+        {
+          "text": "configuration",
+          "start": 624.5,
+          "end": 625.16
+        },
+        {
+          "text": "that",
+          "start": 625.16,
+          "end": 625.54
+        },
+        {
+          "text": "meets",
+          "start": 625.54,
+          "end": 625.74
+        },
+        {
+          "text": "memory,",
+          "start": 625.74,
+          "end": 626.1
+        },
+        {
+          "text": "throughput",
+          "start": 626.6,
+          "end": 626.96
+        },
+        {
+          "text": "and",
+          "start": 626.96,
+          "end": 627.48
+        },
+        {
+          "text": "schedule.",
+          "start": 627.48,
+          "end": 627.82
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Training is the iron law run backwards. The workload fixed the work; everything else is buying back eta.",
+      "start": 628.47,
+      "end": 636.2,
+      "words": [
+        {
+          "text": "Training",
+          "start": 628.48,
+          "end": 629.12
+        },
+        {
+          "text": "is",
+          "start": 629.12,
+          "end": 629.5
+        },
+        {
+          "text": "the",
+          "start": 629.5,
+          "end": 629.66
+        },
+        {
+          "text": "iron",
+          "start": 629.66,
+          "end": 630.04
+        },
+        {
+          "text": "law",
+          "start": 630.04,
+          "end": 630.32
+        },
+        {
+          "text": "run",
+          "start": 630.32,
+          "end": 630.64
+        },
+        {
+          "text": "backwards.",
+          "start": 630.64,
+          "end": 631.06
+        },
+        {
+          "text": "The",
+          "start": 631.82,
+          "end": 631.88
+        },
+        {
+          "text": "workload",
+          "start": 631.88,
+          "end": 632.26
+        },
+        {
+          "text": "fix",
+          "start": 632.26,
+          "end": 632.64
+        },
+        {
+          "text": "the",
+          "start": 632.64,
+          "end": 632.86
+        },
+        {
+          "text": "work.",
+          "start": 632.86,
+          "end": 633.12
+        },
+        {
+          "text": "Everything",
+          "start": 633.52,
+          "end": 633.84
+        },
+        {
+          "text": "else",
+          "start": 633.84,
+          "end": 634.28
+        },
+        {
+          "text": "is",
+          "start": 634.28,
+          "end": 634.48
+        },
+        {
+          "text": "buying",
+          "start": 634.48,
+          "end": 634.82
+        },
+        {
+          "text": "back",
+          "start": 634.82,
+          "end": 635.14
+        },
+        {
+          "text": "ADA.",
+          "start": 635.14,
+          "end": 635.46
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "See you for chapter nine - data selection, where O itself starts shrinking.",
+      "start": 636.2,
+      "end": 640.8,
+      "words": [
+        {
+          "text": "See",
+          "start": 636.38,
+          "end": 636.7
+        },
+        {
+          "text": "you",
+          "start": 636.7,
+          "end": 636.82
+        },
+        {
+          "text": "for",
+          "start": 636.82,
+          "end": 636.98
+        },
+        {
+          "text": "chapter",
+          "start": 636.98,
+          "end": 637.16
+        },
+        {
+          "text": "nine",
+          "start": 637.16,
+          "end": 637.54
+        },
+        {
+          "text": "data",
+          "start": 637.54,
+          "end": 637.84
+        },
+        {
+          "text": "selection",
+          "start": 637.84,
+          "end": 638.28
+        },
+        {
+          "text": "where",
+          "start": 638.28,
+          "end": 638.96
+        },
+        {
+          "text": "O",
+          "start": 638.96,
+          "end": 639.16
+        },
+        {
+          "text": "itself",
+          "start": 639.16,
+          "end": 639.52
+        },
+        {
+          "text": "starts",
+          "start": 639.52,
+          "end": 639.84
+        },
+        {
+          "text": "shrinking.",
+          "start": 639.84,
+          "end": 640.16
+        }
+      ]
+    }
+  ]
+}

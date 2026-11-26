@@ -1,0 +1,89 @@
+[
+  {
+    "id": "glue-share",
+    "kind": "BAR_STACKED",
+    "title": "The maintenance surface is not the model",
+    "caption": "Sculley et al.'s audit of production ML systems: a mature system ends up at most ~5% machine-learning code and ~95% glue — integration wrappers, configuration, collection and serving plumbing. Debt accumulates in the 95%.",
+    "xLabel": "Code share",
+    "yLabel": "Percent of codebase",
+    "xPoints": [
+      "Production code"
+    ],
+    "series": [
+      {
+        "key": "ml",
+        "label": "ML code",
+        "color": "var(--chart-2)",
+        "values": [
+          5
+        ]
+      },
+      {
+        "key": "glue",
+        "label": "Glue + plumbing",
+        "color": "var(--chart-4)",
+        "values": [
+          95
+        ]
+      }
+    ]
+  },
+  {
+    "id": "retrain-cost",
+    "kind": "BAR_STACKED",
+    "title": "Daily cost vs retraining interval",
+    "caption": "Amortized run cost + accrued staleness per day for the ranking service (C_r = \\$5,000, Q = 1M/day, v = \\$0.50, A₀ = 0.94, δ = 0.24%/day). The sum bottoms out near T* ≈ 3 days; shorter intervals overspend on runs, longer ones bleed staleness.",
+    "xLabel": "Interval T (days)",
+    "yLabel": "Total daily cost ($)",
+    "xPoints": [
+      "1",
+      "3",
+      "7",
+      "14",
+      "30"
+    ],
+    "series": [
+      {
+        "key": "cost",
+        "label": "C_r/T + staleness",
+        "color": "var(--chart-3)",
+        "values": [
+          5564,
+          3359,
+          4662,
+          8253,
+          17087
+        ]
+      }
+    ]
+  },
+  {
+    "id": "silent-slide",
+    "kind": "BAR_STACKED",
+    "title": "Four weeks of silent accuracy decay",
+    "caption": "The ranking service's click accuracy, modeled at 0.24%/day decay: 94% → ~88% over four weeks while uptime, latency and error rate stay green. The signature is gradual — visible to a trend monitor, invisible to every health check.",
+    "xLabel": "Week",
+    "yLabel": "Click accuracy (%)",
+    "xPoints": [
+      "Week 0",
+      "Week 1",
+      "Week 2",
+      "Week 3",
+      "Week 4"
+    ],
+    "series": [
+      {
+        "key": "acc",
+        "label": "Accuracy",
+        "color": "var(--chart-4)",
+        "values": [
+          94,
+          92.4,
+          90.9,
+          89.4,
+          88
+        ]
+      }
+    ]
+  }
+]

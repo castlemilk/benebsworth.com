@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import { forceSpill, openRunLog, runLogFileName, setRunLogDir } from './runlog'
+import { forceSpill, openRunLog, setRunLogDir } from './runlog'
 import {
   MAX_RESUME_ATTEMPTS,
   RecoveryLockError,

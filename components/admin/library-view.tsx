@@ -72,7 +72,7 @@ export function LibraryView({
           const uses = usage[a.id] ?? []
           return (
             <div key={a.id} className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-surface">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              { }
               <img src={thumbOf(a)} alt={a.alt || ''} loading="lazy" className="aspect-[4/3] w-full object-cover" />
               <div className="p-2">
                 {hasGeo(a) && (

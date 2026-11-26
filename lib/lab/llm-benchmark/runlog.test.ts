@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
+import type * as fsPromises from 'node:fs/promises'
 import { mkdtempSync, readFileSync, writeFileSync, appendFileSync, existsSync, rmSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -8,7 +9,7 @@ import { join } from 'node:path'
 // forcing a genuine write failure portably (disk full, revoked fd) is not
 // otherwise reproducible on a developer machine.
 vi.mock('node:fs/promises', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('node:fs/promises')>()
+  const actual = await importOriginal<typeof fsPromises>()
   return { ...actual, default: actual, open: vi.fn(actual.open) }
 })
 import { open } from 'node:fs/promises'
@@ -413,7 +414,7 @@ describe('write-failure rollback', () => {
     setRunLogDir(dir)
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    const actualOpen = (await vi.importActual<typeof import('node:fs/promises')>('node:fs/promises')).open
+    const actualOpen = (await vi.importActual<typeof fsPromises>('node:fs/promises')).open
     let failNext = false
     vi.mocked(open).mockImplementationOnce(async (...args: Parameters<typeof actualOpen>) => {
       const handle = await actualOpen(...args)

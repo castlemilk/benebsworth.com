@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ha-compile-path" class="study-fig-fit" viewBox="0 0 420 322" role="img" aria-labelledby="ha-compile-path-title ha-compile-path-desc">
+<title id="ha-compile-path-title">From graph to measured execution</title>
+<desc id="ha-compile-path-desc">A model graph is optimized, lowered to target kernels and tiles, and dispatched by a runtime. Inspect the execution trace for selected device kernels and any unsupported operation that runs on the host.</desc>
+<style>
+  #ha-compile-path { font-family: system-ui, sans-serif; }
+  .dark #ha-compile-path [fill="#fbf7f0"] { fill: #201a17; }
+  .dark #ha-compile-path [fill="#eee5da"] { fill: #332b26; }
+  .dark #ha-compile-path [fill="#29231e"] { fill: #f7eee3; }
+  .dark #ha-compile-path [fill="#6f6055"] { fill: #c8b8aa; }
+  .dark #ha-compile-path [fill="#9a3d1d"] { fill: #f2a276; }
+  .dark #ha-compile-path [stroke="#b8a89c"] { stroke: #72665c; }
+  .dark #ha-compile-path [stroke="#6f6055"] { stroke: #ad9d8f; }
+  .dark #ha-compile-path [stroke="#9a3d1d"] { stroke: #f2a276; }
+</style>
+<rect width="420" height="322" rx="12" fill="#fbf7f0"/>
+<text x="22" y="36" fill="#29231e" font-size="21" font-weight="650">How the graph reaches silicon</text>
+<rect x="22" y="53" width="376" height="48" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="35" y="73" fill="#29231e" font-size="18" font-weight="650">Graph rewrites</text>
+<text x="35" y="92" fill="#6f6055" font-size="15">fold constants, fuse compatible ops</text>
+<path d="M210 101L210 113" fill="none" stroke="#6f6055" stroke-width="2"/>
+<rect x="22" y="113" width="376" height="48" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="35" y="133" fill="#29231e" font-size="18" font-weight="650">Lower + choose</text>
+<text x="35" y="152" fill="#6f6055" font-size="15">select kernels, layouts and tiles</text>
+<path d="M210 161L210 173" fill="none" stroke="#6f6055" stroke-width="2"/>
+<rect x="22" y="173" width="376" height="48" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="35" y="193" fill="#29231e" font-size="18" font-weight="650">Runtime dispatch</text>
+<text x="35" y="212" fill="#6f6055" font-size="15">match actual shapes and dependencies</text>
+<path d="M210 221L210 233" fill="none" stroke="#6f6055" stroke-width="2"/>
+<rect x="22" y="233" width="376" height="48" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="35" y="253" fill="#29231e" font-size="18" font-weight="650">Measure the trace</text>
+<text x="35" y="272" fill="#6f6055" font-size="15">device kernels, copies, CPU fallbacks</text>
+</svg>

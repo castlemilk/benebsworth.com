@@ -6,6 +6,7 @@ description: >-
   Exploring Kapitan as a generic configuration management tool: its
   reclass-style inventory, multiple input types, and the single-source-of-truth
   model that compiles one set of parameters into many outputs
+heroImage: /blog/using-kapitan/hero.webp
 labels: 'technology,kubernetes,developer experience'
 keywords: >-
   kapitan,reclass,inventory,jinja2,kadet,jsonnet,helm,kubernetes,configuration

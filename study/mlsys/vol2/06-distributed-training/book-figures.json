@@ -1,0 +1,32 @@
+[
+ {
+  "file": "images/svg/3d-parallelism-cube.svg",
+  "title": "The 3D Parallelism Cube",
+  "note": "The configuration space as a DP x PP x TP device grid: each cell one accelerator's coordinate, each axis a different traffic pattern for a different fabric tier."
+ },
+ {
+  "file": "images/svg/data-parallel-flow.svg",
+  "title": "Data Parallelism Implementation Pipeline",
+  "note": "The five-stage DP workflow across four GPU lanes: partition, assign, local forward/backward, AllReduce, identical update."
+ },
+ {
+  "file": "images/svg/fsdp-parameter-lifetime.svg",
+  "title": "FSDP Parameter Lifetime",
+  "note": "The fully sharded schedule: parameters materialize per layer just in time for compute, then release."
+ },
+ {
+  "file": "images/svg/pipeline-1f1b-schedule.svg",
+  "title": "Pipeline 1F1B Schedule",
+  "note": "The one-forward-one-backward steady state that bounds warmup: the source of the (p-1)/(m+p-1) bubble."
+ },
+ {
+  "file": "images/svg/moe-all-to-all-routing.svg",
+  "title": "MoE AllToAll Routing",
+  "note": "Dispatch and return: each rank's gate routes tokens to the rank hosting its expert, stressing bisection bandwidth."
+ },
+ {
+  "file": "images/svg/rlhf-ppo-coordination.svg",
+  "title": "RLHF PPO Coordination",
+  "note": "Four models in one training step: policy generates, reward scores, reference constrains, value estimates."
+ }
+]

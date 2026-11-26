@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 380" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#bfdbfe"]{fill:#1e3a5f}
+    .dark [fill="#dbeafe"]{fill:#1e3a5f}
+    .dark [fill="#d1fae5"]{fill:#123a2b}
+    .dark [fill="#fef3c7"]{fill:#453007}
+    .dark [fill="#fee2e2"]{fill:#451a1a}
+    .dark [fill="#f3f4f6"]{fill:#1f2937}
+    .dark [fill="#ffffff"]{fill:#161a22}
+    .dark rect.bg{fill:#0f1115}
+    .dark [fill="none"]{fill:none}
+  </style>
+  <rect class="bg" x="0" y="0" width="700" height="380" fill="#ffffff"/>
+
+  <text x="28" y="38" font-size="16" fill="#374151" font-weight="600">the random-access penalty: scattered 4 KB reads</text>
+  <text x="28" y="60" font-size="11" fill="#6b7280">realized-bandwidth loss vs sequential, by tier (book's table)</text>
+
+  <!-- tier bars: log-ish scale, proportional widths for legibility -->
+  <g font-size="11">
+    <text x="60" y="104" fill="#374151" font-weight="600">HDD</text>
+    <rect x="120" y="88" width="500" height="26" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.5"/>
+    <text x="612" y="106" font-size="11" fill="#b91c1c" text-anchor="end" font-weight="600">~375&#215; lost</text>
+
+    <text x="60" y="164" fill="#374151" font-weight="600">SATA SSD</text>
+    <rect x="120" y="148" width="200" height="26" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+    <text x="332" y="166" font-size="11" fill="#92400e" font-weight="600">~14&#215; lost</text>
+
+    <text x="60" y="224" fill="#374151" font-weight="600">NVMe</text>
+    <rect x="120" y="208" width="56" height="26" fill="#d1fae5" stroke="#047857" stroke-width="1.5"/>
+    <text x="188" y="226" font-size="11" fill="#047857" font-weight="600">&lt;2&#215; lost</text>
+  </g>
+
+  <!-- two ways to use the same subset -->
+  <text x="28" y="274" font-size="12" fill="#374151" font-weight="600">the same 10% subset, two read plans</text>
+
+  <rect x="40" y="290" width="300" height="62" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="56" y="312" font-size="10" fill="#1d4ed8" font-weight="600">materialize subset shards</text>
+  <text x="56" y="328" font-size="9" fill="#1d4ed8">write once, read sequentially</text>
+  <text x="56" y="342" font-size="9" fill="#1d4ed8">bytes read &#8776; 10% of corpus</text>
+
+  <rect x="360" y="290" width="300" height="62" fill="#f3f4f6" stroke="#4b5563"/>
+  <text x="376" y="312" font-size="10" fill="#374151" font-weight="600">stream-and-discard filter</text>
+  <text x="376" y="328" font-size="9" fill="#4b5563">sequential, but reads everything</text>
+  <text x="376" y="342" font-size="9" fill="#4b5563">bytes read = 100% of corpus</text>
+</svg>

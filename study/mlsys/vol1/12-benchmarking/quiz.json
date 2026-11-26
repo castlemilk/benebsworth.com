@@ -1,0 +1,123 @@
+{
+  "questions": [
+    {
+      "id": "granularity-certifies",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A team reports three results for one optimization: a kernel microbenchmark, a whole-model latency figure, and an end-to-end request-path p99. Which result can certify that users see the improvement?",
+      "options": [
+        { "id": "a", "label": "The kernel microbenchmark, because isolating the optimized stage removes confounding pipeline effects." },
+        { "id": "b", "label": "The request-path p99, because it covers the stages and conditions the user's requests actually travel." },
+        { "id": "c", "label": "The whole-model latency, because model time is always the largest term in request latency." },
+        { "id": "d", "label": "All three certify the same claim at different levels of detail." }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Granularity must match the engineering question. A component speedup is diluted by every stage it does not touch; only an end-to-end measurement at the relevant percentile describes what users receive."
+    },
+    {
+      "id": "time-to-accuracy",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Why does MLPerf Training rank submissions on time-to-accuracy rather than raw throughput in samples per second?",
+      "options": [
+        { "id": "a", "label": "Throughput depends on batch size, which submissions are not allowed to change." },
+        { "id": "b", "label": "Time-to-accuracy is simpler to instrument than counting processed samples." },
+        { "id": "c", "label": "A faster sample rate achieved by hurting convergence (larger minibatch, dropped precision, fewer epochs to target) is not faster training — the fixed quality target makes the metric honest." },
+        { "id": "d", "label": "Sample throughput cannot be measured reproducibly across different accelerators." }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Throughput that never reaches the quality target is waste however fast. Fixing the target makes submissions compete on the machine, not on convergence tricks or precision games."
+    },
+    {
+      "id": "peak-vs-sustained",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "What is the primary fallacy in sizing an inference deployment from an accelerator's advertised peak TOPS?",
+      "options": [
+        { "id": "a", "label": "Peak is measured at maximum batch, cool silicon and ideal operands; sustained deployments hold a thermal state and input mix that can deliver a fraction of it." },
+        { "id": "b", "label": "TOPS counts marketing operations that are physically impossible on any hardware." },
+        { "id": "c", "label": "Peak applies to training and inference workloads are always memory-bound." },
+        { "id": "d", "label": "Vendors quote peak in decimal units and deployments use binary units." }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Peak is a ceiling under favorable state, not a deployment. DVFS, thermal throttling, real batch shapes and contending traffic set the sustained rate — ResNet-50 training sustains about 12.4% of an H100's dense FP16 peak."
+    },
+    {
+      "id": "component-vs-e2e",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "An attached accelerator runs INT8 inference 7.5× faster than the board's host CPU, yet end-to-end latency improves only about 3×. What most directly explains the narrowing?",
+      "options": [
+        { "id": "a", "label": "The accelerator's efficiency claim was measured incorrectly." },
+        { "id": "b", "label": "The model's accuracy fell at INT8, adding retries." },
+        { "id": "c", "label": "Preprocessing and other host work stay on the request path; by Amdahl's law the untouched stages cap the total gain." },
+        { "id": "d", "label": "PCIe transfer of weights dominates every inference." }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The isolated speedup applies to a fraction of the request. Even an infinitely fast model stage leaves the host-side pipeline untouched — the chapter's 5×→1.8× pipeline makes the same arithmetic explicit."
+    },
+    {
+      "id": "energy-boundary",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A vendor reports '0.10 Wh per prompt' measured at the accelerators; a customer measures 0.24 Wh across the serving stack for the same prompt. Both are correct. What reconciles them?",
+      "options": [
+        { "id": "a", "label": "One instrument is miscalibrated; energy numbers for the same prompt cannot legitimately differ." },
+        { "id": "b", "label": "The measurement boundaries differ — accelerators alone versus accelerators plus host CPUs, DRAM, idle reserve and overhead." },
+        { "id": "c", "label": "The 0.24 Wh figure includes the training energy amortized over requests." },
+        { "id": "d", "label": "Wh and Wh differ by a unit prefix." }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The boundary alone moved the reported energy 2.4× (58/25/17 shares of the full-stack draw). Energy claims are unrepeatable without the stated boundary and window."
+    },
+    {
+      "id": "goodhart-target",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A translation team raises beam size from 1 to 10, gaining 0.5 BLEU points while latency grows from 50 ms to 200 ms and breaks the serving SLO. Which benchmarking failure is this?",
+      "options": [
+        { "id": "a", "label": "Benchmark overfitting to a fixed test set." },
+        { "id": "b", "label": "Goodhart's law — optimizing the offline metric without the system's constraints makes the metric stop tracking the real objective." },
+        { "id": "c", "label": "A statistical-significance error: 0.5 BLEU is within noise." },
+        { "id": "d", "label": "The hardware lottery: beam search suits a different accelerator." }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The metric was the target, so optimizing it traded away the deployment property (latency) it was supposed to stand for. Production benchmarks must carry the SLOs the metric abstracts away."
+    },
+    {
+      "id": "rank-vendor-cards",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "Explain to a teammate why the camera-trap vendor cards (8 TOPS INT8, 15 TOPS INT4, proprietary-model latency, a two-generation-old MLPerf score, peak at max batch) cannot be ranked as quoted, and describe the first test you would run.",
+      "modelAnswer": "Each card names a different measurement: different precision paths (INT8 vs INT4 arithmetic are different peaks), different models, different suite generations and different machine states. None is wrong, but none is comparable — TOPS is a rate, latency is a time, and a stale score describes old silicon and rules. A fair test fixes one task (the trap's own frames), one model (the deployed artifact), one machine state (sustained, at the deployment duty cycle) and one boundary, then measures p99 frame time, energy per frame and slice recall against the gates. Run that on the shortlist; the spec cards only decide which boards are worth testing."
+    },
+    {
+      "id": "gap-not-settled",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "A compressed model scores 94% where the baseline scores 95% on the same 1,000-image test set. Explain why the two scores alone cannot settle whether the drop is real, and what evidence could.",
+      "modelAnswer": "The marginal scores are 50 versus 60 errors, and a binomial error count on 1,000 images carries a standard deviation of roughly 7 — the gap overlaps sampling noise, so an unpaired comparison cannot resolve it. The informative evidence is paired: on the same images, count the disagreements. Images both models get right or wrong carry no information; McNemar's test uses only the two discordant cells, and at most 26 disagreements still flag the 10-error gap as significant at 95%. The disagreement pattern, not the test-set size, decides."
+    },
+    {
+      "id": "pipeline-amdahl",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "A service request spends 14 ms in preprocessing and 21 ms in the model. The model is made 4× faster. Compute the new end-to-end time and speedup, and the ceiling if the model became instant.",
+      "modelAnswer": "Baseline is 14 + 21 = 35 ms. The model at 4× takes 21/4 = 5.25 ms, so the request takes 14 + 5.25 = 19.25 ms — an end-to-end speedup of 35/19.25 ≈ 1.82×, not 4×. With the model instant, the request floor is 14 ms: ceiling 35/14 = 2.5×. The model owned f = 21/35 = 0.6 of the path, bounding the maximum win at 1/(1−0.6) = 2.5×."
+    },
+    {
+      "id": "duty-cycle-drain",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "A board draws 60 mW idle and 450 mW active. It runs one 12 ms inference inside each 2 s window. Compute the duty cycle, the average power, and which state dominates the drain.",
+      "modelAnswer": "Duty cycle d = 12/2000 = 0.006 (0.6%). Average power = d·450 + (1−d)·60 = 2.7 + 59.64 ≈ 62.3 mW. The idle state contributes ~96% of the drain (59.64 of 62.3 mW), so standby leakage — not the active inference efficiency — sets battery life."
+    },
+    {
+      "id": "mfu-cluster",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "A cluster peaks at 700 TFLOP/s on the matching numerical path and a training run sustains 210 TFLOP/s of model arithmetic. Compute the MFU and name two places the missing arithmetic can be going.",
+      "modelAnswer": "MFU = 210/700 = 0.30 (30%). The missing 70% goes to memory-bound layers that cannot feed the compute units (below the ridge), the input pipeline (decode, augmentation, storage), launch and synchronization overhead, and collective communication for parallelism — any stage that occupies time without doing model FLOPs."
+    }
+  ]
+}

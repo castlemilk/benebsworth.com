@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ha-primitive-routing" class="study-fig-fit" viewBox="0 0 420 278" role="img" aria-labelledby="ha-primitive-routing-title ha-primitive-routing-desc">
+<title id="ha-primitive-routing-title">Different primitives, different units</title>
+<desc id="ha-primitive-routing-desc">A projection can map to a matrix unit, normalization to vector and reduction hardware, and exponential calculations to special-function or vector paths. Actual placement depends on the device and compiler.</desc>
+<style>
+  #ha-primitive-routing { font-family: system-ui, sans-serif; }
+  .dark #ha-primitive-routing [fill="#fbf7f0"] { fill: #201a17; }
+  .dark #ha-primitive-routing [fill="#eee5da"] { fill: #332b26; }
+  .dark #ha-primitive-routing [fill="#29231e"] { fill: #f7eee3; }
+  .dark #ha-primitive-routing [fill="#6f6055"] { fill: #c8b8aa; }
+  .dark #ha-primitive-routing [fill="#9a3d1d"] { fill: #f2a276; }
+  .dark #ha-primitive-routing [stroke="#b8a89c"] { stroke: #72665c; }
+  .dark #ha-primitive-routing [stroke="#6f6055"] { stroke: #ad9d8f; }
+  .dark #ha-primitive-routing [stroke="#9a3d1d"] { stroke: #f2a276; }
+</style>
+<rect width="420" height="278" rx="12" fill="#fbf7f0"/>
+<text x="22" y="36" fill="#29231e" font-size="22" font-weight="650">One model, several paths</text>
+<rect x="22" y="58" width="376" height="56" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="34" y="81" fill="#29231e" font-size="18" font-weight="650">Projection</text>
+<text x="386" y="81" fill="#9a3d1d" font-size="16" font-weight="650" text-anchor="end">MATRIX</text>
+<text x="34" y="103" fill="#6f6055" font-size="16">multiply + accumulate</text>
+<rect x="22" y="127" width="376" height="56" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="34" y="150" fill="#29231e" font-size="18" font-weight="650">Normalization</text>
+<text x="386" y="150" fill="#9a3d1d" font-size="16" font-weight="650" text-anchor="end">VECTOR</text>
+<text x="34" y="172" fill="#6f6055" font-size="16">reduce + scale</text>
+<rect x="22" y="196" width="376" height="56" rx="8" fill="#eee5da" stroke="#b8a89c"/>
+<text x="34" y="219" fill="#29231e" font-size="18" font-weight="650">Exponential</text>
+<text x="386" y="219" fill="#9a3d1d" font-size="16" font-weight="650" text-anchor="end">SPECIAL / VECTOR</text>
+<text x="34" y="241" fill="#6f6055" font-size="16">evaluate + combine</text>
+</svg>

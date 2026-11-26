@@ -1,0 +1,82 @@
+[
+  {
+    "id": "mfu",
+    "title": "Model FLOPs utilization",
+    "latex": "\\mathrm{MFU}=\\frac{\\text{useful model FLOP/s}}{\\text{peak FLOP/s}}",
+    "symbols": [
+      { "symbol": "\\mathrm{MFU}", "name": "Model FLOPs utilization", "meaning": "Share of the numerical-path peak that the run spends on model arithmetic." },
+      { "symbol": "\\text{useful model FLOP/s}", "name": "Achieved model rate", "meaning": "About 123 TFLOP/s for ResNet-50 at 5,000 images/s per accelerator." },
+      { "symbol": "\\text{peak FLOP/s}", "name": "Hardware peak", "meaning": "989 TFLOP/s dense FP16 on the H100 in this example." }
+    ]
+  },
+  {
+    "id": "time-to-accuracy",
+    "title": "Time to accuracy",
+    "latex": "T_{\\mathrm{train}}=\\inf\\{t\\ge 0:\\mathrm{Acc}_{\\mathrm{val}}(t)\\ge \\mathrm{target}\\}",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{train}}", "name": "Training time", "meaning": "Elapsed time until the run first meets the quality target." },
+      { "symbol": "\\mathrm{Acc}_{\\mathrm{val}}(t)", "name": "Validation accuracy", "meaning": "Measured quality at time t; the target is fixed by the benchmark (75.9% top-1 for ResNet-50)." },
+      { "symbol": "\\inf", "name": "Earliest meeting time", "meaning": "The first instant the target is reached — later gains do not count." }
+    ]
+  },
+  {
+    "id": "amdahl-pipeline",
+    "title": "End-to-end dilution",
+    "latex": "S_{\\mathrm{e2e}}\\le\\frac{1}{1-f}\\quad\\text{as }S_{\\mathrm{part}}\\to\\infty",
+    "symbols": [
+      { "symbol": "S_{\\mathrm{e2e}}", "name": "End-to-end speedup", "meaning": "The improvement a request actually sees." },
+      { "symbol": "f", "name": "Accelerated fraction", "meaning": "Share of the serial time the optimized stage owns (10 of 18 ms → 0.56)." },
+      { "symbol": "S_{\\mathrm{part}}", "name": "Component speedup", "meaning": "How much faster the touched stage runs — even infinite speed leaves the other stages." }
+    ]
+  },
+  {
+    "id": "inference-energy",
+    "title": "Energy per inference",
+    "latex": "E_{\\mathrm{inf}}=P_{\\mathrm{active}}\\times t_{\\mathrm{inf}}",
+    "symbols": [
+      { "symbol": "E_{\\mathrm{inf}}", "name": "Energy per inference", "meaning": "Joules for one completed request inside the measured window." },
+      { "symbol": "P_{\\mathrm{active}}", "name": "Active power", "meaning": "Draw during the inference interval only — e.g. 300 W." },
+      { "symbol": "t_{\\mathrm{inf}}", "name": "Inference time", "meaning": "Length of the measured window — e.g. 10 ms gives 3 J." }
+    ]
+  },
+  {
+    "id": "duty-power",
+    "title": "Duty-cycle average power",
+    "latex": "P_{\\mathrm{avg}}=d\\,P_{\\mathrm{active}}+(1-d)\\,P_{\\mathrm{standby}}",
+    "symbols": [
+      { "symbol": "d", "name": "Duty cycle", "meaning": "Fraction of time the accelerator runs inference — 0.8% for keyword spotting." },
+      { "symbol": "P_{\\mathrm{active}}", "name": "Active power", "meaning": "Draw during inference bursts." },
+      { "symbol": "P_{\\mathrm{standby}}", "name": "Standby power", "meaning": "The idle floor; dominates at low duty." }
+    ]
+  },
+  {
+    "id": "cold-start",
+    "title": "Cold-start transfer bound",
+    "latex": "t_{\\mathrm{load}}\\ge\\frac{M_{\\mathrm{model}}}{B_{\\mathrm{link}}}",
+    "symbols": [
+      { "symbol": "t_{\\mathrm{load}}", "name": "Load time", "meaning": "Physical lower bound before any runtime work." },
+      { "symbol": "M_{\\mathrm{model}}", "name": "Model bytes", "meaning": "~14 GB for a 7B-parameter FP16 model." },
+      { "symbol": "B_{\\mathrm{link}}", "name": "Effective bandwidth", "meaning": "25 GB/s on PCIe 4.0 here → ~560 ms." }
+    ]
+  },
+  {
+    "id": "binomial-se",
+    "title": "Standard error of an accuracy difference",
+    "latex": "\\mathrm{SE}=\\sqrt{\\frac{\\hat a_1(1-\\hat a_1)}{N}+\\frac{\\hat a_2(1-\\hat a_2)}{N}}",
+    "symbols": [
+      { "symbol": "\\hat a_1,\\hat a_2", "name": "Measured accuracies", "meaning": "95% and 94% on the same evaluation." },
+      { "symbol": "N", "name": "Evaluation count", "meaning": "1,000 images; the interval narrows only as N grows." },
+      { "symbol": "\\mathrm{SE}", "name": "Standard error", "meaning": "The unpaired noise floor — assumes independent samples, which the same-test-set comparison violates." }
+    ]
+  },
+  {
+    "id": "mcnemar",
+    "title": "McNemar's paired statistic",
+    "latex": "\\chi^2=\\frac{(b-c)^2}{b+c}",
+    "symbols": [
+      { "symbol": "b", "name": "Baseline-only correct", "meaning": "Images the baseline gets right and the compressed model misses." },
+      { "symbol": "c", "name": "Compressed-only correct", "meaning": "Images the compressed model gets right and the baseline misses." },
+      { "symbol": "\\chi^2", "name": "Test statistic", "meaning": "Exceeds 3.84 for significance at 95%; at most 26 disagreements still flag the 10-error gap." }
+    ]
+  }
+]

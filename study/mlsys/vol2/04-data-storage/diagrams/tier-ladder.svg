@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="tier-ladder" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="tl-title tl-desc">
+  <title id="tl-title">Six tiers, one gap to hide</title>
+  <desc id="tl-desc">A ladder of six storage tiers from GPU HBM at the top (3.35 terabytes per second, per accelerator) down through host DRAM, local NVMe, parallel file system, object storage, and archive. A bracket marks the 479-fold gap between HBM and a single NVMe drive.</desc>
+  <style>
+    .dark #tier-ladder { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#tier-ladder { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">Six tiers, one gap to hide</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">bandwidth for capacity · scope widens downward</text>
+
+    <!-- gap bracket -->
+    <path d="M330 62 v92" stroke="var(--fig-mark, #b4571f)" stroke-width="1.4" fill="none"/>
+    <path d="M326 62 h8 M326 154 h8" stroke="var(--fig-mark, #b4571f)" stroke-width="1.4" fill="none"/>
+    <text x="340" y="104" font-size="10" font-weight="650" fill="var(--fig-mark, #b4571f)">≈479×</text>
+    <text x="340" y="117" font-size="7" fill="var(--fig-rule, #6e6a5b)">HBM↔NVMe</text>
+
+    <!-- tier rows: box + name + bw + scope -->
+    <g font-size="11">
+      <rect x="20" y="60" width="200" height="30" rx="4" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.3"/>
+      <text x="30" y="72" font-size="10" font-weight="650">T0 · GPU HBM</text>
+      <text x="30" y="84" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">3.35 TB/s · resident state</text>
+      <text x="230" y="80" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">per accelerator</text>
+
+      <rect x="20" y="98" width="200" height="30" rx="4" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.3"/>
+      <text x="30" y="110" font-size="10" font-weight="650">T1 · host DRAM</text>
+      <text x="30" y="122" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">prefetch + loader · first byte sooner</text>
+      <text x="230" y="118" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">per node</text>
+
+      <rect x="20" y="136" width="200" height="30" rx="4" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.3"/>
+      <text x="30" y="148" font-size="10" font-weight="650">T2 · local NVMe</text>
+      <text x="30" y="160" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">~7 GB/s/drive · RAID-0 ×4 ≈ 7× PFS share</text>
+      <text x="230" y="156" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">per node</text>
+
+      <rect x="20" y="174" width="200" height="30" rx="4" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.3"/>
+      <text x="30" y="186" font-size="10" font-weight="650">T3 · parallel FS</text>
+      <text x="30" y="198" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">striped durable checkpoint</text>
+      <text x="230" y="194" font-size="8.5" fill="var(--fig-mark, #b4571f)">shared service</text>
+
+      <rect x="20" y="212" width="200" height="30" rx="4" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="1.3"/>
+      <text x="30" y="224" font-size="10" font-weight="650">T4 · object store</text>
+      <text x="30" y="236" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">corpus of record · egress-taxed</text>
+      <text x="230" y="232" font-size="8.5" fill="var(--fig-mark, #b4571f)">shared service</text>
+
+      <rect x="20" y="250" width="200" height="30" rx="4" fill="none" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1.1" stroke-dasharray="4 3"/>
+      <text x="30" y="262" font-size="10" font-weight="650" fill="var(--fig-rule, #6e6a5b)">T5 · archive</text>
+      <text x="30" y="274" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">offline media</text>
+      <text x="230" y="270" font-size="8.5" fill="var(--fig-mark, #b4571f)">shared service</text>
+    </g>
+
+    <text x="20" y="296" font-size="9" fill="var(--fig-rule, #6e6a5b)">no tier is fast, capacious and cheap at once · every rung exists to hide the gap</text>
+  </g>
+</svg>

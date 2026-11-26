@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ridge-map" class="study-fig-fit" viewBox="0 0 380 292" role="img" aria-labelledby="rm-title rm-desc">
+  <title id="rm-title">Below the ridge the nameplate is fiction</title>
+  <desc id="rm-desc">Roofline sketch: a rising bandwidth slope meets a flat compute ceiling at the ridge intensity of about 295 FLOP per byte. Five workload dots are placed: batch-1 decode far below at 1 FLOP per byte using 0.34 percent of peak, batch-32 decode and a CNN below the ridge, 512-token prefill and a training step above it.</desc>
+  <style>
+    .dark #ridge-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#ridge-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="292" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">The ridge decides who can use the peak</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">Roofline sketch · log scale both axes · H100 FP16</text>
+
+    <line x1="46" y1="232" x2="204" y2="104" stroke="var(--fig-outline, #364c50)" stroke-width="2"/>
+    <line x1="204" y1="104" x2="356" y2="104" stroke="var(--fig-outline, #364c50)" stroke-width="2"/>
+    <line x1="204" y1="104" x2="204" y2="232" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8" stroke-dasharray="3 4"/>
+    <text x="204" y="246" font-size="10" text-anchor="middle">ridge ≈ 295 FLOP/B</text>
+    <text x="356" y="96" font-size="10" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">nameplate peak</text>
+    <text x="52" y="98" font-size="10" fill="var(--fig-rule, #6e6a5b)" transform="rotate(-45 52 98)">bandwidth slope</text>
+
+    <circle cx="66" cy="218" r="5" fill="var(--fig-mark, #b45a2d)"/>
+    <text x="76" y="222" font-size="10.5">decode b=1 · 1 FLOP/B · ~0.34% of peak</text>
+    <circle cx="118" cy="196" r="4.5" fill="var(--fig-mark, #b45a2d)"/>
+    <text x="128" y="200" font-size="10.5">decode b=32</text>
+    <circle cx="150" cy="170" r="4.5" fill="var(--fig-mark, #b45a2d)"/>
+    <text x="160" y="174" font-size="10.5">CNN inference</text>
+    <circle cx="238" cy="104" r="5" fill="var(--fig-outline, #364c50)"/>
+    <text x="248" y="112" font-size="10.5">prefill · 512 tok</text>
+    <circle cx="316" cy="104" r="5" fill="var(--fig-outline, #364c50)"/>
+    <text x="326" y="92" font-size="10.5" text-anchor="end">training · 2,048</text>
+
+    <line x1="46" y1="232" x2="356" y2="232" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8"/>
+    <text x="46" y="262" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">arithmetic intensity →</text>
+    <text x="330" y="262" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">left of ridge:</text>
+    <text x="330" y="275" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">buy bandwidth</text>
+    <text x="46" y="275" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">right of ridge: FLOPs pay</text>
+  </g>
+</svg>

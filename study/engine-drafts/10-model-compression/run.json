@@ -1,0 +1,241 @@
+{
+  "id": "vol1/01_compression_pilot",
+  "title": "Model Compression",
+  "profile": "chapter",
+  "command": "chapter",
+  "sourceUrl": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd",
+  "sourceHash": "34b0e7eabed0900072c65cc00778cf22e32cafc56e30ae540878c66f564f35cd",
+  "specHash": "4473768e7b39e650ac73d370a8696f482546e4597aad55a98a8a253cefee03e0",
+  "status": "accepted",
+  "sections": [
+    {
+      "id": "resident-memory-budget",
+      "heading": "Count the entire resident footprint",
+      "sourceHeadings": [
+        "Fitting the Deployment Budget"
+      ]
+    },
+    {
+      "id": "reduce-existing-layer-work",
+      "heading": "Remove work from a trained model",
+      "sourceHeadings": [
+        "Structural Optimization: Changing What the Model Computes"
+      ]
+    },
+    {
+      "id": "design-a-cheaper-inference-path",
+      "heading": "Train a smaller graph or vary work by input",
+      "sourceHeadings": [
+        "Structural Optimization: Changing What the Model Computes"
+      ]
+    },
+    {
+      "id": "match-precision-to-bottleneck",
+      "heading": "Choose a precision the device can use",
+      "sourceHeadings": [
+        "Numerical Precision: Changing How Values Are Stored"
+      ]
+    },
+    {
+      "id": "calibrate-quantization",
+      "heading": "Manage quantization error",
+      "sourceHeadings": [
+        "Numerical Precision: Changing How Values Are Stored"
+      ]
+    },
+    {
+      "id": "realize-savings-in-kernels",
+      "heading": "Make the runtime realize the savings",
+      "sourceHeadings": [
+        "Hardware Implementation: Changing How the Model Executes"
+      ]
+    },
+    {
+      "id": "sequence-and-compare-candidates",
+      "heading": "Sequence changes and compare feasible candidates",
+      "sourceHeadings": [
+        "Choosing and Combining Techniques",
+        "Fallacies and Pitfalls"
+      ]
+    },
+    {
+      "id": "accept-the-shipping-artifact",
+      "heading": "Run an end-to-end acceptance test",
+      "sourceHeadings": [
+        "Measuring Compression Gains"
+      ]
+    },
+    {
+      "id": "diagnose-missing-gains",
+      "heading": "Trace a failed gate to its cause",
+      "sourceHeadings": [
+        "Measuring Compression Gains",
+        "Fallacies and Pitfalls"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "resident-memory-budget",
+        "reduce-existing-layer-work"
+      ],
+      "promptBytes": 19422,
+      "cached": true,
+      "key": "e34642e13f9647a7f08ac1f0fb5029009d2c83e2a14ebc721d2074dcdefda7ab",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 15833,
+        "cachedInput": 0,
+        "output": 1097
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "design-a-cheaper-inference-path",
+        "match-precision-to-bottleneck"
+      ],
+      "promptBytes": 18691,
+      "cached": true,
+      "key": "1e6dcdf47d86b0d6df05fcdad3b6a7c64c553f32921cf1a0dbd5a427a463f6fd",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 15593,
+        "cachedInput": 0,
+        "output": 1260
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "calibrate-quantization",
+        "realize-savings-in-kernels"
+      ],
+      "promptBytes": 18789,
+      "cached": true,
+      "key": "176a0e7660e0d91f8ef23008e9a9a6c26bc3f13c1e51d5f5e0018af21b0c97fd",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 15575,
+        "cachedInput": 10624,
+        "output": 1220
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "sequence-and-compare-candidates",
+        "accept-the-shipping-artifact"
+      ],
+      "promptBytes": 23681,
+      "cached": true,
+      "key": "e2edd1c4c2ac3d5fe799b875f43378867a1a76679bfda22556521636a5a6b5cc",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 16474,
+        "cachedInput": 10624,
+        "output": 1121
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.1-terra",
+      "effort": "medium",
+      "sections": [
+        "diagnose-missing-gains"
+      ],
+      "promptBytes": 16193,
+      "cached": true,
+      "key": "d1ece8d44290824a7ac87276ab81ad9a997e88dbb0f462a31dbab3887eaa617f",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 15036,
+        "cachedInput": 10624,
+        "output": 624
+      }
+    },
+    {
+      "role": "chapter-reviewer",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "sections": [
+        "resident-memory-budget",
+        "reduce-existing-layer-work",
+        "design-a-cheaper-inference-path",
+        "match-precision-to-bottleneck",
+        "calibrate-quantization",
+        "realize-savings-in-kernels",
+        "sequence-and-compare-candidates",
+        "accept-the-shipping-artifact",
+        "diagnose-missing-gains"
+      ],
+      "promptBytes": 96752,
+      "cached": true,
+      "key": "bcc95902264196919325b38b60e171d7d167bfd18e4175b83fd5e33159f1b5f2",
+      "usage": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0
+      },
+      "originalUsage": {
+        "input": 61400,
+        "cachedInput": 40192,
+        "output": 449
+      }
+    }
+  ],
+  "maxCalls": 0,
+  "stopAfterTokens": null,
+  "liveCalls": 0,
+  "tokens": {
+    "input": 0,
+    "cachedInput": 0,
+    "output": 0,
+    "total": 0
+  },
+  "usageIncomplete": false,
+  "elapsedMs": 3071,
+  "outlineSource": "/Users/benebsworth/projects/benebsworth.com/.cache/study-engine/chapter-v1/compression-editor-outline.json",
+  "reviews": [
+    {
+      "verdict": "pass",
+      "checks": {
+        "mechanism": "Channel pruning removes output channels and corresponding inputs in every consumer, shrinking dense tensor dimensions; scattered zeros alone leave ordinary dense kernels with the original work. Rank-128 factorization of a 1,024×1,024 layer uses 128×(1,024+1,024)=262,144 weights versus 1,048,576, a fourfold reduction, though the two operations and intermediate still need profiling.",
+        "calculation": "The transfer quiz’s FP16 read is 24÷600=40 ms. INT8 reads 12+3=15 MiB, or 15÷600=25 ms, a 15 ms read-only estimate; conversion is unknown, so prototyping and measuring end-to-end latency is the supported decision. For its memory quiz, simultaneous allocations total 8+36+8=52 MiB, exceeding 48 MiB by 4 MiB. The chapter’s early-exit example has mean 7.6 ms, but 80% of frames finish by 6 ms, so the 95th percentile is 14 ms and fails a 12 ms limit.",
+        "continuity": "The sequence is coherent: first identify the binding resource, alter structure or representation to address it, then compile and measure the actual runtime path. Structural changes can alter numeric distributions, so final calibration follows pruning or fine-tuning; acceptance then checks the exported artifact against quality slices and device limits. The opening question is answered by this evidence-based selection and acceptance argument.",
+        "assessment": "The precision MCQ has one defensible answer: prototype INT8 and measure conversion and end-to-end cost. Option A is tempting because the read estimate improves, but incorrectly treats a read-only estimate as a guaranteed full-path saving. The resident-memory transfer is solvable from its own prompt and correctly withholds its 52 MiB result from the chapter. The acceptance MCQ also correctly selects Y because X misses its required recall floor."
+      },
+      "issues": []
+    }
+  ]
+}

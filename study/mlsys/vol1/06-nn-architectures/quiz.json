@@ -1,0 +1,116 @@
+{
+ "questions": [
+  {
+   "id": "a1",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A team must choose between an MLP and a CNN for classifying $224 \\times 224$ RGB medical images. A single dense first layer would need ~150M weights per thousand output units, whereas a CNN uses a shared $3 \\times 3 \\times 3$ filter (27 weights). Using inductive bias, which statement best explains why the CNN is the superior starting point?",
+   "options": [
+    {"id": "a", "label": "The CNN is strictly more expressive, approximating functions the Universal Approximation Theorem forbids"},
+    {"id": "b", "label": "The MLP is mathematically incapable of representing 2D spatial features"},
+    {"id": "c", "label": "The CNN eliminates gradient descent because convolutional filters are deterministic"},
+    {"id": "d", "label": "The CNN's spatial-locality and weight-sharing prior matches image structure: convolution is translation equivariant, and pooling can build invariance on top"}
+   ],
+   "correctOptionId": "d",
+   "explanation": "Locality plus sharing matches image structure directly: the same detector applies at every position (equivariance), and pooling can later produce invariance. Expressiveness arguments run backwards - the CNN is the more constrained family, which is why it needs fewer samples and parameters here. Filters are still learned."
+  },
+  {
+   "id": "a2",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A single dense layer ($2{,}048 \\times 2{,}048$) running FP32 inference at batch size 1 achieves ~4% of peak compute, with an arithmetic intensity of ~0.5 FLOP/byte. What most effectively moves it out of the bandwidth-bound regime?",
+   "options": [
+    {"id": "a", "label": "Increase the batch size, turning the matrix-vector product into a matrix-matrix product that reuses each weight read across examples"},
+    {"id": "b", "label": "Replace the matmul with an unvectorized scalar loop to avoid kernel launch overhead"},
+    {"id": "c", "label": "Upgrade to an accelerator with double the peak FLOP/s, keeping B = 1"},
+    {"id": "d", "label": "Replace the linear map with an element-wise activation to eliminate weight traffic"}
+   ],
+   "correctOptionId": "a",
+   "explanation": "At B = 1 each weight serves exactly one MAC - the GEMV floor. Batching turns it into GEMM, reusing every weight read across examples; that is the only listed change that raises arithmetic intensity. More peak FLOP/s makes a bandwidth-bound layer relatively worse, not better."
+  },
+  {
+   "id": "a3",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A standard RNN with input dimension 100 and hidden dimension 128 performs how many MACs per time step?",
+   "options": [
+    {"id": "a", "label": "12,800 - only the input projection multiplies a matrix"},
+    {"id": "b", "label": "29,184 - 16,384 recurrent MACs plus 12,800 input MACs"},
+    {"id": "c", "label": "1,280,000 - recurrence multiplies hidden states across all past steps"},
+    {"id": "d", "label": "256 - an RNN only does a vector addition per step"}
+   ],
+   "correctOptionId": "b",
+   "explanation": "16,384 + 12,800 = 29,184 MACs per step. The recurrent matrix is the larger term whenever hidden width exceeds input width, and it is the term on the serial critical path."
+  },
+  {
+   "id": "a4",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "In an attention layer with sequence length $S = 512$ and per-head dimension $d_k = 64$, how many MACs does computing the $QK^T$ score matrix cost?",
+   "options": [
+    {"id": "a", "label": "32,768"},
+    {"id": "b", "label": "262,144"},
+    {"id": "c", "label": "1,048,576"},
+    {"id": "d", "label": "16,777,216 - $S \\times S \\times d_k$"}
+   ],
+   "correctOptionId": "d",
+   "explanation": "512 x 512 score positions, each a dot product of length 64, gives S-squared times d_k = 16.8M MACs. This is the quadratic signature: double S and the term quadruples."
+  },
+  {
+   "id": "a5",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "The workload profile gives the transformer two rows, prefill and decode, even though both run the same weights. Which statement is correct?",
+   "options": [
+    {"id": "a", "label": "Prefill is limited by the data term because it reads the whole prompt from storage; decode is limited by compute"},
+    {"id": "b", "label": "Prefill processes all S prompt tokens together, raising weight reuse and intensity enough to be compute-bound; decode emits one token per step and rereads all weights plus the KV cache, making it bandwidth-bound at small batch"},
+    {"id": "c", "label": "Both are limited by memory capacity because the KV cache always exceeds device memory"},
+    {"id": "d", "label": "Decode is compute-bound because its O(S^2) attention dominates; prefill is latency-bound"}
+   ],
+   "correctOptionId": "b",
+   "explanation": "Same weights, different regime. Prefill is matrix-matrix work with full reuse; decode is matrix-vector work where every weight and all cached K/V stream per token. A benchmark of one phase says nothing about the other - a named fallacy in the chapter."
+  },
+  {
+   "id": "a6",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A profiler reports embedding tables consuming over 1 TB across cluster nodes, requests performing sparse random row lookups rather than dense matmuls, and a hard memory-capacity constraint on every device. Which lighthouse architecture is this?",
+   "options": [
+    {"id": "a", "label": "DLRM - capacity-bound tables with irregular gathers"},
+    {"id": "b", "label": "ResNet-50 - dense conv throughput"},
+    {"id": "c", "label": "GPT-2 - bandwidth-bound autoregressive decode"},
+    {"id": "d", "label": "MobileNetV2 - depthwise-separable low-intensity conv"}
+   ],
+   "correctOptionId": "a",
+   "explanation": "Terabyte tables plus irregular lookups plus a capacity-first constraint is the recommender lighthouse. Intensity is not even the right unit: a lookup is a copy, not a computation."
+  },
+  {
+   "id": "f1",
+   "kind": "FEYNMAN",
+   "source": "ORIGINAL",
+   "prompt": "Explain to a junior engineer why 'the transformer is bandwidth-bound' is wrong as stated but right half the time - using the difference between prefill and decode and the arithmetic intensity of each phase.",
+   "modelAnswer": "Prefill runs the whole prompt as GEMMs: each weight is reused across all S positions, so intensity is high and the phase is usually compute-bound. Decode emits one token per step as GEMV: each FP16 weight is read once for 2 FLOPs, about 1 FLOP/byte, so decode is bandwidth-bound. The sentence is right for the serving half - where users feel latency and where the bill accrues - and wrong for prompt evaluation and training. Bonus: the KV cache is a second streamed term that grows with context, so decode gets more bandwidth-bound over long sessions."
+  },
+  {
+   "id": "f2",
+   "kind": "FEYNMAN",
+   "source": "ORIGINAL",
+   "prompt": "A colleague says depthwise-separable convolution cuts FLOPs ~9x, so MobileNet should be ~9x faster than ResNet on a datacenter GPU. Give the two reasons the FLOP cut doesn't translate.",
+   "modelAnswer": "First, the pointwise 1x1 half is a GEMM, but the depthwise half filters each channel in isolation - no cross-channel contraction, so it cannot lower onto wide matrix multiplies and runs as many small stencil ops. Second, its arithmetic intensity drops accordingly, putting the depthwise stage on the bandwidth slope: ~9x fewer FLOPs competes against much lower intensity. The saving shines where the constraint is parameters and energy (edge, always-on), not on compute-hungry datacenter parts."
+  },
+  {
+   "id": "n1",
+   "kind": "NUMERIC",
+   "source": "ORIGINAL",
+   "prompt": "A 7B-parameter FP16 model has 32 layers and hidden width 4,096. (a) How many bytes of weights does decode stream per generated token? (b) How large is one request's KV cache at 4K tokens? (c) At 8 concurrent requests, which streamed term is bigger and what does that imply?",
+   "modelAnswer": "(a) 14 GB per token. (b) 32 layers x 2 tensors x 4,096 wide x 4,000 tokens x 2 bytes = ~2.1 GB per request. (c) At 8 requests KV is ~16.8 GB, exceeding the 14 GB weight stream - the cache is the bigger term and scales with context and concurrency, not with the model alone. Batching amortizes the weight stream but not the per-request cache, which is why paged and shared-KV schemes exist."
+  },
+  {
+   "id": "n2",
+   "kind": "NUMERIC",
+   "source": "ORIGINAL",
+   "prompt": "A transformer block has hidden width $d = 2{,}048$ and FFN width $4d$. At what context length does attention arithmetic overtake the dense GEMMs? Give the rule and the number.",
+   "modelAnswer": "The crossover rule is S* = 6d, from 12·S·d^2 = 2·S^2·d with a 4x FFN. At d = 2,048 that is 12,288 tokens. Below it the dense GEMMs dominate the block's arithmetic; above it the quadratic attention term takes over."
+  }
+ ]
+}

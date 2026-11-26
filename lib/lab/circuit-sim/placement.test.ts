@@ -127,7 +127,7 @@ describe('placement validation', () => {
     const c = circuit().v(5, 1, 0).r(1000, 1, 2).r(2000, 2, 0).gnd().build()
     // Manually add a diagonal wire
     c.wires = [{ id: 'w_bad', nodeA: 1, nodeB: 2, waypoints: [] }]
-    const issues = validatePlacement(c)
+    validatePlacement(c)
     // Diagonal detected because endpoints aren't aligned and there's no waypoint
     // Actually the wire renderer uses Manhattan paths, so this is user-created
     // A wire with no waypoints between non-aligned points would need computeManhattanPath

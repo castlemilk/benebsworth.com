@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 338" role="img" aria-labelledby="title desc">
+  <title id="title">High-concurrency decode throughput versus Kolibri Origin</title>
+  <desc id="desc">Aleph Alpha Figure 1 reports 1.6 times Kolibri Origin Base at 4k tokens and 2.7 times post-trained Kolibri Origin at 16k tokens. Both tests use eight B200 GPUs. Each ratio has its own baseline.</desc>
+  <style>
+    text {font:22px system-ui,sans-serif;fill:#202d2c}
+    .title {font-size:26px;font-weight:700}
+    .small {font-size:20px;fill:#394e49}
+    .ratio {font-size:24px;font-weight:750;fill:#185e50}
+  </style>
+  <rect width="600" height="338" rx="12" fill="#f8faf9"/>
+  <text x="27" y="43" class="title">Decode throughput vs Kolibri Origin</text>
+  <text x="27" y="78" class="small">Eight B200 GPUs · best layout at high concurrency</text>
+  <path d="M198 100v152" stroke="#506e66" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="27" y="123">Base · 4k live tokens</text>
+  <rect x="28" y="134" width="272" height="33" rx="5" fill="#bbded4" stroke="#257660"/>
+  <text x="311" y="159" class="ratio">1.6×</text>
+  <text x="27" y="204">Post-trained · 16k live tokens</text>
+  <rect x="28" y="216" width="459" height="33" rx="5" fill="#bbded4" stroke="#257660"/>
+  <text x="499" y="240" class="ratio">2.7×</text>
+  <path d="M198 253v9" stroke="#506e66" stroke-width="2"/>
+  <text x="198" y="287" class="small" text-anchor="middle">1× Origin for each stage</text>
+  <text x="27" y="317" class="small">Estimated UTF-8 bytes/s per GPU · Report Figure 1</text>
+</svg>

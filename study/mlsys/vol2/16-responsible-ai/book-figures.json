@@ -1,0 +1,12 @@
+[
+ {"id":"assurance-case","file":"assurance-case.svg","note":"Book version of the assurance-case structure our assurance-chain redraws as an ownership chain."},
+ {"id":"fairness-impossibility","file":"fairness-impossibility.svg","note":"Book rendering of the conflicting fairness criteria."},
+ {"id":"bias-loop","file":"bias-loop.svg","note":"Book rendering of the bias amplification feedback loop our loop diagram simplifies."},
+ {"id":"interpretability-spectrum","file":"interpretability-spectrum.svg","note":"Intrinsic versus post-hoc interpretability spectrum, the design-space context for explanation placement."},
+ {"id":"privacy-flow","file":"privacy-flow.svg","note":"Data governance flow across the lifecycle."},
+ {"id":"fairness-tax","file":"responsible_ai_fairness_tax.svg","note":"The accuracy cost of approval parity in the credit scenario."},
+ {"id":"unlearning-cost-ladder","file":"responsible_ai_unlearning_cost_ladder.svg","note":"Retraining cost across unlearning strategies, the quantitative backing for the SISA discussion."},
+ {"id":"representation-tax-ladder","file":"responsible_ai_representation_tax_ladder.svg","note":"Cost scaling of representative data acquisition by subgroup coverage."},
+ {"id":"monitoring-scale","file":"responsible_ai_monitoring_scale.svg","note":"Monitoring cost as a function of fleet scale."},
+ {"id":"rlhf-pipeline","file":"rlhf-pipeline.svg","note":"The RLHF pipeline as the generative-era control surface."}
+]

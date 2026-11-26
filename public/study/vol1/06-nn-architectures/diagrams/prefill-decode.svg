@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#dbeafe"]{fill:#1e3a5f}
+    .dark [fill="#e5e7eb"]{fill:#374151}
+    .dark [fill="#fef3c7"]{fill:#453007}
+    .dark [fill="#fee2e2"]{fill:#4c1d1d}
+    .dark [fill="#f3f4f6"]{fill:#1f2937}
+    .dark [fill="#ffffff"]{fill:#161a22}
+    .dark rect.bg{fill:#0f1115}
+    .dark [fill="none"]{fill:none}
+  </style>
+  <rect x="0" y="0" width="700" height="420" fill="#ffffff" class="bg"/>
+  <text x="350" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#374151">Same weights, two machine regimes</text>
+  <text x="350" y="44" text-anchor="middle" font-size="10" fill="#6b7280">prefill pays compute once; decode pays bandwidth every token</text>
+
+  <!-- PREFILL phase -->
+  <rect x="24" y="60" width="300" height="200" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="44" y="86" font-size="12" font-weight="bold" fill="#1d4ed8">PREFILL</text>
+  <text x="44" y="102" font-size="9" fill="#1d4ed8">all S prompt tokens at once</text>
+  <!-- prompt tokens -->
+  <g font-size="8.5" fill="#374151">
+    <rect x="44" y="116" width="34" height="20" rx="3" fill="#ffffff" stroke="#2563eb"/>
+    <text x="61" y="130" text-anchor="middle">t1</text>
+    <rect x="82" y="116" width="34" height="20" rx="3" fill="#ffffff" stroke="#2563eb"/>
+    <text x="99" y="130" text-anchor="middle">t2</text>
+    <rect x="120" y="116" width="34" height="20" rx="3" fill="#ffffff" stroke="#2563eb"/>
+    <text x="137" y="130" text-anchor="middle">t3</text>
+    <rect x="158" y="116" width="34" height="20" rx="3" fill="#ffffff" stroke="#2563eb"/>
+    <text x="175" y="130" text-anchor="middle">…</text>
+    <rect x="196" y="116" width="34" height="20" rx="3" fill="#ffffff" stroke="#2563eb"/>
+    <text x="213" y="130" text-anchor="middle">tS</text>
+  </g>
+  <!-- parallel arrows into GEMM -->
+  <g stroke="#2563eb" stroke-width="1.4" fill="none">
+    <path d="M61 140 V156"/>
+    <path d="M99 140 V156"/>
+    <path d="M137 140 V156"/>
+    <path d="M175 140 V156"/>
+    <path d="M213 140 V156"/>
+  </g>
+  <rect x="44" y="160" width="240" height="40" rx="6" fill="#2563eb"/>
+  <text x="164" y="177" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#ffffff">GEMM · weights reused ×S</text>
+  <text x="164" y="192" text-anchor="middle" font-size="8.5" fill="#dbeafe">matrix-matrix → compute-bound</text>
+  <text x="44" y="222" font-size="8.5" fill="#374151">writes K,V for every token → KV cache</text>
+  <text x="44" y="238" font-size="8.5" fill="#4b5563">limiting term: Ops / (R_peak · η)</text>
+
+  <!-- DECODE phase -->
+  <rect x="376" y="60" width="300" height="200" rx="10" fill="#fee2e2" stroke="#b91c1c" stroke-width="1.5"/>
+  <text x="396" y="86" font-size="12" font-weight="bold" fill="#b91c1c">DECODE</text>
+  <text x="396" y="102" font-size="9" fill="#b91c1c">one token per step, serial</text>
+  <rect x="396" y="116" width="40" height="20" rx="3" fill="#ffffff" stroke="#b91c1c"/>
+  <text x="416" y="130" text-anchor="middle" font-size="8.5" fill="#374151">tok n</text>
+  <path d="M416 136 V156" stroke="#b91c1c" stroke-width="1.4" fill="none"/>
+  <rect x="396" y="160" width="240" height="40" rx="6" fill="#b91c1c"/>
+  <text x="516" y="177" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#ffffff">GEMV · weights read ×1</text>
+  <text x="516" y="192" text-anchor="middle" font-size="8.5" fill="#fee2e2">matrix-vector → bandwidth-bound</text>
+  <text x="396" y="222" font-size="8.5" fill="#374151">reads all weights + whole KV cache per step</text>
+  <text x="396" y="238" font-size="8.5" fill="#4b5563">limiting term: D_vol / BW (~1 FLOP/B)</text>
+  <path d="M636 180 h18 v-54 h-40" stroke="#b91c1c" stroke-width="1.2" fill="none" stroke-dasharray="4 3"/>
+  <path d="M614 126 h-14" stroke="#b91c1c" stroke-width="1.2" fill="none" stroke-dasharray="4 3"/>
+  <polygon points="614,126 622,122 622,130" fill="#b91c1c"/>
+  <text x="644" y="112" font-size="7.5" fill="#b91c1c">repeat</text>
+
+  <!-- KV cache growth strip -->
+  <text x="350" y="286" text-anchor="middle" font-size="11" font-weight="bold" fill="#374151">KV cache grows linearly with context -- 307 KB/token (GPT-2 XL)</text>
+  <g>
+    <rect x="80" y="300" width="70" height="30" rx="4" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="115" y="320" text-anchor="middle" font-size="8.5" fill="#1d4ed8">1K · 0.3 GB</text>
+    <rect x="170" y="300" width="70" height="30" rx="4" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="205" y="320" text-anchor="middle" font-size="8.5" fill="#1d4ed8">4K · 1.2 GB</text>
+    <rect x="260" y="300" width="80" height="30" rx="4" fill="#fef3c7" stroke="#d97706"/>
+    <text x="300" y="320" text-anchor="middle" font-size="8.5" fill="#92400e">10K · 3.1 GB</text>
+    <rect x="360" y="300" width="80" height="30" rx="4" fill="#fef3c7" stroke="#d97706"/>
+    <text x="400" y="320" text-anchor="middle" font-size="8.5" fill="#92400e">32K · 9.8 GB</text>
+    <rect x="460" y="300" width="90" height="30" rx="4" fill="#fee2e2" stroke="#b91c1c"/>
+    <text x="505" y="320" text-anchor="middle" font-size="8.5" fill="#b91c1c">128K · 39 GB</text>
+    <path d="M150 315 h20 M240 315 h20 M340 315 h20 M440 315 h20" stroke="#6b7280" stroke-width="1" fill="none"/>
+    <rect x="570" y="300" width="70" height="30" rx="4" fill="#ffffff" stroke="#374151" stroke-dasharray="4 3"/>
+    <text x="605" y="313" text-anchor="middle" font-size="8" fill="#374151">weights</text>
+    <text x="605" y="325" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#374151">~3 GB flat</text>
+  </g>
+  <text x="350" y="360" text-anchor="middle" font-size="9" fill="#6b7280">cache crosses weights ~10K tokens · materialized scores would fill a device ~20-40K (never materialize them)</text>
+  <text x="350" y="380" text-anchor="middle" font-size="9.5" fill="#4b5563">70B FP16: &gt;100 GB of weights streamed per emitted token → decode is the serving cost</text>
+</svg>

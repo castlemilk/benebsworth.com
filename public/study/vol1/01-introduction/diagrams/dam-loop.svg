@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 340" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+  </style>
+
+  <!-- D·A·M diagnosis: the triad feeds a loop, because the bottleneck migrates -->
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+    <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#34d399"/>
+    </marker>
+  </defs>
+
+  <!-- left: the triad -->
+  <text x="165" y="36" text-anchor="middle" font-size="13" fill="#4b5563" font-weight="600">the three axes</text>
+  <g stroke="#6b7280" fill="none" stroke-width="1.4">
+    <rect x="110" y="56" width="110" height="44" rx="9" fill="#34d399" fill-opacity="0.12" stroke="#34d399"/>
+    <rect x="50" y="150" width="110" height="44" rx="9" fill="none"/>
+    <rect x="180" y="150" width="110" height="44" rx="9" fill="none"/>
+  </g>
+  <text x="165" y="83" text-anchor="middle" font-size="14" fill="#34d399" font-weight="700">ALGORITHM</text>
+  <text x="105" y="177" text-anchor="middle" font-size="14" fill="#4b5563" font-weight="600">DATA</text>
+  <text x="235" y="177" text-anchor="middle" font-size="14" fill="#4b5563" font-weight="600">MACHINE</text>
+  <!-- migration edges -->
+  <g stroke="#6b7280" stroke-width="1.3" fill="none">
+    <path d="M130,104 L110,146" marker-end="url(#arr)" marker-start="url(#arr)"/>
+    <path d="M200,104 L230,146" marker-end="url(#arr)" marker-start="url(#arr)"/>
+    <path d="M163,172 L177,172" marker-end="url(#arr)" marker-start="url(#arr)"/>
+  </g>
+  <text x="165" y="222" text-anchor="middle" font-size="11" fill="#9ca3af">relax one constraint → the limit</text>
+  <text x="165" y="237" text-anchor="middle" font-size="11" fill="#9ca3af">reappears on a neighbour axis</text>
+
+  <!-- right: the loop -->
+  <text x="565" y="36" text-anchor="middle" font-size="13" fill="#4b5563" font-weight="600">the diagnosis is a loop</text>
+  <g font-size="11" fill="#4b5563">
+    <rect x="497" y="60" width="136" height="34" rx="8" fill="none" stroke="#6b7280"/>
+    <text x="565" y="81" text-anchor="middle">1 · a symptom shows</text>
+    <rect x="628" y="140" width="136" height="34" rx="8" fill="none" stroke="#6b7280"/>
+    <text x="696" y="161" text-anchor="middle">2 · attribute an axis</text>
+    <rect x="497" y="220" width="136" height="34" rx="8" fill="none" stroke="#6b7280"/>
+    <text x="565" y="241" text-anchor="middle">3 · intervene</text>
+    <rect x="366" y="140" width="136" height="34" rx="8" fill="none" stroke="#6b7280"/>
+    <text x="434" y="161" text-anchor="middle">4 · re-measure all</text>
+  </g>
+  <!-- loop arrows (clockwise) -->
+  <g stroke="#34d399" stroke-width="1.6" fill="none">
+    <path d="M633,77 C672,80 692,105 694,138" marker-end="url(#arrA)"/>
+    <path d="M694,176 C690,206 666,226 635,234" marker-end="url(#arrA)"/>
+    <path d="M495,237 C455,232 438,206 440,176" marker-end="url(#arrA)"/>
+    <path d="M440,138 C445,108 468,84 495,78" marker-end="url(#arrA)"/>
+  </g>
+  <text x="566" y="150" text-anchor="middle" font-size="11" fill="#9ca3af">limiting</text>
+  <text x="566" y="164" text-anchor="middle" font-size="11" fill="#9ca3af">constraint</text>
+  <text x="565" y="300" text-anchor="middle" font-size="12" fill="#34d399" font-weight="600">D·A·M never ends: intervening moves the bottleneck</text>
+
+  <!-- connector between panels -->
+  <line x1="345" y1="60" x2="345" y2="270" stroke="#e5e7eb" stroke-dasharray="3 4"/>
+</svg>

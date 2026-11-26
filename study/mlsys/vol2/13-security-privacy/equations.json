@@ -1,0 +1,150 @@
+[
+  {
+    "id": "poisoning-bilevel",
+    "number": "13.1",
+    "title": "Data poisoning as a bilevel problem",
+    "latex": "\\max_{\\mathcal{S}_{\\mathrm{poison}}}\\ \\mathcal{L}\\!\\left(f_{\\mathcal{S}\\cup\\mathcal{S}_{\\mathrm{poison}}},\\ \\mathcal{S}_{\\mathrm{test}}\\right)\\qquad\\theta^{*}=\\arg\\min_{\\theta}\\ \\mathcal{L}\\!\\left(\\theta;\\ \\mathcal{S}\\cup\\mathcal{S}_{\\mathrm{poison}}\\right)",
+    "caption": "The poisoner picks the poisoned set that maximizes damage *after* the defender's inner training loop runs on clean plus poisoned data. The untargeted form maximizes test loss; the targeted form instead minimizes loss on one chosen example, and backdoors hide inside either.",
+    "symbols": [
+      { "symbol": "\\mathcal{S}_{\\mathrm{poison}}", "name": "poisoned set", "meaning": "the attacker-chosen training examples or updates" },
+      { "symbol": "\\mathcal{S}", "name": "clean data", "meaning": "the defender's honest training set" },
+      { "symbol": "\\mathcal{S}_{\\mathrm{test}}", "name": "test distribution", "meaning": "the data the untargeted attack degrades" },
+      { "symbol": "f_{\\mathcal{S}\\cup\\mathcal{S}_{\\mathrm{poison}}}", "name": "trained model", "meaning": "the model produced by training on the union" },
+      { "symbol": "\\mathcal{L}", "name": "loss", "meaning": "the objective being maximized outside and minimized inside" },
+      { "symbol": "\\theta^{*}", "name": "trained parameters", "meaning": "the inner loop's result: the defender's optimum" }
+    ]
+  },
+  {
+    "id": "extraction-economics",
+    "number": "13.2",
+    "title": "Extraction break-even price",
+    "latex": "N_{q}\\,p_{q} \\;<\\; C_{\\mathrm{train}}\\qquad\\Longrightarrow\\qquad p^{*}=\\frac{C_{\\mathrm{train}}}{N_{q}}",
+    "caption": "Query-based extraction is worthwhile to the attacker only while the total bill for the query set stays below the cost of training the model itself. In the chapter's worked case, \\$5M of training against 100M extraction queries puts the break-even at \\$0.05 per query; pricing at or above that makes the full set cost about what training did.",
+    "symbols": [
+      { "symbol": "N_{q}", "name": "query count", "meaning": "number of API calls the extraction attack needs" },
+      { "symbol": "p_{q}", "name": "per-query price", "meaning": "what the attacker pays per call" },
+      { "symbol": "C_{\\mathrm{train}}", "name": "training cost", "meaning": "the defender's cost to produce the model from scratch" },
+      { "symbol": "p^{*}", "name": "break-even price", "meaning": "per-query price at which extraction costs exactly match training" }
+    ]
+  },
+  {
+    "id": "mia-dp-ceiling",
+    "number": "13.3",
+    "title": "Membership-inference ceiling under DP",
+    "latex": "\\mathrm{TPR}\\;\\leq\\;\\min\\!\\left(e^{\\epsilon}\\,\\mathrm{FPR},\\;1-e^{-\\epsilon}\\,(1-\\mathrm{FPR})\\right)",
+    "caption": "For a pure epsilon-DP release, no membership test, however clever, can push the true-positive rate above this ceiling at a given false-positive rate. At epsilon = 1 the bound bends near FPR 0.27: past that point the curve flattens and extra attack sophistication buys nothing.",
+    "symbols": [
+      { "symbol": "\\mathrm{TPR}", "name": "true-positive rate", "meaning": "fraction of members the attack correctly flags" },
+      { "symbol": "\\mathrm{FPR}", "name": "false-positive rate", "meaning": "fraction of non-members wrongly flagged" },
+      { "symbol": "\\epsilon", "name": "privacy budget", "meaning": "the DP bound on output-distribution change per protected unit" }
+    ]
+  },
+  {
+    "id": "robust-agg-traffic",
+    "number": "13.4",
+    "title": "Robust aggregation traffic multiplier",
+    "latex": "\\frac{(N-1)\\,M}{\\,2(N-1)M/N\\,}=\\frac{N}{2}",
+    "caption": "A gather-based coordinate-wise median receives every peer's gradient: $(N-1)M$ bytes per worker. Ring AllReduce moves about $2(N-1)M/N$. The ratio is $N/2$, so at $N=64$ robust aggregation costs roughly 32 times the per-worker gradient traffic of the ring, landing in the CommunicationTime term of the Fleet Law.",
+    "symbols": [
+      { "symbol": "N", "name": "data-parallel degree", "meaning": "number of workers in the synchronous training job" },
+      { "symbol": "M", "name": "gradient payload", "meaning": "bytes of one worker's gradient per step" },
+      { "symbol": "(N-1)M", "name": "gather traffic", "meaning": "per-worker bytes received by all-gather median aggregation" },
+      { "symbol": "2(N-1)M/N", "name": "ring traffic", "meaning": "per-worker bytes moved by ring AllReduce" }
+    ]
+  },
+  {
+    "id": "dp-approx",
+    "number": "13.5",
+    "title": "Approximate differential privacy",
+    "latex": "\\Pr[\\mathcal{M}(D)\\in S]\\;\\leq\\;e^{\\epsilon}\\,\\Pr[\\mathcal{M}(D')\\in S]\\;+\\;\\delta",
+    "caption": "For adjacent datasets $D$ and $D'$ differing only in the protected unit, and every measurable output set $S$, the release's probability of landing in $S$ can grow by at most the factor $e^\\epsilon$ plus additive slack $\\delta$. Pure DP sets $\\delta=0$; Gaussian mechanisms need the slack because their tails have unbounded likelihood ratios.",
+    "symbols": [
+      { "symbol": "\\mathcal{M}", "name": "mechanism", "meaning": "the randomized algorithm producing the release" },
+      { "symbol": "D", "name": "dataset", "meaning": "the data the mechanism runs on" },
+      { "symbol": "D'", "name": "adjacent dataset", "meaning": "differs from $D$ in exactly one protected contribution" },
+      { "symbol": "S", "name": "output set", "meaning": "any measurable collection of possible releases" },
+      { "symbol": "\\epsilon", "name": "privacy budget", "meaning": "multiplicative bound on output-probability ratios" },
+      { "symbol": "\\delta", "name": "additive slack", "meaning": "additive term in the bound, typically below $1/n$" }
+    ]
+  },
+  {
+    "id": "composition-basic",
+    "number": "13.6",
+    "title": "Basic composition of privacy loss",
+    "latex": "\\epsilon_{\\mathrm{total}}\\;\\leq\\;\\sum_{i=1}^{k}\\epsilon_i\\qquad\\qquad\\delta_{\\mathrm{total}}\\;\\leq\\;\\sum_{i=1}^{k}\\delta_i",
+    "caption": "Ten models each released at epsilon = 1 on the same population compose to a basic bound of epsilon = 10, not epsilon = 1. The budget belongs to the history of data-dependent releases about the same protected population; mechanism-specific accountants tighten this sum.",
+    "symbols": [
+      { "symbol": "\\epsilon_{\\mathrm{total}}", "name": "composed budget", "meaning": "cumulative privacy bound across $k$ releases" },
+      { "symbol": "\\epsilon_i", "name": "per-release budget", "meaning": "the bound certified for release $i$" },
+      { "symbol": "\\delta_{\\mathrm{total}}", "name": "composed slack", "meaning": "additive slacks also accumulate" },
+      { "symbol": "k", "name": "release count", "meaning": "number of data-dependent releases about the population" }
+    ]
+  },
+  {
+    "id": "laplace-mechanism",
+    "number": "13.7",
+    "title": "Laplace mechanism",
+    "latex": "\\widetilde{f}(D)=f(D)+\\mathrm{Lap}\\!\\left(\\frac{\\Delta_1 f}{\\epsilon}\\right)\\qquad b=\\frac{\\Delta_1 f}{\\epsilon}",
+    "caption": "Pure-DP noise whose scale is the $\\ell_1$ sensitivity divided by the privacy budget. In the salary-mean example the scale lands near \\$200K at $\\epsilon=1$, giving about a \\$200 expected error on the mean of 1,000 employees and about \\$2,000 on a 100-person group: small groups pay the largest relative cost.",
+    "symbols": [
+      { "symbol": "\\widetilde{f}(D)", "name": "private output", "meaning": "the released, noise-added query result" },
+      { "symbol": "f(D)", "name": "true query", "meaning": "the unperturbed aggregate" },
+      { "symbol": "\\Delta_1 f", "name": "l1 sensitivity", "meaning": "maximum output change when one protected unit changes" },
+      { "symbol": "\\epsilon", "name": "privacy budget", "meaning": "smaller epsilon means more noise" },
+      { "symbol": "b", "name": "noise scale", "meaning": "Laplace scale parameter $\\Delta_1 f/\\epsilon$" }
+    ]
+  },
+  {
+    "id": "gaussian-sigma",
+    "number": "13.8",
+    "title": "Gaussian mechanism calibration",
+    "latex": "\\sigma\\;\\geq\\;\\frac{\\Delta_2 f}{\\epsilon}\\sqrt{2\\ln\\!\\left(\\frac{1.25}{\\delta}\\right)}",
+    "caption": "A classic sufficient bound for one application of the Gaussian mechanism with $0<\\epsilon<1$. At $\\Delta_2 f=1$, $\\epsilon=0.5$, $\\delta=10^{-5}$ the minimum sigma is about 9.7. This calibrates a single release; DP-SGD composes thousands of steps and needs a sampled-Gaussian accountant instead.",
+    "symbols": [
+      { "symbol": "\\sigma", "name": "noise std dev", "meaning": "standard deviation of the added Gaussian noise per coordinate" },
+      { "symbol": "\\Delta_2 f", "name": "l2 sensitivity", "meaning": "maximum $\\ell_2$ change in output per protected unit" },
+      { "symbol": "\\epsilon", "name": "privacy budget", "meaning": "multiplicative bound on output-probability ratios" },
+      { "symbol": "\\delta", "name": "additive slack", "meaning": "tail-probability slack in the approximate-DP bound" }
+    ]
+  },
+  {
+    "id": "moments-accountant",
+    "number": "13.9",
+    "title": "Moments accountant composition",
+    "latex": "L=\\ln\\frac{\\Pr[\\mathcal{M}(D)=o]}{\\Pr[\\mathcal{M}(D')=o]}\\qquad \\epsilon(\\delta)=\\min_{\\lambda>0}\\frac{k\\,M(\\lambda)+\\ln(1/\\delta)}{\\lambda}",
+    "caption": "The privacy loss random variable is the log-likelihood ratio between adjacent datasets. The moments accountant accumulates its exponential moments across steps and applies the tail bound once at the end, certifying tighter budgets than summing per-step bounds. In the Abadi experiment it reports epsilon 1.26 at 100 epochs and 2.55 at 400 where advanced composition reports 9.34 and 24.22.",
+    "symbols": [
+      { "symbol": "L", "name": "privacy loss", "meaning": "log ratio of output probabilities on adjacent datasets" },
+      { "symbol": "o", "name": "observed output", "meaning": "the realized release used in the ratio" },
+      { "symbol": "M(\\lambda)", "name": "log moment", "meaning": "exponential moment of the privacy loss at order lambda" },
+      { "symbol": "\\lambda", "name": "moment order", "meaning": "the order being optimized over" },
+      { "symbol": "k", "name": "step count", "meaning": "number of composed mechanism applications" },
+      { "symbol": "\\delta", "name": "additive slack", "meaning": "target tail probability for the composed bound" }
+    ]
+  },
+  {
+    "id": "rdp-bound",
+    "number": "13.10",
+    "title": "RDP composition and conversion",
+    "latex": "\\epsilon=\\epsilon_{\\mathrm{RDP}}+\\frac{\\ln(1/\\delta)}{\\alpha-1}\\qquad D_\\alpha\\!\\left(\\mathcal{M}(D)\\,\\|\\,\\mathcal{M}(D')\\right)\\leq\\epsilon_{\\mathrm{RDP}}",
+    "caption": "Rényi DP bounds the alpha-divergence between output distributions on adjacent datasets, and per-step bounds add across composition. Converting the composed RDP guarantee back to $(\\epsilon,\\delta)$-DP adds the slack term and optimizes over the order alpha. Subsampled mechanisms need a tested accountant; the leading-order shortcut does not certify a run.",
+    "symbols": [
+      { "symbol": "\\epsilon_{\\mathrm{RDP}}", "name": "RDP budget", "meaning": "the Rényi-divergence bound at order alpha" },
+      { "symbol": "\\alpha", "name": "Renyi order", "meaning": "divergence order, greater than 1, optimized at conversion" },
+      { "symbol": "\\delta", "name": "additive slack", "meaning": "target slack in the converted DP guarantee" },
+      { "symbol": "D_\\alpha", "name": "Renyi divergence", "meaning": "the divergence measure bounded by epsilon_RDP" }
+    ]
+  },
+  {
+    "id": "output-shaping",
+    "number": "13.11",
+    "title": "Output-contract information budget",
+    "latex": "\\text{bits removed}\\approx\\Delta d\\cdot\\log_{2}10\\approx3.32\\,\\Delta d\\qquad\\text{entries kept}=\\frac{K}{N}",
+    "caption": "Rounding a probability from 6 to 2 decimals removes about 3.32 bits per dropped decimal digit per class; returning only the top K of N classes keeps the fraction K/N of distribution entries. Both raise the query cost of a fixed-fidelity surrogate without constituting a privacy guarantee.",
+    "symbols": [
+      { "symbol": "\\Delta d", "name": "decimals dropped", "meaning": "reduction in decimal precision per probability" },
+      { "symbol": "K", "name": "top-k", "meaning": "number of classes whose scores are returned" },
+      { "symbol": "N", "name": "class count", "meaning": "total classes in the output distribution" }
+    ]
+  }
+]

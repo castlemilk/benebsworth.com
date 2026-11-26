@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="mo-loop" class="study-fig-fit" viewBox="0 0 408 320" role="img" aria-labelledby="mo-o-title mo-o-desc">
+  <title id="mo-o-title">The closed operations loop</title>
+  <desc id="mo-o-desc">Deploy, monitor, detect, diagnose, retrain, release — the loop turns a static artifact into a maintained claim.</desc>
+  <style>
+    #mo-loop { font-family: system-ui, sans-serif; }
+    .dark #mo-loop [fill="#fbf7f0"] { fill: #201a17; }
+    .dark #mo-loop [fill="#29231e"] { fill: #f7eee3; }
+    .dark #mo-loop [fill="#6f6055"] { fill: #c8b8aa; }
+    .dark #mo-loop [fill="#cfc1b2"] { fill: #8b7f73; }
+    .dark #mo-loop [fill="#cf8359"] { fill: #d99066; }
+    .dark #mo-loop [stroke="#b8a89c"] { stroke: #72665c; }
+  </style>
+  <rect width="408" height="320" rx="12" fill="#fbf7f0"/>
+  <text x="24" y="38" fill="#29231e" font-size="20" font-weight="650">The loop is the product</text>
+  <text x="24" y="59" fill="#6f6055" font-size="13">a model is a maintained claim, not a shipped binary</text>
+
+  <g font-size="12" fill="#29231e">
+    <rect x="24" y="84" width="108" height="32" rx="6" fill="#cfc1b2"/>
+    <text x="78" y="105" text-anchor="middle">deploy</text>
+    <rect x="150" y="84" width="108" height="32" rx="6" fill="#cfc1b2"/>
+    <text x="204" y="105" text-anchor="middle">monitor</text>
+    <rect x="276" y="84" width="108" height="32" rx="6" fill="#cfc1b2"/>
+    <text x="330" y="105" text-anchor="middle">detect</text>
+
+    <rect x="276" y="150" width="108" height="32" rx="6" fill="#cfc1b2"/>
+    <text x="330" y="171" text-anchor="middle">diagnose</text>
+    <rect x="150" y="150" width="108" height="32" rx="6" fill="#cf8359"/>
+    <text x="204" y="171" text-anchor="middle">retrain? T*</text>
+    <rect x="24" y="150" width="108" height="32" rx="6" fill="#cfc1b2"/>
+    <text x="78" y="171" text-anchor="middle">release</text>
+  </g>
+  <path d="M132 100h18M258 100h18M330 116v34M276 166h-18M150 166H132M78 150v-34" stroke="#b8a89c" stroke-width="2" fill="none"/>
+
+  <g font-size="11.5" fill="#6f6055">
+    <text x="24" y="216">each stage has its own number:</text>
+    <text x="24" y="238">· detect: PSI/KS/JS vs thresholds, bounded by label arrival</text>
+    <text x="24" y="260">· diagnose: data, model or infrastructure — trace the term</text>
+    <text x="24" y="282">· retrain: T* ≈ √(2C_r/QvA₀δ) prices the cadence</text>
+    <text x="24" y="304">· release: stages of evidence with a revert path</text>
+  </g>
+</svg>

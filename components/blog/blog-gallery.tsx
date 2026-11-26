@@ -49,7 +49,7 @@ export function BlogGallery({ slug, accent = '#7c5cff' }: { slug: string; accent
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {gallery.map((a, i) => (
           <button key={a.id + i} type="button" onClick={() => setLightbox(i)} className="group relative aspect-square overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-stage)]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            { }
             <img src={thumbOf(a)} alt={a.alt || a.caption || ''} loading="lazy" decoding="async" width={a.width || undefined} height={a.height || undefined} className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.04]" />
             {a.caption && (
               <span className="pointer-events-none absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/70 to-transparent p-2 font-sans text-[0.75rem] text-white/90 opacity-0 transition-opacity group-hover:opacity-100">{a.caption}</span>
@@ -68,7 +68,7 @@ export function BlogGallery({ slug, accent = '#7c5cff' }: { slug: string; accent
             </>
           )}
           <figure className="max-h-[88vh] max-w-5xl" onClick={(e) => e.stopPropagation()}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            { }
             <img src={lb.url} alt={lb.alt || lb.caption || 'photo'} decoding="async" width={lb.width || undefined} height={lb.height || undefined} className="max-h-[82vh] w-auto rounded-lg object-contain" />
             {(lb.caption || hasGeo(lb)) && (
               <figcaption className="mt-2 font-mono text-xs text-white/70">

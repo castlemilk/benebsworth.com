@@ -1,0 +1,38 @@
+[
+  {
+    "id": "book-benchmark-components",
+    "file": "_benchmarking_components.png",
+    "title": "A complete reference benchmark",
+    "caption": "The book's nine-phase MLPerf Tiny anomaly-detection pipeline — task, data, model, metrics, harness and run rules fixed at once on one small embedded model."
+  },
+  {
+    "id": "book-tail-latency-gap",
+    "file": "benchmarking_tail_latency_gap.svg",
+    "title": "The tail the mean hides",
+    "caption": "The book's percentile gap figure. The packet makes the same point with the 1%-at-10× count: 10,000 slow requests per million."
+  },
+  {
+    "id": "book-confidence-detectability",
+    "file": "benchmarking_confidence_detectability.svg",
+    "title": "Disagreements versus detectability",
+    "caption": "The book's McNemar detectability curve. The packet renders the same threshold as a 2×2 grid where only the discordant cells carry signal."
+  },
+  {
+    "id": "book-power-ladder",
+    "file": "benchmarking_power_ladder.svg",
+    "title": "Eight orders of magnitude of power",
+    "caption": "The book's ladder from TinyML boards to training clusters — the span that makes 'energy per inference' meaningless without a boundary."
+  },
+  {
+    "id": "book-component-dilution",
+    "file": "vol1_benchmarking_margin_001.svg",
+    "title": "Component speedup diluted end to end",
+    "caption": "The book's margin figure for the 3× model-stage speedup arriving smaller on the request path. The packet works the same dilution on an 8 ms + 10 ms pipeline."
+  },
+  {
+    "id": "book-hardware-lottery",
+    "file": "_hardware_lottery.png",
+    "title": "The hardware lottery",
+    "caption": "Architectures win when their structure matches the era's dominant hardware — the reason a benchmark result can fail to transfer across machine generations."
+  }
+]

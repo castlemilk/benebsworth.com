@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 360" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#059669"]{fill:#34d399}
+    .dark [stroke="#059669"]{stroke:#34d399}
+    .dark [fill="#10b981"]{fill:#4ade80}
+    .dark [stroke="#10b981"]{stroke:#4ade80}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#3b82f6"]{fill:#7cb3f8}
+    .dark [stroke="#3b82f6"]{stroke:#7cb3f8}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#f59e0b"]{fill:#fbbf24}
+    .dark [stroke="#f59e0b"]{stroke:#fbbf24}
+  </style>
+  <defs>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+    <marker id="arrRr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <text x="350" y="26" text-anchor="middle" font-size="13" font-weight="600" fill="#374151">Scores are not decisions: the USPS reject gate</text>
+  <text x="350" y="43" text-anchor="middle" font-size="10" fill="#6b7280">six-stage composite of the 1989 ZIP-code and check-reader pipelines, tens of ms per envelope</text>
+
+  <!-- pipeline boxes -->
+  <g font-size="9" text-anchor="middle">
+    <rect x="20" y="120" width="88" height="40" rx="5" fill="none" stroke="#9ca3af"/>
+    <text x="64" y="136" fill="#4b5563">acquisition</text>
+    <text x="64" y="149" fill="#9ca3af" font-size="8">scan envelope</text>
+    <rect x="128" y="120" width="100" height="40" rx="5" fill="none" stroke="#9ca3af"/>
+    <text x="178" y="136" fill="#4b5563">preprocess</text>
+    <text x="178" y="149" fill="#9ca3af" font-size="8">segment + normalize</text>
+    <rect x="248" y="120" width="104" height="40" rx="5" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="300" y="136" fill="#2563eb">neural score</text>
+    <text x="300" y="149" fill="#6b7280" font-size="8">~9,760 params, ~40 KB</text>
+    <rect x="372" y="114" width="96" height="52" rx="5" fill="none" stroke="#d97706" stroke-width="1.5"/>
+    <text x="420" y="136" fill="#92400e" font-weight="600">threshold gate</text>
+    <text x="420" y="150" fill="#6b7280" font-size="8">top score vs tau</text>
+    <rect x="488" y="120" width="88" height="40" rx="5" fill="none" stroke="#047857" stroke-width="1.5"/>
+    <text x="532" y="136" fill="#047857">decide</text>
+    <text x="532" y="149" fill="#6b7280" font-size="8">trip sorter gate</text>
+    <rect x="596" y="120" width="84" height="40" rx="5" fill="none" stroke="#b91c1c" stroke-width="1.5"/>
+    <text x="638" y="136" fill="#b91c1c">review</text>
+    <text x="638" y="149" fill="#6b7280" font-size="8">human keying</text>
+  </g>
+
+  <!-- flow arrows -->
+  <g stroke="#6b7280" stroke-width="1.5" fill="none">
+    <line x1="108" y1="140" x2="128" y2="140" marker-end="url(#arrR)"/>
+    <line x1="228" y1="140" x2="248" y2="140" marker-end="url(#arrR)"/>
+    <line x1="352" y1="140" x2="372" y2="140" marker-end="url(#arrR)"/>
+    <line x1="468" y1="134" x2="488" y2="134" marker-end="url(#arrR)"/>
+    <line x1="576" y1="134" x2="596" y2="134" marker-end="url(#arrR)"/>
+    <path d="M 468 155 L 638 155 L 638 120" stroke="#b91c1c" marker-end="url(#arrRr)"/>
+  </g>
+  <text x="545" y="150" font-size="8" fill="#b91c1c" text-anchor="middle">below tau: reject</text>
+  <text x="478" y="128" font-size="8" fill="#047857" text-anchor="middle">accept</text>
+
+  <!-- measured numbers band -->
+  <g>
+    <rect x="20" y="196" width="660" height="66" rx="6" fill="none" stroke="#9ca3af"/>
+    <text x="34" y="219" font-size="10" font-weight="600" fill="#374151">measured point (1989, USPS digits): 1% error on accepted - by rejecting 12.1% for review</text>
+    <text x="34" y="237" font-size="10" fill="#4b5563">throughput: &gt;30 classifications/s after normalization, 10-12/s including acquisition</text>
+    <text x="34" y="253" font-size="9" fill="#6b7280">the Amdahl boundary: once the network is fast, the stages around it dominate</text>
+  </g>
+
+  <!-- cost rule -->
+  <g>
+    <rect x="20" y="278" width="660" height="62" rx="6" fill="none" stroke="#d97706"/>
+    <text x="34" y="301" font-size="10" font-weight="600" fill="#92400e">the rule: pick tau minimizing r(tau) x review cost + e(tau) x error cost (Chow 1970)</text>
+    <text x="34" y="319" font-size="9" fill="#4b5563">error quoted on accepted items must be scaled by the accepted fraction before it counts</text>
+    <text x="34" y="333" font-size="9" fill="#6b7280">monitor the rejection rate: review capacity is finite, and input drift moves the curve</text>
+  </g>
+</svg>

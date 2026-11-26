@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { verifyCircuit, isCircuitRunnable, type VerificationReport } from './verifier'
+import { verifyCircuit, isCircuitRunnable } from './verifier'
 import { circuit } from './validator'
 import { SAMPLES } from './samples'
 import { deserializeCircuit } from './yaml'

@@ -1,0 +1,57 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The thesis names the contract-vs-schedule split and the star-vs-ring 512x opening case; the primitive panels and the algorithm comparison carry it forward."
+    },
+    "The Contract": {
+      "figure": "::fig[primitive-contracts]",
+      "teaches": "The four group contracts as input -> operation -> output rows: AllReduce leaves Sigma on every rank, AllGather concatenates shards, ReduceScatter leaves one reduced shard per rank, AllToAll transposes chunks. The contract fixes the result, not the cost.",
+      "source": "fig-collective-primitives-overview: four panels, ranks 0-3, amber collective band, result tiles per primitive; Broadcast and Reduce as the two building blocks."
+    },
+    "The Physics of a Moved Byte": {
+      "proseOnly": "The energy ladder (0.5/20/100/1,000 pJ) is the book's data-movement-hierarchy figure; the packet carries the n*-per-chunk regime point and the 100-alpha fusion arithmetic as prose."
+    },
+    "Pricing the Schedule": {
+      "figure": "::fig[ring-trace]",
+      "teaches": "The N=4 ring trace: 2(N-1)=6 steps split scatter-reduce (3) then all-gather (3); each rank sends ~2M total while rounds grow linearly. The byte floor vs the latency tax in one picture.",
+      "source": "Ring AllReduce algorithm: scatter-reduce N-1 rounds then all-gather N-1 rounds; N=4 element-sum trace [10,26,18,34]; ring achieves 2(N-1)/N * M/beta bound (Patarasuk 2009).",
+      "alsoEmbeds": [
+        "::fig[crossover-map]"
+      ],
+      "alsoTeaches": "crossover-map: modeled time vs message size on log axes; crossover near 1 MB at 256 GPUs on 200 Gbps; tree wins small, ring wins large; M* ~ N*alpha*beta/log2 N."
+    },
+    "Topology-Aware Schedules": {
+      "proseOnly": "Hierarchical 3-phase (350 GB, 128x8, ~4-5x), torus 12-vs-30 rounds, rail-optimized 3->1 hops, and SHARP each have book figures (hierarchical-allreduce, torus-reduction, sharp-innetwork); the packet carries the numbers."
+    },
+    "AllToAll and the MoE Exchange": {
+      "proseOnly": "Injection-bound arithmetic (8 x 262.144 KB at 6.5 us, ~38.2 us bound) and the 448-vs-672 hot-expert tail are mechanism prose; the contract panel already drew the transpose."
+    },
+    "Trading Bits for Schedule": {
+      "proseOnly": "The compression table and the error-feedback trace (transmit 2, residual -0.4, true 1.6) are tabular content; the book's error-feedback margin figure covers the loop."
+    },
+    "Hiding the Exchange": {
+      "figure": "::fig[overlap-lanes]",
+      "teaches": "LogP split as two lanes: L=100us network transit hides beneath 500us compute, 2o=100us processor overhead stays exposed; DDP bucket chain where only the last bucket's transfer is exposed.",
+      "source": "fig-comm-compute-overlap: compute lane (backward L4-L1 + o slices) vs network lane (AllReduce L4-L2 hidden, L1 exposed); LogP: 2o + max(compute, L) = 600us."
+    },
+    "Calibration Before Diagnosis": {
+      "proseOnly": "Bus-bandwidth normalization (half of spec = ring traffic factor ~2) and the matched-measurement calibration contract are measurement prose, no new figure."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Audit list of the claims the packet's numbers refute."
+    },
+    "The physics": {
+      "proseOnly": "Reference table of every pinned number."
+    },
+    "Glossary": {
+      "proseOnly": "Definitions."
+    },
+    "Open questions": {
+      "proseOnly": "Discussion prompts."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Transfer notes to Ben's systems."
+    }
+  }
+}

@@ -247,7 +247,7 @@ export function GaltonBoard() {
     setLiveBalls([])
     setCounts(new Array(n + 1).fill(0))
     setTotal(0)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [n])
 
   // seed a calm batch the first time it's in view so the bell is visible on

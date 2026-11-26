@@ -1,0 +1,82 @@
+[
+  {
+    "id": "false-wake-curve",
+    "kind": "BAR_STACKED",
+    "title": "Expected false wakes per month vs per-window rejection",
+    "caption": "Packet-owned illustration of the book's margin arithmetic: ~2.59M non-keyword windows/month means even 99.999% per-window rejection leaves ~26 expected false wakes \u2014 26x over a one-per-month budget. Against the 1/month budget this shows why commercial assistants add a second, larger verification stage rather than asking the always-on detector to meet the bound alone.",
+    "xLabel": "Per-window rejection tier",
+    "yLabel": "Expected false wakes / month",
+    "xPoints": [
+      "99%",
+      "99.9%",
+      "99.99%",
+      "99.999%"
+    ],
+    "series": [
+      {
+        "key": "false-wakes",
+        "label": "Expected false wakes/month",
+        "color": "var(--chart-1)",
+        "values": [
+          25900,
+          2590,
+          259,
+          26
+        ]
+      }
+    ]
+  },
+  {
+    "id": "debt-compound",
+    "kind": "LINE",
+    "title": "Remediation backlog growth at constant net rates",
+    "caption": "Illustrative compounding of a 100-engineer-hour data-debt backlog over a 12-month planning window at net growth rates of 10%, 20%, and 30%. The formula is the book's planning heuristic \u2014 real backlogs jump at discrete upstream migrations rather than compounding smoothly.",
+    "xLabel": "Planning month",
+    "yLabel": "Backlog (engineer-hours)",
+    "xPoints": [
+      "2026-01-01",
+      "2026-04-01",
+      "2026-07-01",
+      "2026-10-01",
+      "2027-01-01"
+    ],
+    "series": [
+      {
+        "key": "r10",
+        "label": "r = 10%/period",
+        "color": "var(--chart-1)",
+        "values": [
+          100,
+          133,
+          177,
+          236,
+          314
+        ]
+      },
+      {
+        "key": "r20",
+        "label": "r = 20%/period",
+        "color": "var(--chart-2)",
+        "values": [
+          100,
+          173,
+          299,
+          516,
+          892
+        ]
+      },
+      {
+        "key": "r30",
+        "label": "r = 30%/period",
+        "color": "var(--chart-3)",
+        "values": [
+          100,
+          220,
+          483,
+          1060,
+          2330
+        ]
+      }
+    ]
+  }
+]

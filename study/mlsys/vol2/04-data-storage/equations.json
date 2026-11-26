@@ -1,0 +1,124 @@
+[
+  {
+    "id": "required-bw",
+    "number": 1,
+    "title": "The fuel-line equation",
+    "latex": "BW_{required} = \\frac{N \\times B_{batch}}{T_{step}}",
+    "caption": "Aggregate storage bandwidth must deliver every global batch inside the step window: accelerator count times batch bytes divided by step time. For the tokenized-text job it comes out to ~2.7 MB/s fleet-wide, while the same inequality on an image corpus demands hundreds of GB/s. Compute upgrades shrink the denominator and raise the requirement.",
+    "symbols": [
+      {
+        "symbol": "N",
+        "meaning": "accelerator count drawing input simultaneously (2,048)"
+      },
+      {
+        "symbol": "B_{batch}",
+        "meaning": "input bytes one worker consumes per step"
+      },
+      {
+        "symbol": "T_{step}",
+        "meaning": "step time, the delivery window (~4.64 s modeled)"
+      }
+    ]
+  },
+  {
+    "id": "stall-fraction",
+    "number": 2,
+    "title": "The stall frontier",
+    "latex": "f_{active} = \\min\\!\\left(1,\\ \\frac{BW_{supply}}{BW_{demand}}\\right)",
+    "caption": "In a fully overlapped pipeline the fraction of time compute is active equals the ratio of delivered to demanded bandwidth, capped at one. Below the knee the fleet starves linearly; above it the fleet is fed. Prefetch depth hides latency variance but cannot move a sustained rate deficit — only bandwidth or a more compact representation moves the knee.",
+    "symbols": [
+      {
+        "symbol": "f_{active}",
+        "meaning": "fraction of wall-clock time accelerators are computing"
+      },
+      {
+        "symbol": "BW_{supply}",
+        "meaning": "bandwidth the storage path actually delivers"
+      },
+      {
+        "symbol": "BW_{demand}",
+        "meaning": "bandwidth the workload asks for (required-bw)"
+      }
+    ]
+  },
+  {
+    "id": "two-phase-ckpt",
+    "number": 3,
+    "title": "Two-phase checkpoint cost",
+    "latex": "T_{pause} = \\frac{B_{shard}}{BW_{local\\ stripe}} \\approx 0.34\\ \\mathrm{s}, \\quad T_{pfs} \\approx 2.45\\ \\mathrm{s}",
+    "caption": "The synchronous pause is only the local-stripe write: the node's ~9.6 GB shard at four-drive RAID-0 bandwidth. The durable copy to the parallel file system (~2.45 s) runs asynchronously against later steps. A one-second pause would still cost ~22% of a 4.64 s step, but only ~0.17% of the ten-minute interval.",
+    "symbols": [
+      {
+        "symbol": "B_{shard}",
+        "meaning": "per-node checkpoint shard (~9.6 GB of the 2,450 GB save)"
+      },
+      {
+        "symbol": "BW_{local\\ stripe}",
+        "meaning": "local RAID-0 write bandwidth (4 drives)"
+      },
+      {
+        "symbol": "T_{pause}, T_{pfs}",
+        "meaning": "synchronous pause vs asynchronous durable copy time"
+      }
+    ]
+  },
+  {
+    "id": "ckpt-volume",
+    "number": 4,
+    "title": "Lifetime checkpoint volume",
+    "latex": "V = B_{ckpt} \\times \\frac{T_{window}}{\\Delta t} = 2450\\ \\mathrm{GB} \\times 4320 \\approx 10.6\\ \\mathrm{PB}",
+    "caption": "The 14 byte-per-parameter resumable contract makes one save 2,450 GB; at ten-minute intervals over the 30-day window that is 4,320 saves and ~10.6 PB of writes, over a thousand times the epoch's 6 TB read volume. The write path, not the corpus, sizes the storage system.",
+    "symbols": [
+      {
+        "symbol": "B_{ckpt}",
+        "meaning": "bytes per checkpoint (params x 14 B for resumable Adam)"
+      },
+      {
+        "symbol": "\\Delta t",
+        "meaning": "checkpoint interval (10 min)"
+      },
+      {
+        "symbol": "T_{window}",
+        "meaning": "training window (30 days)"
+      }
+    ]
+  },
+  {
+    "id": "locality-mean",
+    "number": 5,
+    "title": "Delivered rate under caching",
+    "latex": "BW_{delivered} = h \\cdot BW_{local} + (1-h) \\cdot BW_{pfs\\ share}",
+    "caption": "With ~88% of the corpus held in the local RAID-0 cache, mean delivered rate lands ~16 GB/s: hits stream at local-stripe speed while misses pay the node's parallel-filesystem share, ~7x slower per byte. Locality-aware staging converts shared-service bandwidth into per-node bandwidth for the working set.",
+    "symbols": [
+      {
+        "symbol": "h",
+        "meaning": "cache hit rate (~0.88 for the multimodal corpus)"
+      },
+      {
+        "symbol": "BW_{local}, BW_{pfs\\ share}",
+        "meaning": "local stripe vs the node's share of the PFS (~7x spread)"
+      }
+    ]
+  },
+  {
+    "id": "egress-vs-rent",
+    "number": 6,
+    "title": "Movement is the meter",
+    "latex": "\\$_{egress} = R_{out} \\times \\$_{GB} = 10 \\times 1\\ \\mathrm{PB} \\times \\$0.09 \\gg \\$_{rent}",
+    "caption": "Object storage prices residence and movement separately: 1 PB at \\$0.02/GB-month is \\$240k/year of rent, but ten full reads at \\$0.09/GB is \\$900k of egress. The cost question is how often the bytes move, not how many exist — the same asymmetry that makes checkpoints the dominant traffic makes egress the dominant bill.",
+    "symbols": [
+      {
+        "symbol": "R_{out}",
+        "meaning": "bytes transferred out of the store per year"
+      },
+      {
+        "symbol": "\\$_{GB}",
+        "meaning": "per-GB egress rate (~$0.09)"
+      },
+      {
+        "symbol": "\\$_{rent}",
+        "meaning": "capacity rent at $0.02/GB-month"
+      }
+    ]
+  }
+]

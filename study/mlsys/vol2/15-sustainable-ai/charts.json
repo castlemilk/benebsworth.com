@@ -1,0 +1,42 @@
+[
+  {
+    "id": "rebound-arithmetic",
+    "kind": "BAR_STACKED",
+    "title": "Efficiency per task is not fleet energy",
+    "caption": "Fleet energy index relative to the baseline, computed from the chapter's fleet identity. Inelastic demand preserves a 4x efficiency gain as a 4x reduction; the same gain with twentyfold volume growth produces a fivefold increase, and a halved query cost with 3.5x volume nets 1.75x. Efficiency creates room inside a resource budget; demand decides how much of the room is consumed.",
+    "xLabel": "scenario at fixed output quality",
+    "yLabel": "fleet energy relative to baseline",
+    "xPoints": ["baseline", "4x efficient, inelastic", "4x efficient, 20x volume", "2x efficient, 3.5x volume"],
+    "series": [
+      {
+        "key": "fleet",
+        "label": "fleet energy index",
+        "color": "var(--chart-1)",
+        "values": [1.0, 0.25, 5.0, 1.75]
+      }
+    ]
+  },
+  {
+    "id": "inference-crossover",
+    "kind": "BAR_STACKED",
+    "title": "Serving overtakes training in months",
+    "caption": "The chapter's crossover arithmetic: a one-time 1,200 MWh training run against a service answering 8 million requests per day at 0.0005 kWh each, which is 4 MWh of serving energy per day. Cumulative inference energy reaches the entire training outlay around day 300 and passes it within the first year. The crossover is workload-specific: query volume, per-query energy and grid intensity all move it.",
+    "xLabel": "days of continuous serving",
+    "yLabel": "cumulative energy (MWh)",
+    "xPoints": ["day 100", "day 200", "day 300", "day 365"],
+    "series": [
+      {
+        "key": "inference",
+        "label": "cumulative inference energy",
+        "color": "var(--chart-1)",
+        "values": [400, 800, 1200, 1460]
+      },
+      {
+        "key": "training",
+        "label": "one-time training energy",
+        "color": "var(--chart-2)",
+        "values": [1200, 1200, 1200, 1200]
+      }
+    ]
+  }
+]

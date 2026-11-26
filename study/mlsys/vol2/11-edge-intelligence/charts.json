@@ -1,0 +1,48 @@
+[
+  {
+    "id": "adapter-storage",
+    "kind": "BAR_STACKED",
+    "title": "Adapters make contexts cheap to keep",
+    "caption": "The book's personalization example: ten full 40 MB context models cost 400 MB, while one shared 40 MB backbone plus ten 200 KB adapters costs about 42 MB. This is storage only; active training memory is a separate budget.",
+    "xLabel": "Storage strategy",
+    "yLabel": "Stored MB",
+    "xPoints": [
+      "Ten full models",
+      "Backbone + adapters"
+    ],
+    "series": [
+      {
+        "key": "storage",
+        "label": "Stored model bytes",
+        "color": "var(--chart-2)",
+        "values": [
+          400,
+          42
+        ]
+      }
+    ]
+  },
+  {
+    "id": "local-epoch-optimum",
+    "kind": "BAR_STACKED",
+    "title": "Slower networks push the local-work optimum right",
+    "caption": "The book's illustrative communication-computation cost model places the time-minimizing local-epoch setting near 10 on a fast network and near 40 on a slow network. These are scenario values, not measured convergence results.",
+    "xLabel": "Network condition",
+    "yLabel": "Illustrative optimum local epochs",
+    "xPoints": [
+      "Fast network",
+      "Slow network"
+    ],
+    "series": [
+      {
+        "key": "optimum",
+        "label": "Cost-model optimum",
+        "color": "var(--chart-3)",
+        "values": [
+          10,
+          40
+        ]
+      }
+    ]
+  }
+]

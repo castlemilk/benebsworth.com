@@ -1,0 +1,20 @@
+[
+ {
+  "id": "tier-ladder",
+  "file": "tier-ladder.svg",
+  "title": "Six tiers, one gap to hide",
+  "caption": "The storage hierarchy as a ladder from T0 GPU HBM (3.35 TB/s, per accelerator) down to T5 archive (offline media, shared service). Each rung trades bandwidth for capacity and shared scope: the ~479x gap between the top and the first drive is why every rung below exists — no single tier is fast, capacious, and cheap at once."
+ },
+ {
+  "id": "stall-frontier",
+  "file": "stall-frontier.svg",
+  "title": "Fed or starved: one knee decides",
+  "caption": "Compute active-time fraction against supply/demand bandwidth ratio on a log axis: active = min(1, ratio). Below the knee the pipeline starves linearly; above it the fleet is fed. Placements: a stalled notebook pipeline at 0.8, an image job at ~3.3x headroom, the text job at ~6,000x. Prefetching hides latency variance; only bandwidth or a smaller representation moves the knee."
+ },
+ {
+  "id": "ckpt-staging",
+  "file": "ckpt-staging.svg",
+  "title": "Pause for the shard, publish the manifest",
+  "caption": "Two-phase checkpoint staging across four lanes: training pauses ~0.34 s while the node's ~9.6 GB shard lands on local NVMe, a ~2.45 s async copy to the parallel file system overlaps later steps, and the manifest publishes last. Between local write and manifest the generation is staged, not restorable — the previous committed generation is the restore point."
+ }
+]

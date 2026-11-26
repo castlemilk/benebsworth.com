@@ -1,0 +1,77 @@
+[
+ {
+  "id": "grid-decomposition",
+  "number": "6.1",
+  "title": "The 3D grid",
+  "latex": "N = \\mathrm{DP} \\times \\mathrm{PP} \\times \\mathrm{TP}",
+  "caption": "Every layout is a point in the parallelism cube: data-parallel replicas times pipeline stages times tensor-parallel shards. The reference job sits at 16 x 8 x 8 = 1,024; the 16K layout at 128 x 16 x 8 = 16,384. A legal point must divide the model evenly, fit each device's memory, and put each axis's traffic on a fabric tier that can carry it.",
+  "symbols": [
+   {"symbol": "N", "meaning": "total accelerators in the cluster"},
+   {"symbol": "\\mathrm{DP}", "meaning": "data-parallel degree: replicas, the batch axis"},
+   {"symbol": "\\mathrm{PP}", "meaning": "pipeline-parallel degree: layer stages, the depth axis"},
+   {"symbol": "\\mathrm{TP}", "meaning": "tensor-parallel degree: intra-layer shards, usually one node"}
+  ]
+ },
+ {
+  "id": "training-state",
+  "number": "6.2",
+  "title": "The training-state contract",
+  "latex": "M_{state} = 16 \\times P \\;\\Rightarrow\\; 175\\mathrm{B} \\times 16 = 2{,}800\\ \\mathrm{GB}",
+  "caption": "Mixed-precision Adam prices 16 bytes per parameter: 2-byte BF16 weights, 2-byte gradients, and a 12-byte optimizer (FP32 master plus two moments). On the 175B reference that is 2.8 TB of state against 80 GB of HBM, at least 35 accelerators of capacity before a single FLOP.",
+  "symbols": [
+   {"symbol": "P", "meaning": "parameter count"},
+   {"symbol": "16", "meaning": "bytes per parameter under mixed-precision Adam (2 + 2 + 12)"},
+   {"symbol": "2{,}800\\ \\mathrm{GB}", "meaning": "the 175B reference job's resumable training state"}
+  ]
+ },
+ {
+  "id": "scaling-efficiency",
+  "number": "6.3",
+  "title": "Scaling efficiency",
+  "latex": "\\eta = \\frac{1}{1 + \\frac{N\\,(T_{comm} + T_{sync} - T_{overlap})}{T_{compute}}}",
+  "caption": "Amdahl's law with communication: every worker's exposed communication, synchronization, and straggler time is scaled by N against one device's compute. A 1 percent residual per worker is ~84 percent of the step at 512. The reference job lands eta = 83 percent; measured series sit at 71-84 percent at the largest sizes.",
+  "symbols": [
+   {"symbol": "\\eta", "meaning": "scaling efficiency: useful-compute fraction of the step"},
+   {"symbol": "T_{comm}", "meaning": "per-worker communication time"},
+   {"symbol": "T_{sync}", "meaning": "synchronization and barrier wait"},
+   {"symbol": "T_{overlap}", "meaning": "communication hidden under compute"},
+   {"symbol": "T_{compute}", "meaning": "per-device useful compute time"}
+  ]
+ },
+ {
+  "id": "pipeline-bubble",
+  "number": "6.4",
+  "title": "The pipeline bubble",
+  "latex": "f_{bubble} = \\frac{p-1}{m + p - 1}",
+  "caption": "Of the m + p - 1 slots in a pipeline schedule, p - 1 are idle while the pipe fills and drains. PP-16 at 32 microbatches idles ~32 percent of compute; the same microbatch count at PP-4 wastes ~9 percent. Depth buys memory relief at the price of idle compute, and filling the pipe needs more microbatches, which pushes on the critical batch size.",
+  "symbols": [
+   {"symbol": "p", "meaning": "pipeline stage count"},
+   {"symbol": "m", "meaning": "microbatches per update per replica"},
+   {"symbol": "p-1", "meaning": "stages that must fill before full occupancy"}
+  ]
+ },
+ {
+  "id": "critical-batch",
+  "number": "6.5",
+  "title": "Critical batch size",
+  "latex": "B^{*} \\approx \\frac{\\mathrm{tr}(\\Sigma)}{\\|\\nabla \\mathcal{L}(\\theta)\\|^{2}}",
+  "caption": "The gradient-noise estimate of where batch scaling stops paying: the trace of the gradient covariance over the squared gradient norm. Below B*, larger batches cut optimization steps nearly proportionally; above it, extra samples buy diminishing reductions. It is a statistical ceiling on data parallelism, separate from the memory-limited batch.",
+  "symbols": [
+   {"symbol": "B^{*}", "meaning": "critical batch size, the diminishing-returns crossover"},
+   {"symbol": "\\mathrm{tr}(\\Sigma)", "meaning": "total gradient noise: trace of the gradient covariance"},
+   {"symbol": "\\|\\nabla \\mathcal{L}\\|^{2}", "meaning": "squared gradient norm, the signal the batch averages toward"}
+  ]
+ },
+ {
+  "id": "activation-memory",
+  "number": "6.6",
+  "title": "Activation memory scaling",
+  "latex": "M_{act} = \\mathcal{O}(B \\cdot S \\cdot H \\cdot L) \\quad\\text{linear layers};\\qquad \\mathcal{O}(B \\cdot A \\cdot S^{2} \\cdot L) \\quad\\text{un-tiled attention}",
+  "caption": "At long contexts the activations, not the weights, are the footprint: linear in sequence length for ordinary layers, quadratic for un-tiled attention. FlashAttention drops the stored score matrix but not the linear growth. GPT-3's unoptimized activations exceed 1 TB at batch 4, sequence 2048; full checkpointing fits them under 25 GB, trading recompute for memory.",
+  "symbols": [
+   {"symbol": "B, S, H, L", "meaning": "batch, sequence length, hidden width, layer count"},
+   {"symbol": "A", "meaning": "attention head count"},
+   {"symbol": "S^{2}", "meaning": "the quadratic attention-score footprint checkpointing and tiling fight"}
+  ]
+ }
+]

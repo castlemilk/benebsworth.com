@@ -1,0 +1,72 @@
+[
+  {
+    "id": "book-robustness-taxonomy",
+    "file": "robustness-taxonomy.svg",
+    "title": "Book robustness taxonomy",
+    "caption": "The book's full subtype decomposition: each pillar descends onto a defense wall where it enters the pipeline. Our silent-failure sketch keeps the three pillars but organizes them by evidence family instead.",
+    "alt": "Three pillar columns with failure chips descending onto defense walls over a pipeline rail"
+  },
+  {
+    "id": "book-shift-types",
+    "file": "shift-types.svg",
+    "title": "Book shift-type geometry",
+    "caption": "The book's three-panel picture of covariate shift, label shift and concept drift as changes in input region, label prior and mapping. Our packet carries the what-stays-fixed rule in prose.",
+    "alt": "Three panels showing inputs migrating, label priors skewing and the mapping itself changing"
+  },
+  {
+    "id": "book-weight-corruption",
+    "file": "weight-corruption.svg",
+    "title": "Book bit-flip corruption path",
+    "caption": "The book's figure tracing one flipped FP32 exponent bit from memory through a hidden unit to the output logits. Our packet keeps the 2^128 scaling arithmetic and the finite-outlier point in prose.",
+    "alt": "Network diagram tracing a corrupted weight through a hidden unit to output logits"
+  },
+  {
+    "id": "book-gradient-attack",
+    "file": "gradient-attack.svg",
+    "title": "Book FGSM corner geometry",
+    "caption": "The book's illustration of the sign-gradient step carrying the input to a corner of the budget cube across the decision boundary. Our packet states the same first-order alignment argument in the FGSM section.",
+    "alt": "Perturbation moving an input to a cube corner across a decision boundary"
+  },
+  {
+    "id": "book-selective-prediction-routing",
+    "file": "selective-prediction-routing.svg",
+    "title": "Book selective-prediction routing",
+    "caption": "The book's routing diagram for answer, stronger model or reviewer, and abstain. Our risk-coverage sketch focuses on the curve and the fallback-load arithmetic instead.",
+    "alt": "Routing diagram splitting requests across answer, fallback and abstain paths"
+  },
+  {
+    "id": "book-paired-pipeline-replay",
+    "file": "paired-pipeline-replay.svg",
+    "title": "Book paired pipeline replay",
+    "caption": "The book's diagram of replaying golden inputs through version-pinned pipelines and comparing tensors stage by stage. Our fault-masquerade sketch compresses the same diagnosis into its replay signal.",
+    "alt": "Two pipeline versions replaying the same inputs with per-stage tensor comparison"
+  },
+  {
+    "id": "book-poisoning-interception",
+    "file": "poisoning-interception.svg",
+    "title": "Book poisoning interception layers",
+    "caption": "The book's figure of the interception layer examining contributed records before training. Our packet carries the four ordered layers as a numbered list in the poisoning section.",
+    "alt": "Defense layers intercepting poisoned records along the data path"
+  },
+  {
+    "id": "book-autoencoder",
+    "file": "autoencoder.svg",
+    "title": "Book autoencoder ingestion gate",
+    "caption": "The book's bottleneck autoencoder accepting low-reconstruction-error records and quarantining outliers. Our packet notes the blind spot: autoencoders can reconstruct unfamiliar inputs well or learn the attack pattern from a contaminated reference.",
+    "alt": "Autoencoder compressing inputs through a bottleneck and filtering by reconstruction error"
+  },
+  {
+    "id": "book-psi-drift-knee",
+    "file": "robust_ai_psi_drift_knee.svg",
+    "title": "Book PSI timeline",
+    "caption": "The book's PSI-over-weeks plot with warning and major-shift bands and the week-41 reference re-approval. Our packet explains in prose why the lower PSI after week 41 does not establish improved predictions.",
+    "alt": "Weekly PSI line crossing warning and critical bands then dropping after reference re-approval"
+  },
+  {
+    "id": "book-clean-vs-robust",
+    "file": "clean-vs-robust-classification.svg",
+    "title": "Book clean-versus-robust trade-off",
+    "caption": "The book's comparison of clean and robust decision boundaries. Our packet keeps the robustness-margin argument in prose: each compression technique can shrink the margin even when clean accuracy holds.",
+    "alt": "Comparison of clean and robust classification decision boundaries"
+  }
+]

@@ -1,0 +1,73 @@
+[
+  {
+    "id": "iron-law",
+    "title": "Iron law of ML systems",
+    "number": 1,
+    "latex": "T=\\frac{D}{B}+\\frac{O}{P\\,\\eta}+L",
+    "caption": "Execution time decomposes into data movement, computation, and fixed overhead. The two timed terms overlap between their maximum and their sum; every optimization in the book attacks exactly one of the three terms.",
+    "symbols": [
+      { "symbol": "T", "name": "execution time", "meaning": "Total time for the workload or request." },
+      { "symbol": "D", "name": "data volume", "meaning": "Bytes the workload moves." },
+      { "symbol": "B", "name": "bandwidth", "meaning": "Sustained memory-bandwidth rate." },
+      { "symbol": "O", "name": "operations", "meaning": "Arithmetic work the workload performs." },
+      { "symbol": "P\\eta", "name": "achieved rate", "meaning": "Peak arithmetic rate times the hardware efficiency fraction actually realized." },
+      { "symbol": "L", "name": "overhead", "meaning": "Fixed latency that neither movement nor compute can hide." }
+    ]
+  },
+  {
+    "id": "ai-law",
+    "title": "Arithmetic intensity law",
+    "number": 2,
+    "latex": "\\text{rate}\\le \\min(P,\\; I\\times B)",
+    "caption": "Attainable compute is capped by the lower of peak rate and intensity times bandwidth. A workload left of the ridge cannot buy speed with more arithmetic — the roofline makes the ridge the machine's balance point.",
+    "symbols": [
+      { "symbol": "I", "name": "arithmetic intensity", "meaning": "Operations performed per byte moved." },
+      { "symbol": "B", "name": "bandwidth", "meaning": "Memory bandwidth of the target machine." },
+      { "symbol": "P", "name": "peak rate", "meaning": "Peak arithmetic throughput of the machine." }
+    ]
+  },
+  {
+    "id": "decode-floor",
+    "title": "Llama 70B decode floor",
+    "number": 3,
+    "latex": "T_{\\mathrm{mem}}=\\frac{140\\ \\mathrm{GB}}{6.70\\ \\mathrm{TB/s}}\\approx 20.9\\ \\mathrm{ms},\\qquad T_{\\mathrm{comp}}=\\frac{140\\ \\mathrm{GFLOP}}{1{,}978\\ \\mathrm{TFLOP/s}}\\approx 0.07\\ \\mathrm{ms}",
+    "caption": "Batch-one Llama 2 70B decode on two H100s: every token reads all 140 GB of FP16 weights once, so the memory floor exceeds the compute floor by 295.2x. Batching, lower-precision weights, or speculative decode are the levers; faster arithmetic is not.",
+    "symbols": [
+      { "symbol": "T_{\\mathrm{mem}}", "name": "memory floor", "meaning": "Lower bound from moving all weights once per token." },
+      { "symbol": "T_{\\mathrm{comp}}", "name": "compute floor", "meaning": "Lower bound from arithmetic at peak rate." }
+    ]
+  },
+  {
+    "id": "fleet-mtbf",
+    "title": "Fleet MTBF",
+    "number": 4,
+    "latex": "\\mathrm{MTBF}_{\\mathrm{fleet}}=\\frac{\\mathrm{MTTF}}{N}=\\frac{50{,}000\\ \\mathrm{h}}{1{,}024}\\approx 48.8\\ \\mathrm{h}",
+    "caption": "Independent failures multiply across a pool. A GPU at ~5.7 years MTTF looks reliable alone; a 1,024-accelerator cluster sees a failure about every two days. Fault tolerance is a requirement, not a feature.",
+    "symbols": [
+      { "symbol": "\\mathrm{MTTF}", "name": "component life", "meaning": "Mean time to failure of one accelerator." },
+      { "symbol": "N", "name": "fleet size", "meaning": "Number of independently failing components." }
+    ]
+  },
+  {
+    "id": "critical-path",
+    "title": "Composed-request critical path",
+    "number": 5,
+    "latex": "T_{\\mathrm{req}}=t_{\\mathrm{ret}}+t_{\\mathrm{plan}}+\\max(t_{a},t_{b})+t_{\\mathrm{gen}}+t_{\\mathrm{ver}}+t_{\\mathrm{oh}}",
+    "caption": "A composed assistant's latency is set by its critical path, not by the sum of stages: parallel tool calls collapse to the slower one. The latency-budget principle must hold this sum at the chosen quantile.",
+    "symbols": [
+      { "symbol": "t_{a},t_{b}", "name": "parallel stages", "meaning": "Tool calls issued concurrently; only the slower bounds the path." },
+      { "symbol": "t_{\\mathrm{oh}}", "name": "orchestration", "meaning": "Overhead between composed stages." }
+    ]
+  },
+  {
+    "id": "amdahl-cap",
+    "title": "Amdahl ceiling",
+    "number": 6,
+    "latex": "S=\\frac{1}{(1-f)+f/s}=\\frac{1}{0.9+0.10/10}\\approx 1.1\\times",
+    "caption": "The un-accelerated fraction caps total speedup. Making inference — 10% of the request path — ten times faster moves the system about 10%. The stage nobody owns sets the ceiling.",
+    "symbols": [
+      { "symbol": "f", "name": "accelerated fraction", "meaning": "Share of execution time the speedup touches." },
+      { "symbol": "s", "name": "local speedup", "meaning": "Factor by which that fraction is accelerated." }
+    ]
+  }
+]

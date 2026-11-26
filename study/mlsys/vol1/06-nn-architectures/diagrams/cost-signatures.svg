@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 470" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#dbeafe"]{fill:#1e3a5f}
+    .dark [fill="#dcfce7"]{fill:#14532d}
+    .dark [fill="#e5e7eb"]{fill:#374151}
+    .dark [fill="#fef3c7"]{fill:#453007}
+    .dark [fill="#fee2e2"]{fill:#4c1d1d}
+    .dark [fill="#ede9fe"]{fill:#2e1065}
+    .dark [fill="#f3f4f6"]{fill:#1f2937}
+    .dark [fill="#ffffff"]{fill:#161a22}
+    .dark rect.bg{fill:#0f1115}
+  </style>
+  <rect x="0" y="0" width="700" height="470" fill="#ffffff" class="bg"/>
+  <text x="350" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#374151">One signature per family: weights · MACs · bytes resident</text>
+  <text x="350" y="44" text-anchor="middle" font-size="10" fill="#6b7280">the same three counts answer which iron-law term saturates first</text>
+
+  <!-- MLP card -->
+  <g>
+    <rect x="20" y="64" width="156" height="288" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+    <text x="98" y="86" text-anchor="middle" font-size="13" font-weight="bold" fill="#374151">MLP</text>
+    <text x="98" y="102" text-anchor="middle" font-size="9" fill="#6b7280">no structure assumed</text>
+    <rect x="32" y="112" width="132" height="52" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="98" y="126" text-anchor="middle" font-size="8.5" fill="#4b5563">data pattern</text>
+    <text x="98" y="140" text-anchor="middle" font-size="9.5" fill="#374151">anything</text>
+    <text x="98" y="154" text-anchor="middle" font-size="8.5" fill="#6b7280">dense all-to-all</text>
+    <rect x="32" y="172" width="132" height="96" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="98" y="186" text-anchor="middle" font-size="8.5" fill="#4b5563">signature</text>
+    <text x="40" y="202" font-size="8.5" fill="#374151">weights  quadratic</text>
+    <text x="40" y="216" font-size="8.5" fill="#374151">MACs     1 per</text>
+    <text x="40" y="230" font-size="8.5" fill="#374151">         weight (B=1)</text>
+    <text x="40" y="244" font-size="8.5" fill="#374151">resident all weights</text>
+    <text x="40" y="258" font-size="8.5" fill="#6b7280">I ≈ 0.5 FLOP/B</text>
+    <rect x="32" y="278" width="132" height="60" rx="4" fill="#fee2e2" stroke="#b91c1c"/>
+    <text x="98" y="294" text-anchor="middle" font-size="8.5" fill="#b91c1c">saturates</text>
+    <text x="98" y="308" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b91c1c">bandwidth</text>
+    <text x="98" y="324" text-anchor="middle" font-size="8" fill="#b91c1c">GEMV floor</text>
+  </g>
+
+  <!-- CNN card -->
+  <g>
+    <rect x="188" y="64" width="156" height="288" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+    <text x="266" y="86" text-anchor="middle" font-size="13" font-weight="bold" fill="#374151">CNN</text>
+    <text x="266" y="102" text-anchor="middle" font-size="9" fill="#6b7280">locality + sharing</text>
+    <rect x="200" y="112" width="132" height="52" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="266" y="126" text-anchor="middle" font-size="8.5" fill="#4b5563">data pattern</text>
+    <text x="266" y="140" text-anchor="middle" font-size="9.5" fill="#374151">spatial grids</text>
+    <text x="266" y="154" text-anchor="middle" font-size="8.5" fill="#6b7280">local, shift-equivariant</text>
+    <rect x="200" y="172" width="132" height="96" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="266" y="186" text-anchor="middle" font-size="8.5" fill="#4b5563">signature</text>
+    <text x="208" y="202" font-size="8.5" fill="#374151">weights  few, shared</text>
+    <text x="208" y="216" font-size="8.5" fill="#374151">MACs     ~50K reuse/</text>
+    <text x="208" y="230" font-size="8.5" fill="#374151">         weight</text>
+    <text x="208" y="244" font-size="8.5" fill="#374151">resident feature maps</text>
+    <text x="208" y="258" font-size="8.5" fill="#6b7280">I ≈ 100+ FLOP/B</text>
+    <rect x="200" y="278" width="132" height="60" rx="4" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="266" y="294" text-anchor="middle" font-size="8.5" fill="#1d4ed8">saturates</text>
+    <text x="266" y="308" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#1d4ed8">compute</text>
+    <text x="266" y="324" text-anchor="middle" font-size="8" fill="#1d4ed8">GEMM (im2col)</text>
+  </g>
+
+  <!-- RNN card -->
+  <g>
+    <rect x="356" y="64" width="156" height="288" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+    <text x="434" y="86" text-anchor="middle" font-size="13" font-weight="bold" fill="#374151">RNN</text>
+    <text x="434" y="102" text-anchor="middle" font-size="9" fill="#6b7280">ordered recurrence</text>
+    <rect x="368" y="112" width="132" height="52" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="434" y="126" text-anchor="middle" font-size="8.5" fill="#4b5563">data pattern</text>
+    <text x="434" y="140" text-anchor="middle" font-size="9.5" fill="#374151">ordered streams</text>
+    <text x="434" y="154" text-anchor="middle" font-size="8.5" fill="#6b7280">fixed O(1) state</text>
+    <rect x="368" y="172" width="132" height="96" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="434" y="186" text-anchor="middle" font-size="8.5" fill="#4b5563">signature</text>
+    <text x="376" y="202" font-size="8.5" fill="#374151">weights  shared over</text>
+    <text x="376" y="216" font-size="8.5" fill="#374151">         all steps</text>
+    <text x="376" y="230" font-size="8.5" fill="#374151">MACs     serial chain</text>
+    <text x="376" y="244" font-size="8.5" fill="#374151">         no batch win</text>
+    <text x="376" y="258" font-size="8.5" fill="#6b7280">state &lt; 1 MiB</text>
+    <rect x="368" y="278" width="132" height="60" rx="4" fill="#fef3c7" stroke="#d97706"/>
+    <text x="434" y="294" text-anchor="middle" font-size="8.5" fill="#92400e">saturates</text>
+    <text x="434" y="308" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#92400e">latency</text>
+    <text x="434" y="324" text-anchor="middle" font-size="8" fill="#92400e">serial floor</text>
+  </g>
+
+  <!-- Transformer card -->
+  <g>
+    <rect x="524" y="64" width="156" height="288" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+    <text x="602" y="86" text-anchor="middle" font-size="13" font-weight="bold" fill="#374151">Transformer</text>
+    <text x="602" y="102" text-anchor="middle" font-size="9" fill="#6b7280">content routing</text>
+    <rect x="536" y="112" width="132" height="52" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="602" y="126" text-anchor="middle" font-size="8.5" fill="#4b5563">data pattern</text>
+    <text x="602" y="140" text-anchor="middle" font-size="9.5" fill="#374151">long-range links</text>
+    <text x="602" y="154" text-anchor="middle" font-size="8.5" fill="#6b7280">pairwise S×S scores</text>
+    <rect x="536" y="172" width="132" height="96" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="602" y="186" text-anchor="middle" font-size="8.5" fill="#4b5563">signature</text>
+    <text x="544" y="202" font-size="8.5" fill="#374151">weights  wide GEMMs</text>
+    <text x="544" y="216" font-size="8.5" fill="#374151">MACs     +S² past 6d</text>
+    <text x="544" y="230" font-size="8.5" fill="#374151">resident KV cache,</text>
+    <text x="544" y="244" font-size="8.5" fill="#374151">         grows w/ ctx</text>
+    <text x="544" y="258" font-size="8.5" fill="#6b7280">two regimes</text>
+    <rect x="536" y="278" width="62" height="60" rx="4" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="567" y="294" text-anchor="middle" font-size="7.5" fill="#1d4ed8">prefill</text>
+    <text x="567" y="308" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1d4ed8">compute</text>
+    <text x="567" y="322" text-anchor="middle" font-size="7" fill="#1d4ed8">GEMM</text>
+    <rect x="606" y="278" width="62" height="60" rx="4" fill="#fee2e2" stroke="#b91c1c"/>
+    <text x="637" y="294" text-anchor="middle" font-size="7.5" fill="#b91c1c">decode</text>
+    <text x="637" y="308" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#b91c1c">bandwidth</text>
+    <text x="637" y="322" text-anchor="middle" font-size="7" fill="#b91c1c">~1 FLOP/B</text>
+  </g>
+
+  <!-- DLRM wide strip -->
+  <g>
+    <rect x="20" y="368" width="660" height="88" rx="8" fill="#f3f4f6" stroke="#9ca3af"/>
+    <text x="44" y="392" font-size="13" font-weight="bold" fill="#374151">DLRM</text>
+    <text x="44" y="408" font-size="9" fill="#6b7280">categorical IDs →</text>
+    <text x="44" y="420" font-size="9" fill="#6b7280">gathered rows</text>
+    <rect x="140" y="380" width="200" height="64" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="240" y="395" text-anchor="middle" font-size="8.5" fill="#4b5563">signature</text>
+    <text x="150" y="410" font-size="8.5" fill="#374151">weights  = the tables (TB-scale)</text>
+    <text x="150" y="424" font-size="8.5" fill="#374151">MACs     ~0 on lookups (copies)</text>
+    <text x="150" y="437" font-size="8.5" fill="#374151">resident table rows, irregular</text>
+    <rect x="356" y="380" width="150" height="64" rx="4" fill="#ede9fe" stroke="#6b7280"/>
+    <text x="431" y="396" text-anchor="middle" font-size="8.5" fill="#374151">saturates</text>
+    <text x="431" y="411" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#374151">capacity first</text>
+    <text x="431" y="426" text-anchor="middle" font-size="8" fill="#4b5563">then bandwidth</text>
+    <text x="431" y="438" text-anchor="middle" font-size="8" fill="#4b5563">(HBM/DRAM/NVLink)</text>
+    <rect x="518" y="380" width="150" height="64" rx="4" fill="#ffffff" stroke="#e5e7eb"/>
+    <text x="593" y="396" text-anchor="middle" font-size="8.5" fill="#4b5563">three escapes</text>
+    <text x="528" y="411" font-size="8.5" fill="#374151">shrink · move ·</text>
+    <text x="528" y="424" font-size="8.5" fill="#374151">partition tables</text>
+    <text x="528" y="437" font-size="8.5" fill="#6b7280">intensity: n/a</text>
+  </g>
+</svg>

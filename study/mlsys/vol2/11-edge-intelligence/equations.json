@@ -1,0 +1,201 @@
+[
+  {
+    "id": "peak-memory",
+    "number": "11.1",
+    "title": "Peak adaptation memory",
+    "latex": "M_{\\mathrm{peak}}=M_{\\mathrm{resident}}+M_{\\mathrm{trainable}}+\\max_t\\left[M_{\\mathrm{act}}(t)+M_{\\mathrm{workspace}}(t)\\right]",
+    "caption": "Training fit is a peak live-memory problem across resident weights, trainable state, activations and workspace, not a comparison of weight bytes with installed RAM.",
+    "symbols": [
+      {
+        "symbol": "M_{\\mathrm{peak}}",
+        "name": "peak adaptation memory",
+        "meaning": "maximum live working memory required by an adaptation window"
+      },
+      {
+        "symbol": "M_{\\mathrm{resident}}",
+        "name": "resident weight memory",
+        "meaning": "frozen backbone weights that must reside in working memory"
+      },
+      {
+        "symbol": "M_{\\mathrm{trainable}}",
+        "name": "trainable state memory",
+        "meaning": "trainable parameters plus their gradients and optimizer state"
+      },
+      {
+        "symbol": "M_{\\mathrm{act}}(t)",
+        "name": "activation memory",
+        "meaning": "saved activations live at time t in the execution schedule"
+      },
+      {
+        "symbol": "M_{\\mathrm{workspace}}(t)",
+        "name": "operator workspace",
+        "meaning": "temporary execution buffers live at time t"
+      }
+    ]
+  },
+  {
+    "id": "background-admission",
+    "number": "11.2",
+    "title": "Background adaptation admission",
+    "latex": "E_{\\mathrm{win}}\\le E_{\\mathrm{allow}}\\quad\\land\\quad P_{\\mathrm{dev}}+\\Delta P_{\\mathrm{adapt}}\\le P_{\\mathrm{thermal}}\\quad\\land\\quad L_{\\mathrm{fg}}+\\Delta L_{\\mathrm{adapt}}\\le D_{\\mathrm{fg}}",
+    "caption": "A background update is admitted only when predicted energy, sustained power and foreground-latency impact all fit their separate budgets. Charging relaxes only the energy term.",
+    "symbols": [
+      {
+        "symbol": "E_{\\mathrm{win}}",
+        "name": "window energy",
+        "meaning": "predicted energy consumed by one adaptation window"
+      },
+      {
+        "symbol": "E_{\\mathrm{allow}}",
+        "name": "energy allowance",
+        "meaning": "energy policy permits before the next charging opportunity"
+      },
+      {
+        "symbol": "P_{\\mathrm{dev}}+\\Delta P_{\\mathrm{adapt}}",
+        "name": "sustained power with adaptation",
+        "meaning": "current device power plus the adaptation increment"
+      },
+      {
+        "symbol": "P_{\\mathrm{thermal}}",
+        "name": "thermal power limit",
+        "meaning": "sustained power the device can dissipate without throttling or discomfort"
+      },
+      {
+        "symbol": "L_{\\mathrm{fg}}+\\Delta L_{\\mathrm{adapt}}",
+        "name": "foreground latency with adaptation",
+        "meaning": "measured foreground latency plus worst-case contention increase"
+      },
+      {
+        "symbol": "D_{\\mathrm{fg}}",
+        "name": "foreground deadline",
+        "meaning": "user-facing latency deadline that background learning may not consume"
+      }
+    ]
+  },
+  {
+    "id": "lora-params",
+    "number": "11.3",
+    "title": "Low-rank update parameters",
+    "latex": "N_{\\mathrm{LoRA}}=r(d_{\\mathrm{in}}+d_{\\mathrm{out}})\\quad\\text{versus}\\quad N_{\\mathrm{full}}=d_{\\mathrm{in}}d_{\\mathrm{out}}",
+    "caption": "LoRA trains two thin matrices rather than the full matrix. The saving applies to trainable parameters; backward traversal, activations and optimizer state still need accounting.",
+    "symbols": [
+      {
+        "symbol": "r",
+        "name": "adapter rank",
+        "meaning": "rank or bottleneck width of the low-rank update"
+      },
+      {
+        "symbol": "d_{\\mathrm{in}}",
+        "name": "input dimension",
+        "meaning": "input width of the adapted matrix"
+      },
+      {
+        "symbol": "d_{\\mathrm{out}}",
+        "name": "output dimension",
+        "meaning": "output width of the adapted matrix"
+      },
+      {
+        "symbol": "N_{\\mathrm{LoRA}}",
+        "name": "LoRA trainable parameters",
+        "meaning": "parameters in the down- and up-projections"
+      },
+      {
+        "symbol": "N_{\\mathrm{full}}",
+        "name": "full matrix parameters",
+        "meaning": "parameters exposed by full fine-tuning"
+      }
+    ]
+  },
+  {
+    "id": "fedavg",
+    "number": "11.4",
+    "title": "Federated averaging",
+    "latex": "\\theta^{t+1}=\\sum_{k=1}^{K}\\frac{n_k}{n}\\theta_k^{t+1},\\qquad n=\\sum_k n_k",
+    "caption": "FedAvg forms an example-weighted average of returned client models. The weighting rule is a population policy, not a neutral implementation detail.",
+    "symbols": [
+      {
+        "symbol": "\\theta^{t+1}",
+        "name": "next global model",
+        "meaning": "shared model after round t aggregation"
+      },
+      {
+        "symbol": "\\theta_k^{t+1}",
+        "name": "client model",
+        "meaning": "model returned by client k after local training"
+      },
+      {
+        "symbol": "n_k",
+        "name": "client sample count",
+        "meaning": "number of examples used by client k"
+      },
+      {
+        "symbol": "K",
+        "name": "participating clients",
+        "meaning": "clients whose updates completed and were accepted in the round"
+      }
+    ]
+  },
+  {
+    "id": "time-to-target",
+    "number": "11.5",
+    "title": "Measured time to target",
+    "latex": "T_{\\mathrm{target}}(E)=\\sum_{r=1}^{R(E)}T_{\\mathrm{round}}(E)",
+    "caption": "Local epochs are compared by measured time to a validated quality target, including round duration and completion, rather than by communication rounds alone.",
+    "symbols": [
+      {
+        "symbol": "E",
+        "name": "local epochs",
+        "meaning": "number of local epochs each client performs per round"
+      },
+      {
+        "symbol": "R(E)",
+        "name": "rounds to target",
+        "meaning": "first validated round count reaching the declared quality target"
+      },
+      {
+        "symbol": "T_{\\mathrm{round}}(E)",
+        "name": "round duration",
+        "meaning": "observed duration of selection, local work, transfer, aggregation and waiting"
+      },
+      {
+        "symbol": "T_{\\mathrm{target}}(E)",
+        "name": "time to target",
+        "meaning": "elapsed wall-clock time to the validated target under a candidate local-work setting"
+      }
+    ]
+  },
+  {
+    "id": "round-traffic",
+    "number": "11.6",
+    "title": "Federated round traffic",
+    "latex": "V_{\\mathrm{round}}=V_{\\mathrm{down}}+V_{\\mathrm{up}}+V_{\\mathrm{protocol}}+V_{\\mathrm{retry}}",
+    "caption": "A round pays download, upload, protocol and retry traffic. Compressed uploads alone do not establish end-to-end communication savings.",
+    "symbols": [
+      {
+        "symbol": "V_{\\mathrm{round}}",
+        "name": "round communication volume",
+        "meaning": "total bytes transferred by one federated round"
+      },
+      {
+        "symbol": "V_{\\mathrm{down}}",
+        "name": "download volume",
+        "meaning": "global-model bytes sent to participating clients"
+      },
+      {
+        "symbol": "V_{\\mathrm{up}}",
+        "name": "upload volume",
+        "meaning": "client update bytes returned to the coordinator"
+      },
+      {
+        "symbol": "V_{\\mathrm{protocol}}",
+        "name": "protocol volume",
+        "meaning": "control, cryptographic and aggregation-protocol bytes"
+      },
+      {
+        "symbol": "V_{\\mathrm{retry}}",
+        "name": "retry volume",
+        "meaning": "retransmission and recovery bytes caused by interruption or dropout"
+      }
+    ]
+  }
+]

@@ -1,0 +1,34 @@
+.button {
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  font: 500 15px / 1 var(--fluid-font);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  will-change: transform;
+  transition: background-color 200ms ease;
+}
+.button[data-variant="solid"] {
+  background: var(--fluid-accent);
+  color: var(--fluid-on-accent);
+}
+.button[data-variant="quiet"] {
+  background: color-mix(in srgb, var(--fluid-text) 10%, transparent);
+  color: var(--fluid-text);
+}
+@media (hover: hover) {
+  .button[data-variant="quiet"]:hover {
+    background: color-mix(in srgb, var(--fluid-text) 16%, transparent);
+  }
+}
+.button:focus-visible {
+  outline: 2px solid var(--fluid-focus);
+  outline-offset: 3px;
+}
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

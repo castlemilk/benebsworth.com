@@ -1,0 +1,50 @@
+[
+  {
+    "id": "shared-fleet-capacity",
+    "kind": "BAR_STACKED",
+    "title": "Sharing one fleet beats partitioning it",
+    "caption": "The chapter's multi-tenant notebook: a fixed 30 GPU-equivalents of active workload needs 100 dedicated GPUs at 0.30 occupancy or about 43 shared GPUs at 0.70 occupancy. That is a 57 percent capacity saving and 2.33 times the active GPU-equivalents for the same 1.75 million dollar annual budget. Statistical multiplexing needs headroom for coincident peaks and isolation.",
+    "xLabel": "Capacity model",
+    "yLabel": "GPUs provisioned",
+    "xPoints": [
+      "Dedicated quotas",
+      "Shared platform"
+    ],
+    "series": [
+      {
+        "key": "gpus",
+        "label": "GPUs required",
+        "color": "var(--chart-2)",
+        "values": [
+          100,
+          43
+        ]
+      }
+    ]
+  },
+  {
+    "id": "platform-breakeven",
+    "kind": "BAR_STACKED",
+    "title": "Platform returns are linear in model count",
+    "caption": "Net annual benefit above a 2 million dollar platform cost, assuming 100 thousand dollars of recovered value per model per year. Break-even sits at 20 models; at 100 models the benefit-cost ratio is 5, a 400 percent net return. Recovered engineering time is capacity value, not automatic cash.",
+    "xLabel": "Production models",
+    "yLabel": "Net annual benefit, millions USD",
+    "xPoints": [
+      "20 models",
+      "50 models",
+      "100 models"
+    ],
+    "series": [
+      {
+        "key": "net",
+        "label": "Benefit minus platform cost",
+        "color": "var(--chart-3)",
+        "values": [
+          0,
+          3,
+          8
+        ]
+      }
+    ]
+  }
+]

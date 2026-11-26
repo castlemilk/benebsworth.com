@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-trace-one-weight-title" aria-describedby="study-svg-trace-one-weight-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-trace-one-weight-title">Follow one projection weight</title>
+  <desc id="study-svg-trace-one-weight-desc">A weight fetch can serve several outputs only when the schedule brings the corresponding input rows to the engine while that weight is still available. Read a weight: Fetch W[k,n] from device memory into local storage. Then Visit input rows: Pair the weight with X[m,k] for each available row m. Then Accumulate by row: Add each product to its own output sum Y[m,n]. Then Check reuse: Count device-memory reads of W[k,n] across those rows.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Read a weight</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Fetch W[k,n] from device memory into</tspan>
+    <tspan x="19" y="64">local storage.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Visit input rows</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Pair the weight with X[m,k] for each</tspan>
+    <tspan x="19" y="165">available row m.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Accumulate by row</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Add each product to its own output</tspan>
+    <tspan x="19" y="266">sum Y[m,n].</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Check reuse</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Count device-memory reads of W[k,n]</tspan>
+    <tspan x="19" y="367">across those rows.</tspan></text>
+  </g>
+</svg>

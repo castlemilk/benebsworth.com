@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="study-fig-fit ds9-data-wall" viewBox="0 0 336 153" role="img" aria-labelledby="ds9-data-wall-title ds9-data-wall-desc">
+  <title id="ds9-data-wall-title">Twice the training slots, the same four examples</title>
+  <desc id="ds9-data-wall-desc">The illustrative second pass contains the same four distinct examples as the first. Eight training slots need not buy eight different learning signals.</desc>
+  <style>
+    .ds9-data-wall { --ink: #253741; --quiet: #435861; --accent: #086653; --wash: #c9e8dd; --line: #858e8a; }
+    .dark .ds9-data-wall { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; }
+    @media (prefers-color-scheme: dark) { :root.ds9-data-wall { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; } }
+    .ds9-data-wall text { font: 16px system-ui, sans-serif; fill: var(--ink); }
+    .ds9-data-wall .ds-title { font-weight: 650; }
+    .ds9-data-wall .ds-note { font-size: 14px; fill: var(--quiet); }
+    .ds9-data-wall .ds-track { fill: none; stroke: var(--line); stroke-width: 1.5; }
+    .ds9-data-wall .ds-focus { fill: var(--wash); stroke: var(--accent); stroke-width: 1.5; }
+  </style>
+<text class="ds-title" x="4" y="23">One pass</text><text class="ds-note" x="123" y="23">4 slots · 4 distinct examples</text>
+<text class="ds-title" x="4" y="96">Two passes</text><text class="ds-note" x="123" y="96">8 slots · 4 distinct examples</text>
+<g class="ds-focus"><rect x="4" y="35" width="154" height="34" rx="3"/><rect x="4" y="108" width="154" height="34" rx="3"/></g>
+<rect class="ds-track" x="169" y="108" width="154" height="34" rx="3"/>
+<g text-anchor="middle" letter-spacing="4"><text x="81" y="58">A B C D</text><text x="81" y="131">A B C D</text><text x="246" y="131">A B C D</text></g>
+</svg>

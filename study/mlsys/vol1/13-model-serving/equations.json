@@ -1,0 +1,69 @@
+[
+  {
+    "id": "littles-law",
+    "title": "Little's Law: resident population",
+    "latex": "L=\\lambda W",
+    "caption": "Average in-flight requests equal arrival rate times mean time in system. At 1,000 QPS and 50 ms, the server must hold ~50 requests of buffers, threads and accelerator memory.",
+    "symbols": [
+      { "symbol": "L", "name": "resident population", "meaning": "Average number of requests inside the system at once." },
+      { "symbol": "\\lambda", "name": "arrival rate", "meaning": "Requests per second arriving at the service." },
+      { "symbol": "W", "name": "time in system", "meaning": "Mean wall-clock time a request spends from arrival to completion, queue plus service." }
+    ]
+  },
+  {
+    "id": "mm1-wait",
+    "title": "M/M/1 time in system",
+    "latex": "W_{\\mathrm{sys}}=\\frac{t_{\\mathrm{service}}}{1-\\rho}",
+    "caption": "With Poisson arrivals and exponential service, average latency is service time divided by 1 − utilization: 2× at 50%, 10× at 90%, 20× at 95%. The knee prices headroom.",
+    "symbols": [
+      { "symbol": "W_{\\mathrm{sys}}", "name": "time in system", "meaning": "Mean wait plus service time per request." },
+      { "symbol": "t_{\\mathrm{service}}", "name": "service time", "meaning": "Mean time the server spends executing one request." },
+      { "symbol": "\\rho", "name": "utilization", "meaning": "λ/μ — fraction of capacity the arrival rate consumes; the denominator vanishes as it nears 1." }
+    ]
+  },
+  {
+    "id": "fan-out-tail",
+    "title": "Fan-out converts leaf tail into user tail",
+    "latex": "P_{\\mathrm{user}}(t>t_{99})=1-(1-p_{99})^{n}",
+    "caption": "When one user request fans out to n parallel leaves, the user waits on the slowest. A p99 leaf still hands ~39% of users a >p99 experience at n=50.",
+    "symbols": [
+      { "symbol": "P_{\\mathrm{user}}", "name": "user tail probability", "meaning": "Chance a user request sees latency beyond the leaf p99 because at least one leaf is slow." },
+      { "symbol": "p_{99}", "name": "leaf tail probability", "meaning": "Probability a single leaf service exceeds its p99 latency (0.01)." },
+      { "symbol": "n", "name": "fan-out width", "meaning": "Number of parallel leaf calls inside one user request." }
+    ]
+  },
+  {
+    "id": "formation-delay",
+    "title": "Formation delay of a batch window",
+    "latex": "t_{\\mathrm{form}}\\approx\\frac{b}{\\lambda}",
+    "caption": "Filling a batch of b requests takes roughly b/λ seconds at arrival rate λ — queueing time the published batch latency omits. At 10 QPS, batch-16 waits ~1.6 s before executing.",
+    "symbols": [
+      { "symbol": "t_{\\mathrm{form}}", "name": "formation delay", "meaning": "Wait for enough requests to arrive to fill the batch." },
+      { "symbol": "b", "name": "batch size", "meaning": "Number of requests needed to fill the batch window." },
+      { "symbol": "\\lambda", "name": "arrival rate", "meaning": "Requests per second; low traffic inflates formation delay." }
+    ]
+  },
+  {
+    "id": "batch-share",
+    "title": "Batching divides the fixed charge",
+    "latex": "c_{\\mathrm{req}}=\\frac{C_{\\mathrm{fixed}}}{b}+c_{\\mathrm{marg}}",
+    "caption": "Cost per request is the per-batch fixed work (weight streaming, launch, setup) divided by batch plus marginal per-item work. Fixed cost dominates at batch one; marginal work sets the floor.",
+    "symbols": [
+      { "symbol": "c_{\\mathrm{req}}", "name": "cost per request", "meaning": "Time or energy each request effectively pays." },
+      { "symbol": "C_{\\mathrm{fixed}}", "name": "fixed per-batch cost", "meaning": "Work paid once per batch regardless of its size — weight reads, kernel launch, memory setup." },
+      { "symbol": "b", "name": "batch size", "meaning": "Requests sharing one execution." },
+      { "symbol": "c_{\\mathrm{marg}}", "name": "marginal cost", "meaning": "Per-item work that does not amortize — each request's own compute." }
+    ]
+  },
+  {
+    "id": "decode-floor",
+    "title": "Decode floor: bandwidth per token",
+    "latex": "t_{\\mathrm{token}}\\ge\\frac{D_{\\mathrm{weights}}}{B}",
+    "caption": "Each generated token streams all weights once. GPT-2 XL's ~3 GB FP16 read takes ~0.9 ms on the reference H100 — token latency is set by memory bandwidth, not compute.",
+    "symbols": [
+      { "symbol": "t_{\\mathrm{token}}", "name": "token latency", "meaning": "Minimum time per decode step (TPOT floor)." },
+      { "symbol": "D_{\\mathrm{weights}}", "name": "weight bytes", "meaning": "Model weight bytes read per token — ~3 GB for GPT-2 XL in FP16." },
+      { "symbol": "B", "name": "memory bandwidth", "meaning": "Accelerator DRAM bandwidth, ~3.35 TB/s on the reference H100." }
+    ]
+  }
+]

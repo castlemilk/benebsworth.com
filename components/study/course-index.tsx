@@ -19,30 +19,23 @@ export function CourseIndex({ course, progress }: { course: StudyCourse; progres
   const local = useStudyProgress()
 
   const chapters = course.volumes.flatMap((v) => v.chapters)
-  const built = chapters.filter((c) => c.hasPacket).length
-  const quizzed = chapters.filter((c) => (local[c.id]?.quizBest ?? 0) > 0).length
-  const next = chapters.find((c) => !c.hasPacket)
+  const packets = chapters.filter((chapter) => chapter.hasPacket)
+  const lastAvailable = packets.at(-1)
+  const attempted = chapters.filter((chapter) => local[chapter.id]?.quizBest !== undefined).length
 
   return (
-    <div className="space-y-10">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat label="chapters" value={String(chapters.length)} />
-        <Stat label="packets built" value={`${built}`} />
-        <Stat label="quizzes passed*" value={`${quizzed}`} />
-        <Stat label="volumes" value={String(course.volumes.length)} />
+    <div className="space-y-8">
+      <div className="space-y-2 border-y border-border py-4">
+        <p className="text-sm text-muted-foreground">
+          {packets.length} of {chapters.length} chapters have study packets across {course.volumes.length} volumes.
+          {attempted > 0 && ` You’ve attempted ${attempted} ${attempted === 1 ? 'quiz' : 'quizzes'} on this device.`}
+        </p>
+        {lastAvailable && (
+          <Link href={chapterHref(lastAvailable)} className="inline-block font-medium underline underline-offset-4">
+            Read chapter {Number(lastAvailable.sourceDir.split('_')[0])} · {lastAvailable.title}
+          </Link>
+        )}
       </div>
-      <p className="-mt-7 font-mono text-[11px] text-muted-foreground">*attempted locally; scores live in your browser, not the repo</p>
-
-      {next && (
-        <div className="rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">
-          Next in the loop:{' '}
-          <Link href={chapterHref(next)} className="font-medium text-foreground underline underline-offset-4">
-            {next.title}
-          </Link>{' '}
-          <span className="font-mono text-xs">({next.id})</span>: packet not built yet. Run the{' '}
-          <code className="font-mono text-xs">mlsys-study</code> skill to produce it.
-        </div>
-      )}
 
       {course.volumes.map((vol) => (
         <section key={vol.id} className="[content-visibility:auto] [contain-intrinsic-size:auto_480px]">
@@ -65,15 +58,6 @@ export function CourseIndex({ course, progress }: { course: StudyCourse; progres
   )
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border/60 p-3 text-center">
-      <div className="text-2xl font-semibold tabular-nums">{value}</div>
-      <div className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
-    </div>
-  )
-}
-
 function ChapterRow({ chapter, row, local }: { chapter: StudyChapter; row?: ProgressRow; local?: { visitedAt?: string; quizBest?: number; reviewedAt?: string } }) {
   const pending = !chapter.hasPacket
   const body = (
@@ -84,7 +68,7 @@ function ChapterRow({ chapter, row, local }: { chapter: StudyChapter; row?: Prog
       {local?.quizBest !== undefined && (
         <span className="hidden font-mono text-xs text-emerald-600 sm:inline dark:text-emerald-400">{local.quizBest}%</span>
       )}
-      {local?.visitedAt && !local.quizBest && <span className="hidden font-mono text-xs text-muted-foreground sm:inline">seen</span>}
+      {local?.visitedAt && local.quizBest === undefined && <span className="hidden font-mono text-xs text-muted-foreground sm:inline">seen</span>}
       {chapter.hasQuiz && <span className="hidden font-mono text-xs text-muted-foreground md:inline">quiz</span>}
       {chapter.diagrams.length > 0 && <span className="hidden font-mono text-xs text-muted-foreground md:inline">{chapter.diagrams.length} fig</span>}
       {pending && <span className="font-mono text-xs text-muted-foreground">pending</span>}

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "book-n-models-complexity",
+    "file": "n-models-complexity.svg",
+    "title": "Operational load versus model count",
+    "caption": "The book's log-log sketch of monitoring load growing linearly, deployment coordination near N log N and dependency conflicts near N squared over two, crossing a team-capacity line around 50 models. The crossing is illustrative, not a measured threshold.",
+    "alt": "Log-log curves of operational load components crossing a team capacity line near fifty models"
+  },
+  {
+    "id": "book-platform-roi-threshold",
+    "file": "platform-roi-threshold.svg",
+    "title": "Platform ROI threshold",
+    "caption": "The book's benefit-cost ratio versus model count for 2 million and 5 million dollar annual platforms. Break-even lands at 20 and 50 models; at 100 models the smaller platform shows a ratio of 5. Our platform-breakeven chart plots the net dollars instead.",
+    "alt": "Benefit-cost ratio curves rising linearly with model count for two platform cost levels"
+  },
+  {
+    "id": "book-model-dependency-graph",
+    "file": "model-dependency-graph.svg",
+    "title": "Model dependency graph",
+    "caption": "The book's registry example where an embedding update fans out to retrieval, ranking and ensemble consumers. Our impact-set sketch adds the re-evaluation gate and the unrecorded-edge failure mode.",
+    "alt": "Directed graph of models depending on a shared embedding model"
+  },
+  {
+    "id": "book-feature-store-architecture",
+    "file": "feature-store-architecture.svg",
+    "title": "Dual-store feature architecture",
+    "caption": "The book's versioned feature definitions feeding one materialization engine, then an offline store for point-in-time historical scans and an online store for sub-10-millisecond lookups. Our packet compresses this into the freshness-latency contract.",
+    "alt": "Feature definitions feeding batch streaming and on-demand materialization into offline and online stores"
+  },
+  {
+    "id": "book-time-travel",
+    "file": "time-travel.svg",
+    "title": "Point-in-time join versus naive join",
+    "caption": "The book's noon example: a point-in-time join sees 4 clicks while a midnight-batch join sees 10, inflating total clicks today 2.5 times. Our freshness-latency equation names the availability-time rule that prevents it.",
+    "alt": "Timeline showing point-in-time join seeing four clicks versus naive join seeing ten"
+  },
+  {
+    "id": "book-monitoring-pyramid",
+    "file": "monitoring-pyramid.svg",
+    "title": "Hierarchical monitoring pyramid",
+    "caption": "The book's four levels, business, portfolio, model and infrastructure, each owned by a different role with different alert volume. Our slo-vector figure drills into the model-level budget rule instead.",
+    "alt": "Pyramid of monitoring levels from business outcomes down to infrastructure"
+  },
+  {
+    "id": "book-tco-build-vs-buy",
+    "file": "tco-build-vs-buy.svg",
+    "title": "Build versus buy cumulative cost",
+    "caption": "The book's matplotlib crossover for a 1,024-GPU cluster near month 26 to 27 of a 30-month horizon. Our build-vs-buy sketch keeps the stepped-versus-linear geometry and the occupancy boundary below the crossover.",
+    "alt": "Cumulative cost chart with owned and cloud lines crossing around month twenty-six"
+  },
+  {
+    "id": "book-tco-iceberg",
+    "file": "tco-iceberg.svg",
+    "title": "TCO iceberg",
+    "caption": "The book's ten-by-ten waffle where GPU cloud and object storage are the visible 50 percent and engineering labor, pipeline maintenance, retraining, incidents and compliance hide the other 50 percent. Our ml-tco equation names the four cost planes.",
+    "alt": "Waffle grid showing visible compute and storage costs above hidden labor and maintenance costs"
+  }
+]

@@ -8,6 +8,9 @@ podcast.md format:
   `A:` / `B:`               utterance start; continuation lines join the turn
   `::eq[<id>]`              on its own line inside a turn — stripped from speech,
                             tags the segment with that equations.json entry
+  `::fig[<id>]`             slide from the chapter's diagrams.json
+  `![alt](/path/to/image)`  slide from public/; put one visual cue in a turn
+Use --sync-cues after <slug> to update an existing recording's slide track.
 Voices: A=am_michael, B=af_heart (Kokoro).
 Outputs:
   public/study-audio/<vol>/<slug>.m4a            joined AAC audio
@@ -21,6 +24,7 @@ import subprocess
 import sys
 import tempfile
 import wave
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 MODEL = 'mlx-community/Kokoro-82M-4bit'
@@ -29,7 +33,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def parse_script(path: Path):
-    """Return (hosts, segments); each segment is {voice, text, eq}."""
+    """Separate spoken turns from their optional visual cues."""
     hosts = {}
     segments, cur = [], None
     for line in path.read_text().split('\n'):
@@ -39,18 +43,20 @@ def parse_script(path: Path):
             for key, name in zip(('A', 'B'), [n.strip() for n in re.split(r'[|&,]', hm.group(1)) if n.strip()]):
                 hosts[key] = name
             continue
-        em = re.match(r'^::eq\[([^\]]+)\]$', s)
-        if em:
-            if cur is not None:
-                cur['eq'] = em.group(1)
-            else:
-                print(f'warning: {em.group(0)} before any utterance — ignored')
+        marker = re.fullmatch(r'::(eq|fig)\[([\w-]+)\]', s)
+        image = re.fullmatch(r'!\[([^\]]+)\]\((/[^\s)]+)\)', s)
+        if marker or image:
+            if cur is None or cur['cue']:
+                raise ValueError(f'{path}: place one visual cue inside a speaker turn: {s}')
+            cur['cue'] = marker.groups() if marker else ('image', *image.groups())
             continue
+        if s.startswith(('::eq[', '::fig[', '![')):
+            raise ValueError(f'{path}: malformed visual cue: {s}')
         m = re.match(r'^([AB]):\s+(.+)$', s)
         if m:
             if cur:
                 segments.append(cur)
-            cur = {'voice': VOICES[m.group(1)], 'text': m.group(2).strip(), 'eq': None}
+            cur = {'speaker': m.group(1), 'voice': VOICES[m.group(1)], 'text': m.group(2).strip(), 'cue': None}
         elif cur and s and not s.startswith('#'):
             cur['text'] += ' ' + s
     if cur:
@@ -58,9 +64,63 @@ def parse_script(path: Path):
     return hosts, segments
 
 
+def resolve_cues(folder, vol, slug, turns):
+    def manifest(name):
+        path = folder / name
+        return {row['id']: row for row in json.loads(path.read_text())} if path.exists() else {}
+
+    figures, equations = manifest('diagrams.json'), manifest('equations.json')
+    public = ROOT / 'public'
+    for turn in turns:
+        cue = turn['cue']
+        turn['media'] = {}
+        if not cue:
+            continue
+        kind, value, *_ = cue
+        if kind == 'eq' and value in equations:
+            turn['media']['eq'] = {k: equations[value][k] for k in ('id', 'title', 'latex')}
+        elif kind == 'fig' and value in figures:
+            fig = figures[value]
+            filename = fig['file']
+            svg = ET.parse(folder / 'diagrams' / filename).getroot()
+            alt = svg.findtext('{http://www.w3.org/2000/svg}desc') or fig.get('caption') or fig['title']
+            turn['media']['visual'] = {'src': f'/study/{vol}/{slug}/diagrams/{filename}',
+                                       'title': fig['title'], 'alt': alt}
+        elif kind == 'image':
+            src = cue[2]
+            file = (public / src.lstrip('/')).resolve()
+            if src.startswith('//') or not file.is_relative_to(public) or not file.is_file():
+                raise ValueError(f'{folder}: missing local image {src}')
+            alt = ET.parse(file).getroot().findtext('{http://www.w3.org/2000/svg}desc') if file.suffix == '.svg' else None
+            turn['media']['visual'] = {'src': src, 'title': value, 'alt': alt or value}
+        else:
+            raise ValueError(f'{folder}: unknown {kind} cue {value}')
+
+
+def sync_cues(script, out_dir, slug, turns):
+    path = script.with_name('transcript.json')
+    transcript = json.loads(path.read_text())
+    recorded = transcript['segments']
+    if len(recorded) != len(turns):
+        raise ValueError('Turn count changed. Regenerate the recording before syncing cues.')
+    for index, (entry, turn) in enumerate(zip(recorded, turns), 1):
+        previous = {k: entry[k] for k in ('eq', 'visual') if k in entry}
+        if entry['speaker'] != turn['speaker']:
+            raise ValueError(f'Speaker changed at turn {index}.')
+        if previous != turn['media']:
+            if re.findall(r'\w+', entry['text']) != re.findall(r'\w+', turn['text']):
+                raise ValueError(f'Spoken words differ at turn {index}. Check the cue against the recording.')
+            for key in previous:
+                del entry[key]
+            entry.update(turn['media'])
+    payload = json.dumps(transcript, indent=2)
+    path.write_text(payload)
+    (out_dir / f'{slug}.transcript.json').write_text(payload)
+
+
 def main():
     vol, slug = sys.argv[1], sys.argv[2]
-    script = ROOT / 'study' / 'mlsys' / vol / slug / 'podcast.md'
+    script = (ROOT / 'study' / 'research' / slug if vol == 'research' else ROOT / 'study' / 'mlsys' / vol / slug) / 'podcast.md'
     if not script.exists():
         sys.exit(f'no podcast.md at {script}')
 
@@ -69,17 +129,12 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
     dest = out_dir / f'{slug}.m4a'
 
-    # Resolve ::eq[…] markers against the chapter's equations.json now, so the
-    # public transcript copy carries {id,title,latex} self-contained.
-    equations = {}
-    eq_path = script.parent / 'equations.json'
-    if eq_path.exists():
-        for e in json.loads(eq_path.read_text()):
-            equations[e['id']] = {'id': e['id'], 'title': e.get('title', ''), 'latex': e.get('latex', '')}
-    for seg in segments:
-        if seg['eq'] and seg['eq'] not in equations:
-            print(f'warning: ::eq[{seg["eq"]}] not in equations.json — dropped')
-            seg['eq'] = None
+    resolve_cues(script.parent, vol, slug, segments)
+    if sys.argv[3:] == ['--sync-cues']:
+        sync_cues(script, out_dir, slug, segments)
+        return
+    if sys.argv[3:]:
+        sys.exit('usage: study-podcast.py <vol> <slug> [--sync-cues]')
 
     from mlx_audio.tts.generate import generate_audio
 
@@ -112,11 +167,9 @@ def main():
                 data = w.readframes(w.getnframes())
                 frames += data
                 dur = w.getnframes() / w.getframerate()
-            entry = {'speaker': 'A' if seg['voice'] == VOICES['A'] else 'B',
+            entry = {'speaker': seg['speaker'],
                      'text': seg['text'], 'start': round(cursor, 2),
-                     'end': round(cursor + dur, 2)}
-            if seg['eq']:
-                entry['eq'] = equations[seg['eq']]
+                     'end': round(cursor + dur, 2), **seg['media']}
             transcript.append(entry)
             cursor += dur
         with wave.open(str(joined), 'wb') as out:
@@ -134,6 +187,14 @@ def main():
     (script.parent / 'transcript.json').write_text(tjson)
     (out_dir / f'{slug}.transcript.json').write_text(tjson)
     print(f'wrote {dest} + transcript.json ({len(transcript)} segments, {cursor:.1f}s)')
+
+    # Word-level karaoke timing: whisper-align the joined audio into the
+    # transcript (uv caches the env; skip quietly if unavailable).
+    align = ROOT / 'scripts' / 'study-align.py'
+    try:
+        subprocess.run(['uv', 'run', '--with', 'mlx-whisper', str(align), vol, slug], check=True, cwd=ROOT)
+    except subprocess.CalledProcessError as e:
+        print(f'warning: word alignment failed ({e.returncode}) — karaoke falls back to interpolation')
 
 
 if __name__ == '__main__':

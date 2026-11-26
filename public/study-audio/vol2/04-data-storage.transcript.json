@@ -1,0 +1,5668 @@
+{
+  "hosts": {
+    "A": "Marcus",
+    "B": "Iris"
+  },
+  "segments": [
+    {
+      "speaker": "A",
+      "text": "I'm Marcus, this is Iris. Volume two chapter four: data storage, the fuel line under the fleet. It opens with a mismatch that flips the whole design.",
+      "start": 0.0,
+      "end": 11.25,
+      "words": [
+        {
+          "text": "I'm",
+          "start": 0.0,
+          "end": 0.6
+        },
+        {
+          "text": "Marcus,",
+          "start": 0.6,
+          "end": 0.88
+        },
+        {
+          "text": "this",
+          "start": 1.0,
+          "end": 1.2
+        },
+        {
+          "text": "is",
+          "start": 1.2,
+          "end": 1.38
+        },
+        {
+          "text": "Iris.",
+          "start": 1.38,
+          "end": 1.8
+        },
+        {
+          "text": "Volume",
+          "start": 2.54,
+          "end": 2.84
+        },
+        {
+          "text": "2,",
+          "start": 2.84,
+          "end": 3.18
+        },
+        {
+          "text": "Chapter",
+          "start": 3.26,
+          "end": 3.44
+        },
+        {
+          "text": "4.",
+          "start": 3.44,
+          "end": 3.98
+        },
+        {
+          "text": "Data",
+          "start": 4.42,
+          "end": 4.64
+        },
+        {
+          "text": "storage,",
+          "start": 4.64,
+          "end": 5.2
+        },
+        {
+          "text": "the",
+          "start": 5.52,
+          "end": 5.6
+        },
+        {
+          "text": "fuel",
+          "start": 5.6,
+          "end": 5.88
+        },
+        {
+          "text": "line",
+          "start": 5.88,
+          "end": 6.3
+        },
+        {
+          "text": "under",
+          "start": 6.3,
+          "end": 6.58
+        },
+        {
+          "text": "the",
+          "start": 6.58,
+          "end": 6.74
+        },
+        {
+          "text": "fleet.",
+          "start": 6.74,
+          "end": 7.04
+        },
+        {
+          "text": "It",
+          "start": 7.56,
+          "end": 7.68
+        },
+        {
+          "text": "opens",
+          "start": 7.68,
+          "end": 7.98
+        },
+        {
+          "text": "with",
+          "start": 7.98,
+          "end": 8.3
+        },
+        {
+          "text": "a",
+          "start": 8.3,
+          "end": 8.4
+        },
+        {
+          "text": "mismatch",
+          "start": 8.4,
+          "end": 9.0
+        },
+        {
+          "text": "that",
+          "start": 9.0,
+          "end": 9.22
+        },
+        {
+          "text": "flips",
+          "start": 9.22,
+          "end": 9.52
+        },
+        {
+          "text": "the",
+          "start": 9.52,
+          "end": 9.76
+        },
+        {
+          "text": "whole",
+          "start": 9.76,
+          "end": 10.0
+        },
+        {
+          "text": "design.",
+          "start": 10.0,
+          "end": 10.54
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "A hundred-seventy-five-billion-parameter run reads a six-terabyte tokenized corpus all epoch. Yet the storage system is provisioned for petabytes. Where does the other ten point six petabytes come from?",
+      "start": 11.25,
+      "end": 24.5,
+      "words": [
+        {
+          "text": "A",
+          "start": 11.54,
+          "end": 11.66
+        },
+        {
+          "text": "175",
+          "start": 11.66,
+          "end": 12.26
+        },
+        {
+          "text": "billion",
+          "start": 12.26,
+          "end": 12.9
+        },
+        {
+          "text": "parameter",
+          "start": 12.9,
+          "end": 13.36
+        },
+        {
+          "text": "run",
+          "start": 13.36,
+          "end": 13.8
+        },
+        {
+          "text": "reads",
+          "start": 13.8,
+          "end": 14.4
+        },
+        {
+          "text": "a",
+          "start": 14.4,
+          "end": 14.56
+        },
+        {
+          "text": "6",
+          "start": 14.56,
+          "end": 14.84
+        },
+        {
+          "text": "-stereobyte",
+          "start": 14.84,
+          "end": 15.44
+        },
+        {
+          "text": "tokenized",
+          "start": 15.44,
+          "end": 16.04
+        },
+        {
+          "text": "corpus",
+          "start": 16.04,
+          "end": 16.62
+        },
+        {
+          "text": "all",
+          "start": 16.62,
+          "end": 17.0
+        },
+        {
+          "text": "epic.",
+          "start": 17.0,
+          "end": 17.32
+        },
+        {
+          "text": "Yet",
+          "start": 17.9,
+          "end": 18.18
+        },
+        {
+          "text": "the",
+          "start": 18.18,
+          "end": 18.34
+        },
+        {
+          "text": "storage",
+          "start": 18.34,
+          "end": 18.6
+        },
+        {
+          "text": "system",
+          "start": 18.6,
+          "end": 19.02
+        },
+        {
+          "text": "is",
+          "start": 19.02,
+          "end": 19.3
+        },
+        {
+          "text": "provisioned",
+          "start": 19.3,
+          "end": 19.96
+        },
+        {
+          "text": "for",
+          "start": 19.96,
+          "end": 20.06
+        },
+        {
+          "text": "petabytes.",
+          "start": 20.06,
+          "end": 20.48
+        },
+        {
+          "text": "Where",
+          "start": 21.12,
+          "end": 21.32
+        },
+        {
+          "text": "does",
+          "start": 21.32,
+          "end": 21.5
+        },
+        {
+          "text": "the",
+          "start": 21.5,
+          "end": 21.64
+        },
+        {
+          "text": "other",
+          "start": 21.64,
+          "end": 21.82
+        },
+        {
+          "text": "10",
+          "start": 21.82,
+          "end": 22.28
+        },
+        {
+          "text": ".6",
+          "start": 22.28,
+          "end": 22.9
+        },
+        {
+          "text": "petabytes",
+          "start": 22.9,
+          "end": 23.46
+        },
+        {
+          "text": "come",
+          "start": 23.46,
+          "end": 23.7
+        },
+        {
+          "text": "from?",
+          "start": 23.7,
+          "end": 23.92
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "From the write side. The resumable checkpoint contract is fourteen bytes per parameter, FP16 weights, FP32 master, two FP32 Adam moments. One save is twenty-four fifty gigabytes, every ten minutes, for thirty days.",
+      "start": 24.5,
+      "end": 42.67,
+      "words": [
+        {
+          "text": "From",
+          "start": 24.54,
+          "end": 24.98
+        },
+        {
+          "text": "the",
+          "start": 24.98,
+          "end": 25.1
+        },
+        {
+          "text": "right",
+          "start": 25.1,
+          "end": 25.3
+        },
+        {
+          "text": "side,",
+          "start": 25.3,
+          "end": 25.74
+        },
+        {
+          "text": "the",
+          "start": 26.34,
+          "end": 26.48
+        },
+        {
+          "text": "resumable",
+          "start": 26.48,
+          "end": 26.98
+        },
+        {
+          "text": "checkpoint",
+          "start": 26.98,
+          "end": 27.38
+        },
+        {
+          "text": "contract",
+          "start": 27.38,
+          "end": 27.98
+        },
+        {
+          "text": "is",
+          "start": 27.98,
+          "end": 28.3
+        },
+        {
+          "text": "14",
+          "start": 28.3,
+          "end": 28.72
+        },
+        {
+          "text": "bytes",
+          "start": 28.72,
+          "end": 29.08
+        },
+        {
+          "text": "per",
+          "start": 29.08,
+          "end": 29.34
+        },
+        {
+          "text": "parameter,",
+          "start": 29.34,
+          "end": 29.86
+        },
+        {
+          "text": "FP16",
+          "start": 30.24,
+          "end": 31.18
+        },
+        {
+          "text": "weights,",
+          "start": 31.18,
+          "end": 31.64
+        },
+        {
+          "text": "FP32",
+          "start": 32.16,
+          "end": 33.14
+        },
+        {
+          "text": "master,",
+          "start": 33.14,
+          "end": 33.62
+        },
+        {
+          "text": "2",
+          "start": 34.12,
+          "end": 34.28
+        },
+        {
+          "text": "FP32",
+          "start": 34.28,
+          "end": 35.48
+        },
+        {
+          "text": "atom",
+          "start": 35.48,
+          "end": 35.92
+        },
+        {
+          "text": "moments.",
+          "start": 35.92,
+          "end": 36.38
+        },
+        {
+          "text": "One",
+          "start": 37.02,
+          "end": 37.36
+        },
+        {
+          "text": "save",
+          "start": 37.36,
+          "end": 37.72
+        },
+        {
+          "text": "is",
+          "start": 37.72,
+          "end": 38.0
+        },
+        {
+          "text": "2450",
+          "start": 38.0,
+          "end": 38.98
+        },
+        {
+          "text": "gigabytes",
+          "start": 38.98,
+          "end": 39.46
+        },
+        {
+          "text": "every",
+          "start": 39.46,
+          "end": 40.2
+        },
+        {
+          "text": "10",
+          "start": 40.2,
+          "end": 40.5
+        },
+        {
+          "text": "minutes",
+          "start": 40.5,
+          "end": 40.86
+        },
+        {
+          "text": "for",
+          "start": 40.86,
+          "end": 41.16
+        },
+        {
+          "text": "30",
+          "start": 41.16,
+          "end": 41.5
+        },
+        {
+          "text": "days.",
+          "start": 41.5,
+          "end": 41.94
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Four thousand three hundred twenty saves, about ten point six petabytes. Over a thousand times the entire epoch's read volume. So the dataset is not the load, the checkpoint is.",
+      "start": 42.67,
+      "end": 54.72,
+      "words": [
+        {
+          "text": "4",
+          "start": 42.6,
+          "end": 43.22
+        },
+        {
+          "text": ",320",
+          "start": 43.22,
+          "end": 44.4
+        },
+        {
+          "text": "saves,",
+          "start": 44.4,
+          "end": 44.92
+        },
+        {
+          "text": "about",
+          "start": 45.26,
+          "end": 45.48
+        },
+        {
+          "text": "10",
+          "start": 45.48,
+          "end": 45.86
+        },
+        {
+          "text": ".6",
+          "start": 45.86,
+          "end": 46.48
+        },
+        {
+          "text": "petabytes.",
+          "start": 46.48,
+          "end": 47.1
+        },
+        {
+          "text": "Over",
+          "start": 47.66,
+          "end": 47.9
+        },
+        {
+          "text": "a",
+          "start": 47.9,
+          "end": 48.08
+        },
+        {
+          "text": "thousand",
+          "start": 48.08,
+          "end": 48.36
+        },
+        {
+          "text": "times",
+          "start": 48.36,
+          "end": 48.8
+        },
+        {
+          "text": "the",
+          "start": 48.8,
+          "end": 49.08
+        },
+        {
+          "text": "entire",
+          "start": 49.08,
+          "end": 49.56
+        },
+        {
+          "text": "epic's",
+          "start": 49.56,
+          "end": 50.1
+        },
+        {
+          "text": "red",
+          "start": 50.1,
+          "end": 50.26
+        },
+        {
+          "text": "volume.",
+          "start": 50.26,
+          "end": 50.74
+        },
+        {
+          "text": "So",
+          "start": 50.74,
+          "end": 51.16
+        },
+        {
+          "text": "the",
+          "start": 51.16,
+          "end": 51.58
+        },
+        {
+          "text": "data",
+          "start": 51.58,
+          "end": 51.78
+        },
+        {
+          "text": "set",
+          "start": 51.78,
+          "end": 52.04
+        },
+        {
+          "text": "is",
+          "start": 52.04,
+          "end": 52.24
+        },
+        {
+          "text": "not",
+          "start": 52.24,
+          "end": 52.44
+        },
+        {
+          "text": "the",
+          "start": 52.44,
+          "end": 52.62
+        },
+        {
+          "text": "load,",
+          "start": 52.62,
+          "end": 52.96
+        },
+        {
+          "text": "the",
+          "start": 53.28,
+          "end": 53.38
+        },
+        {
+          "text": "checkpoint",
+          "start": 53.38,
+          "end": 53.72
+        },
+        {
+          "text": "is.",
+          "start": 53.72,
+          "end": 54.16
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The running example doubles the book's usual cluster: two hundred fifty-six nodes, two thousand forty-eight accelerators, the one-seventy-five-B job as thirty-two replicas of sixty-four GPUs, a four point six four second modeled step, one epoch in about twenty-five point six days.",
+      "start": 54.72,
+      "end": 75.45,
+      "eq": {
+        "id": "ckpt-volume",
+        "title": "Lifetime checkpoint volume",
+        "latex": "V = B_{ckpt} \\times \\frac{T_{window}}{\\Delta t} = 2450\\ \\mathrm{GB} \\times 4320 \\approx 10.6\\ \\mathrm{PB}"
+      },
+      "words": [
+        {
+          "text": "The",
+          "start": 54.84,
+          "end": 55.2
+        },
+        {
+          "text": "running",
+          "start": 55.2,
+          "end": 55.46
+        },
+        {
+          "text": "example",
+          "start": 55.46,
+          "end": 56.04
+        },
+        {
+          "text": "doubles",
+          "start": 56.04,
+          "end": 56.42
+        },
+        {
+          "text": "the",
+          "start": 56.42,
+          "end": 56.7
+        },
+        {
+          "text": "book's",
+          "start": 56.7,
+          "end": 57.02
+        },
+        {
+          "text": "usual",
+          "start": 57.02,
+          "end": 57.36
+        },
+        {
+          "text": "cluster.",
+          "start": 57.36,
+          "end": 57.84
+        },
+        {
+          "text": "256",
+          "start": 58.46,
+          "end": 59.0
+        },
+        {
+          "text": "nodes,",
+          "start": 59.0,
+          "end": 59.96
+        },
+        {
+          "text": "2048",
+          "start": 60.52,
+          "end": 61.62
+        },
+        {
+          "text": "accelerators,",
+          "start": 61.62,
+          "end": 62.48
+        },
+        {
+          "text": "the",
+          "start": 62.94,
+          "end": 63.16
+        },
+        {
+          "text": "175B",
+          "start": 63.16,
+          "end": 64.4
+        },
+        {
+          "text": "job",
+          "start": 64.4,
+          "end": 64.78
+        },
+        {
+          "text": "as",
+          "start": 64.78,
+          "end": 65.1
+        },
+        {
+          "text": "32",
+          "start": 65.1,
+          "end": 65.64
+        },
+        {
+          "text": "replicas",
+          "start": 65.64,
+          "end": 66.32
+        },
+        {
+          "text": "of",
+          "start": 66.32,
+          "end": 66.56
+        },
+        {
+          "text": "64",
+          "start": 66.56,
+          "end": 67.08
+        },
+        {
+          "text": "GPUs.",
+          "start": 67.08,
+          "end": 68.16
+        },
+        {
+          "text": "A",
+          "start": 68.52,
+          "end": 68.76
+        },
+        {
+          "text": "4",
+          "start": 68.76,
+          "end": 69.04
+        },
+        {
+          "text": ".64",
+          "start": 69.04,
+          "end": 69.72
+        },
+        {
+          "text": "second",
+          "start": 69.72,
+          "end": 70.34
+        },
+        {
+          "text": "modeled",
+          "start": 70.34,
+          "end": 70.72
+        },
+        {
+          "text": "step,",
+          "start": 70.72,
+          "end": 71.14
+        },
+        {
+          "text": "one",
+          "start": 71.68,
+          "end": 72.02
+        },
+        {
+          "text": "epic",
+          "start": 72.02,
+          "end": 72.44
+        },
+        {
+          "text": "in",
+          "start": 72.44,
+          "end": 72.68
+        },
+        {
+          "text": "about",
+          "start": 72.68,
+          "end": 72.92
+        },
+        {
+          "text": "25",
+          "start": 72.92,
+          "end": 73.48
+        },
+        {
+          "text": ".6",
+          "start": 73.48,
+          "end": 74.26
+        },
+        {
+          "text": "days.",
+          "start": 74.26,
+          "end": 74.66
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And the bandwidth ladder starts with a ratio. HBM moves data at three point three five terabytes a second; one NVMe drive does about seven gigabytes. Four hundred seventy-nine times apart.",
+      "start": 75.45,
+      "end": 88.8,
+      "words": [
+        {
+          "text": "And",
+          "start": 75.54,
+          "end": 75.84
+        },
+        {
+          "text": "the",
+          "start": 75.84,
+          "end": 75.94
+        },
+        {
+          "text": "bandwidth",
+          "start": 75.94,
+          "end": 76.22
+        },
+        {
+          "text": "ladder",
+          "start": 76.22,
+          "end": 76.62
+        },
+        {
+          "text": "starts",
+          "start": 76.62,
+          "end": 76.98
+        },
+        {
+          "text": "with",
+          "start": 76.98,
+          "end": 77.22
+        },
+        {
+          "text": "a",
+          "start": 77.22,
+          "end": 77.32
+        },
+        {
+          "text": "ratio.",
+          "start": 77.32,
+          "end": 77.7
+        },
+        {
+          "text": "HBM",
+          "start": 78.42,
+          "end": 78.96
+        },
+        {
+          "text": "moves",
+          "start": 78.96,
+          "end": 79.44
+        },
+        {
+          "text": "data",
+          "start": 79.44,
+          "end": 79.76
+        },
+        {
+          "text": "at",
+          "start": 79.76,
+          "end": 80.06
+        },
+        {
+          "text": "3",
+          "start": 80.06,
+          "end": 80.4
+        },
+        {
+          "text": ".35",
+          "start": 80.4,
+          "end": 81.1
+        },
+        {
+          "text": "terabytes",
+          "start": 81.1,
+          "end": 81.88
+        },
+        {
+          "text": "a",
+          "start": 81.88,
+          "end": 82.08
+        },
+        {
+          "text": "second.",
+          "start": 82.08,
+          "end": 82.4
+        },
+        {
+          "text": "One",
+          "start": 82.86,
+          "end": 83.16
+        },
+        {
+          "text": "NVMe",
+          "start": 83.16,
+          "end": 83.78
+        },
+        {
+          "text": "drive",
+          "start": 83.78,
+          "end": 84.24
+        },
+        {
+          "text": "does",
+          "start": 84.24,
+          "end": 84.5
+        },
+        {
+          "text": "about",
+          "start": 84.5,
+          "end": 84.74
+        },
+        {
+          "text": "7",
+          "start": 84.74,
+          "end": 85.14
+        },
+        {
+          "text": "gigabytes,",
+          "start": 85.14,
+          "end": 85.56
+        },
+        {
+          "text": "479",
+          "start": 86.28,
+          "end": 87.52
+        },
+        {
+          "text": "times",
+          "start": 87.52,
+          "end": 87.84
+        },
+        {
+          "text": "apart.",
+          "start": 87.84,
+          "end": 88.2
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "But the gap contrasts tiers, it doesn't set the feed requirement. That comes from batch bytes over step time. Which is why the hierarchy exists at all, six tiers trading bandwidth for capacity.",
+      "start": 88.8,
+      "end": 102.87,
+      "visual": {
+        "src": "/study/vol2/04-data-storage/diagrams/tier-ladder.svg",
+        "title": "Six tiers, one gap to hide",
+        "alt": "A ladder of six storage tiers from GPU HBM at the top (3.35 terabytes per second, per accelerator) down through host DRAM, local NVMe, parallel file system, object storage, and archive. A bracket marks the 479-fold gap between HBM and a single NVMe drive."
+      },
+      "words": [
+        {
+          "text": "But",
+          "start": 89.24,
+          "end": 89.24
+        },
+        {
+          "text": "the",
+          "start": 89.24,
+          "end": 89.36
+        },
+        {
+          "text": "gap",
+          "start": 89.36,
+          "end": 89.62
+        },
+        {
+          "text": "contrasts",
+          "start": 89.62,
+          "end": 90.42
+        },
+        {
+          "text": "tiers.",
+          "start": 90.42,
+          "end": 90.62
+        },
+        {
+          "text": "It",
+          "start": 91.24,
+          "end": 91.36
+        },
+        {
+          "text": "doesn't",
+          "start": 91.36,
+          "end": 91.66
+        },
+        {
+          "text": "set",
+          "start": 91.66,
+          "end": 91.88
+        },
+        {
+          "text": "the",
+          "start": 91.88,
+          "end": 92.08
+        },
+        {
+          "text": "feed",
+          "start": 92.08,
+          "end": 92.36
+        },
+        {
+          "text": "requirement.",
+          "start": 92.36,
+          "end": 92.94
+        },
+        {
+          "text": "That",
+          "start": 93.66,
+          "end": 93.9
+        },
+        {
+          "text": "comes",
+          "start": 93.9,
+          "end": 94.2
+        },
+        {
+          "text": "from",
+          "start": 94.2,
+          "end": 94.44
+        },
+        {
+          "text": "batch",
+          "start": 94.44,
+          "end": 94.8
+        },
+        {
+          "text": "bytes",
+          "start": 94.8,
+          "end": 95.18
+        },
+        {
+          "text": "over",
+          "start": 95.18,
+          "end": 95.4
+        },
+        {
+          "text": "step",
+          "start": 95.4,
+          "end": 95.64
+        },
+        {
+          "text": "time,",
+          "start": 95.64,
+          "end": 96.12
+        },
+        {
+          "text": "which",
+          "start": 96.5,
+          "end": 96.84
+        },
+        {
+          "text": "is",
+          "start": 96.84,
+          "end": 97.02
+        },
+        {
+          "text": "why",
+          "start": 97.02,
+          "end": 97.24
+        },
+        {
+          "text": "the",
+          "start": 97.24,
+          "end": 97.42
+        },
+        {
+          "text": "hierarchy",
+          "start": 97.42,
+          "end": 97.94
+        },
+        {
+          "text": "exists",
+          "start": 97.94,
+          "end": 98.56
+        },
+        {
+          "text": "at",
+          "start": 98.56,
+          "end": 98.88
+        },
+        {
+          "text": "all.",
+          "start": 98.88,
+          "end": 99.24
+        },
+        {
+          "text": "Six",
+          "start": 99.62,
+          "end": 99.88
+        },
+        {
+          "text": "tiers",
+          "start": 99.88,
+          "end": 100.32
+        },
+        {
+          "text": "trading",
+          "start": 100.32,
+          "end": 100.74
+        },
+        {
+          "text": "bandwidth",
+          "start": 100.74,
+          "end": 101.26
+        },
+        {
+          "text": "for",
+          "start": 101.26,
+          "end": 101.58
+        },
+        {
+          "text": "capacity.",
+          "start": 101.58,
+          "end": 102.14
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Tier zero, GPU HBM, per accelerator. Tier one, host DRAM, which actually reaches first byte sooner than HBM even though its bandwidth is lower. Tier two, local NVMe, per node. Then the shared services: parallel file system, object store, archive.",
+      "start": 102.87,
+      "end": 121.3,
+      "words": [
+        {
+          "text": "Tier",
+          "start": 102.98,
+          "end": 103.3
+        },
+        {
+          "text": "zero,",
+          "start": 103.3,
+          "end": 103.74
+        },
+        {
+          "text": "GPU",
+          "start": 104.0,
+          "end": 104.24
+        },
+        {
+          "text": "HBM",
+          "start": 104.24,
+          "end": 105.12
+        },
+        {
+          "text": "per",
+          "start": 105.12,
+          "end": 105.48
+        },
+        {
+          "text": "accelerator.",
+          "start": 105.48,
+          "end": 106.06
+        },
+        {
+          "text": "Tier",
+          "start": 106.61,
+          "end": 106.94
+        },
+        {
+          "text": "one,",
+          "start": 106.94,
+          "end": 107.24
+        },
+        {
+          "text": "host",
+          "start": 107.48,
+          "end": 107.62
+        },
+        {
+          "text": "DRAM,",
+          "start": 107.62,
+          "end": 108.1
+        },
+        {
+          "text": "which",
+          "start": 108.46,
+          "end": 108.64
+        },
+        {
+          "text": "actually",
+          "start": 108.64,
+          "end": 109.08
+        },
+        {
+          "text": "reaches",
+          "start": 109.08,
+          "end": 109.42
+        },
+        {
+          "text": "first",
+          "start": 109.42,
+          "end": 109.72
+        },
+        {
+          "text": "byte",
+          "start": 109.72,
+          "end": 109.96
+        },
+        {
+          "text": "sooner",
+          "start": 109.96,
+          "end": 110.3
+        },
+        {
+          "text": "than",
+          "start": 110.3,
+          "end": 110.52
+        },
+        {
+          "text": "HBM,",
+          "start": 110.52,
+          "end": 111.12
+        },
+        {
+          "text": "even",
+          "start": 111.4,
+          "end": 111.64
+        },
+        {
+          "text": "though",
+          "start": 111.64,
+          "end": 111.84
+        },
+        {
+          "text": "its",
+          "start": 111.84,
+          "end": 112.02
+        },
+        {
+          "text": "bandwidth",
+          "start": 112.02,
+          "end": 112.36
+        },
+        {
+          "text": "is",
+          "start": 112.36,
+          "end": 112.64
+        },
+        {
+          "text": "lower.",
+          "start": 112.64,
+          "end": 112.92
+        },
+        {
+          "text": "Tier",
+          "start": 113.62,
+          "end": 113.84
+        },
+        {
+          "text": "two,",
+          "start": 113.84,
+          "end": 114.16
+        },
+        {
+          "text": "local",
+          "start": 114.38,
+          "end": 114.54
+        },
+        {
+          "text": "NVMe",
+          "start": 114.54,
+          "end": 115.24
+        },
+        {
+          "text": "per",
+          "start": 115.24,
+          "end": 115.5
+        },
+        {
+          "text": "node.",
+          "start": 115.5,
+          "end": 115.76
+        },
+        {
+          "text": "Then",
+          "start": 116.34,
+          "end": 116.56
+        },
+        {
+          "text": "the",
+          "start": 116.56,
+          "end": 116.72
+        },
+        {
+          "text": "shared",
+          "start": 116.72,
+          "end": 116.96
+        },
+        {
+          "text": "services,",
+          "start": 116.96,
+          "end": 117.44
+        },
+        {
+          "text": "parallel",
+          "start": 118.02,
+          "end": 118.38
+        },
+        {
+          "text": "file",
+          "start": 118.38,
+          "end": 118.72
+        },
+        {
+          "text": "system,",
+          "start": 118.72,
+          "end": 119.14
+        },
+        {
+          "text": "object",
+          "start": 119.5,
+          "end": 119.74
+        },
+        {
+          "text": "store",
+          "start": 119.74,
+          "end": 120.06
+        },
+        {
+          "text": "archive.",
+          "start": 120.06,
+          "end": 120.5
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And a subtle one I liked: four drives in RAID-0 stripe to about seven times the node's individual share of the parallel file system. Local beats shared, which is why warm data stages on the node at all.",
+      "start": 121.3,
+      "end": 136.17,
+      "words": [
+        {
+          "text": "And",
+          "start": 121.36,
+          "end": 121.8
+        },
+        {
+          "text": "a",
+          "start": 121.8,
+          "end": 121.92
+        },
+        {
+          "text": "subtle",
+          "start": 121.92,
+          "end": 122.2
+        },
+        {
+          "text": "one",
+          "start": 122.2,
+          "end": 122.46
+        },
+        {
+          "text": "I",
+          "start": 122.46,
+          "end": 122.62
+        },
+        {
+          "text": "liked.",
+          "start": 122.62,
+          "end": 122.98
+        },
+        {
+          "text": "Four",
+          "start": 123.44,
+          "end": 123.8
+        },
+        {
+          "text": "drives",
+          "start": 123.8,
+          "end": 124.26
+        },
+        {
+          "text": "in",
+          "start": 124.26,
+          "end": 124.5
+        },
+        {
+          "text": "RAID",
+          "start": 124.5,
+          "end": 124.84
+        },
+        {
+          "text": "0",
+          "start": 124.84,
+          "end": 125.16
+        },
+        {
+          "text": "striped",
+          "start": 125.16,
+          "end": 125.68
+        },
+        {
+          "text": "to",
+          "start": 125.68,
+          "end": 125.84
+        },
+        {
+          "text": "about",
+          "start": 125.84,
+          "end": 126.06
+        },
+        {
+          "text": "seven",
+          "start": 126.06,
+          "end": 126.5
+        },
+        {
+          "text": "times",
+          "start": 126.5,
+          "end": 127.08
+        },
+        {
+          "text": "the",
+          "start": 127.08,
+          "end": 127.32
+        },
+        {
+          "text": "node's",
+          "start": 127.32,
+          "end": 127.78
+        },
+        {
+          "text": "individual",
+          "start": 127.78,
+          "end": 128.2
+        },
+        {
+          "text": "share",
+          "start": 128.2,
+          "end": 128.72
+        },
+        {
+          "text": "of",
+          "start": 128.72,
+          "end": 128.92
+        },
+        {
+          "text": "the",
+          "start": 128.92,
+          "end": 129.02
+        },
+        {
+          "text": "parallel",
+          "start": 129.02,
+          "end": 129.38
+        },
+        {
+          "text": "file",
+          "start": 129.38,
+          "end": 129.74
+        },
+        {
+          "text": "system.",
+          "start": 129.74,
+          "end": 130.26
+        },
+        {
+          "text": "Local",
+          "start": 130.8,
+          "end": 131.16
+        },
+        {
+          "text": "beats",
+          "start": 131.16,
+          "end": 131.56
+        },
+        {
+          "text": "shared,",
+          "start": 131.56,
+          "end": 131.98
+        },
+        {
+          "text": "which",
+          "start": 132.46,
+          "end": 132.64
+        },
+        {
+          "text": "is",
+          "start": 132.64,
+          "end": 132.8
+        },
+        {
+          "text": "why",
+          "start": 132.8,
+          "end": 133.0
+        },
+        {
+          "text": "warm",
+          "start": 133.0,
+          "end": 133.44
+        },
+        {
+          "text": "data",
+          "start": 133.44,
+          "end": 133.76
+        },
+        {
+          "text": "stages",
+          "start": 133.76,
+          "end": 134.28
+        },
+        {
+          "text": "on",
+          "start": 134.28,
+          "end": 134.58
+        },
+        {
+          "text": "the",
+          "start": 134.58,
+          "end": 134.7
+        },
+        {
+          "text": "node",
+          "start": 134.7,
+          "end": 135.04
+        },
+        {
+          "text": "at",
+          "start": 135.04,
+          "end": 135.2
+        },
+        {
+          "text": "all.",
+          "start": 135.2,
+          "end": 135.5
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Then the workload inverts everything database storage was built for. Small random four-kilobyte reads become megabyte sequential scans through immutable shards. A drive that streams seven to fourteen gigabytes a second falls to half a gigabyte on random reads.",
+      "start": 136.17,
+      "end": 153.4,
+      "words": [
+        {
+          "text": "Then",
+          "start": 136.42,
+          "end": 136.7
+        },
+        {
+          "text": "the",
+          "start": 136.7,
+          "end": 136.9
+        },
+        {
+          "text": "workload",
+          "start": 136.9,
+          "end": 137.24
+        },
+        {
+          "text": "inverts",
+          "start": 137.24,
+          "end": 137.88
+        },
+        {
+          "text": "everything",
+          "start": 137.88,
+          "end": 138.26
+        },
+        {
+          "text": "database",
+          "start": 138.26,
+          "end": 138.78
+        },
+        {
+          "text": "storage",
+          "start": 138.78,
+          "end": 139.26
+        },
+        {
+          "text": "was",
+          "start": 139.26,
+          "end": 139.56
+        },
+        {
+          "text": "built",
+          "start": 139.56,
+          "end": 139.8
+        },
+        {
+          "text": "for.",
+          "start": 139.8,
+          "end": 140.06
+        },
+        {
+          "text": "Small",
+          "start": 140.68,
+          "end": 141.08
+        },
+        {
+          "text": "random",
+          "start": 141.08,
+          "end": 141.6
+        },
+        {
+          "text": "4",
+          "start": 141.6,
+          "end": 141.82
+        },
+        {
+          "text": "kilobyte",
+          "start": 141.82,
+          "end": 142.32
+        },
+        {
+          "text": "reads",
+          "start": 142.32,
+          "end": 142.56
+        },
+        {
+          "text": "become",
+          "start": 142.56,
+          "end": 143.22
+        },
+        {
+          "text": "megabyte",
+          "start": 143.22,
+          "end": 143.8
+        },
+        {
+          "text": "sequential",
+          "start": 143.8,
+          "end": 144.04
+        },
+        {
+          "text": "scans",
+          "start": 144.04,
+          "end": 144.72
+        },
+        {
+          "text": "through",
+          "start": 144.72,
+          "end": 145.32
+        },
+        {
+          "text": "immutable",
+          "start": 145.32,
+          "end": 145.72
+        },
+        {
+          "text": "shards.",
+          "start": 145.72,
+          "end": 146.3
+        },
+        {
+          "text": "A",
+          "start": 146.9,
+          "end": 147.14
+        },
+        {
+          "text": "drive",
+          "start": 147.14,
+          "end": 147.44
+        },
+        {
+          "text": "that",
+          "start": 147.44,
+          "end": 147.76
+        },
+        {
+          "text": "streams",
+          "start": 147.76,
+          "end": 148.08
+        },
+        {
+          "text": "7",
+          "start": 148.08,
+          "end": 148.52
+        },
+        {
+          "text": "to",
+          "start": 148.52,
+          "end": 148.7
+        },
+        {
+          "text": "14",
+          "start": 148.7,
+          "end": 149.04
+        },
+        {
+          "text": "gigabytes,",
+          "start": 149.04,
+          "end": 149.6
+        },
+        {
+          "text": "a",
+          "start": 150.08,
+          "end": 150.24
+        },
+        {
+          "text": "second",
+          "start": 150.24,
+          "end": 150.54
+        },
+        {
+          "text": "falls",
+          "start": 150.54,
+          "end": 150.9
+        },
+        {
+          "text": "to",
+          "start": 150.9,
+          "end": 151.12
+        },
+        {
+          "text": "half",
+          "start": 151.12,
+          "end": 151.36
+        },
+        {
+          "text": "a",
+          "start": 151.36,
+          "end": 151.44
+        },
+        {
+          "text": "gigabyte",
+          "start": 151.44,
+          "end": 151.8
+        },
+        {
+          "text": "on",
+          "start": 151.8,
+          "end": 152.06
+        },
+        {
+          "text": "random",
+          "start": 152.06,
+          "end": 152.38
+        },
+        {
+          "text": "reads.",
+          "start": 152.38,
+          "end": 152.82
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Ten to thirty times gone per access pattern, a hundred times on spinning disks. And SGD still needs shuffled batches, so the compromise is shuffle the shard order, mix within a buffer, keep the sequential reads.",
+      "start": 153.4,
+      "end": 168.9,
+      "words": [
+        {
+          "text": "10",
+          "start": 153.56,
+          "end": 154.0
+        },
+        {
+          "text": "to",
+          "start": 154.0,
+          "end": 154.16
+        },
+        {
+          "text": "30",
+          "start": 154.16,
+          "end": 154.48
+        },
+        {
+          "text": "times",
+          "start": 154.48,
+          "end": 154.98
+        },
+        {
+          "text": "gone",
+          "start": 154.98,
+          "end": 155.22
+        },
+        {
+          "text": "per",
+          "start": 155.22,
+          "end": 155.46
+        },
+        {
+          "text": "access",
+          "start": 155.46,
+          "end": 155.86
+        },
+        {
+          "text": "pattern,",
+          "start": 155.86,
+          "end": 156.38
+        },
+        {
+          "text": "100",
+          "start": 156.78,
+          "end": 157.22
+        },
+        {
+          "text": "times",
+          "start": 157.22,
+          "end": 157.74
+        },
+        {
+          "text": "on",
+          "start": 157.74,
+          "end": 158.0
+        },
+        {
+          "text": "spinning",
+          "start": 158.0,
+          "end": 158.36
+        },
+        {
+          "text": "disks.",
+          "start": 158.36,
+          "end": 158.86
+        },
+        {
+          "text": "An",
+          "start": 158.86,
+          "end": 159.64
+        },
+        {
+          "text": "SGD",
+          "start": 159.64,
+          "end": 160.24
+        },
+        {
+          "text": "still",
+          "start": 160.24,
+          "end": 160.58
+        },
+        {
+          "text": "needs",
+          "start": 160.58,
+          "end": 160.88
+        },
+        {
+          "text": "shuffled",
+          "start": 160.88,
+          "end": 161.32
+        },
+        {
+          "text": "batches,",
+          "start": 161.32,
+          "end": 162.02
+        },
+        {
+          "text": "so",
+          "start": 162.28,
+          "end": 162.52
+        },
+        {
+          "text": "the",
+          "start": 162.52,
+          "end": 162.66
+        },
+        {
+          "text": "compromise",
+          "start": 162.66,
+          "end": 163.16
+        },
+        {
+          "text": "is",
+          "start": 163.16,
+          "end": 163.58
+        },
+        {
+          "text": "shuffle",
+          "start": 163.58,
+          "end": 163.98
+        },
+        {
+          "text": "the",
+          "start": 163.98,
+          "end": 164.24
+        },
+        {
+          "text": "shard",
+          "start": 164.24,
+          "end": 164.62
+        },
+        {
+          "text": "order.",
+          "start": 164.62,
+          "end": 165.06
+        },
+        {
+          "text": "Mix",
+          "start": 165.36,
+          "end": 165.68
+        },
+        {
+          "text": "within",
+          "start": 165.68,
+          "end": 165.96
+        },
+        {
+          "text": "a",
+          "start": 165.96,
+          "end": 166.12
+        },
+        {
+          "text": "buffer,",
+          "start": 166.12,
+          "end": 166.38
+        },
+        {
+          "text": "keep",
+          "start": 166.8,
+          "end": 167.06
+        },
+        {
+          "text": "the",
+          "start": 167.06,
+          "end": 167.26
+        },
+        {
+          "text": "sequential",
+          "start": 167.26,
+          "end": 167.58
+        },
+        {
+          "text": "reads.",
+          "start": 167.58,
+          "end": 168.2
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The payoff for getting this wrong is the I/O wall. The book's normalized example: input delivery is a quarter of compute, perfectly overlapped. Make compute sixteen times faster and batch throughput improves exactly four times, then flatlines.",
+      "start": 168.9,
+      "end": 185.32,
+      "words": [
+        {
+          "text": "The",
+          "start": 169.24,
+          "end": 169.26
+        },
+        {
+          "text": "payoff",
+          "start": 169.26,
+          "end": 169.56
+        },
+        {
+          "text": "for",
+          "start": 169.56,
+          "end": 169.84
+        },
+        {
+          "text": "getting",
+          "start": 169.84,
+          "end": 170.04
+        },
+        {
+          "text": "this",
+          "start": 170.04,
+          "end": 170.28
+        },
+        {
+          "text": "wrong",
+          "start": 170.28,
+          "end": 170.52
+        },
+        {
+          "text": "is",
+          "start": 170.52,
+          "end": 170.82
+        },
+        {
+          "text": "the",
+          "start": 170.82,
+          "end": 170.96
+        },
+        {
+          "text": "I",
+          "start": 170.96,
+          "end": 171.2
+        },
+        {
+          "text": ".O.",
+          "start": 171.2,
+          "end": 171.44
+        },
+        {
+          "text": "wall.",
+          "start": 171.52,
+          "end": 171.74
+        },
+        {
+          "text": "The",
+          "start": 172.4,
+          "end": 172.54
+        },
+        {
+          "text": "book's",
+          "start": 172.54,
+          "end": 172.92
+        },
+        {
+          "text": "normalized",
+          "start": 172.92,
+          "end": 173.34
+        },
+        {
+          "text": "example,",
+          "start": 173.34,
+          "end": 173.98
+        },
+        {
+          "text": "input",
+          "start": 174.56,
+          "end": 174.8
+        },
+        {
+          "text": "delivery",
+          "start": 174.8,
+          "end": 175.24
+        },
+        {
+          "text": "is",
+          "start": 175.24,
+          "end": 175.6
+        },
+        {
+          "text": "a",
+          "start": 175.6,
+          "end": 175.72
+        },
+        {
+          "text": "quarter",
+          "start": 175.72,
+          "end": 175.94
+        },
+        {
+          "text": "of",
+          "start": 175.94,
+          "end": 176.2
+        },
+        {
+          "text": "compute,",
+          "start": 176.2,
+          "end": 176.56
+        },
+        {
+          "text": "perfectly",
+          "start": 176.98,
+          "end": 177.48
+        },
+        {
+          "text": "overlapped.",
+          "start": 177.48,
+          "end": 178.16
+        },
+        {
+          "text": "Make",
+          "start": 178.74,
+          "end": 178.94
+        },
+        {
+          "text": "compute",
+          "start": 178.94,
+          "end": 179.24
+        },
+        {
+          "text": "16",
+          "start": 179.24,
+          "end": 179.72
+        },
+        {
+          "text": "times",
+          "start": 179.72,
+          "end": 180.1
+        },
+        {
+          "text": "faster",
+          "start": 180.1,
+          "end": 180.62
+        },
+        {
+          "text": "and",
+          "start": 180.62,
+          "end": 180.86
+        },
+        {
+          "text": "batch",
+          "start": 180.86,
+          "end": 181.16
+        },
+        {
+          "text": "throughput",
+          "start": 181.16,
+          "end": 181.54
+        },
+        {
+          "text": "improves",
+          "start": 181.54,
+          "end": 182.18
+        },
+        {
+          "text": "exactly",
+          "start": 182.18,
+          "end": 182.78
+        },
+        {
+          "text": "four",
+          "start": 182.78,
+          "end": 183.14
+        },
+        {
+          "text": "times,",
+          "start": 183.14,
+          "end": 183.62
+        },
+        {
+          "text": "then",
+          "start": 183.88,
+          "end": 184.12
+        },
+        {
+          "text": "flatlines.",
+          "start": 184.12,
+          "end": 184.72
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Doubling compute halves batch time, quadrupling makes the two equal, and past that the pipeline is delivery-bound. Faster compute just idles sooner.",
+      "start": 185.32,
+      "end": 196.35,
+      "words": [
+        {
+          "text": "Doubling",
+          "start": 185.68,
+          "end": 186.12
+        },
+        {
+          "text": "compute",
+          "start": 186.12,
+          "end": 186.52
+        },
+        {
+          "text": "halves",
+          "start": 186.52,
+          "end": 186.92
+        },
+        {
+          "text": "batch",
+          "start": 186.92,
+          "end": 187.24
+        },
+        {
+          "text": "time,",
+          "start": 187.24,
+          "end": 187.68
+        },
+        {
+          "text": "quadrupling",
+          "start": 188.1,
+          "end": 188.8
+        },
+        {
+          "text": "makes",
+          "start": 188.8,
+          "end": 189.14
+        },
+        {
+          "text": "the",
+          "start": 189.14,
+          "end": 189.34
+        },
+        {
+          "text": "two",
+          "start": 189.34,
+          "end": 189.54
+        },
+        {
+          "text": "equal,",
+          "start": 189.54,
+          "end": 189.96
+        },
+        {
+          "text": "and",
+          "start": 190.32,
+          "end": 190.5
+        },
+        {
+          "text": "pass",
+          "start": 190.5,
+          "end": 190.82
+        },
+        {
+          "text": "that",
+          "start": 190.82,
+          "end": 191.1
+        },
+        {
+          "text": "the",
+          "start": 191.1,
+          "end": 191.22
+        },
+        {
+          "text": "pipeline",
+          "start": 191.22,
+          "end": 191.64
+        },
+        {
+          "text": "is",
+          "start": 191.64,
+          "end": 191.94
+        },
+        {
+          "text": "delivery",
+          "start": 191.94,
+          "end": 192.34
+        },
+        {
+          "text": "bound.",
+          "start": 192.34,
+          "end": 192.76
+        },
+        {
+          "text": "Faster",
+          "start": 193.44,
+          "end": 193.84
+        },
+        {
+          "text": "compute",
+          "start": 193.84,
+          "end": 194.4
+        },
+        {
+          "text": "just",
+          "start": 194.4,
+          "end": 194.76
+        },
+        {
+          "text": "idles",
+          "start": 194.76,
+          "end": 195.24
+        },
+        {
+          "text": "sooner.",
+          "start": 195.24,
+          "end": 195.64
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Which brings the design equation: required bandwidth is accelerator count times batch bytes over step time.",
+      "start": 196.35,
+      "end": 203.72,
+      "eq": {
+        "id": "required-bw",
+        "title": "The fuel-line equation",
+        "latex": "BW_{required} = \\frac{N \\times B_{batch}}{T_{step}}"
+      },
+      "words": [
+        {
+          "text": "For",
+          "start": 202.7,
+          "end": 203.5
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "For the text job the answer is almost comic: six terabytes over twenty-five point six days averages two point seven megabytes a second for the whole fleet. Meanwhile MLPerf shows vision workloads demanding up to two point eight gigabytes a second per accelerator. Same cluster, overfed on tokens, starved on pixels.",
+      "start": 203.72,
+      "end": 226.47,
+      "words": [
+        {
+          "text": "the",
+          "start": 203.5,
+          "end": 204.3
+        },
+        {
+          "text": "text",
+          "start": 204.3,
+          "end": 204.56
+        },
+        {
+          "text": "job,",
+          "start": 204.56,
+          "end": 204.96
+        },
+        {
+          "text": "the",
+          "start": 205.12,
+          "end": 205.2
+        },
+        {
+          "text": "answer",
+          "start": 205.2,
+          "end": 205.58
+        },
+        {
+          "text": "is",
+          "start": 205.58,
+          "end": 205.82
+        },
+        {
+          "text": "almost",
+          "start": 205.82,
+          "end": 206.18
+        },
+        {
+          "text": "comic.",
+          "start": 206.18,
+          "end": 206.68
+        },
+        {
+          "text": "6",
+          "start": 207.24,
+          "end": 207.56
+        },
+        {
+          "text": "terabytes",
+          "start": 207.56,
+          "end": 208.06
+        },
+        {
+          "text": "over",
+          "start": 208.06,
+          "end": 208.36
+        },
+        {
+          "text": "25",
+          "start": 208.36,
+          "end": 208.88
+        },
+        {
+          "text": ".6",
+          "start": 208.88,
+          "end": 209.58
+        },
+        {
+          "text": "days",
+          "start": 209.58,
+          "end": 209.96
+        },
+        {
+          "text": "averages",
+          "start": 209.96,
+          "end": 210.56
+        },
+        {
+          "text": "2",
+          "start": 210.56,
+          "end": 210.96
+        },
+        {
+          "text": ".7",
+          "start": 210.96,
+          "end": 211.66
+        },
+        {
+          "text": "megabytes",
+          "start": 211.66,
+          "end": 212.16
+        },
+        {
+          "text": "a",
+          "start": 212.16,
+          "end": 212.34
+        },
+        {
+          "text": "second",
+          "start": 212.34,
+          "end": 212.7
+        },
+        {
+          "text": "for",
+          "start": 212.7,
+          "end": 212.94
+        },
+        {
+          "text": "the",
+          "start": 212.94,
+          "end": 213.04
+        },
+        {
+          "text": "whole",
+          "start": 213.04,
+          "end": 213.22
+        },
+        {
+          "text": "fleet.",
+          "start": 213.22,
+          "end": 213.54
+        },
+        {
+          "text": "Meanwhile,",
+          "start": 214.18,
+          "end": 214.7
+        },
+        {
+          "text": "ML",
+          "start": 215.0,
+          "end": 215.16
+        },
+        {
+          "text": "Perf",
+          "start": 215.16,
+          "end": 215.68
+        },
+        {
+          "text": "shows",
+          "start": 215.68,
+          "end": 216.1
+        },
+        {
+          "text": "vision",
+          "start": 216.1,
+          "end": 216.5
+        },
+        {
+          "text": "workloads",
+          "start": 216.5,
+          "end": 217.02
+        },
+        {
+          "text": "demanding",
+          "start": 217.02,
+          "end": 217.52
+        },
+        {
+          "text": "up",
+          "start": 217.52,
+          "end": 217.9
+        },
+        {
+          "text": "to",
+          "start": 217.9,
+          "end": 218.06
+        },
+        {
+          "text": "2",
+          "start": 218.06,
+          "end": 218.32
+        },
+        {
+          "text": ".8",
+          "start": 218.32,
+          "end": 218.86
+        },
+        {
+          "text": "gigabytes",
+          "start": 218.86,
+          "end": 219.18
+        },
+        {
+          "text": "a",
+          "start": 219.18,
+          "end": 219.6
+        },
+        {
+          "text": "second",
+          "start": 219.6,
+          "end": 219.96
+        },
+        {
+          "text": "per",
+          "start": 219.96,
+          "end": 220.22
+        },
+        {
+          "text": "accelerator.",
+          "start": 220.22,
+          "end": 220.8
+        },
+        {
+          "text": "Same",
+          "start": 221.56,
+          "end": 221.92
+        },
+        {
+          "text": "cluster,",
+          "start": 221.92,
+          "end": 222.4
+        },
+        {
+          "text": "overfed",
+          "start": 222.94,
+          "end": 223.34
+        },
+        {
+          "text": "on",
+          "start": 223.34,
+          "end": 223.52
+        },
+        {
+          "text": "tokens,",
+          "start": 223.52,
+          "end": 223.88
+        },
+        {
+          "text": "starved",
+          "start": 224.5,
+          "end": 224.98
+        },
+        {
+          "text": "on",
+          "start": 224.98,
+          "end": 225.18
+        },
+        {
+          "text": "pixels.",
+          "start": 225.18,
+          "end": 225.56
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The stall frontier makes starvation quantitative: active fraction is min of one and supply over demand. Below the knee you starve linearly; above it you're fed. The text job sits at six thousand times headroom, an image job at three point three.",
+      "start": 226.47,
+      "end": 242.82,
+      "eq": {
+        "id": "stall-fraction",
+        "title": "The stall frontier",
+        "latex": "f_{active} = \\min\\!\\left(1,\\ \\frac{BW_{supply}}{BW_{demand}}\\right)"
+      },
+      "words": [
+        {
+          "text": "The",
+          "start": 226.64,
+          "end": 226.84
+        },
+        {
+          "text": "stall",
+          "start": 226.84,
+          "end": 227.14
+        },
+        {
+          "text": "frontier",
+          "start": 227.14,
+          "end": 227.5
+        },
+        {
+          "text": "makes",
+          "start": 227.5,
+          "end": 227.86
+        },
+        {
+          "text": "starvation",
+          "start": 227.86,
+          "end": 228.44
+        },
+        {
+          "text": "quantitative.",
+          "start": 228.44,
+          "end": 228.94
+        },
+        {
+          "text": "Active",
+          "start": 229.64,
+          "end": 230.04
+        },
+        {
+          "text": "fraction",
+          "start": 230.04,
+          "end": 230.4
+        },
+        {
+          "text": "is",
+          "start": 230.4,
+          "end": 230.8
+        },
+        {
+          "text": "min",
+          "start": 230.8,
+          "end": 231.02
+        },
+        {
+          "text": "of",
+          "start": 231.02,
+          "end": 231.16
+        },
+        {
+          "text": "one",
+          "start": 231.16,
+          "end": 231.46
+        },
+        {
+          "text": "and",
+          "start": 231.46,
+          "end": 231.72
+        },
+        {
+          "text": "supply",
+          "start": 231.72,
+          "end": 232.08
+        },
+        {
+          "text": "over",
+          "start": 232.08,
+          "end": 232.42
+        },
+        {
+          "text": "demand.",
+          "start": 232.42,
+          "end": 232.76
+        },
+        {
+          "text": "Below",
+          "start": 233.56,
+          "end": 233.82
+        },
+        {
+          "text": "the",
+          "start": 233.82,
+          "end": 234.08
+        },
+        {
+          "text": "knee",
+          "start": 234.08,
+          "end": 234.28
+        },
+        {
+          "text": "you",
+          "start": 234.28,
+          "end": 234.42
+        },
+        {
+          "text": "starve",
+          "start": 234.42,
+          "end": 234.7
+        },
+        {
+          "text": "linearly,",
+          "start": 234.7,
+          "end": 235.08
+        },
+        {
+          "text": "above",
+          "start": 235.64,
+          "end": 235.88
+        },
+        {
+          "text": "it",
+          "start": 235.88,
+          "end": 236.06
+        },
+        {
+          "text": "you're",
+          "start": 236.06,
+          "end": 236.24
+        },
+        {
+          "text": "fed.",
+          "start": 236.24,
+          "end": 236.46
+        },
+        {
+          "text": "The",
+          "start": 237.12,
+          "end": 237.26
+        },
+        {
+          "text": "text",
+          "start": 237.26,
+          "end": 237.52
+        },
+        {
+          "text": "job",
+          "start": 237.52,
+          "end": 237.84
+        },
+        {
+          "text": "sits",
+          "start": 237.84,
+          "end": 238.12
+        },
+        {
+          "text": "at",
+          "start": 238.12,
+          "end": 238.36
+        },
+        {
+          "text": "6",
+          "start": 238.36,
+          "end": 238.68
+        },
+        {
+          "text": ",000",
+          "start": 238.68,
+          "end": 239.14
+        },
+        {
+          "text": "times",
+          "start": 239.14,
+          "end": 239.46
+        },
+        {
+          "text": "headroom,",
+          "start": 239.46,
+          "end": 239.94
+        },
+        {
+          "text": "an",
+          "start": 240.2,
+          "end": 240.42
+        },
+        {
+          "text": "image",
+          "start": 240.42,
+          "end": 240.7
+        },
+        {
+          "text": "job",
+          "start": 240.7,
+          "end": 241.1
+        },
+        {
+          "text": "at",
+          "start": 241.1,
+          "end": 241.36
+        },
+        {
+          "text": "3",
+          "start": 241.36,
+          "end": 241.64
+        },
+        {
+          "text": ".3.",
+          "start": 241.64,
+          "end": 242.22
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And prefetching doesn't move that knee, the frontier figure shows why. It hides latency variance, never a sustained rate deficit. The chapter measured multi-worker loading at about a sixth of the all-hot rate once real service times mixed in.",
+      "start": 242.82,
+      "end": 259.55,
+      "visual": {
+        "src": "/study/vol2/04-data-storage/diagrams/stall-frontier.svg",
+        "title": "Fed or starved: one knee decides",
+        "alt": "A piecewise curve of compute active-time fraction against the ratio of supplied to demanded bandwidth on a log axis, rising linearly to a knee at ratio one and flat after. A stalled pipeline marker sits at 0.8 on the rising segment; an image job marker at 3.3 times headroom and a text job marker at 6000 times sit on the flat segment."
+      },
+      "words": [
+        {
+          "text": "And",
+          "start": 242.98,
+          "end": 243.32
+        },
+        {
+          "text": "profetching",
+          "start": 243.32,
+          "end": 243.94
+        },
+        {
+          "text": "doesn't",
+          "start": 243.94,
+          "end": 244.26
+        },
+        {
+          "text": "move",
+          "start": 244.26,
+          "end": 244.48
+        },
+        {
+          "text": "that",
+          "start": 244.48,
+          "end": 244.76
+        },
+        {
+          "text": "knee,",
+          "start": 244.76,
+          "end": 245.04
+        },
+        {
+          "text": "the",
+          "start": 245.44,
+          "end": 245.58
+        },
+        {
+          "text": "frontier",
+          "start": 245.58,
+          "end": 245.9
+        },
+        {
+          "text": "figure",
+          "start": 245.9,
+          "end": 246.4
+        },
+        {
+          "text": "shows",
+          "start": 246.4,
+          "end": 246.76
+        },
+        {
+          "text": "why.",
+          "start": 246.76,
+          "end": 247.22
+        },
+        {
+          "text": "It",
+          "start": 247.86,
+          "end": 247.96
+        },
+        {
+          "text": "hides",
+          "start": 247.96,
+          "end": 248.26
+        },
+        {
+          "text": "latency",
+          "start": 248.26,
+          "end": 248.74
+        },
+        {
+          "text": "variance,",
+          "start": 248.74,
+          "end": 249.3
+        },
+        {
+          "text": "never",
+          "start": 249.82,
+          "end": 250.06
+        },
+        {
+          "text": "a",
+          "start": 250.06,
+          "end": 250.3
+        },
+        {
+          "text": "sustained",
+          "start": 250.3,
+          "end": 250.7
+        },
+        {
+          "text": "rate",
+          "start": 250.7,
+          "end": 251.1
+        },
+        {
+          "text": "deficit.",
+          "start": 251.1,
+          "end": 251.62
+        },
+        {
+          "text": "The",
+          "start": 252.34,
+          "end": 252.48
+        },
+        {
+          "text": "chapter",
+          "start": 252.48,
+          "end": 252.8
+        },
+        {
+          "text": "measured",
+          "start": 252.8,
+          "end": 253.32
+        },
+        {
+          "text": "multi",
+          "start": 253.32,
+          "end": 253.72
+        },
+        {
+          "text": "-worker",
+          "start": 253.72,
+          "end": 254.04
+        },
+        {
+          "text": "loading",
+          "start": 254.04,
+          "end": 254.54
+        },
+        {
+          "text": "at",
+          "start": 254.54,
+          "end": 254.8
+        },
+        {
+          "text": "about",
+          "start": 254.8,
+          "end": 255.04
+        },
+        {
+          "text": "a",
+          "start": 255.04,
+          "end": 255.2
+        },
+        {
+          "text": "sixth",
+          "start": 255.2,
+          "end": 255.52
+        },
+        {
+          "text": "of",
+          "start": 255.52,
+          "end": 255.76
+        },
+        {
+          "text": "the",
+          "start": 255.76,
+          "end": 255.86
+        },
+        {
+          "text": "all",
+          "start": 255.86,
+          "end": 256.16
+        },
+        {
+          "text": "-hot",
+          "start": 256.16,
+          "end": 256.4
+        },
+        {
+          "text": "rate",
+          "start": 256.4,
+          "end": 256.74
+        },
+        {
+          "text": "once",
+          "start": 256.74,
+          "end": 257.06
+        },
+        {
+          "text": "real",
+          "start": 257.06,
+          "end": 257.42
+        },
+        {
+          "text": "service",
+          "start": 257.42,
+          "end": 257.88
+        },
+        {
+          "text": "times",
+          "start": 257.88,
+          "end": 258.22
+        },
+        {
+          "text": "mixed",
+          "start": 258.22,
+          "end": 258.62
+        },
+        {
+          "text": "in.",
+          "start": 258.62,
+          "end": 258.9
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Locality is the other lever. Prestaging the working set costs about eighty seconds once, then eighty-eight percent of the corpus hits the local cache and mean delivered rate lands near sixteen gigabytes a second. A miss is seven times slower per byte.",
+      "start": 259.55,
+      "end": 275.8,
+      "eq": {
+        "id": "locality-mean",
+        "title": "Delivered rate under caching",
+        "latex": "BW_{delivered} = h \\cdot BW_{local} + (1-h) \\cdot BW_{pfs\\ share}"
+      },
+      "words": [
+        {
+          "text": "Locality",
+          "start": 259.72,
+          "end": 260.4
+        },
+        {
+          "text": "is",
+          "start": 260.4,
+          "end": 260.68
+        },
+        {
+          "text": "the",
+          "start": 260.68,
+          "end": 260.82
+        },
+        {
+          "text": "other",
+          "start": 260.82,
+          "end": 261.02
+        },
+        {
+          "text": "lever.",
+          "start": 261.02,
+          "end": 261.28
+        },
+        {
+          "text": "Prestaging",
+          "start": 262.06,
+          "end": 262.44
+        },
+        {
+          "text": "the",
+          "start": 262.44,
+          "end": 262.64
+        },
+        {
+          "text": "working",
+          "start": 262.64,
+          "end": 262.86
+        },
+        {
+          "text": "set",
+          "start": 262.86,
+          "end": 263.2
+        },
+        {
+          "text": "costs",
+          "start": 263.2,
+          "end": 263.64
+        },
+        {
+          "text": "about",
+          "start": 263.64,
+          "end": 263.92
+        },
+        {
+          "text": "80",
+          "start": 263.92,
+          "end": 264.28
+        },
+        {
+          "text": "seconds",
+          "start": 264.28,
+          "end": 264.62
+        },
+        {
+          "text": "once,",
+          "start": 264.62,
+          "end": 265.0
+        },
+        {
+          "text": "then",
+          "start": 265.48,
+          "end": 265.68
+        },
+        {
+          "text": "88",
+          "start": 265.68,
+          "end": 266.08
+        },
+        {
+          "text": "%",
+          "start": 266.08,
+          "end": 266.54
+        },
+        {
+          "text": "of",
+          "start": 266.54,
+          "end": 266.72
+        },
+        {
+          "text": "the",
+          "start": 266.72,
+          "end": 266.82
+        },
+        {
+          "text": "corpus",
+          "start": 266.82,
+          "end": 267.22
+        },
+        {
+          "text": "hits",
+          "start": 267.22,
+          "end": 267.74
+        },
+        {
+          "text": "the",
+          "start": 267.74,
+          "end": 267.96
+        },
+        {
+          "text": "local",
+          "start": 267.96,
+          "end": 268.16
+        },
+        {
+          "text": "cache",
+          "start": 268.16,
+          "end": 268.64
+        },
+        {
+          "text": "and",
+          "start": 268.64,
+          "end": 268.92
+        },
+        {
+          "text": "mean",
+          "start": 268.92,
+          "end": 269.16
+        },
+        {
+          "text": "delivered",
+          "start": 269.16,
+          "end": 269.58
+        },
+        {
+          "text": "rate",
+          "start": 269.58,
+          "end": 269.86
+        },
+        {
+          "text": "lands",
+          "start": 269.86,
+          "end": 270.28
+        },
+        {
+          "text": "near",
+          "start": 270.28,
+          "end": 270.82
+        },
+        {
+          "text": "16",
+          "start": 270.82,
+          "end": 271.4
+        },
+        {
+          "text": "gigabytes",
+          "start": 271.4,
+          "end": 271.7
+        },
+        {
+          "text": "a",
+          "start": 271.7,
+          "end": 272.04
+        },
+        {
+          "text": "second.",
+          "start": 272.04,
+          "end": 272.34
+        },
+        {
+          "text": "A",
+          "start": 273.0,
+          "end": 273.16
+        },
+        {
+          "text": "miss",
+          "start": 273.16,
+          "end": 273.34
+        },
+        {
+          "text": "is",
+          "start": 273.34,
+          "end": 273.6
+        },
+        {
+          "text": "seven",
+          "start": 273.6,
+          "end": 273.92
+        },
+        {
+          "text": "times",
+          "start": 273.92,
+          "end": 274.36
+        },
+        {
+          "text": "slower",
+          "start": 274.36,
+          "end": 274.72
+        },
+        {
+          "text": "per",
+          "start": 274.72,
+          "end": 274.98
+        },
+        {
+          "text": "byte.",
+          "start": 274.98,
+          "end": 275.24
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "GPUDirect storage attacks a different copy: normally a payload DMAs into a kernel buffer in host DRAM, the CPU copies it to pinned memory, then DMA descends to HBM. GDS skips the host entirely, about four times the CPU service ratio, seventy-five percent latency cut on that path.",
+      "start": 275.8,
+      "end": 299.75,
+      "words": [
+        {
+          "text": "GPU",
+          "start": 275.98,
+          "end": 276.6
+        },
+        {
+          "text": "direct",
+          "start": 276.6,
+          "end": 277.18
+        },
+        {
+          "text": "storage",
+          "start": 277.18,
+          "end": 277.72
+        },
+        {
+          "text": "attacks",
+          "start": 277.72,
+          "end": 278.0
+        },
+        {
+          "text": "a",
+          "start": 278.0,
+          "end": 278.36
+        },
+        {
+          "text": "different",
+          "start": 278.36,
+          "end": 278.54
+        },
+        {
+          "text": "copy.",
+          "start": 278.54,
+          "end": 278.98
+        },
+        {
+          "text": "Normally",
+          "start": 279.52,
+          "end": 279.92
+        },
+        {
+          "text": "a",
+          "start": 279.92,
+          "end": 280.18
+        },
+        {
+          "text": "payload",
+          "start": 280.18,
+          "end": 280.5
+        },
+        {
+          "text": "DMAs",
+          "start": 280.5,
+          "end": 281.46
+        },
+        {
+          "text": "into",
+          "start": 281.46,
+          "end": 281.64
+        },
+        {
+          "text": "a",
+          "start": 281.64,
+          "end": 281.86
+        },
+        {
+          "text": "kernel",
+          "start": 281.86,
+          "end": 282.08
+        },
+        {
+          "text": "buffer",
+          "start": 282.08,
+          "end": 282.48
+        },
+        {
+          "text": "in",
+          "start": 282.48,
+          "end": 282.72
+        },
+        {
+          "text": "host",
+          "start": 282.72,
+          "end": 282.98
+        },
+        {
+          "text": "DRAM,",
+          "start": 282.98,
+          "end": 283.56
+        },
+        {
+          "text": "the",
+          "start": 284.02,
+          "end": 284.2
+        },
+        {
+          "text": "CPU",
+          "start": 284.2,
+          "end": 284.58
+        },
+        {
+          "text": "copies",
+          "start": 284.58,
+          "end": 285.28
+        },
+        {
+          "text": "it",
+          "start": 285.28,
+          "end": 285.48
+        },
+        {
+          "text": "to",
+          "start": 285.48,
+          "end": 285.62
+        },
+        {
+          "text": "pinned",
+          "start": 285.62,
+          "end": 285.88
+        },
+        {
+          "text": "memory,",
+          "start": 285.88,
+          "end": 286.28
+        },
+        {
+          "text": "then",
+          "start": 286.66,
+          "end": 286.94
+        },
+        {
+          "text": "DMA",
+          "start": 286.94,
+          "end": 287.6
+        },
+        {
+          "text": "descends",
+          "start": 287.6,
+          "end": 288.14
+        },
+        {
+          "text": "to",
+          "start": 288.14,
+          "end": 288.34
+        },
+        {
+          "text": "HBM.",
+          "start": 288.34,
+          "end": 288.96
+        },
+        {
+          "text": "GDS",
+          "start": 289.74,
+          "end": 290.34
+        },
+        {
+          "text": "skips",
+          "start": 290.34,
+          "end": 290.82
+        },
+        {
+          "text": "the",
+          "start": 290.82,
+          "end": 291.02
+        },
+        {
+          "text": "host",
+          "start": 291.02,
+          "end": 291.26
+        },
+        {
+          "text": "entirely,",
+          "start": 291.26,
+          "end": 291.94
+        },
+        {
+          "text": "about",
+          "start": 292.5,
+          "end": 292.72
+        },
+        {
+          "text": "four",
+          "start": 292.72,
+          "end": 293.1
+        },
+        {
+          "text": "times",
+          "start": 293.1,
+          "end": 293.56
+        },
+        {
+          "text": "the",
+          "start": 293.56,
+          "end": 293.76
+        },
+        {
+          "text": "CPU",
+          "start": 293.76,
+          "end": 294.26
+        },
+        {
+          "text": "service",
+          "start": 294.26,
+          "end": 294.84
+        },
+        {
+          "text": "ratio.",
+          "start": 294.84,
+          "end": 295.52
+        },
+        {
+          "text": "75",
+          "start": 296.08,
+          "end": 296.46
+        },
+        {
+          "text": "%",
+          "start": 296.46,
+          "end": 297.26
+        },
+        {
+          "text": "latency",
+          "start": 297.26,
+          "end": 297.86
+        },
+        {
+          "text": "cut",
+          "start": 297.86,
+          "end": 298.24
+        },
+        {
+          "text": "on",
+          "start": 298.24,
+          "end": 298.48
+        },
+        {
+          "text": "that",
+          "start": 298.48,
+          "end": 298.68
+        },
+        {
+          "text": "path.",
+          "start": 298.68,
+          "end": 299.1
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "It removes the copy, not the network round trip, not the tail. Now the write side: a naive full-state save is absurd at scale, the seventy-B scenario's nine hundred eighty gigabyte checkpoint at a hundred gigabytes a second stalls over ten thousand seconds.",
+      "start": 299.75,
+      "end": 316.48,
+      "words": [
+        {
+          "text": "It",
+          "start": 299.9,
+          "end": 300.12
+        },
+        {
+          "text": "removes",
+          "start": 300.12,
+          "end": 300.48
+        },
+        {
+          "text": "the",
+          "start": 300.48,
+          "end": 300.72
+        },
+        {
+          "text": "copy,",
+          "start": 300.72,
+          "end": 301.02
+        },
+        {
+          "text": "not",
+          "start": 301.46,
+          "end": 301.62
+        },
+        {
+          "text": "the",
+          "start": 301.62,
+          "end": 301.76
+        },
+        {
+          "text": "network",
+          "start": 301.76,
+          "end": 302.04
+        },
+        {
+          "text": "round",
+          "start": 302.04,
+          "end": 302.34
+        },
+        {
+          "text": "trip,",
+          "start": 302.34,
+          "end": 302.6
+        },
+        {
+          "text": "not",
+          "start": 303.02,
+          "end": 303.16
+        },
+        {
+          "text": "the",
+          "start": 303.16,
+          "end": 303.32
+        },
+        {
+          "text": "tail.",
+          "start": 303.32,
+          "end": 303.58
+        },
+        {
+          "text": "Now",
+          "start": 304.34,
+          "end": 304.62
+        },
+        {
+          "text": "the",
+          "start": 304.62,
+          "end": 304.76
+        },
+        {
+          "text": "right",
+          "start": 304.76,
+          "end": 304.96
+        },
+        {
+          "text": "side.",
+          "start": 304.96,
+          "end": 305.32
+        },
+        {
+          "text": "A",
+          "start": 305.92,
+          "end": 306.04
+        },
+        {
+          "text": "naive",
+          "start": 306.04,
+          "end": 306.32
+        },
+        {
+          "text": "full",
+          "start": 306.32,
+          "end": 306.6
+        },
+        {
+          "text": "state",
+          "start": 306.6,
+          "end": 306.86
+        },
+        {
+          "text": "save",
+          "start": 306.86,
+          "end": 307.26
+        },
+        {
+          "text": "is",
+          "start": 307.26,
+          "end": 307.52
+        },
+        {
+          "text": "absurd",
+          "start": 307.52,
+          "end": 307.88
+        },
+        {
+          "text": "at",
+          "start": 307.88,
+          "end": 308.04
+        },
+        {
+          "text": "scale.",
+          "start": 308.04,
+          "end": 308.36
+        },
+        {
+          "text": "The",
+          "start": 308.88,
+          "end": 309.0
+        },
+        {
+          "text": "70B",
+          "start": 309.0,
+          "end": 309.58
+        },
+        {
+          "text": "Scenario's",
+          "start": 309.58,
+          "end": 310.28
+        },
+        {
+          "text": "980",
+          "start": 310.28,
+          "end": 311.16
+        },
+        {
+          "text": "gigabyte",
+          "start": 311.16,
+          "end": 311.68
+        },
+        {
+          "text": "checkpoint",
+          "start": 311.68,
+          "end": 312.06
+        },
+        {
+          "text": "at",
+          "start": 312.06,
+          "end": 312.44
+        },
+        {
+          "text": "100",
+          "start": 312.44,
+          "end": 312.8
+        },
+        {
+          "text": "gigabytes",
+          "start": 312.8,
+          "end": 313.3
+        },
+        {
+          "text": "a",
+          "start": 313.3,
+          "end": 313.58
+        },
+        {
+          "text": "second",
+          "start": 313.58,
+          "end": 313.86
+        },
+        {
+          "text": "stalls",
+          "start": 313.86,
+          "end": 314.26
+        },
+        {
+          "text": "over",
+          "start": 314.26,
+          "end": 314.64
+        },
+        {
+          "text": "10",
+          "start": 314.64,
+          "end": 315.0
+        },
+        {
+          "text": ",000",
+          "start": 315.0,
+          "end": 315.44
+        },
+        {
+          "text": "seconds.",
+          "start": 315.44,
+          "end": 315.84
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "So the design is two-phase. Pause only for the local stripe write, point three four seconds for the node's nine point six gigabyte shard, then copy to the parallel file system asynchronously, two point four five seconds overlapping later steps.",
+      "start": 316.48,
+      "end": 333.7,
+      "eq": {
+        "id": "two-phase-ckpt",
+        "title": "Two-phase checkpoint cost",
+        "latex": "T_{pause} = \\frac{B_{shard}}{BW_{local\\ stripe}} \\approx 0.34\\ \\mathrm{s}, \\quad T_{pfs} \\approx 2.45\\ \\mathrm{s}"
+      },
+      "words": [
+        {
+          "text": "So",
+          "start": 316.54,
+          "end": 317.0
+        },
+        {
+          "text": "the",
+          "start": 317.0,
+          "end": 317.14
+        },
+        {
+          "text": "design",
+          "start": 317.14,
+          "end": 317.58
+        },
+        {
+          "text": "is",
+          "start": 317.58,
+          "end": 317.8
+        },
+        {
+          "text": "two",
+          "start": 317.8,
+          "end": 318.02
+        },
+        {
+          "text": "phase.",
+          "start": 318.02,
+          "end": 318.32
+        },
+        {
+          "text": "Pause",
+          "start": 319.02,
+          "end": 319.3
+        },
+        {
+          "text": "only",
+          "start": 319.3,
+          "end": 319.74
+        },
+        {
+          "text": "for",
+          "start": 319.74,
+          "end": 319.94
+        },
+        {
+          "text": "the",
+          "start": 319.94,
+          "end": 320.02
+        },
+        {
+          "text": "local",
+          "start": 320.02,
+          "end": 320.28
+        },
+        {
+          "text": "stripe",
+          "start": 320.28,
+          "end": 320.66
+        },
+        {
+          "text": "right,",
+          "start": 320.66,
+          "end": 321.0
+        },
+        {
+          "text": "0",
+          "start": 321.38,
+          "end": 321.52
+        },
+        {
+          "text": ".34",
+          "start": 321.52,
+          "end": 322.04
+        },
+        {
+          "text": "seconds",
+          "start": 322.04,
+          "end": 322.64
+        },
+        {
+          "text": "for",
+          "start": 322.64,
+          "end": 322.88
+        },
+        {
+          "text": "the",
+          "start": 322.88,
+          "end": 323.0
+        },
+        {
+          "text": "node's",
+          "start": 323.0,
+          "end": 323.46
+        },
+        {
+          "text": "9",
+          "start": 323.46,
+          "end": 323.7
+        },
+        {
+          "text": ".6",
+          "start": 323.7,
+          "end": 324.42
+        },
+        {
+          "text": "gigabyte",
+          "start": 324.42,
+          "end": 324.98
+        },
+        {
+          "text": "shard,",
+          "start": 324.98,
+          "end": 325.48
+        },
+        {
+          "text": "then",
+          "start": 325.92,
+          "end": 326.12
+        },
+        {
+          "text": "copy",
+          "start": 326.12,
+          "end": 326.5
+        },
+        {
+          "text": "to",
+          "start": 326.5,
+          "end": 326.68
+        },
+        {
+          "text": "the",
+          "start": 326.68,
+          "end": 326.82
+        },
+        {
+          "text": "parallel",
+          "start": 326.82,
+          "end": 327.22
+        },
+        {
+          "text": "file",
+          "start": 327.22,
+          "end": 327.6
+        },
+        {
+          "text": "system",
+          "start": 327.6,
+          "end": 328.14
+        },
+        {
+          "text": "asynchronously,",
+          "start": 328.14,
+          "end": 329.12
+        },
+        {
+          "text": "2",
+          "start": 329.64,
+          "end": 329.88
+        },
+        {
+          "text": ".45",
+          "start": 329.88,
+          "end": 330.66
+        },
+        {
+          "text": "seconds",
+          "start": 330.66,
+          "end": 331.4
+        },
+        {
+          "text": "overlapping",
+          "start": 331.4,
+          "end": 331.92
+        },
+        {
+          "text": "later",
+          "start": 331.92,
+          "end": 332.48
+        },
+        {
+          "text": "steps.",
+          "start": 332.48,
+          "end": 333.0
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "A one-second pause would still eat twenty-two percent of a step but only point one seven percent of the ten-minute interval. And between local write and manifest the new generation is staged, not restorable, the previous committed save is still the restore point.",
+      "start": 333.7,
+      "end": 349.68,
+      "visual": {
+        "src": "/study/vol2/04-data-storage/diagrams/ckpt-staging.svg",
+        "title": "Pause for the shard, publish the manifest",
+        "alt": "Four timeline lanes: training pauses briefly for the local NVMe write, an asynchronous copy to the parallel file system runs much longer, checksum verification follows, and the coordinator publishes the manifest last. A bracket marks the staged window between local write and manifest where the new generation is not yet restorable."
+      },
+      "words": [
+        {
+          "text": "A",
+          "start": 334.02,
+          "end": 334.06
+        },
+        {
+          "text": "one",
+          "start": 334.06,
+          "end": 334.28
+        },
+        {
+          "text": "second",
+          "start": 334.28,
+          "end": 334.6
+        },
+        {
+          "text": "pause",
+          "start": 334.6,
+          "end": 334.96
+        },
+        {
+          "text": "would",
+          "start": 334.96,
+          "end": 335.26
+        },
+        {
+          "text": "still",
+          "start": 335.26,
+          "end": 335.52
+        },
+        {
+          "text": "eat",
+          "start": 335.52,
+          "end": 335.72
+        },
+        {
+          "text": "22",
+          "start": 335.72,
+          "end": 336.16
+        },
+        {
+          "text": "%",
+          "start": 336.16,
+          "end": 336.62
+        },
+        {
+          "text": "of",
+          "start": 336.62,
+          "end": 336.84
+        },
+        {
+          "text": "a",
+          "start": 336.84,
+          "end": 336.96
+        },
+        {
+          "text": "step,",
+          "start": 336.96,
+          "end": 337.26
+        },
+        {
+          "text": "but",
+          "start": 337.58,
+          "end": 337.78
+        },
+        {
+          "text": "only",
+          "start": 337.78,
+          "end": 338.06
+        },
+        {
+          "text": "0",
+          "start": 338.06,
+          "end": 338.22
+        },
+        {
+          "text": ".17",
+          "start": 338.22,
+          "end": 338.84
+        },
+        {
+          "text": "%",
+          "start": 338.84,
+          "end": 339.28
+        },
+        {
+          "text": "of",
+          "start": 339.28,
+          "end": 339.52
+        },
+        {
+          "text": "the",
+          "start": 339.52,
+          "end": 339.64
+        },
+        {
+          "text": "10",
+          "start": 339.64,
+          "end": 339.86
+        },
+        {
+          "text": "minute",
+          "start": 339.86,
+          "end": 340.02
+        },
+        {
+          "text": "interval.",
+          "start": 340.02,
+          "end": 340.38
+        },
+        {
+          "text": "And",
+          "start": 341.08,
+          "end": 341.28
+        },
+        {
+          "text": "between",
+          "start": 341.28,
+          "end": 341.52
+        },
+        {
+          "text": "local",
+          "start": 341.52,
+          "end": 341.86
+        },
+        {
+          "text": "right",
+          "start": 341.86,
+          "end": 342.2
+        },
+        {
+          "text": "and",
+          "start": 342.2,
+          "end": 342.46
+        },
+        {
+          "text": "manifest",
+          "start": 342.46,
+          "end": 342.88
+        },
+        {
+          "text": "the",
+          "start": 342.88,
+          "end": 343.18
+        },
+        {
+          "text": "new",
+          "start": 343.18,
+          "end": 343.36
+        },
+        {
+          "text": "generation",
+          "start": 343.36,
+          "end": 343.78
+        },
+        {
+          "text": "is",
+          "start": 343.78,
+          "end": 344.12
+        },
+        {
+          "text": "staged,",
+          "start": 344.12,
+          "end": 344.54
+        },
+        {
+          "text": "not",
+          "start": 345.06,
+          "end": 345.26
+        },
+        {
+          "text": "restoreable,",
+          "start": 345.26,
+          "end": 345.86
+        },
+        {
+          "text": "the",
+          "start": 346.24,
+          "end": 346.36
+        },
+        {
+          "text": "previous",
+          "start": 346.36,
+          "end": 346.68
+        },
+        {
+          "text": "committed",
+          "start": 346.68,
+          "end": 347.12
+        },
+        {
+          "text": "save",
+          "start": 347.12,
+          "end": 347.52
+        },
+        {
+          "text": "is",
+          "start": 347.52,
+          "end": 347.94
+        },
+        {
+          "text": "still",
+          "start": 347.94,
+          "end": 348.24
+        },
+        {
+          "text": "the",
+          "start": 348.24,
+          "end": 348.4
+        },
+        {
+          "text": "restore",
+          "start": 348.4,
+          "end": 348.74
+        },
+        {
+          "text": "point.",
+          "start": 348.74,
+          "end": 349.08
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The correctness bug has a name too: the acknowledgment gap. A worker writes the row for event e42, crashes before recording the commit, its replacement replays. Append and the click counts twice; write under a stable key and the replay overwrites the same row.",
+      "start": 349.68,
+      "end": 368.25,
+      "words": [
+        {
+          "text": "The",
+          "start": 349.78,
+          "end": 350.16
+        },
+        {
+          "text": "correctness",
+          "start": 350.16,
+          "end": 350.68
+        },
+        {
+          "text": "bug",
+          "start": 350.68,
+          "end": 350.96
+        },
+        {
+          "text": "has",
+          "start": 350.96,
+          "end": 351.28
+        },
+        {
+          "text": "a",
+          "start": 351.28,
+          "end": 351.42
+        },
+        {
+          "text": "name",
+          "start": 351.42,
+          "end": 351.58
+        },
+        {
+          "text": "too,",
+          "start": 351.58,
+          "end": 351.9
+        },
+        {
+          "text": "the",
+          "start": 352.4,
+          "end": 352.52
+        },
+        {
+          "text": "acknowledgement",
+          "start": 352.52,
+          "end": 353.0
+        },
+        {
+          "text": "gap.",
+          "start": 353.0,
+          "end": 353.42
+        },
+        {
+          "text": "A",
+          "start": 353.42,
+          "end": 354.18
+        },
+        {
+          "text": "worker",
+          "start": 354.18,
+          "end": 354.48
+        },
+        {
+          "text": "writes",
+          "start": 354.48,
+          "end": 354.8
+        },
+        {
+          "text": "the",
+          "start": 354.8,
+          "end": 355.02
+        },
+        {
+          "text": "row",
+          "start": 355.02,
+          "end": 355.26
+        },
+        {
+          "text": "for",
+          "start": 355.26,
+          "end": 355.54
+        },
+        {
+          "text": "event",
+          "start": 355.54,
+          "end": 355.84
+        },
+        {
+          "text": "E42,",
+          "start": 355.84,
+          "end": 356.56
+        },
+        {
+          "text": "crashes",
+          "start": 357.16,
+          "end": 357.6
+        },
+        {
+          "text": "before",
+          "start": 357.6,
+          "end": 358.02
+        },
+        {
+          "text": "recording",
+          "start": 358.02,
+          "end": 358.56
+        },
+        {
+          "text": "the",
+          "start": 358.56,
+          "end": 358.76
+        },
+        {
+          "text": "commit,",
+          "start": 358.76,
+          "end": 359.08
+        },
+        {
+          "text": "its",
+          "start": 359.32,
+          "end": 359.46
+        },
+        {
+          "text": "replacement",
+          "start": 359.46,
+          "end": 359.96
+        },
+        {
+          "text": "replays.",
+          "start": 359.96,
+          "end": 360.78
+        },
+        {
+          "text": "A",
+          "start": 361.26,
+          "end": 361.4
+        },
+        {
+          "text": "pen",
+          "start": 361.4,
+          "end": 361.6
+        },
+        {
+          "text": "and",
+          "start": 361.6,
+          "end": 361.92
+        },
+        {
+          "text": "the",
+          "start": 361.92,
+          "end": 362.06
+        },
+        {
+          "text": "click",
+          "start": 362.06,
+          "end": 362.28
+        },
+        {
+          "text": "counts",
+          "start": 362.28,
+          "end": 362.62
+        },
+        {
+          "text": "twice,",
+          "start": 362.62,
+          "end": 363.02
+        },
+        {
+          "text": "right",
+          "start": 363.62,
+          "end": 363.88
+        },
+        {
+          "text": "under",
+          "start": 363.88,
+          "end": 364.2
+        },
+        {
+          "text": "a",
+          "start": 364.2,
+          "end": 364.36
+        },
+        {
+          "text": "stable",
+          "start": 364.36,
+          "end": 364.64
+        },
+        {
+          "text": "key,",
+          "start": 364.64,
+          "end": 365.06
+        },
+        {
+          "text": "and",
+          "start": 365.34,
+          "end": 365.46
+        },
+        {
+          "text": "the",
+          "start": 365.46,
+          "end": 365.58
+        },
+        {
+          "text": "replay",
+          "start": 365.58,
+          "end": 365.92
+        },
+        {
+          "text": "overwrites",
+          "start": 365.92,
+          "end": 366.66
+        },
+        {
+          "text": "the",
+          "start": 366.66,
+          "end": 366.9
+        },
+        {
+          "text": "same",
+          "start": 366.9,
+          "end": 367.22
+        },
+        {
+          "text": "row.",
+          "start": 367.22,
+          "end": 367.48
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Effectively-once out of at-least-once. Synthetic data adds the provenance angle: store the regeneration recipe and a five percent source change shrinks the needed payload twenty times, at forty percent metadata overhead across versions.",
+      "start": 368.25,
+      "end": 383.8,
+      "words": [
+        {
+          "text": "Effectively,",
+          "start": 368.42,
+          "end": 369.06
+        },
+        {
+          "text": "once",
+          "start": 369.22,
+          "end": 369.48
+        },
+        {
+          "text": "out",
+          "start": 369.48,
+          "end": 369.72
+        },
+        {
+          "text": "of",
+          "start": 369.72,
+          "end": 369.82
+        },
+        {
+          "text": "at",
+          "start": 369.82,
+          "end": 369.92
+        },
+        {
+          "text": "least",
+          "start": 369.92,
+          "end": 370.12
+        },
+        {
+          "text": "once.",
+          "start": 370.12,
+          "end": 370.42
+        },
+        {
+          "text": "Synthetic",
+          "start": 371.12,
+          "end": 371.62
+        },
+        {
+          "text": "data",
+          "start": 371.62,
+          "end": 371.88
+        },
+        {
+          "text": "adds",
+          "start": 371.88,
+          "end": 372.32
+        },
+        {
+          "text": "the",
+          "start": 372.32,
+          "end": 372.5
+        },
+        {
+          "text": "provenance",
+          "start": 372.5,
+          "end": 372.96
+        },
+        {
+          "text": "angle.",
+          "start": 372.96,
+          "end": 373.28
+        },
+        {
+          "text": "Store",
+          "start": 373.82,
+          "end": 374.16
+        },
+        {
+          "text": "the",
+          "start": 374.16,
+          "end": 374.38
+        },
+        {
+          "text": "regeneration",
+          "start": 374.38,
+          "end": 374.76
+        },
+        {
+          "text": "recipe,",
+          "start": 374.76,
+          "end": 375.46
+        },
+        {
+          "text": "and",
+          "start": 375.86,
+          "end": 376.1
+        },
+        {
+          "text": "a",
+          "start": 376.1,
+          "end": 376.22
+        },
+        {
+          "text": "5",
+          "start": 376.22,
+          "end": 376.5
+        },
+        {
+          "text": "%",
+          "start": 376.5,
+          "end": 376.86
+        },
+        {
+          "text": "source",
+          "start": 376.86,
+          "end": 377.16
+        },
+        {
+          "text": "change",
+          "start": 377.16,
+          "end": 377.62
+        },
+        {
+          "text": "shrinks",
+          "start": 377.62,
+          "end": 378.14
+        },
+        {
+          "text": "the",
+          "start": 378.14,
+          "end": 378.34
+        },
+        {
+          "text": "needed",
+          "start": 378.34,
+          "end": 378.56
+        },
+        {
+          "text": "payload",
+          "start": 378.56,
+          "end": 379.04
+        },
+        {
+          "text": "20",
+          "start": 379.04,
+          "end": 379.4
+        },
+        {
+          "text": "times",
+          "start": 379.4,
+          "end": 379.92
+        },
+        {
+          "text": "at",
+          "start": 379.92,
+          "end": 380.46
+        },
+        {
+          "text": "40",
+          "start": 380.46,
+          "end": 380.82
+        },
+        {
+          "text": "%",
+          "start": 380.82,
+          "end": 381.2
+        },
+        {
+          "text": "metadata",
+          "start": 381.2,
+          "end": 381.56
+        },
+        {
+          "text": "overhead",
+          "start": 381.56,
+          "end": 382.16
+        },
+        {
+          "text": "across",
+          "start": 382.16,
+          "end": 382.54
+        },
+        {
+          "text": "versions.",
+          "start": 382.54,
+          "end": 383.16
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Then the bill, which inverts the same way. One petabyte at two cents a gigabyte-month is two hundred forty thousand a year of rent. Ten full reads at nine cents a gigabyte is nine hundred thousand of egress. The meter runs on movement.",
+      "start": 383.8,
+      "end": 401.0,
+      "words": [
+        {
+          "text": "Then",
+          "start": 384.32,
+          "end": 384.36
+        },
+        {
+          "text": "the",
+          "start": 384.36,
+          "end": 384.54
+        },
+        {
+          "text": "bill,",
+          "start": 384.54,
+          "end": 384.88
+        },
+        {
+          "text": "which",
+          "start": 385.12,
+          "end": 385.34
+        },
+        {
+          "text": "inverts",
+          "start": 385.34,
+          "end": 385.82
+        },
+        {
+          "text": "the",
+          "start": 385.82,
+          "end": 385.96
+        },
+        {
+          "text": "same",
+          "start": 385.96,
+          "end": 386.3
+        },
+        {
+          "text": "way.",
+          "start": 386.3,
+          "end": 386.58
+        },
+        {
+          "text": "One",
+          "start": 387.24,
+          "end": 387.48
+        },
+        {
+          "text": "petabyte",
+          "start": 387.48,
+          "end": 388.02
+        },
+        {
+          "text": "at",
+          "start": 388.02,
+          "end": 388.26
+        },
+        {
+          "text": "two",
+          "start": 388.26,
+          "end": 388.52
+        },
+        {
+          "text": "cents",
+          "start": 388.52,
+          "end": 388.8
+        },
+        {
+          "text": "a",
+          "start": 388.8,
+          "end": 389.08
+        },
+        {
+          "text": "gigabyte",
+          "start": 389.08,
+          "end": 389.5
+        },
+        {
+          "text": "month",
+          "start": 389.5,
+          "end": 389.8
+        },
+        {
+          "text": "is",
+          "start": 389.8,
+          "end": 390.2
+        },
+        {
+          "text": "240",
+          "start": 390.2,
+          "end": 390.86
+        },
+        {
+          "text": ",000",
+          "start": 390.86,
+          "end": 391.8
+        },
+        {
+          "text": "a",
+          "start": 391.8,
+          "end": 392.02
+        },
+        {
+          "text": "year",
+          "start": 392.02,
+          "end": 392.22
+        },
+        {
+          "text": "of",
+          "start": 392.22,
+          "end": 392.4
+        },
+        {
+          "text": "rent.",
+          "start": 392.4,
+          "end": 392.66
+        },
+        {
+          "text": "10",
+          "start": 393.3,
+          "end": 393.62
+        },
+        {
+          "text": "full",
+          "start": 393.62,
+          "end": 393.94
+        },
+        {
+          "text": "reads",
+          "start": 393.94,
+          "end": 394.36
+        },
+        {
+          "text": "at",
+          "start": 394.36,
+          "end": 394.64
+        },
+        {
+          "text": "nine",
+          "start": 394.64,
+          "end": 394.98
+        },
+        {
+          "text": "cents",
+          "start": 394.98,
+          "end": 395.3
+        },
+        {
+          "text": "a",
+          "start": 395.3,
+          "end": 395.52
+        },
+        {
+          "text": "gigabyte",
+          "start": 395.52,
+          "end": 395.98
+        },
+        {
+          "text": "is",
+          "start": 395.98,
+          "end": 396.22
+        },
+        {
+          "text": "900",
+          "start": 396.22,
+          "end": 396.68
+        },
+        {
+          "text": ",000",
+          "start": 396.68,
+          "end": 397.42
+        },
+        {
+          "text": "of",
+          "start": 397.42,
+          "end": 397.58
+        },
+        {
+          "text": "egress.",
+          "start": 397.58,
+          "end": 398.0
+        },
+        {
+          "text": "The",
+          "start": 398.68,
+          "end": 398.8
+        },
+        {
+          "text": "meter",
+          "start": 398.8,
+          "end": 399.04
+        },
+        {
+          "text": "runs",
+          "start": 399.04,
+          "end": 399.5
+        },
+        {
+          "text": "on",
+          "start": 399.5,
+          "end": 399.8
+        },
+        {
+          "text": "movement.",
+          "start": 399.8,
+          "end": 400.2
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "HBM-as-storage prices the whole pyramid at one point five million per hundred terabytes. And tiering pays: demoting forty of fifty datasets saves a hundred forty-four thousand a year; one dedup pass saved two hundred eighty-two thousand, roughly nine H100s.",
+      "start": 401.0,
+      "end": 419.0,
+      "eq": {
+        "id": "egress-vs-rent",
+        "title": "Movement is the meter",
+        "latex": "\\$_{egress} = R_{out} \\times \\$_{GB} = 10 \\times 1\\ \\mathrm{PB} \\times \\$0.09 \\gg \\$_{rent}"
+      },
+      "words": [
+        {
+          "text": "HBMA",
+          "start": 401.1,
+          "end": 401.78
+        },
+        {
+          "text": "storage",
+          "start": 401.78,
+          "end": 402.14
+        },
+        {
+          "text": "prices",
+          "start": 402.14,
+          "end": 402.66
+        },
+        {
+          "text": "the",
+          "start": 402.66,
+          "end": 402.9
+        },
+        {
+          "text": "whole",
+          "start": 402.9,
+          "end": 403.12
+        },
+        {
+          "text": "pyramid",
+          "start": 403.12,
+          "end": 403.52
+        },
+        {
+          "text": "at",
+          "start": 403.52,
+          "end": 403.82
+        },
+        {
+          "text": "1",
+          "start": 403.82,
+          "end": 404.08
+        },
+        {
+          "text": ".5",
+          "start": 404.08,
+          "end": 404.8
+        },
+        {
+          "text": "million",
+          "start": 404.8,
+          "end": 405.14
+        },
+        {
+          "text": "per",
+          "start": 405.14,
+          "end": 405.38
+        },
+        {
+          "text": "hundred",
+          "start": 405.38,
+          "end": 405.66
+        },
+        {
+          "text": "terabytes.",
+          "start": 405.66,
+          "end": 406.18
+        },
+        {
+          "text": "And",
+          "start": 406.57,
+          "end": 407.0
+        },
+        {
+          "text": "tiering",
+          "start": 407.0,
+          "end": 407.4
+        },
+        {
+          "text": "pays,",
+          "start": 407.4,
+          "end": 407.66
+        },
+        {
+          "text": "demoting",
+          "start": 408.18,
+          "end": 408.56
+        },
+        {
+          "text": "40",
+          "start": 408.56,
+          "end": 409.0
+        },
+        {
+          "text": "of",
+          "start": 409.0,
+          "end": 409.16
+        },
+        {
+          "text": "50",
+          "start": 409.16,
+          "end": 409.44
+        },
+        {
+          "text": "datasets",
+          "start": 409.44,
+          "end": 409.9
+        },
+        {
+          "text": "saves",
+          "start": 409.9,
+          "end": 410.64
+        },
+        {
+          "text": "144",
+          "start": 410.64,
+          "end": 411.32
+        },
+        {
+          "text": ",000",
+          "start": 411.32,
+          "end": 412.16
+        },
+        {
+          "text": "a",
+          "start": 412.16,
+          "end": 412.26
+        },
+        {
+          "text": "year.",
+          "start": 412.26,
+          "end": 412.48
+        },
+        {
+          "text": "One",
+          "start": 413.08,
+          "end": 413.32
+        },
+        {
+          "text": "deduct",
+          "start": 413.32,
+          "end": 413.54
+        },
+        {
+          "text": "pass",
+          "start": 413.54,
+          "end": 413.98
+        },
+        {
+          "text": "saved",
+          "start": 413.98,
+          "end": 414.58
+        },
+        {
+          "text": "282",
+          "start": 414.58,
+          "end": 415.74
+        },
+        {
+          "text": ",000,",
+          "start": 415.74,
+          "end": 416.36
+        },
+        {
+          "text": "roughly",
+          "start": 416.62,
+          "end": 416.98
+        },
+        {
+          "text": "nine",
+          "start": 416.98,
+          "end": 417.44
+        },
+        {
+          "text": "H100s.",
+          "start": 417.44,
+          "end": 418.84
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Serving repeats the fuel line at a different tempo. Push three fifty gigabytes of weights to a hundred replicas, thirty-five terabytes at a terabyte a second, thirty-five seconds. And retrieval indexes reintroduce random I/O: a billion vectors at fifteen thirty-six dimensions is six point one terabytes plus a tenth of adjacency.",
+      "start": 419.0,
+      "end": 442.2,
+      "words": [
+        {
+          "text": "Serving",
+          "start": 419.04,
+          "end": 419.76
+        },
+        {
+          "text": "repeats",
+          "start": 419.76,
+          "end": 420.2
+        },
+        {
+          "text": "the",
+          "start": 420.2,
+          "end": 420.38
+        },
+        {
+          "text": "fuel",
+          "start": 420.38,
+          "end": 420.62
+        },
+        {
+          "text": "line",
+          "start": 420.62,
+          "end": 421.04
+        },
+        {
+          "text": "at",
+          "start": 421.04,
+          "end": 421.24
+        },
+        {
+          "text": "a",
+          "start": 421.24,
+          "end": 421.36
+        },
+        {
+          "text": "different",
+          "start": 421.36,
+          "end": 421.56
+        },
+        {
+          "text": "tempo.",
+          "start": 421.56,
+          "end": 422.02
+        },
+        {
+          "text": "Push",
+          "start": 422.54,
+          "end": 422.82
+        },
+        {
+          "text": "350",
+          "start": 422.82,
+          "end": 423.26
+        },
+        {
+          "text": "gigabytes",
+          "start": 423.26,
+          "end": 423.78
+        },
+        {
+          "text": "of",
+          "start": 423.78,
+          "end": 424.12
+        },
+        {
+          "text": "weights",
+          "start": 424.12,
+          "end": 424.42
+        },
+        {
+          "text": "to",
+          "start": 424.42,
+          "end": 424.66
+        },
+        {
+          "text": "100",
+          "start": 424.66,
+          "end": 425.08
+        },
+        {
+          "text": "replicas,",
+          "start": 425.08,
+          "end": 425.7
+        },
+        {
+          "text": "35",
+          "start": 426.22,
+          "end": 426.7
+        },
+        {
+          "text": "terabytes",
+          "start": 426.7,
+          "end": 427.34
+        },
+        {
+          "text": "at",
+          "start": 427.34,
+          "end": 427.62
+        },
+        {
+          "text": "a",
+          "start": 427.62,
+          "end": 427.74
+        },
+        {
+          "text": "terabyte",
+          "start": 427.74,
+          "end": 428.2
+        },
+        {
+          "text": "a",
+          "start": 428.2,
+          "end": 428.44
+        },
+        {
+          "text": "second,",
+          "start": 428.44,
+          "end": 428.78
+        },
+        {
+          "text": "35",
+          "start": 429.22,
+          "end": 429.54
+        },
+        {
+          "text": "seconds.",
+          "start": 429.54,
+          "end": 430.18
+        },
+        {
+          "text": "And",
+          "start": 430.82,
+          "end": 431.04
+        },
+        {
+          "text": "retrieval",
+          "start": 431.04,
+          "end": 431.52
+        },
+        {
+          "text": "indexes",
+          "start": 431.52,
+          "end": 432.24
+        },
+        {
+          "text": "reintroduce",
+          "start": 432.24,
+          "end": 433.0
+        },
+        {
+          "text": "random",
+          "start": 433.0,
+          "end": 433.38
+        },
+        {
+          "text": "I",
+          "start": 433.38,
+          "end": 433.76
+        },
+        {
+          "text": ".O.",
+          "start": 433.76,
+          "end": 434.04
+        },
+        {
+          "text": "A",
+          "start": 434.04,
+          "end": 434.76
+        },
+        {
+          "text": "billion",
+          "start": 434.76,
+          "end": 435.06
+        },
+        {
+          "text": "vectors",
+          "start": 435.06,
+          "end": 435.52
+        },
+        {
+          "text": "at",
+          "start": 435.52,
+          "end": 435.82
+        },
+        {
+          "text": "1536",
+          "start": 435.82,
+          "end": 436.88
+        },
+        {
+          "text": "dimensions",
+          "start": 436.88,
+          "end": 437.6
+        },
+        {
+          "text": "is",
+          "start": 437.6,
+          "end": 438.1
+        },
+        {
+          "text": "6",
+          "start": 438.1,
+          "end": 438.44
+        },
+        {
+          "text": ".1",
+          "start": 438.44,
+          "end": 439.14
+        },
+        {
+          "text": "terabytes",
+          "start": 439.14,
+          "end": 439.76
+        },
+        {
+          "text": "plus",
+          "start": 439.76,
+          "end": 440.06
+        },
+        {
+          "text": "a",
+          "start": 440.06,
+          "end": 440.32
+        },
+        {
+          "text": "tenth",
+          "start": 440.32,
+          "end": 440.58
+        },
+        {
+          "text": "of",
+          "start": 440.58,
+          "end": 440.8
+        },
+        {
+          "text": "adjacency.",
+          "start": 440.8,
+          "end": 441.52
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The fallacies audit lands cleanly: size storage for the dataset, wrong by three orders of magnitude. Faster compute relieves storage pressure, wrong past the knee. A saved checkpoint is a restore point, not until the manifest commits.",
+      "start": 442.2,
+      "end": 457.63,
+      "words": [
+        {
+          "text": "The",
+          "start": 442.54,
+          "end": 442.54
+        },
+        {
+          "text": "fallacies",
+          "start": 442.54,
+          "end": 442.98
+        },
+        {
+          "text": "audit",
+          "start": 442.98,
+          "end": 443.34
+        },
+        {
+          "text": "lands",
+          "start": 443.34,
+          "end": 443.72
+        },
+        {
+          "text": "cleanly.",
+          "start": 443.72,
+          "end": 444.24
+        },
+        {
+          "text": "Size",
+          "start": 444.62,
+          "end": 444.94
+        },
+        {
+          "text": "storage",
+          "start": 444.94,
+          "end": 445.3
+        },
+        {
+          "text": "for",
+          "start": 445.3,
+          "end": 445.56
+        },
+        {
+          "text": "the",
+          "start": 445.56,
+          "end": 445.66
+        },
+        {
+          "text": "dataset,",
+          "start": 445.66,
+          "end": 446.04
+        },
+        {
+          "text": "wrong",
+          "start": 446.42,
+          "end": 446.7
+        },
+        {
+          "text": "by",
+          "start": 446.7,
+          "end": 446.94
+        },
+        {
+          "text": "three",
+          "start": 446.94,
+          "end": 447.24
+        },
+        {
+          "text": "orders",
+          "start": 447.24,
+          "end": 447.62
+        },
+        {
+          "text": "of",
+          "start": 447.62,
+          "end": 447.8
+        },
+        {
+          "text": "magnitude.",
+          "start": 447.8,
+          "end": 448.2
+        },
+        {
+          "text": "Faster",
+          "start": 448.94,
+          "end": 449.3
+        },
+        {
+          "text": "compute",
+          "start": 449.3,
+          "end": 449.76
+        },
+        {
+          "text": "relieves",
+          "start": 449.76,
+          "end": 450.34
+        },
+        {
+          "text": "storage",
+          "start": 450.34,
+          "end": 450.62
+        },
+        {
+          "text": "pressure,",
+          "start": 450.62,
+          "end": 451.1
+        },
+        {
+          "text": "wrong",
+          "start": 451.42,
+          "end": 451.7
+        },
+        {
+          "text": "past",
+          "start": 451.7,
+          "end": 452.04
+        },
+        {
+          "text": "the",
+          "start": 452.04,
+          "end": 452.26
+        },
+        {
+          "text": "knee.",
+          "start": 452.26,
+          "end": 452.48
+        },
+        {
+          "text": "A",
+          "start": 453.1,
+          "end": 453.24
+        },
+        {
+          "text": "saved",
+          "start": 453.24,
+          "end": 453.64
+        },
+        {
+          "text": "checkpoint",
+          "start": 453.64,
+          "end": 454.08
+        },
+        {
+          "text": "is",
+          "start": 454.08,
+          "end": 454.38
+        },
+        {
+          "text": "a",
+          "start": 454.38,
+          "end": 454.5
+        },
+        {
+          "text": "restore",
+          "start": 454.5,
+          "end": 454.74
+        },
+        {
+          "text": "point,",
+          "start": 454.74,
+          "end": 455.12
+        },
+        {
+          "text": "not",
+          "start": 455.36,
+          "end": 455.68
+        },
+        {
+          "text": "until",
+          "start": 455.68,
+          "end": 455.92
+        },
+        {
+          "text": "the",
+          "start": 455.92,
+          "end": 456.06
+        },
+        {
+          "text": "manifest",
+          "start": 456.06,
+          "end": 456.46
+        },
+        {
+          "text": "commits.",
+          "start": 456.46,
+          "end": 456.98
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "So the chapter's thesis holds: the fleet's storage is a write system with a read side. The corpus is six terabytes; the workload is ten point six petabytes, and it arrives as a burst every ten minutes.",
+      "start": 457.63,
+      "end": 472.05,
+      "words": [
+        {
+          "text": "So",
+          "start": 457.72,
+          "end": 458.16
+        },
+        {
+          "text": "the",
+          "start": 458.16,
+          "end": 458.3
+        },
+        {
+          "text": "chapter's",
+          "start": 458.3,
+          "end": 458.78
+        },
+        {
+          "text": "thesis",
+          "start": 458.78,
+          "end": 458.96
+        },
+        {
+          "text": "holds.",
+          "start": 458.96,
+          "end": 459.42
+        },
+        {
+          "text": "The",
+          "start": 460.04,
+          "end": 460.18
+        },
+        {
+          "text": "fleet",
+          "start": 460.18,
+          "end": 460.38
+        },
+        {
+          "text": "storage",
+          "start": 460.38,
+          "end": 460.8
+        },
+        {
+          "text": "is",
+          "start": 460.8,
+          "end": 461.1
+        },
+        {
+          "text": "a",
+          "start": 461.1,
+          "end": 461.26
+        },
+        {
+          "text": "right",
+          "start": 461.26,
+          "end": 461.44
+        },
+        {
+          "text": "system",
+          "start": 461.44,
+          "end": 461.92
+        },
+        {
+          "text": "with",
+          "start": 461.92,
+          "end": 462.16
+        },
+        {
+          "text": "a",
+          "start": 462.16,
+          "end": 462.3
+        },
+        {
+          "text": "read",
+          "start": 462.3,
+          "end": 462.52
+        },
+        {
+          "text": "side.",
+          "start": 462.52,
+          "end": 462.92
+        },
+        {
+          "text": "The",
+          "start": 463.4,
+          "end": 463.76
+        },
+        {
+          "text": "corpus",
+          "start": 463.76,
+          "end": 464.22
+        },
+        {
+          "text": "is",
+          "start": 464.22,
+          "end": 464.44
+        },
+        {
+          "text": "six",
+          "start": 464.44,
+          "end": 464.8
+        },
+        {
+          "text": "terabytes.",
+          "start": 464.8,
+          "end": 465.28
+        },
+        {
+          "text": "The",
+          "start": 465.9,
+          "end": 466.0
+        },
+        {
+          "text": "workload",
+          "start": 466.0,
+          "end": 466.38
+        },
+        {
+          "text": "is",
+          "start": 466.38,
+          "end": 466.76
+        },
+        {
+          "text": "10",
+          "start": 466.76,
+          "end": 467.12
+        },
+        {
+          "text": ".6",
+          "start": 467.12,
+          "end": 467.8
+        },
+        {
+          "text": "petabytes.",
+          "start": 467.8,
+          "end": 468.42
+        },
+        {
+          "text": "And",
+          "start": 468.8,
+          "end": 468.96
+        },
+        {
+          "text": "it",
+          "start": 468.96,
+          "end": 469.08
+        },
+        {
+          "text": "arrives",
+          "start": 469.08,
+          "end": 469.44
+        },
+        {
+          "text": "as",
+          "start": 469.44,
+          "end": 469.8
+        },
+        {
+          "text": "a",
+          "start": 469.8,
+          "end": 469.92
+        },
+        {
+          "text": "burst",
+          "start": 469.92,
+          "end": 470.24
+        },
+        {
+          "text": "every",
+          "start": 470.24,
+          "end": 470.68
+        },
+        {
+          "text": "10",
+          "start": 470.68,
+          "end": 471.0
+        },
+        {
+          "text": "minutes.",
+          "start": 471.0,
+          "end": 471.38
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Design the fuel line for the traffic that exists: sequential streams in, checkpoint storms out, and a manifest at the end that decides what a save actually means.",
+      "start": 472.05,
+      "end": 482.55,
+      "words": [
+        {
+          "text": "Design",
+          "start": 472.04,
+          "end": 472.56
+        },
+        {
+          "text": "the",
+          "start": 472.56,
+          "end": 472.9
+        },
+        {
+          "text": "fuel",
+          "start": 472.9,
+          "end": 473.16
+        },
+        {
+          "text": "line",
+          "start": 473.16,
+          "end": 473.52
+        },
+        {
+          "text": "for",
+          "start": 473.52,
+          "end": 473.72
+        },
+        {
+          "text": "the",
+          "start": 473.72,
+          "end": 473.82
+        },
+        {
+          "text": "traffic",
+          "start": 473.82,
+          "end": 474.12
+        },
+        {
+          "text": "that",
+          "start": 474.12,
+          "end": 474.36
+        },
+        {
+          "text": "exists.",
+          "start": 474.36,
+          "end": 474.7
+        },
+        {
+          "text": "Sequential",
+          "start": 475.48,
+          "end": 475.88
+        },
+        {
+          "text": "streams",
+          "start": 475.88,
+          "end": 476.22
+        },
+        {
+          "text": "in,",
+          "start": 476.22,
+          "end": 476.64
+        },
+        {
+          "text": "checkpoint",
+          "start": 477.08,
+          "end": 477.34
+        },
+        {
+          "text": "storms",
+          "start": 477.34,
+          "end": 477.68
+        },
+        {
+          "text": "out,",
+          "start": 477.68,
+          "end": 478.06
+        },
+        {
+          "text": "and",
+          "start": 478.38,
+          "end": 478.5
+        },
+        {
+          "text": "a",
+          "start": 478.5,
+          "end": 478.58
+        },
+        {
+          "text": "manifest",
+          "start": 478.58,
+          "end": 478.94
+        },
+        {
+          "text": "at",
+          "start": 478.94,
+          "end": 479.22
+        },
+        {
+          "text": "the",
+          "start": 479.22,
+          "end": 479.32
+        },
+        {
+          "text": "end",
+          "start": 479.32,
+          "end": 479.64
+        },
+        {
+          "text": "that",
+          "start": 479.64,
+          "end": 480.0
+        },
+        {
+          "text": "decides",
+          "start": 480.0,
+          "end": 480.4
+        },
+        {
+          "text": "what",
+          "start": 480.4,
+          "end": 480.68
+        },
+        {
+          "text": "a",
+          "start": 480.68,
+          "end": 480.76
+        },
+        {
+          "text": "save",
+          "start": 480.76,
+          "end": 481.1
+        },
+        {
+          "text": "actually",
+          "start": 481.1,
+          "end": 481.52
+        },
+        {
+          "text": "means.",
+          "start": 481.52,
+          "end": 481.94
+        }
+      ]
+    }
+  ]
+}

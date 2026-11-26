@@ -6,6 +6,7 @@ description: >-
   Three solutions to Two Number Sum, from O(n^2) brute force to an O(n) hash set
   to an O(1)-space two-pointer scan — and the memory-vs-compute trade-off behind
   each.
+heroImage: /blog/two-number-sum/hero.webp
 labels: 'algorithms,personal,go,python'
 keywords: >-
   datastructures,cyclomatic complexity,big O,physics,blackholes,quantum

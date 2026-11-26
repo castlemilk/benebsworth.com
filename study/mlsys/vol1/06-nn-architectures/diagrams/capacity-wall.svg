@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#047857"]{fill:#34d399}
+    .dark [stroke="#047857"]{stroke:#34d399}
+    .dark [fill="#1d4ed8"]{fill:#93c5fd}
+    .dark [stroke="#1d4ed8"]{stroke:#93c5fd}
+    .dark [fill="#2563eb"]{fill:#6aa8f8}
+    .dark [stroke="#2563eb"]{stroke:#6aa8f8}
+    .dark [fill="#374151"]{fill:#e5e7eb}
+    .dark [stroke="#374151"]{stroke:#e5e7eb}
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#92400e"]{fill:#fbbf24}
+    .dark [stroke="#92400e"]{stroke:#fbbf24}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b91c1c"]{fill:#f87171}
+    .dark [stroke="#b91c1c"]{stroke:#f87171}
+    .dark [fill="#d97706"]{fill:#f59e0b}
+    .dark [stroke="#d97706"]{stroke:#f59e0b}
+    .dark [fill="#dbeafe"]{fill:#1e3a5f}
+    .dark [fill="#e5e7eb"]{fill:#374151}
+    .dark [fill="#fef3c7"]{fill:#453007}
+    .dark [fill="#fee2e2"]{fill:#4c1d1d}
+    .dark [fill="#dcfce7"]{fill:#14532d}
+    .dark [fill="#f3f4f6"]{fill:#1f2937}
+    .dark [fill="#ffffff"]{fill:#161a22}
+    .dark rect.bg{fill:#0f1115}
+  </style>
+  <rect x="0" y="0" width="700" height="400" fill="#ffffff" class="bg"/>
+  <text x="350" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#374151">The capacity wall -- embeddings are sized before they are run</text>
+  <text x="350" y="44" text-anchor="middle" font-size="10" fill="#6b7280">100M items × 128 dims × 4 bytes = 51.2 GB per table</text>
+
+  <!-- device memory line + table bars -->
+  <g>
+    <text x="60" y="72" font-size="9" fill="#6b7280">memory</text>
+    <line x1="70" y1="320" x2="70" y2="80" stroke="#9ca3af"/>
+    <!-- device capacity line at 80GB = y 110 -->
+    <line x1="70" y1="112" x2="400" y2="112" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="7 5"/>
+    <text x="402" y="116" font-size="9" font-weight="bold" fill="#b91c1c">80 GB accelerator</text>
+    <text x="402" y="128" font-size="8" fill="#b91c1c">capacity wall</text>
+    <!-- baseline -->
+    <line x1="70" y1="320" x2="400" y2="320" stroke="#9ca3af"/>
+
+    <!-- table 1: 51.2 GB fits -->
+    <rect x="110" y="187" width="80" height="133" rx="4" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="150" y="250" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#1d4ed8">51.2 GB</text>
+    <text x="150" y="264" text-anchor="middle" font-size="8" fill="#1d4ed8">table A</text>
+    <text x="150" y="336" text-anchor="middle" font-size="8.5" fill="#374151">fits -- 64% of device</text>
+
+    <!-- table 2: another 51.2 breaches -->
+    <rect x="230" y="187" width="80" height="133" rx="4" fill="#dbeafe" stroke="#2563eb"/>
+    <rect x="230" y="54" width="80" height="133" rx="4" fill="#fee2e2" stroke="#b91c1c" opacity="0.9"/>
+    <text x="270" y="118" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#b91c1c">+51.2 GB</text>
+    <text x="270" y="132" text-anchor="middle" font-size="8" fill="#b91c1c">table B</text>
+    <text x="270" y="336" text-anchor="middle" font-size="8.5" fill="#374151">two tables breach</text>
+  </g>
+
+  <!-- three escapes -->
+  <g>
+    <rect x="440" y="76" width="236" height="74" rx="8" fill="#dcfce7" stroke="#047857"/>
+    <text x="558" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#047857">SHRINK</text>
+    <text x="558" y="112" text-anchor="middle" font-size="8.5" fill="#374151">hash / compress / quantize rows</text>
+    <text x="558" y="126" text-anchor="middle" font-size="8" fill="#047857">fits device -- loses tail fidelity</text>
+    <text x="558" y="140" text-anchor="middle" font-size="8" fill="#047857">INT8 alone: 51.2 → 12.8 GB</text>
+
+    <rect x="440" y="160" width="236" height="74" rx="8" fill="#fef3c7" stroke="#d97706"/>
+    <text x="558" y="180" text-anchor="middle" font-size="10" font-weight="bold" fill="#92400e">MOVE</text>
+    <text x="558" y="196" text-anchor="middle" font-size="8.5" fill="#374151">tables on host DRAM / KV store</text>
+    <text x="558" y="210" text-anchor="middle" font-size="8" fill="#92400e">every lookup pays PCIe bandwidth</text>
+    <text x="558" y="224" text-anchor="middle" font-size="8" fill="#92400e">capacity solved, latency worse</text>
+
+    <rect x="440" y="244" width="236" height="74" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="558" y="264" text-anchor="middle" font-size="10" font-weight="bold" fill="#1d4ed8">PARTITION</text>
+    <text x="558" y="280" text-anchor="middle" font-size="8.5" fill="#374151">shard rows across accelerators</text>
+    <text x="558" y="294" text-anchor="middle" font-size="8" fill="#1d4ed8">each lookup = all-to-all collective</text>
+    <text x="558" y="308" text-anchor="middle" font-size="8" fill="#1d4ed8">bandwidth moves to the network</text>
+  </g>
+
+  <!-- lookup inset -->
+  <g>
+    <rect x="80" y="352" width="320" height="40" rx="6" fill="#f3f4f6" stroke="#9ca3af"/>
+    <text x="94" y="368" font-size="8.5" fill="#4b5563">a lookup is a gather:</text>
+    <text x="94" y="382" font-size="8.5" fill="#374151">user_id 8842 → row 8842 · data-dependent address, no reuse, no FLOPs</text>
+  </g>
+  <text x="530" y="352" text-anchor="middle" font-size="9" fill="#4b5563">production tables: terabytes.</text>
+  <text x="530" y="366" text-anchor="middle" font-size="9" fill="#4b5563">capacity decides the cluster shape</text>
+  <text x="530" y="380" text-anchor="middle" font-size="9" fill="#4b5563">before the iron law's execution terms</text>
+</svg>

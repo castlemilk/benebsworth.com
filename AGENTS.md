@@ -15,3 +15,14 @@ search `node_modules/@ui-sdk/react/docs/core.md` by heading, and read
   `@spec-01` in `components.json`: `npx shadcn@latest add @spec-01/<name>`.
 - Only the knowledge console is wrapped in `<Hardware>` (`components/ui/hardware.tsx`).
   Keep the editorial shell outside it; everything inside inherits its skin.
+
+## Interactive study diagrams
+
+For new or substantially revised Study packets and technical posts, use the
+[interactive-study-diagrams skill](.agents/skills/interactive-study-diagrams/SKILL.md).
+Plan visuals by section in a co-located `diagram-plan.json` and run
+`task lint:diagrams` before handoff. Review the rendered figures against their
+learning goals in the browser.
+
+For narrated studies, use [study-slide-reels](.agents/skills/study-slide-reels/SKILL.md)
+when authoring or reviewing the visuals that follow the transcript.

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { GammaButton } from '@/components/gamma/GammaButton'
 import { cn } from '@/lib/utils'
 import { recordQuiz } from './progress'
+import './quiz-runner.css'
 
 /**
  * Interactive self-test runner for /study chapter pages.
@@ -95,36 +96,38 @@ function QuizSession({ quiz, chapterId }: { quiz: PreparedQuiz; chapterId: strin
   }
 
   return (
-    <div className="not-prose space-y-4">
-      <div className="flex items-center justify-between rounded-xl border border-border/60 bg-muted/30 px-4 py-3">
-        <div className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
-          {resolved}/{total} answered · {correct} correct
+    <div className="not-prose study-quiz">
+      <div className="study-quiz-progress" aria-label={`Progress: ${resolved} of ${total} answered`}>
+        <div className="study-quiz-progress-row">
+          <div><span className="study-quiz-progress-count">{resolved}/{total} answered</span></div>
+          <div className="study-quiz-progress-actions">
+            <span className="study-quiz-correct">{correct} correct</span>
+            {resolved > 0 && <GammaButton variant="quiet" size="sm" onClick={reset}>Reset</GammaButton>}
+          </div>
         </div>
-        {resolved > 0 && (
-          <GammaButton variant="quiet" size="sm" onClick={reset} className="font-mono text-xs">
-            reset
-          </GammaButton>
-        )}
+        <div className="study-quiz-track" role="progressbar" aria-label="Questions answered" aria-valuemin={0} aria-valuemax={total} aria-valuenow={resolved}>
+          <span style={{ transform: `scaleX(${total ? resolved / total : 0})` }} />
+        </div>
       </div>
 
       {quiz.questions.map((q, i) => {
         const a = answers[q.id] ?? {}
         const answeredMcq = q.kind === 'MCQ' && a.selected !== undefined
         return (
-          <div key={q.id} className="rounded-xl border border-border/60 p-4 sm:p-5">
-            <div className="mb-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-              <span>Q{i + 1}</span>
+          <article key={q.id} className="study-question" aria-label={`Question ${i + 1}`} >
+            <div className="study-question-meta">
+              <span className="study-question-number">{String(i + 1).padStart(2, '0')}</span>
               <span aria-hidden>·</span>
               <span>{KIND_LABEL[q.kind]}</span>
               <span aria-hidden>·</span>
               <span>{SOURCE_LABEL[q.source]}</span>
             </div>
 
-            <Html html={q.promptHtml} className="text-[15px] leading-relaxed" />
+            <Html html={q.promptHtml} className="study-question-prompt" />
 
             {q.kind === 'MCQ' && (
-              <div className="mt-3 grid gap-2">
-                {q.options.map((opt) => {
+              <div className="study-quiz-options">
+                {q.options.map((opt, optionIndex) => {
                   const isCorrect = opt.id === q.correctOptionId
                   const isPicked = a.selected === opt.id
                   return (
@@ -133,15 +136,11 @@ function QuizSession({ quiz, chapterId }: { quiz: PreparedQuiz; chapterId: strin
                       type="button"
                       disabled={answeredMcq}
                       onClick={() => select(q, opt.id)}
-                      className={cn(
-                        'rounded-lg border px-3 py-2 text-left text-sm transition-colors',
-                        !answeredMcq && 'border-border/60 hover:border-foreground/40 hover:bg-muted/40',
-                        answeredMcq && isCorrect && 'border-emerald-500/60 bg-emerald-500/10',
-                        answeredMcq && isPicked && !isCorrect && 'border-red-500/60 bg-red-500/10',
-                        answeredMcq && !isPicked && !isCorrect && 'border-border/40 opacity-60',
-                      )}
+                      className={cn('study-quiz-option', answeredMcq && isCorrect && 'is-correct', answeredMcq && isPicked && !isCorrect && 'is-incorrect', answeredMcq && !isPicked && !isCorrect && 'is-muted')}
                     >
-                      <Html html={opt.labelHtml} className="[&_p]:my-0" />
+                      <span className="study-quiz-option-letter" aria-hidden="true">{String.fromCharCode(65 + optionIndex)}</span>
+                      <Html html={opt.labelHtml} className="study-quiz-option-copy" />
+                      {answeredMcq && (isCorrect || isPicked) && <span className="study-quiz-option-result">{isCorrect ? 'Correct answer' : 'Your answer'}</span>}
                     </button>
                   )
                 })}
@@ -149,14 +148,14 @@ function QuizSession({ quiz, chapterId }: { quiz: PreparedQuiz; chapterId: strin
             )}
 
             {q.kind !== 'MCQ' && !a.revealed && (
-              <GammaButton variant="secondary" size="sm" className="mt-3" onClick={() => reveal(q)}>
+              <GammaButton variant="secondary" size="sm" className="study-quiz-reveal" onClick={() => reveal(q)}>
                 Reveal model answer
               </GammaButton>
             )}
 
             {q.kind !== 'MCQ' && a.revealed && q.modelAnswerHtml && (
-              <div className="mt-3 rounded-lg border border-border/50 bg-muted/30 p-3">
-                <div className="mb-1 font-mono text-[11px] uppercase tracking-wide text-muted-foreground">model answer</div>
+              <div className="study-quiz-feedback study-quiz-model">
+                <div className="study-quiz-feedback-label">Model answer</div>
                 <Html html={q.modelAnswerHtml} className="text-sm [&_p+p]:mt-2" />
                 {a.self === undefined && (
                   <div className="mt-3 flex gap-2">
@@ -168,8 +167,8 @@ function QuizSession({ quiz, chapterId }: { quiz: PreparedQuiz; chapterId: strin
             )}
 
             {answeredMcq && q.explanationHtml && (
-              <div className={cn('mt-3 rounded-lg border p-3', a.selected === q.correctOptionId ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-red-500/40 bg-red-500/5')}>
-                <div className="mb-1 font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
+              <div className={cn('study-quiz-feedback', a.selected === q.correctOptionId ? 'is-correct' : 'is-incorrect')} role="status">
+                <div className="study-quiz-feedback-label">
                   {a.selected === q.correctOptionId ? 'correct' : 'not quite'}
                 </div>
                 <Html html={q.explanationHtml} className="text-sm" />
@@ -177,16 +176,16 @@ function QuizSession({ quiz, chapterId }: { quiz: PreparedQuiz; chapterId: strin
             )}
 
             {q.kind !== 'MCQ' && a.self && (
-              <div className="mt-3 font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
+              <div className="study-quiz-self-mark">
                 self-marked: {a.self === 'got' ? 'got it' : 'missed — revisit the packet section'}
               </div>
             )}
-          </div>
+          </article>
         )
       })}
 
       {done && (
-        <div className={cn('rounded-xl border p-4 text-center', pass ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-amber-500/50 bg-amber-500/5')}>
+        <div className={cn('study-quiz-summary', pass ? 'is-correct' : 'is-incorrect')} role="status">
           <div className="text-2xl font-semibold">{pct}%</div>
           <div className="mt-1 text-sm text-muted-foreground">{summary} Score saved locally.</div>
         </div>

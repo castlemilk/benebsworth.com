@@ -1,0 +1,32 @@
+[
+  {
+    "id": "arrival-to-answer",
+    "file": "arrival-to-answer.svg",
+    "title": "The model is one stage of the request",
+    "caption": "A request travels ingress, parse, preprocess, batch, execute, postprocess and dispatch — each stage adds latency and a queue. The forward pass is one term of the budget."
+  },
+  {
+    "id": "queue-lanes",
+    "file": "queue-lanes.svg",
+    "title": "Little's Law sizes the resident population",
+    "caption": "At 1,000 arrivals per second and a 50 ms mean time in system, ~50 requests live inside the service at once. Buffers, threads and accelerator memory are sized by that population."
+  },
+  {
+    "id": "formation-window",
+    "file": "formation-window.svg",
+    "title": "A batch window is spent waiting before it executes",
+    "caption": "Requests trickle in over the formation window; the batch latency everyone quotes starts only after the window fills. Early arrivals pay the whole formation delay."
+  },
+  {
+    "id": "serving-decision-map",
+    "file": "serving-decision-map.svg",
+    "title": "The serving plan, end to end",
+    "caption": "Traffic sets the resident population (Little's Law), utilization sets the tail (the knee), the window trades formation delay for batch throughput, and replicas plus headroom carry the peak."
+  },
+  {
+    "id": "headroom-knee",
+    "file": "headroom-knee.svg",
+    "title": "Waiting near saturation",
+    "caption": "In a single-server M/M/1 queue, mean time in system divided by mean service time is 1/(1 − utilization). Moving from 80% to 90% load doubles the multiplier from 5× to 10×. The next five percentage points double it again. At a balanced peak of 1,000 requests/s and 285 requests/s per replica, four replicas run at 88% and five at 70%. Five is the candidate to load-test. Measure request p99 on peak traffic to verify the deadline."
+  }
+]

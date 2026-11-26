@@ -1,0 +1,56 @@
+[
+  {
+    "id": "resident-footprint-versus-capacity",
+    "title": "Resident footprint versus capacity",
+    "caption": "The compressed weights and unchanged activations total 44 MiB, leaving 4 MiB below the capacity limit before the extra buffer is included.",
+    "file": "resident-footprint-versus-capacity.svg"
+  },
+  {
+    "id": "factorized-layer-weight-count",
+    "title": "Weight count for one linear layer",
+    "caption": "At the assumed rank, the two factors contain one quarter as many weights. The bars quantify the change in parameters for this layer, while runtime depends on how the two operations execute.",
+    "file": "factorized-layer-weight-count.svg"
+  },
+  {
+    "id": "early-exit-decision",
+    "title": "How a frame takes an early exit",
+    "caption": "A confidence policy determines how often the shorter route is used. Full-depth frames can still determine the tail of the latency distribution.",
+    "file": "early-exit-decision.svg"
+  },
+  {
+    "id": "estimated-weight-transfer-time",
+    "title": "Estimated time to stream one weight block",
+    "caption": "At the same assumed bandwidth, the smaller INT8 payload reduces transfer time even after metadata is counted. These estimates cover the weight reads alone.",
+    "file": "estimated-weight-transfer-time.svg"
+  },
+  {
+    "id": "quantization-quality-loop",
+    "title": "From calibration to a deployable precision",
+    "caption": "Each pass tests whether a low-precision configuration preserves task quality with the kernels the device will actually run.",
+    "file": "quantization-quality-loop.svg"
+  },
+  {
+    "id": "fusion-activation-traffic",
+    "title": "Idealized global-memory traffic for a chain",
+    "caption": "Under the stated buffer assumptions, fusion eliminates 16 MiB of intermediate reads and writes. Tiling and spills affect how much of that saving appears on the device.",
+    "file": "fusion-activation-traffic.svg"
+  },
+  {
+    "id": "compression-candidate-sequence",
+    "title": "Order of work for a combined candidate",
+    "caption": "Structural changes precede final range fitting, and the benchmark follows runtime lowering so each decision uses the representation that will ship.",
+    "file": "compression-candidate-sequence.svg"
+  },
+  {
+    "id": "deployment-acceptance-test",
+    "title": "Production acceptance gates",
+    "caption": "The same exported candidate must meet the resource and quality limits. Passing the memory and timing gates cannot compensate for failing a required quality slice.",
+    "file": "deployment-acceptance-test.svg"
+  },
+  {
+    "id": "failed-gate-diagnostic-loop",
+    "title": "From a failed metric to a targeted experiment",
+    "caption": "Changing one suspected cause and rechecking the full workload helps distinguish a local improvement from a deployment gain.",
+    "file": "failed-gate-diagnostic-loop.svg"
+  }
+]

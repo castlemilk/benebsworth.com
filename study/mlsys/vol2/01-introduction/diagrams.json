@@ -1,0 +1,26 @@
+[
+  {
+    "id": "scale-climb",
+    "file": "scale-climb.svg",
+    "title": "Two ladders: compute climbs faster than fleets",
+    "caption": "Accelerator counts rose ~4 orders (2 GTX 580s to 16,384 H100s) while training compute rose ~7 (10^18 to 10^25 FLOPs). The vertical gap between the ladders is achieved per-device rate — the other half of the growth."
+  },
+  {
+    "id": "step-anatomy",
+    "file": "step-anatomy.svg",
+    "title": "The 8.71-second step, anatomized",
+    "caption": "The instrumented 1,024-GPU step: 7.25 s local compute, 0.53 s pipeline bubble, 0.93 s gradient exchange. Doubling the fleet shrinks the amber span but grows the other two — the answer to the opening question."
+  },
+  {
+    "id": "mtbf-ladder",
+    "file": "mtbf-ladder.svg",
+    "title": "Reliability divides by N",
+    "caption": "One GPU fails on average every 50,000 hours (~5.7 years); a 25,000-GPU synchronous job sees an interruption every ~2 hours. Meta's measured Llama 3 record — 419 interruptions in 54 days on 16,384 H100s — lands on the same line."
+  },
+  {
+    "id": "c3-map",
+    "file": "c3-map.svg",
+    "title": "D·A·M names it, C³ spends it",
+    "caption": "The nouns of the workload (Data, Algorithm, Machine) project onto the fleet's verbs (Compute, Communication, Coordination). Every optimization relieves exactly one C — diagnosis picks the target before the purchase."
+  }
+]

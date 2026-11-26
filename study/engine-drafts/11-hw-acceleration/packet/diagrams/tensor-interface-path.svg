@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 420" role="img" aria-labelledby="study-svg-tensor-interface-path-title" aria-describedby="study-svg-tensor-interface-path-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-tensor-interface-path-title">Follow a tensor across memory interfaces</title>
+  <desc id="study-svg-tensor-interface-path-desc">Each crossing has its own byte count and bandwidth, so a saturated host link and a saturated device-memory interface call for different changes. Host to device: Count transfers over the host link and check their overlap with kernels. Then Device DRAM to SRAM: Count tile loads, repeated reads, and spill traffic. Then SRAM to compute: Check how often resident data is reused and how quickly it is delivered. Then Write results: Track intermediate writes and any copies back to the host.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Host to device</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Count transfers over the host link</tspan>
+    <tspan x="19" y="64">and check their overlap with</tspan>
+    <tspan x="19" y="81">kernels.</tspan></text>
+  <path d="M172 101v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="121" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="145" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Device DRAM to SRAM</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="165">Count tile loads, repeated reads,</tspan>
+    <tspan x="19" y="182">and spill traffic.</tspan></text>
+  <path d="M172 202v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="222" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="246" font-size="15" font-weight="700" fill="var(--fg, #31251d)">SRAM to compute</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="266">Check how often resident data is</tspan>
+    <tspan x="19" y="283">reused and how quickly it is</tspan>
+    <tspan x="19" y="300">delivered.</tspan></text>
+  <path d="M172 320v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="340" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="364" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Write results</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="384">Track intermediate writes and any</tspan>
+    <tspan x="19" y="401">copies back to the host.</tspan></text>
+  </g>
+</svg>

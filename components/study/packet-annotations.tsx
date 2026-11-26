@@ -177,6 +177,43 @@ export function PacketAnnotator({
     return () => window.removeEventListener('scroll', onScroll)
   }, [close])
 
+  // Gloss cards open left-anchored to their mark — but the mark is inline, so
+  // for multi-line marks the card anchors to the last fragment's box, not the
+  // visible span. Clamp from its natural horizontal position each time:
+  // a tap can deliver both pointerover and focusin on the same mark.
+  useEffect(() => {
+    const body = bodyRef.current
+    if (!body) return
+    const align = (mark: Element) => {
+      const gloss = mark.querySelector<HTMLElement>('.study-mark-gloss')
+      if (!gloss) return
+      gloss.style.marginLeft = ''
+      gloss.style.display = 'block'
+      const r = gloss.getBoundingClientRect()
+      gloss.style.display = ''
+      // Mobile browsers may expand innerWidth to include the overflowing
+      // card while it is measured. clientWidth remains the layout viewport.
+      const rightEdge = document.documentElement.clientWidth - 8
+      let shift = 0
+      if (r.right > rightEdge) shift = rightEdge - r.right
+      if (r.left + shift < 8) shift += 8 - (r.left + shift)
+      gloss.style.marginLeft = shift ? `${shift}px` : ''
+    }
+    const alignTarget = (e: Event) => {
+      const mark = (e.target as Element).closest?.('mark.study-mark')
+      if (mark && body.contains(mark)) align(mark)
+    }
+    const alignOpen = () => body.querySelectorAll('mark.study-mark:is(:hover, :focus-within)').forEach(align)
+    body.addEventListener('pointerover', alignTarget)
+    body.addEventListener('focusin', alignTarget)
+    window.addEventListener('resize', alignOpen)
+    return () => {
+      body.removeEventListener('pointerover', alignTarget)
+      body.removeEventListener('focusin', alignTarget)
+      window.removeEventListener('resize', alignOpen)
+    }
+  }, [])
+
   // Re-wrap all managed marks whenever the annotation set changes, then
   // measure note positions for the rail.
   useEffect(() => {

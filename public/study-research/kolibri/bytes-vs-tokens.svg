@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 282" role="img" aria-labelledby="title desc">
+  <title id="title">Equal text, different throughput</title>
+  <desc id="desc">An illustrative 1,000-byte passage takes 200 tokens with tokeniser A and 250 with B. At 100 tokens per second, A delivers it in two seconds and B in two and a half.</desc>
+  <style>
+    text {font:22px system-ui,sans-serif; fill:#202d2c}
+    .label {font-weight:700}
+    .detail {fill:#394e49}
+  </style>
+  <rect width="600" height="282" rx="12" fill="#f8faf9"/>
+  <text x="28" y="43" class="label">Same 1,000 bytes · same 100 tokens/s</text>
+  <text x="28" y="86">A · 200 tokens</text>
+  <rect x="28" y="99" width="408" height="37" rx="6" fill="#bce5d8" stroke="#257660"/>
+  <text x="42" y="125" class="label">2 s · 500 bytes/s</text>
+  <text x="28" y="179">B · 250 tokens</text>
+  <rect x="28" y="192" width="510" height="37" rx="6" fill="#e7eeeb" stroke="#849893"/>
+  <text x="42" y="218" class="label">2.5 s · 400 bytes/s</text>
+  <text x="28" y="262" class="detail">Bar length shows decode time in this example.</text>
+</svg>

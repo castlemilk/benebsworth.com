@@ -25,7 +25,7 @@ export function Stop(props: StopProps) {
   return (
     <TrailCard accent={props.accent} className={props.image ? 'overflow-hidden p-0' : 'p-5'}>
       {props.image && (
-        // eslint-disable-next-line @next/next/no-img-element
+         
         <img src={props.image} alt={props.alt ?? props.name} className="h-36 w-full object-cover" loading="lazy" />
       )}
       <div className={props.image ? 'flex items-start gap-3 p-5' : 'flex items-start gap-3'}>

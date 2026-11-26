@@ -671,6 +671,7 @@ function DatePillTrackerInner({
   // biome-ignore lint/correctness/useExhaustiveDependencies: we need to jump the animatedX when the visible prop changes
   useEffect(() => {
     animatedX.set(xWithMargin);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- xWithMargin is applied during render; this effect only re-jumps on visible
   }, [animatedX, visible]);
 
   return (

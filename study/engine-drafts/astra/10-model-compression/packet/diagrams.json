@@ -1,0 +1,50 @@
+[
+  {
+    "id": "trace-a-routing-decision",
+    "title": "From a late parcel decision to a compression experiment",
+    "caption": "A trace narrows a missed deadline to a particular resource, giving the next model change a prediction that can be checked.",
+    "file": "trace-a-routing-decision.svg"
+  },
+  {
+    "id": "resident-footprint-versus-capacity",
+    "title": "Resident footprint versus capacity",
+    "caption": "Adding the simultaneous weights and activations puts the original case above the 48 MiB limit. The compressed case uses 44 MiB in this first accounting.",
+    "file": "resident-footprint-versus-capacity.svg"
+  },
+  {
+    "id": "projection-coefficient-count",
+    "title": "Coefficients in two candidate projections",
+    "caption": "Under the assumed dimensions, rank 32 removes 20,480 coefficients. The count establishes a storage opportunity at equal precision and leaves execution time and task quality to measurement.",
+    "file": "projection-coefficient-count.svg"
+  },
+  {
+    "id": "qualify-an-early-exit",
+    "title": "Qualifying an early exit for the sorter",
+    "caption": "An exit threshold determines both the work avoided and which parcels receive less computation. Its value depends on the errors and delays in both paths.",
+    "file": "qualify-an-early-exit.svg"
+  },
+  {
+    "id": "follow-a-quantized-feature",
+    "title": "Where a weak feature loses resolution",
+    "caption": "Following a feature through the integer grid shows how the chosen scale can erase a signal before a later layer has a chance to use it.",
+    "file": "follow-a-quantized-feature.svg"
+  },
+  {
+    "id": "inspect-a-fused-block",
+    "title": "Checking a fused image-processing block",
+    "caption": "The exported graph predicts which intermediate transfers can disappear. Kernel and traffic traces reveal whether the runtime realizes that saving.",
+    "file": "inspect-a-fused-block.svg"
+  },
+  {
+    "id": "sequence-a-pruned-student",
+    "title": "Preparing a pruned student for integer deployment",
+    "caption": "Each range-changing step precedes final calibration, so the integer scales describe the model that the compiler receives.",
+    "file": "sequence-a-pruned-student.svg"
+  },
+  {
+    "id": "accept-a-sorter-release",
+    "title": "One acceptance test for the exported sorter",
+    "caption": "Pairing device measurements with decisions on the same replay exposes candidates that satisfy a timing limit while violating a user-facing quality requirement.",
+    "file": "accept-a-sorter-release.svg"
+  }
+]

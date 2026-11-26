@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420" role="img" aria-labelledby="title desc">
+  <title id="title">A worked example of a throughput and quality frontier</title>
+  <desc id="desc">Three illustrative models. A has 40 bytes per second per GPU and a score of 70. B has 60 and 68. C has 35 and 67. A and B trade throughput for quality. Both are faster and score higher than C.</desc>
+  <style>
+    text {font:22px system-ui,sans-serif;fill:#202d2c}
+    .small {font-size:20px;fill:#394e49}
+    .label {font-weight:700}
+    .grid {stroke:#c5d2cf;stroke-width:1}
+  </style>
+  <rect width="600" height="420" rx="12" fill="#f8faf9"/>
+  <text x="27" y="42" class="label">Toy frontier · scores and throughput</text>
+  <text x="27" y="76" class="small">Illustrative values · higher is better on both axes</text>
+  <path class="grid" d="M98 142h455m-455 40h455m-455 40h455m-455 40h455"/>
+  <path d="M98 107v195h455" fill="none" stroke="#465c56" stroke-width="2"/>
+  <text x="27" y="112" class="small">Score</text>
+  <g text-anchor="end" class="small">
+    <text x="87" y="150">70</text><text x="87" y="190">69</text>
+    <text x="87" y="230">68</text><text x="87" y="270">67</text>
+  </g>
+  <g text-anchor="middle" class="small">
+    <text x="98" y="331">30</text><text x="228" y="331">40</text>
+    <text x="358" y="331">50</text><text x="488" y="331">60</text>
+  </g>
+  <text x="325" y="368" text-anchor="middle">Decoded bytes/s per GPU</text>
+  <path d="M228 142L488 222" stroke="#257660" stroke-dasharray="7 5" stroke-width="3"/>
+  <circle cx="228" cy="142" r="8" fill="#257660"/>
+  <circle cx="488" cy="222" r="8" fill="#257660"/>
+  <path d="M156 255l14 14m0-14l-14 14" stroke="#874624" stroke-width="3"/>
+  <text x="244" y="132" class="label">A · higher score</text>
+  <text x="480" y="255" text-anchor="end" class="label">B · faster</text>
+  <text x="185" y="272">C · dominated</text>
+</svg>

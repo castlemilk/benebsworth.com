@@ -5,6 +5,7 @@ author: Ben Ebsworth
 description: >-
   How to sleep at night when actively developing on Google Kubernetes Engine
   (GKE) using Google Cloud Scheduler
+heroImage: /blog/gke-development-auto-scale-down/hero.webp
 labels: 'technology,GCP,kubernetes'
 keywords: >-
   technology,gke,google kubernetes engine,cloud

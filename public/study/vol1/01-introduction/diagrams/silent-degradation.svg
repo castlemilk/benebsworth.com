@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 340" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+  <style>
+    .dark [fill="#4b5563"]{fill:#d1d5db}
+    .dark [stroke="#4b5563"]{stroke:#d1d5db}
+    .dark [fill="#6b7280"]{fill:#a4adba}
+    .dark [stroke="#6b7280"]{stroke:#a4adba}
+    .dark [fill="#9ca3af"]{fill:#c3cad4}
+    .dark [stroke="#9ca3af"]{stroke:#c3cad4}
+    .dark [fill="#b45309"]{fill:#fbbf24}
+    .dark [stroke="#b45309"]{stroke:#fbbf24}
+    .dark [fill="#f59e0b"]{fill:#fbbf24}
+    .dark [stroke="#f59e0b"]{stroke:#fbbf24}
+  </style>
+
+  <!-- Silent degradation: health stays green while predictive quality falls -->
+  <defs>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9ca3af"/>
+    </marker>
+  </defs>
+
+  <!-- axes -->
+  <line x1="70" y1="30" x2="70" y2="270" stroke="#9ca3af" stroke-width="1.2"/>
+  <line x1="70" y1="270" x2="660" y2="270" stroke="#9ca3af" stroke-width="1.2"/>
+  <text x="365" y="298" text-anchor="middle" font-size="12" fill="#6b7280">deployment age t →</text>
+  <text x="30" y="150" font-size="12" fill="#6b7280" transform="rotate(-90 30 150)" text-anchor="middle">measured value</text>
+
+  <!-- shaded monitoring gap: between health line (y≈70) and quality curve -->
+  <path d="M70,70 L660,70 L660,70 C 560,78 500,120 430,165 C 360,210 250,222 70,228 Z"
+        fill="#f59e0b" fill-opacity="0.14"/>
+
+  <!-- health line: flat, green -->
+  <line x1="70" y1="70" x2="660" y2="70" stroke="#34d399" stroke-width="2.4"/>
+  <text x="640" y="56" text-anchor="end" font-size="12" fill="#34d399" font-weight="600">infra health: all green</text>
+
+  <!-- quality curve: baseline then decay -->
+  <path d="M70,78 C200,82 300,95 380,120 C460,148 540,195 660,215" fill="none" stroke="#ef4444" stroke-width="2.4"/>
+  <text x="655" y="234" text-anchor="end" font-size="12" fill="#ef4444" font-weight="600">predictive quality Acc(t)</text>
+
+  <!-- baseline Acc0 -->
+  <line x1="70" y1="78" x2="110" y2="78" stroke="#ef4444" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="62" y="82" text-anchor="end" font-size="11" fill="#ef4444">Acc₀</text>
+
+  <!-- drift onset marker -->
+  <line x1="300" y1="95" x2="300" y2="270" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="300" y="90" text-anchor="middle" font-size="11" fill="#6b7280">the world moved</text>
+  <path d="M255,60 C275,52 292,62 300,84" fill="none" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr2)"/>
+
+  <!-- gap annotation -->
+  <text x="400" y="150" text-anchor="middle" font-size="11.5" fill="#b45309">the gap nobody alerts on:</text>
+  <text x="400" y="166" text-anchor="middle" font-size="11.5" fill="#b45309">runtime fine, answers wrong</text>
+
+  <!-- equation -->
+  <text x="365" y="322" text-anchor="middle" font-size="12" fill="#4b5563">Acc(t) ≈ Acc₀ − λ · D( P_t ∥ P₀ )   ·   drift warns, labelled outcomes convict</text>
+</svg>

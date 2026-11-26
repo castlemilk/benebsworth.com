@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="fanout-tail" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="fanout-tail-title fanout-tail-desc">
+  <title id="fanout-tail-title">Tail latency under fan-out</title>
+  <desc id="fanout-tail-desc">One request fanning out to many leaf shards, with the slowest leaf determining completion; at one hundred independent leaves, a one-percent slow-leaf probability makes about sixty-three percent of requests slow.</desc>
+  <style>
+    .dark #fanout-tail { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#fanout-tail { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Fan-out inherits the slowest leaf</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">independent leaves · request completes when the last shard returns</text>
+
+    <!-- central request -->
+    <rect x="24" y="105" width="72" height="52" rx="6" fill="var(--fig-outline, #364c50)"/>
+    <text x="60" y="126" font-size="9" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">one</text>
+    <text x="60" y="139" font-size="9" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">request</text>
+
+    <!-- fanout lines and leaves -->
+    <g stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.8">
+      <line x1="96" y1="131" x2="159" y2="71"/><line x1="96" y1="131" x2="159" y2="92"/><line x1="96" y1="131" x2="159" y2="113"/><line x1="96" y1="131" x2="159" y2="134"/><line x1="96" y1="131" x2="159" y2="155"/><line x1="96" y1="131" x2="159" y2="176"/><line x1="96" y1="131" x2="159" y2="197"/>
+    </g>
+    <g fill="var(--fig-outline, #364c50)" opacity="0.86">
+      <circle cx="166" cy="68" r="7"/><circle cx="166" cy="89" r="7"/><circle cx="166" cy="110" r="7"/><circle cx="166" cy="131" r="7"/><circle cx="166" cy="152" r="7"/><circle cx="166" cy="173" r="7"/><circle cx="166" cy="194" r="7"/>
+    </g>
+    <circle cx="166" cy="194" r="10" fill="none" stroke="var(--fig-mark, #b4571f)" stroke-width="2"/>
+    <text x="184" y="198" font-size="9" font-weight="650" fill="var(--fig-mark, #b4571f)">the slowest one decides</text>
+    <text x="184" y="74" font-size="9" fill="var(--fig-rule, #6e6a5b)">× 100 leaves</text>
+
+    <!-- formula panel -->
+    <rect x="28" y="220" width="324" height="58" rx="6" fill="none" stroke="var(--fig-outline, #364c50)"/>
+    <text x="42" y="240" font-size="10" font-weight="650">P(request slow) = 1 − (1 − q)^N</text>
+    <text x="42" y="258" font-size="9" fill="var(--fig-rule, #6e6a5b)">q = 1% per leaf, N = 100  →  request slow ≈ 63%</text>
+    <text x="42" y="272" font-size="9" fill="var(--fig-rule, #6e6a5b)">to hold request p99, each leaf needs roughly p99.99</text>
+  </g>
+</svg>

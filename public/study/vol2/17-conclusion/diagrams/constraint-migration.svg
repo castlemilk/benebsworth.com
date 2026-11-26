@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" role="img" aria-label="The binding constraint migrates across layers as each term shrinks">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .st{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-edge,#bbb);stroke-width:1.1}
+    .hot{fill:var(--diagram-warn-fill,#f2ddd4);stroke:var(--diagram-warn,#c85a3c);stroke-width:1.5}
+    .stt{font:600 11.5px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .arr{stroke:var(--diagram-accent,#3c64c8);stroke-width:1.8;fill:none;marker-end:url(#ahm)}
+    .fix{font:10px var(--font-sans,sans-serif);fill:var(--diagram-ok,#3c8c4e)}
+  </style>
+  <defs><marker id="ahm" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="var(--diagram-accent,#3c64c8)"/></marker></defs>
+  <rect class="bg" width="760" height="400"/>
+  <text class="title" x="30" y="32">The constraint never disappears; it moves</text>
+  <text class="sub" x="30" y="51">Each optimization shrinks one term of the Fleet Law and exposes the next. Measure where it went.</text>
+  <!-- migration chain -->
+  <rect class="st" x="30" y="120" width="120" height="60" rx="8"/>
+  <text class="stt" x="90" y="145" text-anchor="middle">compute</text>
+  <text class="sm" x="90" y="162" text-anchor="middle">kernel time</text>
+  <line class="arr" x1="150" y1="150" x2="180" y2="150"/>
+  <rect class="st" x="184" y="120" width="120" height="60" rx="8"/>
+  <text class="stt" x="244" y="145" text-anchor="middle">fabric</text>
+  <text class="sm" x="244" y="162" text-anchor="middle">collectives</text>
+  <line class="arr" x1="304" y1="150" x2="334" y2="150"/>
+  <rect class="st" x="338" y="120" width="120" height="60" rx="8"/>
+  <text class="stt" x="398" y="145" text-anchor="middle">recovery</text>
+  <text class="sm" x="398" y="162" text-anchor="middle">checkpoints</text>
+  <line class="arr" x1="458" y1="150" x2="488" y2="150"/>
+  <rect class="st" x="492" y="120" width="110" height="60" rx="8"/>
+  <text class="stt" x="547" y="145" text-anchor="middle">serving tail</text>
+  <text class="sm" x="547" y="162" text-anchor="middle">p99 latency</text>
+  <line class="arr" x1="602" y1="150" x2="632" y2="150"/>
+  <rect class="hot" x="636" y="120" width="104" height="60" rx="8"/>
+  <text class="stt" x="688" y="145" text-anchor="middle">governance</text>
+  <text class="sm" x="688" y="162" text-anchor="middle">may it run?</text>
+  <!-- annotations of what shrinks each -->
+  <text class="fix" x="60" y="102">kernels, fusion</text>
+  <text class="fix" x="196" y="102">overlap, topology</text>
+  <text class="fix" x="344" y="102">incremental ckpt</text>
+  <text class="fix" x="494" y="102">batching, hedging</text>
+  <text class="fix" x="636" y="102">evidence paths</text>
+  <!-- loopback note -->
+  <path class="arr" d="M 688 180 C 688 260, 90 260, 90 184" stroke-dasharray="5 4"/>
+  <text class="sm" x="250" y="252">demand grows back: scaling laws price each further loss reduction in more compute,</text>
+  <text class="sm" x="250" y="268">so the loop repeats at a larger fleet and a smaller efficient frontier</text>
+  <text class="sm" x="30" y="330">An optimization judged only by the term it shrinks can leave the step no faster. Expect bottlenecks</text>
+  <text class="sm" x="30" y="346">to migrate, and measure the layers they move into.</text>
+</svg>

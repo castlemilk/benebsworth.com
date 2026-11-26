@@ -1,0 +1,32 @@
+[
+  {
+    "id": "green-but-dying",
+    "file": "green-but-dying.svg",
+    "title": "Every check green while quality decays",
+    "caption": "HTTP 200, p99 inside budget, 99.99% uptime — and accuracy sliding 94% toward 88%. Infrastructure health and model health are different instruments."
+  },
+  {
+    "id": "debt-map",
+    "file": "debt-map.svg",
+    "title": "Where ML technical debt hides",
+    "caption": "The model is ~5% of the code; the debt lives around it — boundary erosion, correction cascades, undeclared consumers, feedback loops, config sprawl and glue."
+  },
+  {
+    "id": "release-ladder",
+    "file": "release-ladder.svg",
+    "title": "Which model answers the request?",
+    "caption": "In shadow mode, both models can see a request and the incumbent supplies the reply. In this illustrative 5% canary, the router assigns one request in twenty on average to the candidate for a real reply. Full rollout moves all replies to the candidate. Rollback routes new requests back to the incumbent."
+  },
+  {
+    "id": "retrain-clock",
+    "file": "retrain-clock.svg",
+    "title": "The interval that pays for itself",
+    "caption": "Staleness accrues as accuracy decays; each run restores it for a fixed cost. The optimal interval sits where amortized run cost meets accrued staleness."
+  },
+  {
+    "id": "ops-loop",
+    "file": "ops-loop.svg",
+    "title": "The closed operations loop",
+    "caption": "Deploy, monitor, detect, diagnose, retrain, release — the loop turns a static artifact into a maintained claim."
+  }
+]

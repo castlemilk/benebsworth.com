@@ -1,0 +1,55 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The thesis is the 2.8 TB-vs-80 GB capacity argument; the A/B/C/D figure downstream shows the same bar-against-the-line story the thesis states."
+    },
+    "The Wall That Forced the Split": {
+      "proseOnly": "The memory-wall crossover and the 49-hour MTBF are the book's own memory-wall-trend figure and reliability math; the packet carries the ~15x / ~4 orders / ~35x numbers as prose."
+    },
+    "The Design Space Is Three Axes": {
+      "figure": "::fig[config-abcd]",
+      "teaches": "Four candidate partitions of one step as per-GPU state bars against the 80 GB line: A 2,800 GB, B ~350 GB, C ~87.5 GB (ZeRO-1 only), D ~43.8 GB. The memory-first ordering the whole chapter argues.",
+      "source": "Hybrid-parallelism worked example: configs A (DP-1024), B (TP8+DP128), C (TP8xPP4+DP32, ZeRO-1), D (TP8xPP8xDP16 reference); efficiencies 86/84/83 percent; memory decides."
+    },
+    "Data Parallelism and the Sharding Ladder": {
+      "figure": "::fig[zero-ladder]",
+      "teaches": "Per-GPU static state by stage for the 7B model: 112 -> 29.3 -> 15.5 -> 1.75 GB with the collective each stage substitutes. The optimizer is the fat target.",
+      "source": "Book's zero-memory stacked bars plus tbl-zero-stages: Z1 reduce-to-owner+AllGather 1x, Z2 ReduceScatter+AllGather 1x, Z3 per-layer AllGather 1.5x."
+    },
+    "What Scale-Out Actually Buys": {
+      "proseOnly": "The eta equation, straggler (<1e-4), 1%-at-512 (~84%), and critical batch are arithmetic; the scaleout-gap chart carries the measured speedups."
+    },
+    "Model Parallelism's Menu": {
+      "figure": "::fig[tp-traffic]",
+      "teaches": "TP-8's ~68 GB forward collectives against ~4.2 GB per stage boundary for one GPT-3 step; the 2(t-1)/t=1.75 ring factor; fits NVLink, not InfiniBand — the intra-node boundary.",
+      "source": "Book's tensor-parallel bandwidth feasibility check (~1.9 ms local compute per split layer) and the TP8 traffic tally."
+    },
+    "The Four Configurations": {
+      "figure": "::fig[bubble-grid]",
+      "teaches": "The pipeline slot band: p-1 idle slots of m+p-1 total drawn as fill/drain triangles. PP-16 at 32 microbatches ~32% idle vs PP-4 ~9% — the depth cost in the A/B/C/D comparison above.",
+      "source": "Book's pipeline-1f1b-schedule: warmup fill and drain leave a triangular idle region; idle fraction = (p-1)/(m+p-1)."
+    },
+    "Many Models at Once": {
+      "proseOnly": "PPO's four-model tally (~1,494 GB, ~86 GB GQA KV vs ~687 GB dense, >50% padding) is the book's rlhf-ppo-coordination figure; carried as prose."
+    },
+    "Choosing a Layout": {
+      "proseOnly": "The decision framework and the 45x83=37 (not 31) MFU caution are prose arithmetic."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Fallacy list; each item restates a number already drawn."
+    },
+    "The physics": {
+      "proseOnly": "Numbers table."
+    },
+    "Glossary": {
+      "proseOnly": "Definitions."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Transfer section: capacity-first ordering and the eta-twice forecasting bug."
+    },
+    "Open questions": {
+      "proseOnly": "Forward-looking prompts."
+    }
+  }
+}

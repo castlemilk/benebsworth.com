@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-trace-mobile-fallback-title" aria-describedby="study-svg-trace-mobile-fallback-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-trace-mobile-fallback-title">Where one unsupported operation costs time</title>
+  <desc id="study-svg-trace-mobile-fallback-desc">Timing the two handoffs separately from the CPU arithmetic reveals whether scoring or moving its inputs and outputs causes the delay. NPU projection: Produce features in the layout used by the accelerated region. Then Prepare CPU input: Wait for completion and convert the tensor if the CPU path requires it. Then CPU scoring: Evaluate the unsupported function and record its own execution time. Then Resume NPU work: Prepare the result, synchronize, and dispatch the next supported region.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">NPU projection</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Produce features in the layout used</tspan>
+    <tspan x="19" y="64">by the accelerated region.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Prepare CPU input</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Wait for completion and convert the</tspan>
+    <tspan x="19" y="165">tensor if the CPU path requires it.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">CPU scoring</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Evaluate the unsupported function</tspan>
+    <tspan x="19" y="266">and record its own execution time.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Resume NPU work</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Prepare the result, synchronize, and</tspan>
+    <tspan x="19" y="367">dispatch the next supported region.</tspan></text>
+  </g>
+</svg>

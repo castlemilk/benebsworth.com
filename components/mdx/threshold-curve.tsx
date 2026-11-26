@@ -135,7 +135,7 @@ export function ThresholdCurve({
       }
       return { d, path: dpath }
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [distances, pTh])
 
   // break-even diagonal p_L = p, clipped to the visible window.
@@ -143,7 +143,7 @@ export function ThresholdCurve({
     const x1 = Math.max(X_MIN, Y_MIN)
     const x2 = Math.min(X_MAX, Y_MAX)
     return `M ${tx(x1).toFixed(2)} ${ty(x1).toFixed(2)} L ${tx(x2).toFixed(2)} ${ty(x2).toFixed(2)}`
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [])
 
   // ── marker drag → set the tween target ──
@@ -195,7 +195,7 @@ export function ThresholdCurve({
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [dragging, inView, p])
 
   // pointer handlers on the whole plot for grabbing the marker anywhere

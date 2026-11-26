@@ -1,0 +1,38 @@
+[
+  {
+    "id": "book-roofline",
+    "file": "compute_infrastructure_decode_roofline.svg",
+    "title": "Roofline model (book)",
+    "caption": "The book's decode-focused roofline with the landscape points annotated. Ours keeps the ridge and the five workload dots so the memory-bound verdict for decode reads at a glance."
+  },
+  {
+    "id": "book-bandwidth-hierarchy",
+    "file": "bandwidth-hierarchy.svg",
+    "title": "Bandwidth hierarchy (book)",
+    "caption": "The book's tier diagram including the latency direction. Ours draws the four drops as a literal staircase with the 7.4×/9×/7.1× multipliers between steps."
+  },
+  {
+    "id": "book-gpu-generations",
+    "file": "accelerator-spectrum.svg",
+    "title": "GPU architecture evolution (book)",
+    "caption": "The accelerator spectrum from CPU through GPU/TPU to wafer-scale as the book lays it out. Ours compresses the lesson to the 18×/8.9×/3.3× growth split in the physics table."
+  },
+  {
+    "id": "book-hbm-stack",
+    "file": "hbm-architecture.svg",
+    "title": "HBM packaging (book)",
+    "caption": "Stacked DRAM on the interposer as the book draws it. Our packet keeps the ~670 GB/s-per-stack and interposer-area numbers without redrawing the package."
+  },
+  {
+    "id": "book-dgx-node",
+    "file": "node-topology-comparison.svg",
+    "title": "DGX H100 node anatomy (book)",
+    "caption": "The book's node topology comparison across GPU interconnects. Ours uses the state-budget figure instead — the number that decides whether the node fits the job."
+  },
+  {
+    "id": "book-rack-elevation",
+    "file": "cooling-comparison.svg",
+    "title": "Rack elevation (book)",
+    "caption": "The book's air-vs-liquid cooling comparison. Our power-ladder abstracts the rung sequence without the thermal engineering detail."
+  }
+]

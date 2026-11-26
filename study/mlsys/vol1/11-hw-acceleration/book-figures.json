@@ -1,0 +1,32 @@
+[
+  {
+    "id": "book-systolic",
+    "file": "fig-systolic-array",
+    "title": "Systolic Array Dataflow Architecture",
+    "caption": "The book follows operands and partial sums through a grid. Our single-cell example isolates one stationary weight used by two output columns."
+  },
+  {
+    "id": "book-irregular",
+    "file": "fig-irregular-address-transactions",
+    "title": "Spatial Utilization and Address Dependencies",
+    "caption": "The book distinguishes scattered sector traffic from a dependent index lookup. Our hierarchy sketch identifies the boundary at which the bytes are counted."
+  },
+  {
+    "id": "book-roofline",
+    "file": "fig-hw-acceleration-h100-roofline-lighthouses",
+    "title": "ResNet-50 and GPT-2 XL on the H100 Roofline",
+    "caption": "The book places different real workload archetypes on the same hardware ceilings. Our example holds the projection fixed and compares two fictional machines across batches."
+  },
+  {
+    "id": "book-tiling",
+    "file": "fig-tiling-diagram",
+    "title": "Matrix Tiling Mechanics",
+    "caption": "The book locates operand and output blocks within larger matrices. Our example budgets the live tiles and an extra double buffer in bytes."
+  },
+  {
+    "id": "book-energy",
+    "file": "fig-energy-hierarchy",
+    "title": "The Energy Hierarchy",
+    "caption": "The book compares representative 45 nm energy costs across arithmetic and memory. Our system-level calculation compares joules per completed result, including measured system power."
+  }
+]

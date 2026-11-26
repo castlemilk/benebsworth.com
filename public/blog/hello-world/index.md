@@ -5,6 +5,7 @@ author: Ben Ebsworth
 description: >-
   The first post on Ben Ebsworth's blog: a living, personal-wiki space for
   exploring technologies, capturing learnings, and refining ideas over time.
+heroImage: /blog/hello-world/hero.webp
 labels: 'general,personal'
 keywords: null
 release: true

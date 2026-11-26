@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 403" role="img" aria-labelledby="study-svg-follow-a-quantized-feature-title" aria-describedby="study-svg-follow-a-quantized-feature-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-follow-a-quantized-feature-title">Where a weak feature loses resolution</title>
+  <desc id="study-svg-follow-a-quantized-feature-desc">Following a feature through the integer grid shows how the chosen scale can erase a signal before a later layer has a chance to use it. Observe the range: Collect activations across representative lighting and label conditions. Then Choose a grid: Fit a supported scale and zero point for the tensor or channel. Then Encode the feature: Divide by scale, round, add the zero point and clip to the integer range. Then Trace the decision: Compare reconstructed features and routing errors on held-out parcels.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Observe the range</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Collect activations across</tspan>
+    <tspan x="19" y="64">representative lighting and label</tspan>
+    <tspan x="19" y="81">conditions.</tspan></text>
+  <path d="M172 101v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="121" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="145" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Choose a grid</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="165">Fit a supported scale and zero point</tspan>
+    <tspan x="19" y="182">for the tensor or channel.</tspan></text>
+  <path d="M172 202v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="222" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="246" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Encode the feature</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="266">Divide by scale, round, add the zero</tspan>
+    <tspan x="19" y="283">point and clip to the integer range.</tspan></text>
+  <path d="M172 303v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="323" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="347" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Trace the decision</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="367">Compare reconstructed features and</tspan>
+    <tspan x="19" y="384">routing errors on held-out parcels.</tspan></text>
+  </g>
+</svg>

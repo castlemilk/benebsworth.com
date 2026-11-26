@@ -1,0 +1,256 @@
+{
+  "id": "vol1/01_compression_pilot",
+  "title": "Model Compression",
+  "profile": "chapter",
+  "chapterProfile": "astra",
+  "command": "chapter",
+  "sourceUrl": "https://github.com/harvard-edge/cs249r_book/blob/de87c0103806d7bfb1c677dbb77a2b92fa00c298/books/vol1/10_model_compression/10_model_compression.qmd",
+  "sourceHash": "34b0e7eabed0900072c65cc00778cf22e32cafc56e30ae540878c66f564f35cd",
+  "specHash": "4473768e7b39e650ac73d370a8696f482546e4597aad55a98a8a253cefee03e0",
+  "status": "accepted",
+  "sections": [
+    {
+      "id": "locate-the-binding-constraint",
+      "heading": "Find what holds up one decision",
+      "sourceHeadings": [
+        "Fitting the Deployment Budget",
+        "Measuring Compression Gains"
+      ]
+    },
+    {
+      "id": "count-the-resident-footprint",
+      "heading": "Count the entire resident footprint",
+      "sourceHeadings": [
+        "Fitting the Deployment Budget"
+      ]
+    },
+    {
+      "id": "reshape-expensive-layers",
+      "heading": "Remove work the device can actually skip",
+      "sourceHeadings": [
+        "Structural Optimization: Changing What the Model Computes"
+      ]
+    },
+    {
+      "id": "design-a-deployable-student",
+      "heading": "Choose a smaller network and decide when it should run",
+      "sourceHeadings": [
+        "Structural Optimization: Changing What the Model Computes"
+      ]
+    },
+    {
+      "id": "choose-precision-and-ranges",
+      "heading": "Spend precision where errors change decisions",
+      "sourceHeadings": [
+        "Numerical Precision: Changing How Values Are Stored"
+      ]
+    },
+    {
+      "id": "inspect-the-execution-path",
+      "heading": "Follow compressed values through the runtime",
+      "sourceHeadings": [
+        "Hardware Implementation: Changing How the Model Executes"
+      ]
+    },
+    {
+      "id": "combine-changes-in-order",
+      "heading": "Sequence changes around what calibration assumes",
+      "sourceHeadings": [
+        "Choosing and Combining Techniques",
+        "Fallacies and Pitfalls"
+      ]
+    },
+    {
+      "id": "accept-the-deployed-model",
+      "heading": "Accept the model on a full production-shaped run",
+      "sourceHeadings": [
+        "Measuring Compression Gains",
+        "Fallacies and Pitfalls"
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "role": "architect",
+      "model": "gpt-6.2-astra",
+      "effort": "high",
+      "sections": [],
+      "promptBytes": 36441,
+      "cached": false,
+      "key": "b349788bd3f259587ef0c7705ad4dace77936359badbcfe8f7f2a5335fdaf436",
+      "usage": {
+        "input": 21098,
+        "cachedInput": 9216,
+        "output": 5938
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "locate-the-binding-constraint",
+        "count-the-resident-footprint"
+      ],
+      "promptBytes": 23721,
+      "cached": false,
+      "key": "a5205134e2fc5470d65e6636503385061bfbcd44d64ab5685e37871c72399582",
+      "usage": {
+        "input": 17986,
+        "cachedInput": 2688,
+        "output": 1429
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "reshape-expensive-layers",
+        "design-a-deployable-student"
+      ],
+      "promptBytes": 19030,
+      "cached": false,
+      "key": "ba4fa29220bdc0d3f68dd8efcbffe9012b24406f8815cf9eec61f5f7ec92dd88",
+      "usage": {
+        "input": 16958,
+        "cachedInput": 2688,
+        "output": 1722
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "choose-precision-and-ranges",
+        "inspect-the-execution-path"
+      ],
+      "promptBytes": 19499,
+      "cached": false,
+      "key": "f8f6cd27f5f4927a8e79ed277cb1532c7fc9bbebf4b7d09f394d03c1712d17f1",
+      "usage": {
+        "input": 17057,
+        "cachedInput": 2688,
+        "output": 1774
+      }
+    },
+    {
+      "role": "chapter-writer",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "combine-changes-in-order",
+        "accept-the-deployed-model"
+      ],
+      "promptBytes": 28333,
+      "cached": false,
+      "key": "6137e469d63accc5f40195fda0ab1368251b99b34740b115d44df20436c0d81a",
+      "usage": {
+        "input": 18622,
+        "cachedInput": 2688,
+        "output": 1669
+      }
+    },
+    {
+      "role": "chapter-reviewer",
+      "model": "gpt-6.2-astra",
+      "effort": "low",
+      "sections": [
+        "locate-the-binding-constraint",
+        "count-the-resident-footprint",
+        "reshape-expensive-layers",
+        "design-a-deployable-student",
+        "choose-precision-and-ranges",
+        "inspect-the-execution-path",
+        "combine-changes-in-order",
+        "accept-the-deployed-model"
+      ],
+      "promptBytes": 103208,
+      "cached": false,
+      "key": "1875f1d48c39850a3174734be94cd2cf227ee825ffb2e7489be368ee6a536c9b",
+      "usage": {
+        "input": 33388,
+        "cachedInput": 0,
+        "output": 519
+      }
+    },
+    {
+      "role": "chapter-repair",
+      "model": "gpt-6.2-astra",
+      "effort": "medium",
+      "sections": [
+        "locate-the-binding-constraint"
+      ],
+      "promptBytes": 19941,
+      "cached": false,
+      "key": "93074c43e8aa4a9f2d4b8044d9bb22b2400d5b5c9c9d45842374ada2aca3e0b2",
+      "usage": {
+        "input": 17189,
+        "cachedInput": 2688,
+        "output": 325
+      }
+    },
+    {
+      "role": "chapter-reviewer",
+      "model": "gpt-6.2-astra",
+      "effort": "low",
+      "sections": [
+        "locate-the-binding-constraint",
+        "count-the-resident-footprint",
+        "reshape-expensive-layers",
+        "design-a-deployable-student",
+        "choose-precision-and-ranges",
+        "inspect-the-execution-path",
+        "combine-changes-in-order",
+        "accept-the-deployed-model"
+      ],
+      "promptBytes": 103991,
+      "cached": false,
+      "key": "e41c83ea5ee8412742746bd1027f81806998729dabeed380eefa2d24de9f7012",
+      "usage": {
+        "input": 33554,
+        "cachedInput": 9216,
+        "output": 488
+      }
+    }
+  ],
+  "maxCalls": 24,
+  "stopAfterTokens": null,
+  "liveCalls": 8,
+  "tokens": {
+    "input": 175852,
+    "cachedInput": 31872,
+    "output": 13864,
+    "total": 189716
+  },
+  "usageIncomplete": false,
+  "elapsedMs": 461664,
+  "reviews": [
+    {
+      "verdict": "revise",
+      "checks": {
+        "mechanism": "Frozen batch normalization gives a(Wx + b) + c = (aW)x + (ab + c) for each output channel. This preserves the real-valued block output while changing the filter ranges. The figure correctly places calibration after folding and uses the target trace to check whether conversion launches and intermediate transfers disappear.",
+        "calculation": "The original footprint is 24 + 36 = 60 MiB, 12 MiB over budget. Compression gives 8 + 36 = 44 MiB, leaving 4 MiB free. The transfer buffer then raises the peak to 52 MiB, so the configuration exceeds capacity by 4 MiB. The footprint figure shows only the baseline comparison and leaves the transfer answer to the quiz key. The projection bars also reconcile: 32 × (256 + 128) = 12,288 coefficients versus 256 × 128 = 32,768, a saving of 20,480 at equal precision.",
+        "continuity": "The opening question receives a coherent engineering answer. In the serial example, the deadline leaves 20 − 7 − 2 = 11 ms for a 15 ms inference. The structural section explains when pruning can recover scheduled work, the calibration section follows the changed tensors into integer export, and the acceptance replay tests whether the gain preserves routing quality. An 18 ms p99 passes timing, but 18 damaged-label misroutes exceed the 10 allowed in 1,000 cases, so withholding release follows from the original contract.",
+        "assessment": "Halving the 6 ms transfer is a tempting answer because it saves 3 ms locally. The decision still takes max(3, 10) + 3 = 13 ms. Either half-millisecond saving gives 12.5 ms. Only the stipulated 1 ms saving on the final stage reaches 12 ms."
+      },
+      "issues": [
+        {
+          "id": "locate-the-binding-constraint",
+          "change": "The critical-path quiz makes normalization the stage that emits the decision, yet the keyed option fuses it with a downstream consumer absent from the timed graph. The stipulated saving makes the arithmetic unique, but the graph does not show the kernel boundary responsible for it. Define the final 3 ms as the combined time of normalization and a decision head that reads its output. Fusing those two kernels can then remove an intermediate write and read within the stated deadline."
+        }
+      ]
+    },
+    {
+      "verdict": "pass",
+      "checks": {
+        "mechanism": "The previous quiz defect is fixed. Normalization writes a tensor that the decision head reads, and the prompt assigns 3 ms to that pair. The original command arrives at max(6, 10) + 3 = 13 ms. Fusion removes the stated intermediate traffic and saves 1 ms, meeting the 12 ms deadline exactly. Halving the transfer leaves arrival at 13 ms. Either 0.5 ms saving gives 12.5 ms. Only B qualifies.",
+        "calculation": "The footprint bars agree with the seed ledger. Simultaneous weights and activations use 24 + 36 = 60 MiB, exceeding capacity by 12 MiB. Compressed weights bring that to 8 + 36 = 44 MiB, leaving 4 MiB free. The transfer adds a separate live buffer, giving 44 + 8 = 52 MiB and reversing the fit decision by 4 MiB. The packet withholds that result until the quiz model answer. The projection bars also check out. Rank 32 uses 32 × (256 + 128) = 12,288 coefficients versus 32,768, saving 62.5% of the equal-precision payload. Its intermediate activation and second launch still have to be timed.",
+        "continuity": "The opening question is answered through the sorter’s release decision. Profiling identifies the delay a change must remove. Pruning fixes the surviving channels, recovery adjusts their weights, and folding frozen normalization changes each filter to aW with bias ab + c. Calibration therefore uses the folded graph. The final replay checks both timing and routing on that export. Its illustrative 18 ms p99 passes, but 18 misroutes among 1,000 damaged labels exceed the allowance of 10, so the release is held.",
+        "assessment": "Approval using full-load timing and low-load inspection results is a tempting distractor because each selected number passes. At 40 arrivals/s, however, 30 of 1,000 dim-light parcels go to inspection. The 2% limit permits 20, so the production replay fails by 10 parcels even with a passing 23 ms p99. The prompt supplies the evidence needed to hold the candidate and investigate those confidence scores."
+      },
+      "issues": []
+    }
+  ]
+}

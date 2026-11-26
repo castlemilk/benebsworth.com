@@ -1,0 +1,72 @@
+[
+ {
+  "id": "fairness-worked-example",
+  "kind": "BAR_STACKED",
+  "title": "Worked example: three rates by group",
+  "caption": "Approval rate, true positive rate, and false positive rate for the two hundred-applicant scenario. The three criteria diverge because approval composition differs.",
+  "xLabel": "rate",
+  "yLabel": "percent",
+  "xPoints": [
+   "approval",
+   "TPR",
+   "FPR"
+  ],
+  "series": [
+   {
+    "key": "a",
+    "label": "Group A",
+    "color": "var(--chart-1)",
+    "values": [
+     70,
+     89,
+     55
+    ]
+   },
+   {
+    "key": "b",
+    "label": "Group B",
+    "color": "var(--chart-2)",
+    "values": [
+     40,
+     60,
+     20
+    ]
+   }
+  ]
+ },
+ {
+  "id": "explanation-retrofit",
+  "kind": "BAR_STACKED",
+  "title": "Inline explanation cost",
+  "caption": "Per-request processing before and after adding inline explanations, with the capacity multiple needed to preserve throughput at ten thousand queries per second.",
+  "xLabel": "configuration",
+  "yLabel": "ms per request",
+  "xPoints": [
+   "baseline",
+   "plus light explanation",
+   "plus heavy explanation"
+  ],
+  "series": [
+   {
+    "key": "base",
+    "label": "baseline work",
+    "color": "var(--chart-1)",
+    "values": [
+     100,
+     100,
+     100
+    ]
+   },
+   {
+    "key": "expl",
+    "label": "explanation work",
+    "color": "var(--chart-2)",
+    "values": [
+     0,
+     50,
+     200
+    ]
+   }
+  ]
+ }
+]

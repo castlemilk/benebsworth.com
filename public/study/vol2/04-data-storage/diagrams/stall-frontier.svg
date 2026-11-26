@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="stall-frontier" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="sf-title sf-desc">
+  <title id="sf-title">Fed or starved: one knee decides</title>
+  <desc id="sf-desc">A piecewise curve of compute active-time fraction against the ratio of supplied to demanded bandwidth on a log axis, rising linearly to a knee at ratio one and flat after. A stalled pipeline marker sits at 0.8 on the rising segment; an image job marker at 3.3 times headroom and a text job marker at 6000 times sit on the flat segment.</desc>
+  <style>
+    .dark #stall-frontier { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#stall-frontier { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">Fed or starved: one knee decides</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">active = min(1, supply ÷ demand) · log scale x-axis</text>
+
+    <!-- starved / fed zones -->
+    <rect x="60" y="70" width="140" height="160" fill="var(--fig-mark, #b4571f)" opacity="0.10"/>
+    <rect x="200" y="70" width="160" height="160" fill="var(--fig-outline, #364c50)" opacity="0.12"/>
+    <text x="130" y="84" font-size="9" text-anchor="middle" fill="var(--fig-mark, #b4571f)" font-weight="650">STARVED</text>
+    <text x="280" y="84" font-size="9" text-anchor="middle" fill="var(--fig-outline, #364c50)" font-weight="650">FED</text>
+
+    <!-- axes -->
+    <path d="M60 230 H360 M60 230 V70" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1.1" fill="none"/>
+    <text x="46" y="233" font-size="8.5" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">0</text>
+    <text x="46" y="100" font-size="8.5" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">1</text>
+    <text x="46" y="140" font-size="8" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">f</text>
+    <text x="360" y="248" font-size="9" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">supply ÷ demand →</text>
+    <text x="200" y="244" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">1 (supply = demand)</text>
+    <path d="M200 230 V78" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+
+    <!-- knee curve: rise to knee, flat after -->
+    <path d="M70 216 L200 92 L350 92" stroke="var(--fig-ink, #252923)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <circle cx="200" cy="92" r="4" fill="var(--fig-mark, #b4571f)"/>
+    <text x="200" y="66" font-size="9" text-anchor="middle" font-weight="650">the knee</text>
+
+    <!-- stalled marker on rising segment -->
+    <circle cx="150" cy="142" r="4" fill="var(--fig-mark, #b4571f)"/>
+    <text x="150" y="132" font-size="8.5" text-anchor="middle" fill="var(--fig-mark, #b4571f)">stalled pipeline</text>
+    <text x="150" y="156" font-size="8" text-anchor="middle" fill="var(--fig-mark, #b4571f)">0.8 active</text>
+    <path d="M150 148 V92" stroke="var(--fig-mark, #b4571f)" stroke-width="1" stroke-dasharray="2 2" fill="none" opacity="0.7"/>
+
+    <!-- headroom markers on flat segment -->
+    <circle cx="252" cy="92" r="4" fill="var(--fig-outline, #364c50)"/>
+    <text x="252" y="110" font-size="8.5" text-anchor="middle" fill="var(--fig-outline, #364c50)">image job</text>
+    <text x="252" y="121" font-size="8" text-anchor="middle" fill="var(--fig-outline, #364c50)">≈3.3× headroom</text>
+    <path d="M204 96 L246 92" stroke="var(--fig-outline, #364c50)" stroke-width="1" fill="none"/>
+    <circle cx="330" cy="92" r="4" fill="var(--fig-outline, #364c50)"/>
+    <text x="330" y="110" font-size="8.5" text-anchor="middle" fill="var(--fig-outline, #364c50)">text job</text>
+    <text x="330" y="121" font-size="8" text-anchor="middle" fill="var(--fig-outline, #364c50)">≈6,000×</text>
+
+    <text x="20" y="272" font-size="9" fill="var(--fig-rule, #6e6a5b)">prefetch hides latency, never a rate deficit</text>
+    <text x="20" y="286" font-size="9" fill="var(--fig-rule, #6e6a5b)">only bandwidth or a smaller representation moves the knee</text>
+  </g>
+</svg>

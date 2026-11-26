@@ -515,7 +515,7 @@ async function main() {
     // hand edit between iterations) aren't clobbered by the stale snapshot
     // this process loaded at startup.
     const baseline = readResults()
-    const merged = mergeResults(baseline, fresh, (kept, dropped) => {
+    const merged = mergeResults(baseline, fresh, (kept) => {
       console.warn(
         `[harness] kept existing ${kept.modelId} :: ${kept.taskId} (${kept.status}) — fresh run produced 0 successful iterations`
       )

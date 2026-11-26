@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 233" role="img" aria-labelledby="study-svg-resident-footprint-versus-capacity-title" aria-describedby="study-svg-resident-footprint-versus-capacity-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-resident-footprint-versus-capacity-title">Resident footprint versus capacity</title>
+  <desc id="study-svg-resident-footprint-versus-capacity-desc">Adding the simultaneous weights and activations puts the original case above the 48 MiB limit. The compressed case uses 44 MiB in this first accounting. Original footprint: 60 MiB. Compressed footprint: 44 MiB. Capacity limit: 48 MiB.</desc>
+  <rect x="0" y="0" width="344" height="233" rx="8" fill="var(--surface, #fbf7f0)"/>
+  <g fill="var(--fg, #31251d)" font-family="ui-monospace, monospace">
+  <text x="328" y="22" font-size="13.5" text-anchor="end">MiB</text>
+  <text x="16" y="43" font-size="15">Original footprint</text>
+  <text x="328" y="81" font-size="14" text-anchor="end">60</text>
+  <rect x="16" y="51" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="51" width="312" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="50" y2="64" stroke="var(--fg, #4b3a2d)"/>
+  <text x="16" y="109" font-size="15">Compressed footprint</text>
+  <text x="328" y="147" font-size="14" text-anchor="end">44</text>
+  <rect x="16" y="117" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="117" width="229" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="116" y2="130" stroke="var(--fg, #4b3a2d)"/>
+  <text x="16" y="175" font-size="15">Capacity limit</text>
+  <text x="328" y="213" font-size="14" text-anchor="end">48</text>
+  <rect x="16" y="183" width="312" height="12" rx="3" fill="var(--surface-2, #e7dbcb)"/>
+  <rect x="16" y="183" width="250" height="12" rx="3" fill="var(--blog, #984720)"/>
+  <line x1="16" x2="16" y1="182" y2="196" stroke="var(--fg, #4b3a2d)"/>
+  </g>
+</svg>

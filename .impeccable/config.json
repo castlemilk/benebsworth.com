@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "app/editorial.css"
+        ],
+        "createdAt": "2026-11-21T09:16:43.152Z",
+        "reason": "Agent: the remaining 2px rule belongs to a figure caption outside the image frame and marks the quiet figure annotation specified in DESIGN.md."
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="config-abcd" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="ca-title ca-desc">
+  <title id="ca-title">Four layouts, one constraint</title>
+  <desc id="ca-desc">Four candidate partitions of the same 175B training step on 1,024 GPUs, drawn as per-GPU state bars on a log scale against the 80 GB HBM mark. Configuration A, pure data parallelism, would replicate 2,800 GB per GPU; B, tensor-parallel 8, leaves ~350 GB; C, tensor times pipeline 4, reaches ~87.5 GB and fits only with ZeRO-1; D, the reference TP-8 PP-8 DP-16 layout, fits unsharded at ~43.8 GB. Efficiencies run 86, 84, and 83 percent. Communication barely separates them; memory disqualifies three.</desc>
+  <style>
+    .dark #config-abcd { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#config-abcd { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Four layouts, one constraint</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">same 175B step · same 1,024 GPUs · state per GPU, log scale</text>
+
+    <!-- 80 GB HBM mark: log10 scale, x = 118 + (log10(gb)-1.5)*140 ; 80 -> 1.903 -> x=174 -->
+    <line x1="174" x2="174" y1="58" y2="242" stroke="var(--fig-mark, #b4571f)" stroke-width="1.4" stroke-dasharray="5 4"/>
+    <text x="174" y="54" font-size="9" text-anchor="middle" fill="var(--fig-mark, #b4571f)" font-weight="650">80 GB HBM</text>
+
+    <!-- A: DP-1024 -> 2,800 GB, log 3.447, x_w = (3.447-1.5)*140 = 273 -->
+    <g>
+      <text x="20" y="82" font-size="10" font-weight="650">A</text>
+      <text x="36" y="82" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">DP-1,024 · replicate all</text>
+      <rect x="118" y="70" width="238" height="20" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.30" stroke="var(--fig-mark, #b4571f)"/>
+      <text x="352" y="84" font-size="8.5" text-anchor="end" font-weight="650">2,800 GB</text>
+      <text x="36" y="104" font-size="8" fill="var(--fig-rule, #6e6a5b)">impossible · no efficiency to quote</text>
+    </g>
+
+    <!-- B: TP8 + DP128 -> ~350 GB, log 2.544, w = 146 -->
+    <g>
+      <text x="20" y="138" font-size="10" font-weight="650">B</text>
+      <text x="36" y="138" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">TP-8 + DP-128</text>
+      <rect x="118" y="126" width="146" height="20" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.30" stroke="var(--fig-mark, #b4571f)"/>
+      <text x="260" y="140" font-size="8.5" font-weight="650">~350 GB</text>
+      <text x="36" y="160" font-size="8" fill="var(--fig-rule, #6e6a5b)">eta = 86% · still over HBM</text>
+    </g>
+
+    <!-- C: TP8xPP4 + DP32 -> ~87.5 GB, log 1.942, w = 62; ZeRO-1 crosses -->
+    <g>
+      <text x="20" y="194" font-size="10" font-weight="650">C</text>
+      <text x="36" y="194" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">TP-8 PP-4 DP-32</text>
+      <rect x="118" y="182" width="62" height="20" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.30" stroke="var(--fig-mark, #b4571f)"/>
+      <rect x="118" y="182" width="48" height="20" rx="3" fill="var(--fig-outline, #364c50)" opacity="0.28" stroke="var(--fig-outline, #364c50)" stroke-dasharray="2 2"/>
+      <text x="186" y="196" font-size="8.5" font-weight="650">~87.5 GB</text>
+      <text x="36" y="216" font-size="8" fill="var(--fig-rule, #6e6a5b)">eta = 84% · fits only + ZeRO-1</text>
+    </g>
+
+    <!-- D: TP8xPP8xDP16 -> ~43.8 GB, log 1.642, w = 20 -->
+    <g>
+      <text x="20" y="250" font-size="10" font-weight="650">D</text>
+      <text x="36" y="250" font-size="8.5" fill="var(--fig-rule, #6e6a5b)">TP-8 PP-8 DP-16</text>
+      <rect x="118" y="238" width="20" height="20" rx="3" fill="var(--fig-outline, #364c50)" opacity="0.45" stroke="var(--fig-outline, #364c50)"/>
+      <text x="144" y="252" font-size="8.5" font-weight="650">~43.8 GB</text>
+      <text x="36" y="272" font-size="8" fill="var(--fig-rule, #6e6a5b)">eta = 83% · fits unsharded · reference layout</text>
+    </g>
+
+    <text x="190" y="292" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">efficiencies within 3 points · memory disqualifies three of four</text>
+  </g>
+</svg>

@@ -13,7 +13,7 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.clearAllMocks(); vi.unstubAllGlobals() })
 
 function audio(name: string) {
-  return <AudioOverview src={`/${name}.m4a`} hosts={{ A: `${name} host` }} segments={[{ speaker: 'A', text: `${name} transcript`, start: 0, end: 10, eq: undefined }]} />
+  return <AudioOverview src={`/${name}.m4a`} hosts={{ A: `${name} host` }} segments={[{ speaker: 'A', text: `${name} transcript`, start: 0, end: 10, eq: undefined, words: [] }]} />
 }
 function quiz(correctOptionId: string): PreparedQuiz {
   return { title: 'Quiz', questions: [{ id: 'a1', kind: 'MCQ', source: 'ORIGINAL', promptHtml: 'Choose', options: [{ id: 'a', labelHtml: 'Alpha' }, { id: 'b', labelHtml: 'Beta' }], correctOptionId }] }

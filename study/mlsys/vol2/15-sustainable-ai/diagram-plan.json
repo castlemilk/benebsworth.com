@@ -1,0 +1,64 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The thesis frames power as an existence constraint and efficiency-versus-demand as the central tension; prose carries it."
+    },
+    "Power Is a Ceiling, Energy Is an Integral": {
+      "figure": "::fig[power-vs-energy-wall]",
+      "teaches": "The instantaneous power limit and the cumulative energy account obey different arithmetic: a short burst can be infeasible with modest total energy while a long slow run is fine.",
+      "source": "Book energy-wall section; redrawn as a two-panel contrast with the burst-versus-month comparison."
+    },
+    "The Fleet Compounds Faster Than Silicon": {
+      "proseOnly": "Compute growth doubling roughly every six months against two-year transistor cadence, the Dennard scaling obituary, and scaling-driven versus rebound demand growth are narrative and propositional."
+    },
+    "A Footprint Is Only as Good as Its Boundary": {
+      "figure": "::fig[boundary-ladder]",
+      "teaches": "Nested accounting boundaries from bare arithmetic to full lifecycle; the narrow accelerator-only boundary understates the measured Gemini prompt roughly tenfold.",
+      "source": "Book measurement contract and Gemini serving-stack measurement; the ladder is distilled from the boundary definitions."
+    },
+    "Where a Watt Goes": {
+      "proseOnly": "The CMOS equation, quantization and pruning mechanism caveats, rack power budgets, and conversion-loss accounting are worked in prose with equations."
+    },
+    "Carbon Is Energy Times a Grid": {
+      "proseOnly": "The Quebec-versus-Poland placement arithmetic, attributional versus consequential accounting, and marginal emissions are prose with the operational-carbon equation."
+    },
+    "Training Is a Spike, Serving Is a River": {
+      "proseOnly": "The crossover arithmetic is quantitative but one-dimensional; the chart carries it alongside the Meta production split evidence."
+    },
+    "Decode Is a Memory Problem": {
+      "proseOnly": "Batch-one arithmetic intensity, the crossover batch size, and static power waste are worked arithmetic in prose."
+    },
+    "The Edge Moves the Account, Not Away": {
+      "proseOnly": "Radio-versus-arithmetic energy, cascade escalation, duty cycling, harvesting budgets and federated energy arithmetic are prose with equations."
+    },
+    "Embodied Carbon Starts Before Boot": {
+      "proseOnly": "Lifecycle phases, amortization arithmetic, lifespan extension break-even, and the NAS boundary lesson are prose with the amortization equation."
+    },
+    "Every Mitigation Tier Multiplies, Except One": {
+      "figure": "::fig[carbon-multiplier-chain]",
+      "teaches": "Work reduction, execution efficiency, PUE and grid intensity form a multiplicative chain; embodied carbon adds at its own boundary; tier reductions compound only when measured in the combined configuration.",
+      "source": "Book multi-layer mitigation framework; redrawn as a chain with the additive term visually separated."
+    },
+    "The Red Area Swallows the Green": {
+      "figure": "::fig[jevons-rebound]",
+      "teaches": "Elastic demand turns per-unit savings into new consumption whose total can exceed the saving; areas measure expenditure, not energy, until unit cost tracks joules.",
+      "source": "Book Jevons paradox schematic; distilled to the two-area geometry."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "The fallacy list is corrective prose by design."
+    },
+    "The physics": {
+      "proseOnly": "Quantity-value-use table as quick reference."
+    },
+    "Glossary": {
+      "proseOnly": "Searchable term definitions; the concept index consumes them."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Connections to the author's stack are prose mappings."
+    },
+    "Open questions": {
+      "proseOnly": "Unresolved questions for review."
+    }
+  }
+}

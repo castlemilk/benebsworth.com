@@ -1,0 +1,77 @@
+[
+  {
+    "id": "dispatch-share",
+    "kind": "BAR_STACKED",
+    "title": "Where the step time goes: small op vs large op",
+    "caption": "The dispatch overhead law at its two ends. A ~1 us elementwise kernel pays ~15 us of host issue cost for ~1 us of device work -- dispatch is ~94% of the step. A ~100 us GEMM pays the same fixed cost once, so dispatch drops to ~13%. The per-op cost is constant; only the denominator changes.",
+    "xLabel": "Operation",
+    "yLabel": "Share of step time (%)",
+    "xPoints": ["~1 us kernel (ReLU-class)", "~100 us kernel (GEMM-class)"],
+    "series": [
+      {
+        "key": "device",
+        "label": "Device work",
+        "color": "var(--chart-1)",
+        "values": [6.25, 87.0]
+      },
+      {
+        "key": "dispatch",
+        "label": "Dispatch + launch",
+        "color": "var(--chart-3)",
+        "values": [93.75, 13.0]
+      }
+    ]
+  },
+  {
+    "id": "operator-surface",
+    "kind": "BAR_STACKED",
+    "title": "What you can write vs what the compiler can lower",
+    "caption": "Operator counts mined from each project (latest snapshots in the book's data tables). Each bar is the eager API surface, split into the subset its compiler-facing set can lower versus the eager-only remainder: ~7% coverage for PyTorch, ~8% for TensorFlow, ~100% for JAX - lax is already the compiler's language. Export succeeds only inside the thin first segment.",
+    "xLabel": "Framework",
+    "yLabel": "Operators (count)",
+    "xPoints": ["PyTorch", "TensorFlow", "JAX"],
+    "series": [
+      {
+        "key": "compiler",
+        "label": "Lowers to compiler set (Core ATen 192 / XLA HLO 123 / lax 135)",
+        "color": "var(--chart-1)",
+        "values": [192, 123, 135]
+      },
+      {
+        "key": "eager_only",
+        "label": "Eager-only remainder",
+        "color": "var(--chart-3)",
+        "values": [2466, 1440, 0]
+      }
+    ]
+  },
+  {
+    "id": "training-peak",
+    "kind": "BAR_STACKED",
+    "title": "ResNet-50 batch-64 training peak: activations are the mountain",
+    "caption": "Book scenario ResNet50Fp32AdamBatch64, FP32. Weights are ~102 MB and Adam's two moments add ~204 MB -- together under 4% of the peak. Saved activations dominate: the low and high estimates bracket 8.4-12.4 GB total, 82-121x the weight storage. The batch knob scales only the activation slice.",
+    "xLabel": "Activation estimate",
+    "yLabel": "Memory (GB)",
+    "xPoints": ["Low-activation model", "High-activation model"],
+    "series": [
+      {
+        "key": "activations",
+        "label": "Saved activations",
+        "color": "var(--chart-1)",
+        "values": [8.0, 12.0]
+      },
+      {
+        "key": "adam",
+        "label": "Adam moments (m + v)",
+        "color": "var(--chart-2)",
+        "values": [0.2, 0.2]
+      },
+      {
+        "key": "weights",
+        "label": "Weights + gradients",
+        "color": "var(--chart-3)",
+        "values": [0.2, 0.2]
+      }
+    ]
+  }
+]

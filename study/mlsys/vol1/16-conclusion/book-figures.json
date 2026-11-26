@@ -1,0 +1,32 @@
+[
+  {
+    "id": "margin-001",
+    "file": "images/svg/vol1_conclusion_margin_001.svg",
+    "title": "Calibration to cohort drop",
+    "caption": "Vertical causal chain: INT8 calibration, then the firmware preprocessing path, then an input shift on one device cohort, ending in a marked accuracy drop."
+  },
+  {
+    "id": "margin-002",
+    "file": "images/svg/vol1_conclusion_margin_002.svg",
+    "title": "Chapter margin figure",
+    "caption": "Companion illustration from the chapter margins."
+  },
+  {
+    "id": "margin-003",
+    "file": "images/svg/vol1_conclusion_margin_003.svg",
+    "title": "Chapter margin figure",
+    "caption": "Companion illustration from the chapter margins."
+  },
+  {
+    "id": "fleet-mtbf-ladder",
+    "file": "images/svg/vol1_conclusion_fleet_mtbf_ladder.svg",
+    "title": "Fleet MTBF ladder",
+    "caption": "One GPU at ~5.7 years mean time to failure versus a 1,024-GPU pool at ~48.8 hours mean time between failures — independent failures collapse component reliability into a two-day cluster cadence."
+  },
+  {
+    "id": "margin-stack",
+    "file": "images/svg/margin_stack.svg",
+    "title": "ML systems architecture stack",
+    "caption": "The full stack a single production decision travels: data, model computation, framework lowering, accelerator execution, serving, operations and governance."
+  }
+]

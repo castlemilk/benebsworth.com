@@ -1,0 +1,20 @@
+[
+ {
+  "id": "cost-signatures",
+  "file": "cost-signatures.svg",
+  "title": "Five families, five signatures",
+  "caption": "The chapter's organizing move: each architecture family answers the same three counts - weights stored, MACs performed, bytes resident - and the answer predicts which iron-law term saturates first. Note the transformer alone gets two cells: prefill and decode share weights but not regimes."
+ },
+ {
+  "id": "prefill-decode",
+  "file": "prefill-decode.svg",
+  "title": "Prefill and decode regimes",
+  "caption": "Why one model gets two rows in the workload profile. Prompt evaluation is a weight-reusing GEMM (compute-bound); each generated token is a GEMV that rereads every weight plus a KV cache growing ~307 KB per token - bandwidth-bound at ~1 FLOP/byte."
+ },
+ {
+  "id": "capacity-wall",
+  "file": "capacity-wall.svg",
+  "title": "The embedding capacity wall",
+  "caption": "Recommendation tables are feasibility problems before they are performance problems: a 51.2 GB table fits an 80 GB accelerator, two do not. The three escapes - shrink, move, partition - each relocate the cost rather than remove it."
+ }
+]

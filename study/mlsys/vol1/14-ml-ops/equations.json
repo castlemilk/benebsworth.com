@@ -1,0 +1,175 @@
+[
+  {
+    "id": "model-output",
+    "title": "Reproducibility as a function",
+    "latex": "\\mathrm{Output}=f(\\mathrm{Code}_{v},\\mathrm{Data}_{v},\\mathrm{Config}_{v},\\mathrm{Env}_{v})",
+    "caption": "The same output requires every pipeline input at the same version: code, data, configuration and environment. A model artifact without its versions cannot be reproduced.",
+    "symbols": [
+      {
+        "symbol": "f",
+        "name": "training pipeline",
+        "meaning": "The deterministic function producing the model."
+      },
+      {
+        "symbol": "\\mathrm{Code}_{v}",
+        "name": "code version",
+        "meaning": "The exact source revision of the pipeline."
+      },
+      {
+        "symbol": "\\mathrm{Data}_{v}",
+        "name": "data version",
+        "meaning": "The versioned dataset and feature schemas."
+      },
+      {
+        "symbol": "\\mathrm{Config}_{v}",
+        "name": "config version",
+        "meaning": "Hyperparameters and settings for the run."
+      },
+      {
+        "symbol": "\\mathrm{Env}_{v}",
+        "name": "environment",
+        "meaning": "The execution environment — dependencies, hardware, seeds."
+      }
+    ]
+  },
+  {
+    "id": "skew-loss",
+    "title": "Training-serving skew as a recurring loss",
+    "latex": "L_{\\mathrm{day}}=Q\\cdot r_{\\mathrm{skew}}\\cdot c_{\\mathrm{err}}",
+    "caption": "Daily loss from a consistency bug = requests × skewed fraction × loss per error. At 1M requests, 1% skew and \\$0.10 per error: \\$1,000/day, \\$365,000 every year until the cause is removed.",
+    "symbols": [
+      {
+        "symbol": "L_{\\mathrm{day}}",
+        "name": "daily loss",
+        "meaning": "Business loss per day attributable to the skew."
+      },
+      {
+        "symbol": "Q",
+        "name": "daily queries",
+        "meaning": "Requests served per day."
+      },
+      {
+        "symbol": "r_{\\mathrm{skew}}",
+        "name": "skew rate",
+        "meaning": "Fraction of queries receiving skew-corrupted predictions."
+      },
+      {
+        "symbol": "c_{\\mathrm{err}}",
+        "name": "cost per error",
+        "meaning": "Estimated business loss per corrupted prediction."
+      }
+    ]
+  },
+  {
+    "id": "mde-sample",
+    "title": "Stage-gate evidence is priced in requests",
+    "latex": "n\\propto\\frac{\\sigma^{2}}{(\\mathrm{MDE})^{2}}",
+    "caption": "Sample size for detecting an effect grows with outcome variance and shrinks with the square of the minimum detectable effect — halving the MDE quadruples the traffic a canary stage needs.",
+    "symbols": [
+      {
+        "symbol": "n",
+        "name": "sample size",
+        "meaning": "Observations needed to detect the effect."
+      },
+      {
+        "symbol": "\\sigma^{2}",
+        "name": "outcome variance",
+        "meaning": "Variance of the metric under comparison."
+      },
+      {
+        "symbol": "\\mathrm{MDE}",
+        "name": "minimum detectable effect",
+        "meaning": "Smallest change the stage is designed to certify."
+      }
+    ]
+  },
+  {
+    "id": "retrain-interval",
+    "title": "The optimal retraining interval",
+    "latex": "T^{*}\\approx\\sqrt{2C_{r}\\,/\\,(Q\\,v\\,A_{0}\\,\\delta)}",
+    "caption": "Amortized run cost meets accrued staleness at the square root. For the ranking service — \\$5,000 per run, 1M queries/day, \\$0.50 per unit accuracy, 0.24%/day decay — T* ≈ 3 days.",
+    "symbols": [
+      {
+        "symbol": "T^{*}",
+        "name": "optimal interval",
+        "meaning": "Retraining cadence minimizing staleness + run cost per unit time."
+      },
+      {
+        "symbol": "C_{r}",
+        "name": "run cost",
+        "meaning": "Fixed cost of one retraining run: compute, validation, rollout."
+      },
+      {
+        "symbol": "Q",
+        "name": "daily traffic",
+        "meaning": "Queries per day."
+      },
+      {
+        "symbol": "v",
+        "name": "value per accuracy",
+        "meaning": "Dollar value per query per unit accuracy change."
+      },
+      {
+        "symbol": "A_{0}",
+        "name": "initial accuracy",
+        "meaning": "Accuracy immediately after a retrain."
+      },
+      {
+        "symbol": "\\delta",
+        "name": "decay rate",
+        "meaning": "Daily fractional accuracy loss to drift."
+      }
+    ]
+  },
+  {
+    "id": "staleness-half-life",
+    "title": "Staleness decay as a half-life",
+    "latex": "A(t)=A_{0}\\,e^{-\\delta t}",
+    "caption": "Exponential accuracy decay fitted to the observed slide: at 0.24%/day a 94% baseline reaches ~88% in about four weeks. The half-life puts deployments with different decay rates on one scale.",
+    "symbols": [
+      {
+        "symbol": "A(t)",
+        "name": "accuracy at age t",
+        "meaning": "Predictive quality t days after the last retrain."
+      },
+      {
+        "symbol": "A_{0}",
+        "name": "initial accuracy",
+        "meaning": "Accuracy at deployment or retrain."
+      },
+      {
+        "symbol": "\\delta",
+        "name": "decay rate",
+        "meaning": "Fractional accuracy lost per day."
+      },
+      {
+        "symbol": "t",
+        "name": "deployment age",
+        "meaning": "Days since the model last trained."
+      }
+    ]
+  },
+  {
+    "id": "monitoring-roi",
+    "title": "Monitoring benefit/cost",
+    "latex": "\\mathrm{B/C}=\\frac{n_{\\mathrm{prev}}\\cdot c_{\\mathrm{inc}}}{c_{\\mathrm{mon}}}",
+    "caption": "Monitoring pays when prevented incidents outweigh its cost: 5 prevented incidents at \\$50K against \\$50K of spend is a 5× benefit/cost — and it sizes which metrics deserve fine-grained observation.",
+    "symbols": [
+      {
+        "symbol": "n_{\\mathrm{prev}}",
+        "name": "incidents prevented",
+        "meaning": "Incidents caught or avoided per period."
+      },
+      {
+        "symbol": "c_{\\mathrm{inc}}",
+        "name": "cost per incident",
+        "meaning": "Loss per undetected incident (downtime, engineering time, reputation)."
+      },
+      {
+        "symbol": "c_{\\mathrm{mon}}",
+        "name": "monitoring cost",
+        "meaning": "Spend on telemetry, alerting and on-call."
+      }
+    ]
+  }
+]

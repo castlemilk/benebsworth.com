@@ -79,7 +79,7 @@ export function ItemEditor({
         ) : (
           <div className="flex flex-wrap gap-2">
             {item.repoImages.map((src) => (
-              // eslint-disable-next-line @next/next/no-img-element
+               
               <img key={src} src={src} alt="" title={src} className="h-16 w-24 rounded-md border border-[var(--color-border)] object-cover opacity-80" />
             ))}
           </div>
@@ -108,7 +108,7 @@ export function ItemEditor({
             {manifest.gallery.map((a, i) => (
               <div key={a.id + i} className="overflow-hidden rounded-lg border border-[var(--color-border)] bg-bg/40">
                 <div className="relative aspect-square">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  { }
                   <img src={thumbOf(a)} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                   <span className="absolute left-1 top-1 rounded bg-black/55 px-1.5 py-0.5 font-mono text-[0.6rem] tabular-nums text-white">{i + 1}</span>
                   <button type="button" onClick={() => removeGallery(i)} className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/55 font-mono text-xs text-white hover:bg-red-500" aria-label="Remove">✕</button>
@@ -147,7 +147,7 @@ function Slot({ name, asset, onSet, onUpload, onClear }: { name: string; asset?:
     <div className="w-40">
       <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg border border-dashed border-[var(--color-border)] bg-bg/40">
         {asset ? (
-          // eslint-disable-next-line @next/next/no-img-element
+           
           <img src={thumbOf(asset)} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
         ) : (
           <span className="font-mono text-[0.6rem] uppercase tracking-wider text-muted">empty</span>

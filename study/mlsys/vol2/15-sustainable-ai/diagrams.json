@@ -1,0 +1,30 @@
+[
+  {
+    "id": "power-vs-energy-wall",
+    "file": "power-vs-energy-wall.svg",
+    "title": "Two limits, two arithmetics",
+    "caption": "The power ceiling is instantaneous: grid feed and cooling cap how many servers can be active at once, whatever the run length. The energy account is cumulative: average power integrated over wall-clock time. A three-day burst can trip breakers with a modest megawatt-hour budget while a month-long job stays feasible on a smaller draw.",
+    "alt": "Split panel contrasting the instantaneous power ceiling against the cumulative energy integral"
+  },
+  {
+    "id": "boundary-ladder",
+    "file": "boundary-ladder.svg",
+    "title": "A footprint is only as good as its boundary",
+    "caption": "Nested accounting boundaries: bare arithmetic, accelerator, IT equipment, facility with PUE, and full lifecycle with embodied carbon. Google's measured median Gemini prompt shows the cost of a narrow boundary: counting only active accelerators on the best-utilized machines understates the full-stack figure roughly tenfold.",
+    "alt": "Nested boxes widening from chip to lifecycle, each adding excluded energy terms"
+  },
+  {
+    "id": "carbon-multiplier-chain",
+    "file": "carbon-multiplier-chain.svg",
+    "title": "Every mitigation tier multiplies, except one",
+    "caption": "The chain from algorithmic work to lifecycle carbon: work reduction and execution efficiency shrink IT energy, PUE scales it to the facility, the grid factor converts to operational carbon, and embodied carbon adds at its own boundary. Reductions at multiplicative tiers compound only when measured in the combined configuration on fixed useful work.",
+    "alt": "Horizontal chain of multiplicative tiers from work to operational carbon, with embodied carbon adding at the end"
+  },
+  {
+    "id": "jevons-rebound",
+    "file": "jevons-rebound.svg",
+    "title": "The red area swallows the green",
+    "caption": "On elastic demand, halving unit cost saves the green strip on baseline volume but unlocks new demand whose red area exceeds it. The areas measure expenditure; they represent energy only when unit cost tracks energy per operation, and emissions only after applying the grid factor. Rebound is why absolute budgets must accompany efficiency targets.",
+    "alt": "Demand curve with a green savings rectangle on baseline volume and a larger red rectangle of new consumption"
+  }
+]

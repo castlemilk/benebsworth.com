@@ -102,6 +102,7 @@ export function GeneratedDemo({ task, results, className = '' }: GeneratedDemoPr
       typeof window !== 'undefined' &&
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
     if (!reduce) run()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run reads only values already in this dep list plus refs; adding it would re-fire auto-run every render
   }, [runnable, hasOutput, selectedModelId, state.phase])
 
   // Render the artifact via the iframe `srcdoc` (inline HTML) rather than a

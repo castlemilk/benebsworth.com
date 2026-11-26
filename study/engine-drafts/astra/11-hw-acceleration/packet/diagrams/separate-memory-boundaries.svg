@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 302" role="img" aria-labelledby="study-svg-separate-memory-boundaries-title" aria-describedby="study-svg-separate-memory-boundaries-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-separate-memory-boundaries-title">Three places to count a weight</title>
+  <desc id="study-svg-separate-memory-boundaries-desc">These counts answer different questions. A startup host copy tells little about the device-memory bandwidth needed for each subsequent request. Host to device: Count initial placement and any repeated uploads on the request path. Then Device to local store: Count refills as batches and tiles revisit the weight matrix. Then Local store to engine: Count local reads and distinguish them from forwarding between cells.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Host to device</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Count initial placement and any</tspan>
+    <tspan x="19" y="64">repeated uploads on the request</tspan>
+    <tspan x="19" y="81">path.</tspan></text>
+  <path d="M172 101v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="121" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="145" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Device to local store</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="165">Count refills as batches and tiles</tspan>
+    <tspan x="19" y="182">revisit the weight matrix.</tspan></text>
+  <path d="M172 202v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="222" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="246" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Local store to engine</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="266">Count local reads and distinguish</tspan>
+    <tspan x="19" y="283">them from forwarding between cells.</tspan></text>
+  </g>
+</svg>

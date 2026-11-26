@@ -1,0 +1,65 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "State the vendor question and name the boundary problem before the walkthrough."
+    },
+    "The Benchmark–Production Gap": {
+      "figure": "::chart[mfu-gap]",
+      "teaches": "Separate the datasheet ceiling from achieved arithmetic: 989 vs ~123 TFLOP/s.",
+      "source": "The chapter's opening measurement: H100 peak vs MLPerf Training v3.1 sustained rate."
+    },
+    "Benchmark Carpentry": {
+      "figure": "::fig[claim-to-test]",
+      "teaches": "Turn a claim into a test by fixing its six components end to end.",
+      "source": "The chapter's carpentry walk: task, dataset, model, metrics, harness, run rules, report."
+    },
+    "Granularity: Micro, Macro, End-to-End": {
+      "figure": "::chart[pipeline-dilution]",
+      "teaches": "Show Amdahl dilution: a 5× inference win lands as 1.8× on the request.",
+      "source": "Napkin Math 12.2: 8 ms preprocessing + 10 ms inference."
+    },
+    "Benchmark Suites and Their Claims": {
+      "proseOnly": "Define divisions, scenarios and run rules; a table of the suite variants would restate the book's own tables."
+    },
+    "Training Benchmarks": {
+      "proseOnly": "Metrics table (time-to-accuracy, scaling efficiency, MFU, energy) reads better as prose plus the physics table."
+    },
+    "Inference Benchmarks": {
+      "figure": "::fig[vendor-claims-card]",
+      "teaches": "Show why the five vendor spec cards cannot be compared before normalization.",
+      "source": "The camera-trap SoC paragraph: 8 TOPS INT8 vs 15 TOPS INT4 vs proprietary vs stale MLPerf vs peak-only."
+    },
+    "Power and Energy Measurement": {
+      "figure": "::fig[measurement-boundary]",
+      "teaches": "Show the same prompt costing 0.10 or 0.24 Wh depending on the meter boundary.",
+      "source": "Elsworth et al. 2025 Gemini prompt energy decomposition (58/25/17 shares)."
+    },
+    "Best Practices: Is the Difference Real?": {
+      "figure": "::fig[disagreement-decides]",
+      "teaches": "Count the discordant predictions in two possible pairings of the same marginal scores and decide which exceeds the stated test cutoff.",
+      "source": "The statistical confidence trap: 95% vs 94% on the same 1,000 images; McNemar threshold 26."
+    },
+    "Model and Data Evaluation": {
+      "proseOnly": "ECE, slices and coverage stay in prose; the camera-trap majority-class trap is a number, not a diagram."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Each fallacy restates a worked number already diagrammed in its own section."
+    },
+    "Summary": {
+      "proseOnly": "Recall the claim-to-test spine and carry the measurement discipline into Model Serving."
+    },
+    "The physics": {
+      "proseOnly": "Use the unit-aware table to look up quantities, inputs and assumptions from the worked examples."
+    },
+    "Glossary": {
+      "proseOnly": "Search short definitions in the packet and the concept index."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Transfer the same measurement boundaries to concrete projects in Ben's stack."
+    },
+    "Open questions": {
+      "proseOnly": "Give the reader three questions to investigate on their own benchmark data."
+    }
+  }
+}

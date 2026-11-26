@@ -1,0 +1,217 @@
+{
+  "title": "Self-test: Model Serving",
+  "questions": [
+    {
+      "id": "inversion-objective",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "The serving inversion means the operating objective changes between training and serving. Which change does it describe?",
+      "options": [
+        {
+          "id": "a",
+          "label": "From minimizing latency variance across a batch to maximizing parameter count per accelerator."
+        },
+        {
+          "id": "b",
+          "label": "From static precomputation of all possible answers to dynamic evaluation of requests."
+        },
+        {
+          "id": "c",
+          "label": "From maximizing hardware occupancy under a controlled schedule to meeting per-request deadlines under arrivals you do not control."
+        },
+        {
+          "id": "d",
+          "label": "From reporting p99 tail latency under live load to reporting mean throughput per device under a fixed schedule."
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Training fills accelerators because idle hardware is wasted capital. Serving keeps headroom because arrivals are stochastic and queueing diverges near saturation; the objective becomes completed requests inside a deadline."
+    },
+    {
+      "id": "littles-sizing",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A service targets 1,000 QPS with a 50 ms mean response time. Little's Law says the average in-flight population is:",
+      "options": [
+        {
+          "id": "a",
+          "label": "5 requests."
+        },
+        {
+          "id": "b",
+          "label": "50 requests."
+        },
+        {
+          "id": "c",
+          "label": "500 requests."
+        },
+        {
+          "id": "d",
+          "label": "2,000 requests."
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "L = \u03bbW = 1,000 \u00d7 0.05 = 50. Buffers, worker threads and accelerator memory must sustain that resident population before any burst."
+    },
+    {
+      "id": "knee-prices-headroom",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Under the M/M/1 model, moving a service from 80% to 90% load changes average time in system by about:",
+      "options": [
+        {
+          "id": "a",
+          "label": "About 10% more, since time in system grows linearly with load."
+        },
+        {
+          "id": "b",
+          "label": "About 25% less, since a busier server drains its queue faster."
+        },
+        {
+          "id": "c",
+          "label": "Nothing systematic: load changes the throughput a replica sustains, not the latency a request experiences."
+        },
+        {
+          "id": "d",
+          "label": "It doubles, from 5\u00d7 to 10\u00d7 of service time, while buying ~11% more capacity."
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "W = t/(1\u2212\u03c1): 5\u00d7 service time at \u03c1=0.8, 10\u00d7 at \u03c1=0.9. The knee is why serving treats near-saturation as a hazard rather than an efficiency goal."
+    },
+    {
+      "id": "formation-omitted",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A datasheet reports a batch-8 latency of 3.8 ms vs 3.5 ms at batch one. What does the batch-8 number leave out?",
+      "options": [
+        {
+          "id": "a",
+          "label": "The formation delay: the queueing time spent waiting for eight requests to arrive before execution starts."
+        },
+        {
+          "id": "b",
+          "label": "The weight-loading time for the model across the batch."
+        },
+        {
+          "id": "c",
+          "label": "The postprocessing and serialization time needed to format eight responses for their clients."
+        },
+        {
+          "id": "d",
+          "label": "The network round trip between client and gateway."
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Batch latency counts execution only. At low arrival rates the wait to fill the window (~b/\u03bb) can dwarf the execution saving; the throughput win is spent queueing."
+    },
+    {
+      "id": "ttft-tpot-split",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Two LLM serving stacks report identical total latency for a 750-token response. Why might they still feel completely different to a user?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Identical totals imply identical experience by definition."
+        },
+        {
+          "id": "b",
+          "label": "They may differ in cold-start and model-load time, which dominates how fast the first request feels."
+        },
+        {
+          "id": "c",
+          "label": "They may use different tokenizers, changing the token count."
+        },
+        {
+          "id": "d",
+          "label": "They may differ in TTFT and TPOT: one streams a first token in 100 ms at reading speed while the other buffers for 10 s then emits instantly."
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Token streams split latency into time-to-first-token and time-per-output-token. The same sum decomposes into very different experiences; TTFT and TPOT must be reported separately."
+    },
+    {
+      "id": "kv-bounds-concurrency",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "On an LLM serving replica, what resource bounds the number of concurrent long-context conversations?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Compute throughput, since each decode step is FLOP-bound and conversations serialize on the same accelerator."
+        },
+        {
+          "id": "b",
+          "label": "KV-cache memory, which grows with each conversation's context."
+        },
+        {
+          "id": "c",
+          "label": "Network bandwidth between gateway and replica."
+        },
+        {
+          "id": "d",
+          "label": "CPU cores available for TLS termination and parsing."
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Decode streams weights per token (bandwidth-bound), and each conversation's KV cache consumes accelerator memory proportional to context; memory, not compute, is the first constraint to run out."
+    },
+    {
+      "id": "fanout-user-tail",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "A user request fans out in parallel to 25 leaf services, each at its p99 (1% chance of exceeding). What is the probability the user sees a response slower than the leaf p99? Give a percentage to one decimal.",
+      "answer": "22.2%",
+      "modelAnswer": "P = 1 \u2212 (1 \u2212 0.01)^25 = 1 \u2212 0.99^25 \u2248 1 \u2212 0.7778 = 0.222, so about 22.2% of user requests exceed the leaf p99. Fan-out converts a rare leaf tail into a common user tail."
+    },
+    {
+      "id": "headroom-replicas",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "Each replica serves 250 QPS (service rate \u03bc). Peak traffic is 900 QPS. If the SLO requires running no hotter than 80% load, how many replicas are needed?",
+      "answer": "5",
+      "modelAnswer": "At 80% load each replica carries 0.8 \u00d7 250 = 200 QPS, so 900/200 = 4.5 \u2192 5 replicas. Provisioned at exactly 4 replicas the fleet runs at 900/1000 = 90%, where the M/M/1 knee already doubles latency vs 80%."
+    },
+    {
+      "id": "explain-headroom",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "Explain to a product manager why buying exactly enough capacity for peak traffic still produces missed deadlines, and why the spare capacity is 'headroom', not 'waste'.",
+      "modelAnswer": "Arrivals are stochastic, not smooth. At 100% planned load any burst queues behind a full system and the queue has no drain rate: in the M/M/1 model time in system tends to infinity as \u03c1\u21921. Headroom is the deliberately idle capacity that absorbs spikes without violating the tail; like a spare lane on a bridge, it looks wasted on an average-load dashboard and is the only thing standing between a burst and a cascade of missed deadlines."
+    },
+    {
+      "id": "explain-sticky-routing",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "Explain why LLM serving adds session-affinity (sticky) routing when a stateless image service can spray requests across any healthy replica.",
+      "modelAnswer": "An LLM conversation carries state: a KV cache that grows with the context and lives in one replica's accelerator memory. Route the next turn to a different replica and the cache must be rebuilt or migrated, paying prefill cost again. An image request carries no such state, so any healthy replica serves it identically. Sticky routing trades load-balancing freedom for keeping each conversation on the replica that already holds its cache."
+    },
+    {
+      "id": "window-vs-traffic",
+      "kind": "MCQ",
+      "source": "ORIGINAL",
+      "prompt": "Traffic at a serving endpoint drops from 800 QPS to 40 QPS overnight. The dynamic batcher is configured with a large batch window tuned for peak. Overnight, p99 latency gets worse even though load fell. Why?",
+      "options": [
+        {
+          "id": "a",
+          "label": "The replicas sit idle overnight and must recompile graphs per request."
+        },
+        {
+          "id": "b",
+          "label": "Little's Law shrinks the resident population, which raises the tail."
+        },
+        {
+          "id": "c",
+          "label": "Formation delay: at 40 QPS the large window takes ~b/40 s to fill, and every request queues behind that wait."
+        },
+        {
+          "id": "d",
+          "label": "The tail-at-scale effect grows as fewer requests fan out across the same number of leaf services."
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The window sized for peak waits too long when arrivals are sparse: the batch speedup is spent waiting to start. Traffic pattern, not just volume, decides the window; a timeout cap or smaller overnight window restores the SLO."
+    }
+  ]
+}

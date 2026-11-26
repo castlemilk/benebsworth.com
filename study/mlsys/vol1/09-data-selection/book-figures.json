@@ -1,0 +1,38 @@
+[
+  {
+    "id": "data-wall",
+    "title": "Data wall — web-corpus growth vs dataset demand",
+    "caption": "The chapter's framing figure: public text corpora have grown far slower than compute budgets, pushing large runs into the repeat-everything regime.",
+    "url": "https://mlsysbook.ai/vol1/09_data_selection/09_data_selection.html#fig-data-wall"
+  },
+  {
+    "id": "icr-frontier",
+    "title": "Information-compute ratio frontier",
+    "caption": "Marginal ICR declines as dataset size grows — the diminishing-returns curve the selection inequality prices against.",
+    "url": "https://mlsysbook.ai/vol1/09_data_selection/09_data_selection.html#sec-measuring-data-value"
+  },
+  {
+    "id": "scaling-saturation",
+    "title": "Scaling saturation on unique vs repeated data",
+    "caption": "Model performance saturates as data repeats — the empirical shape behind the token-supply shortfall for GPT-2-scale runs.",
+    "url": "https://mlsysbook.ai/vol1/09_data_selection/09_data_selection.html#fig-scaling-saturation"
+  },
+  {
+    "id": "active-learning-loop",
+    "title": "Active learning closed loop",
+    "caption": "Score unlabeled pool → query top-k → human annotates → retrain → rescore. The book's loop figure; our original diagram redistributes the same stages by who pays each cost.",
+    "url": "https://mlsysbook.ai/vol1/09_data_selection/09_data_selection.html#sec-active-learning"
+  },
+  {
+    "id": "random-access-penalty",
+    "title": "Random-access penalty table",
+    "caption": "Realized bandwidth on 4 KB random reads vs sequential, by storage tier — the source table behind our read-penalty diagram.",
+    "url": "https://mlsysbook.ai/vol1/09_data_selection/09_data_selection.html#sec-selection-engineering"
+  },
+  {
+    "id": "data-echoing",
+    "title": "Data echoing",
+    "caption": "Echo factor fills accelerator idle slots when the input pipeline is the slow stage; nothing recovered when R < 1.",
+    "url": "https://mlsysbook.ai/vol1/09_data_selection/09_data_selection.html#sec-selection-engineering"
+  }
+]

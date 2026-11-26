@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-qualify-an-early-exit-title" aria-describedby="study-svg-qualify-an-early-exit-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-qualify-an-early-exit-title">Qualifying an early exit for the sorter</title>
+  <desc id="study-svg-qualify-an-early-exit-desc">An exit threshold determines both the work avoided and which parcels receive less computation. Its value depends on the errors and delays in both paths. Train the student: Fit a compact model to labels and teacher outputs. Then Fit the early exit: Use held-out inputs to select a confidence threshold. Then Replay mixed batches: Record exit choice, correctness and decision time for each parcel. Then Test difficult runs: Check errors and queues when damaged labels arrive close together.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Train the student</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Fit a compact model to labels and</tspan>
+    <tspan x="19" y="64">teacher outputs.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Fit the early exit</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Use held-out inputs to select a</tspan>
+    <tspan x="19" y="165">confidence threshold.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Replay mixed batches</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Record exit choice, correctness and</tspan>
+    <tspan x="19" y="266">decision time for each parcel.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Test difficult runs</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Check errors and queues when damaged</tspan>
+    <tspan x="19" y="367">labels arrive close together.</tspan></text>
+  </g>
+</svg>

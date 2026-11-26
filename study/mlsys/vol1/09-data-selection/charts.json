@@ -1,0 +1,88 @@
+[
+  {
+    "id": "token-budget",
+    "kind": "BAR_STACKED",
+    "title": "GPT-2 XL's token wall: supply, need, and what it actually processed",
+    "xLabel": "token pool",
+    "xPoints": [
+      "WebText unique supply",
+      "Chinchilla-fitted need",
+      "tokens the run processed"
+    ],
+    "series": [
+      {
+        "key": "unique",
+        "label": "unique tokens (billions)",
+        "values": [
+          10,
+          30,
+          10
+        ],
+        "color": "var(--chart-1)"
+      },
+      {
+        "key": "repeats",
+        "label": "re-read copies of the same tokens",
+        "values": [
+          0,
+          0,
+          157
+        ],
+        "color": "var(--chart-4)"
+      }
+    ],
+    "caption": "WebText holds ~10B unique tokens (~6.7 per parameter); the Chinchilla-fitted ~20 tokens/param asks 30B for 1.5B parameters -- 3x the supply. The original run covered the gap by re-reading: ~167B processed tokens, of which ~157B were repeats of the same unique pool. Book values, rounded."
+  },
+  {
+    "id": "icr-decay",
+    "kind": "BAR_STACKED",
+    "title": "Marginal ICR halves with each corpus doubling (illustrative model)",
+    "xLabel": "dataset size relative to first corpus",
+    "xPoints": [
+      "1x",
+      "2x",
+      "4x",
+      "8x"
+    ],
+    "series": [
+      {
+        "key": "icr",
+        "label": "marginal ICR (normalized)",
+        "values": [
+          1,
+          0.5,
+          0.25,
+          0.125
+        ],
+        "color": "var(--chart-1)"
+      }
+    ],
+    "caption": "The chapter's illustrative model: marginal ICR ~ 1/(O_sample x D). Each doubling of consumed data halves what the next FLOP learns -- the frontier bends down, which is why pruning repeats beats buying more corpus at the margin."
+  },
+  {
+    "id": "amortized-roi",
+    "kind": "BAR_STACKED",
+    "title": "Dedup savings accumulating against a fixed setup cost",
+    "xLabel": "campaign runs reusing the pipeline",
+    "xPoints": [
+      "1 run",
+      "5 runs",
+      "10 runs",
+      "50 runs"
+    ],
+    "series": [
+      {
+        "key": "savings",
+        "label": "gross savings ($k)",
+        "values": [
+          6,
+          30,
+          60,
+          300
+        ],
+        "color": "var(--chart-2)"
+      }
+    ],
+    "caption": "The book's worked dedup pipeline: gross saving is \\$6k per run against a fixed \\$30k setup. The bar reaches the cost at five runs; net ROI is therefore negative at one run, break-even at five, and positive after that (+100% at ten runs in the worked accounting)."
+  }
+]

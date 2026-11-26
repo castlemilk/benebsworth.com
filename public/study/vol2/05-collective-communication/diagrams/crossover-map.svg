@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="crossover-map" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="cm-title cm-desc">
+  <title id="cm-title">Tree below, ring above</title>
+  <desc id="cm-desc">A log-log plot of modeled AllReduce time against message size for a 256-GPU group at 200 gigabits per second with 1 microsecond startup. The tree curve starts lower and rises steeply; the ring curve starts higher and rises gently. They cross near one megabyte: tree wins small payloads, ring wins large ones. The double binary tree tracks the faster of the two.</desc>
+  <style>
+    .dark #crossover-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#crossover-map { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Tree below, ring above</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">modeled time vs size · 256 GPUs · 200 Gbps · α = 1 μs</text>
+
+    <!-- zones -->
+    <rect x="60" y="66" width="110" height="168" fill="var(--fig-outline, #364c50)" opacity="0.13"/>
+    <rect x="170" y="66" width="190" height="168" fill="var(--fig-mark, #b4571f)" opacity="0.09"/>
+    <text x="115" y="80" font-size="9" text-anchor="middle" font-weight="650" fill="var(--fig-outline, #364c50)">tree wins</text>
+    <text x="265" y="80" font-size="9" text-anchor="middle" font-weight="650" fill="var(--fig-mark, #b4571f)">ring wins</text>
+
+    <!-- axes -->
+    <path d="M60 234 H360 M60 234 V66" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1.1" fill="none"/>
+    <text x="360" y="252" font-size="9" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">message size →</text>
+    <text x="64" y="252" font-size="9" fill="var(--fig-rule, #6e6a5b)">1 KB</text>
+    <text x="356" y="246" font-size="9" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">10 GB</text>
+    <text x="46" y="80" font-size="9" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">T</text>
+
+    <!-- crossover -->
+    <path d="M170 234 V74" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+    <text x="170" y="246" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">≈1 MB</text>
+    <text x="170" y="66" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">M*</text>
+
+    <!-- tree: low start, steep rise -->
+    <path d="M64 208 L170 178 L356 96" stroke="var(--fig-outline, #364c50)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <text x="340" y="88" font-size="9.5" text-anchor="end" fill="var(--fig-outline, #364c50)" font-weight="650">tree</text>
+    <text x="300" y="112" font-size="8" fill="var(--fig-outline, #364c50)">O(log N)·M/β</text>
+
+    <!-- ring: high start, gentle rise -->
+    <path d="M64 186 L170 174 L356 152" stroke="var(--fig-mark, #b4571f)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <text x="340" y="146" font-size="9.5" text-anchor="end" fill="var(--fig-mark, #b4571f)" font-weight="650">ring</text>
+    <text x="118" y="199" font-size="8" fill="var(--fig-mark, #b4571f)">2(N−1)α startup floor</text>
+
+    <!-- double binary tree dashed following min -->
+    <path d="M64 212 L170 180 L356 104" stroke="var(--fig-ink, #252923)" stroke-width="1.4" fill="none" stroke-dasharray="4 3" opacity="0.75"/>
+    <text x="262" y="140" font-size="8.5" fill="var(--fig-ink, #252923)">double binary tree</text>
+
+    <!-- annotation of the two regimes -->
+    <text x="20" y="272" font-size="9" fill="var(--fig-rule, #6e6a5b)">below M*: fewer rounds beat fewer bytes</text>
+    <text x="20" y="285" font-size="9" fill="var(--fig-rule, #6e6a5b)">above M*: ring's ~2M/β floor beats tree's log N hops</text>
+    <text x="360" y="285" font-size="8.5" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">M* ≈ N·α·β/log₂N</text>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ha-tile-budget" class="study-fig-fit" viewBox="0 0 420 285" role="img" aria-labelledby="ha-tile-budget-title ha-tile-budget-desc">
+<title id="ha-tile-budget-title">A tile can fit while double buffering does not</title>
+<desc id="ha-tile-budget-desc">With a ninety-six-kibibyte local store, the weight tile uses thirty-two kibibytes, the input tile sixteen, and the accumulator thirty-two: eighty total. A second weight and input tile adds forty-eight, taking the allocation to one hundred and twenty-eight kibibytes, above the limit.</desc>
+<style>
+  #ha-tile-budget { font-family: system-ui, sans-serif; }
+  .dark #ha-tile-budget [fill="#fbf7f0"] { fill: #201a17; }
+  .dark #ha-tile-budget [fill="#eee5da"] { fill: #332b26; }
+  .dark #ha-tile-budget [fill="#29231e"] { fill: #f7eee3; }
+  .dark #ha-tile-budget [fill="#6f6055"] { fill: #c8b8aa; }
+  .dark #ha-tile-budget [fill="#9a3d1d"] { fill: #f2a276; }
+  .dark #ha-tile-budget [stroke="#b8a89c"] { stroke: #72665c; }
+  .dark #ha-tile-budget [stroke="#6f6055"] { stroke: #ad9d8f; }
+  .dark #ha-tile-budget [stroke="#9a3d1d"] { stroke: #f2a276; }
+</style>
+<rect width="420" height="285" rx="12" fill="#fbf7f0"/>
+<text x="22" y="36" fill="#29231e" font-size="22" font-weight="650">Local store: 96 KiB</text>
+<text x="22" y="69" fill="#29231e" font-size="18">One set: 32 + 16 + 32 = 80 KiB</text>
+<rect x="22" y="84" width="96" height="30" rx="3" fill="#9a3d1d" stroke="#9a3d1d"/>
+<rect x="118" y="84" width="48" height="30" rx="3" fill="#b8a89c" stroke="#b8a89c"/>
+<rect x="166" y="84" width="96" height="30" rx="3" fill="#6f6055" stroke="#6f6055"/>
+<path d="M310 74L310 224" fill="none" stroke="#9a3d1d" stroke-width="2" stroke-dasharray="4 4"/>
+<text x="310" y="65" fill="#9a3d1d" font-size="16" font-weight="650" text-anchor="middle">96</text>
+<text x="22" y="145" fill="#29231e" font-size="17">Double-buffer inputs: +48 = 128 KiB</text>
+<rect x="22" y="159" width="240" height="30" rx="3" fill="#6f6055" stroke="#6f6055"/>
+<rect x="262" y="159" width="144" height="30" rx="3" fill="#9a3d1d" stroke="#9a3d1d"/>
+<text x="22" y="216" fill="#6f6055" font-size="16">0</text>
+<text x="406" y="216" fill="#6f6055" font-size="16" text-anchor="end">128 KiB</text>
+<text x="22" y="251" fill="#6f6055" font-size="16">FP16 operands; FP32 accumulators.</text>
+<text x="22" y="273" fill="#6f6055" font-size="16">Other workspace is extra.</text>
+</svg>

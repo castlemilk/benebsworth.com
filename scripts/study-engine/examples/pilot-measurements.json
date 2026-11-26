@@ -1,0 +1,519 @@
+{
+  "date": "2026-11-23",
+  "codexCli": "0.171.0",
+  "sourceCommit": "de87c0103806d7bfb1c677dbb77a2b92fa00c298",
+  "runs": {
+    "lean-compression": {
+      "status": "accepted",
+      "calls": [
+        {
+          "section": "resident-memory-budget",
+          "role": "writer",
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "cached": false,
+          "key": "12355255e895c33976debbee24c48d3d176e619b14d0462ce0d5ca83d890f1e7",
+          "usage": {
+            "input": 25298,
+            "cachedInput": 4864,
+            "output": 426
+          }
+        },
+        {
+          "section": "resident-memory-budget",
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": false,
+          "key": "8768d4608ff430369d7713939ebd6bf94c8adf13f8c14a0c181a1f2821246796",
+          "usage": {
+            "input": 13212,
+            "cachedInput": 0,
+            "output": 13
+          }
+        }
+      ],
+      "repairReasons": [],
+      "incrementalTokens": {
+        "input": 38510,
+        "cachedInput": 4864,
+        "output": 439,
+        "total": 38949
+      }
+    },
+    "lean-hardware": {
+      "status": "accepted",
+      "calls": [
+        {
+          "section": "tile-capacity",
+          "role": "writer",
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "cached": false,
+          "key": "868093c028528d12d313adc81f9b12340b114eb82ad0a1caab4b2a69ebda4d2f",
+          "usage": {
+            "input": 12472,
+            "cachedInput": 2432,
+            "output": 541
+          }
+        },
+        {
+          "section": "tile-capacity",
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": false,
+          "key": "099c2c042f96adc763d4567f2db7c2a815f73fa5290ffd62ddd1473002ee3b5d",
+          "usage": {
+            "input": 13473,
+            "cachedInput": 0,
+            "output": 13
+          }
+        }
+      ],
+      "repairReasons": [],
+      "incrementalTokens": {
+        "input": 25945,
+        "cachedInput": 2432,
+        "output": 554,
+        "total": 26499
+      }
+    },
+    "reference-compression": {
+      "status": "accepted",
+      "calls": [
+        {
+          "section": "resident-memory-budget",
+          "role": "writer",
+          "model": "gpt-6.2-sol",
+          "effort": "high",
+          "cached": false,
+          "key": "ec539dd7de09056853f2813cea0e99c3c0186c62e24773ef3f95ff870aaa8139",
+          "usage": {
+            "input": 14381,
+            "cachedInput": 0,
+            "output": 885
+          }
+        },
+        {
+          "section": "resident-memory-budget",
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": false,
+          "key": "10b1d63bf906d2c9ea0e3df3344b0d9480b3191ceb5dd9b03501c9c0ad2cb2f0",
+          "usage": {
+            "input": 13205,
+            "cachedInput": 0,
+            "output": 13
+          }
+        }
+      ],
+      "repairReasons": [],
+      "incrementalTokens": {
+        "input": 27586,
+        "cachedInput": 0,
+        "output": 898,
+        "total": 28484
+      }
+    },
+    "reference-hardware": {
+      "status": "accepted",
+      "calls": [
+        {
+          "section": "tile-capacity",
+          "role": "writer",
+          "model": "gpt-6.2-sol",
+          "effort": "high",
+          "cached": false,
+          "key": "60ddaa95527a627950dd893871d6c2efb9c64b648d2880b97c2d4c94564248f4",
+          "usage": {
+            "input": 14514,
+            "cachedInput": 0,
+            "output": 992
+          }
+        },
+        {
+          "section": "tile-capacity",
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": false,
+          "key": "9293da0c1d9c57507ef9e257cc0c0ca72b0c2414e618190f1570a419a68b2479",
+          "usage": {
+            "input": 13567,
+            "cachedInput": 0,
+            "output": 88
+          }
+        }
+      ],
+      "repairReasons": [],
+      "incrementalTokens": {
+        "input": 28081,
+        "cachedInput": 0,
+        "output": 1080,
+        "total": 29161
+      }
+    },
+    "paired-lean": {
+      "status": "accepted",
+      "calls": [
+        {
+          "sections": [
+            "vol1/01_compression_pilot/resident-memory-budget"
+          ],
+          "role": "writer",
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "cached": true,
+          "key": "12355255e895c33976debbee24c48d3d176e619b14d0462ce0d5ca83d890f1e7",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 25298,
+            "cachedInput": 4864,
+            "output": 426
+          }
+        },
+        {
+          "sections": [
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "writer",
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "cached": true,
+          "key": "868093c028528d12d313adc81f9b12340b114eb82ad0a1caab4b2a69ebda4d2f",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 12472,
+            "cachedInput": 2432,
+            "output": 541
+          }
+        },
+        {
+          "sections": [
+            "vol1/01_compression_pilot/resident-memory-budget",
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": false,
+          "key": "9f78cb192c7d17db5a4630ff716cc43490233ef75946112f582858a19eae21cb",
+          "usage": {
+            "input": 14838,
+            "cachedInput": 10624,
+            "output": 55
+          }
+        }
+      ],
+      "repairReasons": [],
+      "incrementalTokens": {
+        "input": 14838,
+        "cachedInput": 10624,
+        "output": 55,
+        "total": 14893
+      }
+    },
+    "paired-reference": {
+      "status": "accepted",
+      "calls": [
+        {
+          "sections": [
+            "vol1/01_compression_pilot/resident-memory-budget"
+          ],
+          "role": "writer",
+          "model": "gpt-6.2-sol",
+          "effort": "high",
+          "cached": true,
+          "key": "ec539dd7de09056853f2813cea0e99c3c0186c62e24773ef3f95ff870aaa8139",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 14381,
+            "cachedInput": 0,
+            "output": 885
+          }
+        },
+        {
+          "sections": [
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "writer",
+          "model": "gpt-6.2-sol",
+          "effort": "high",
+          "cached": true,
+          "key": "60ddaa95527a627950dd893871d6c2efb9c64b648d2880b97c2d4c94564248f4",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 14514,
+            "cachedInput": 0,
+            "output": 992
+          }
+        },
+        {
+          "sections": [
+            "vol1/01_compression_pilot/resident-memory-budget",
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": false,
+          "key": "bdb46ddef66888d60cb280f64a6341cf98bef1551997406a5577e408d37f0e04",
+          "usage": {
+            "input": 14923,
+            "cachedInput": 10624,
+            "output": 91
+          }
+        },
+        {
+          "sections": [
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "repair",
+          "model": "gpt-6.2-sol",
+          "effort": "medium",
+          "cached": false,
+          "key": "b3f15cea011c47b55b251097ef4766e0635ceaf132b8e4217ab2ecfb72db4b6a",
+          "usage": {
+            "input": 15329,
+            "cachedInput": 0,
+            "output": 794
+          }
+        },
+        {
+          "sections": [
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": false,
+          "key": "355098adba6bc6a57fb10df9a0b4ac27c73971c27ca7427d5bfdfa2b0b6374ac",
+          "usage": {
+            "input": 13587,
+            "cachedInput": 10624,
+            "output": 13
+          }
+        }
+      ],
+      "repairReasons": [
+        [
+          "The transfer task requires learners to state whether the tile fits and how much SRAM remains, but the question asks only for the total footprint. Add those requests to the question."
+        ]
+      ],
+      "incrementalTokens": {
+        "input": 43839,
+        "cachedInput": 21248,
+        "output": 898,
+        "total": 44737
+      }
+    },
+    "warm-lean": {
+      "status": "accepted",
+      "calls": [
+        {
+          "sections": [
+            "vol1/01_compression_pilot/resident-memory-budget"
+          ],
+          "role": "writer",
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "cached": true,
+          "key": "12355255e895c33976debbee24c48d3d176e619b14d0462ce0d5ca83d890f1e7",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 25298,
+            "cachedInput": 4864,
+            "output": 426
+          }
+        },
+        {
+          "sections": [
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "writer",
+          "model": "gpt-6-luna",
+          "effort": "low",
+          "cached": true,
+          "key": "868093c028528d12d313adc81f9b12340b114eb82ad0a1caab4b2a69ebda4d2f",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 12472,
+            "cachedInput": 2432,
+            "output": 541
+          }
+        },
+        {
+          "sections": [
+            "vol1/01_compression_pilot/resident-memory-budget",
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": true,
+          "key": "9f78cb192c7d17db5a4630ff716cc43490233ef75946112f582858a19eae21cb",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 14838,
+            "cachedInput": 10624,
+            "output": 55
+          }
+        }
+      ],
+      "repairReasons": [],
+      "incrementalTokens": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0,
+        "total": 0
+      }
+    },
+    "warm-reference": {
+      "status": "accepted",
+      "calls": [
+        {
+          "sections": [
+            "vol1/01_compression_pilot/resident-memory-budget"
+          ],
+          "role": "writer",
+          "model": "gpt-6.2-sol",
+          "effort": "high",
+          "cached": true,
+          "key": "ec539dd7de09056853f2813cea0e99c3c0186c62e24773ef3f95ff870aaa8139",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 14381,
+            "cachedInput": 0,
+            "output": 885
+          }
+        },
+        {
+          "sections": [
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "writer",
+          "model": "gpt-6.2-sol",
+          "effort": "high",
+          "cached": true,
+          "key": "60ddaa95527a627950dd893871d6c2efb9c64b648d2880b97c2d4c94564248f4",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 14514,
+            "cachedInput": 0,
+            "output": 992
+          }
+        },
+        {
+          "sections": [
+            "vol1/01_compression_pilot/resident-memory-budget",
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": true,
+          "key": "bdb46ddef66888d60cb280f64a6341cf98bef1551997406a5577e408d37f0e04",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 14923,
+            "cachedInput": 10624,
+            "output": 91
+          }
+        },
+        {
+          "sections": [
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "repair",
+          "model": "gpt-6.2-sol",
+          "effort": "medium",
+          "cached": true,
+          "key": "b3f15cea011c47b55b251097ef4766e0635ceaf132b8e4217ab2ecfb72db4b6a",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 15329,
+            "cachedInput": 0,
+            "output": 794
+          }
+        },
+        {
+          "sections": [
+            "vol1/02_hardware_pilot/tile-capacity"
+          ],
+          "role": "reviewer",
+          "model": "gpt-6.1-terra",
+          "effort": "low",
+          "cached": true,
+          "key": "355098adba6bc6a57fb10df9a0b4ac27c73971c27ca7427d5bfdfa2b0b6374ac",
+          "usage": {
+            "input": 0,
+            "cachedInput": 0,
+            "output": 0
+          },
+          "originalUsage": {
+            "input": 13587,
+            "cachedInput": 10624,
+            "output": 13
+          }
+        }
+      ],
+      "repairReasons": [
+        [
+          "The transfer task requires learners to state whether the tile fits and how much SRAM remains, but the question asks only for the total footprint. Add those requests to the question."
+        ]
+      ],
+      "incrementalTokens": {
+        "input": 0,
+        "cachedInput": 0,
+        "output": 0,
+        "total": 0
+      }
+    }
+  }
+}

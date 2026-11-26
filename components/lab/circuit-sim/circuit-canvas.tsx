@@ -511,7 +511,7 @@ export function CircuitCanvas({
 
     onSelectComponent(null)
     panRef.current = { startX: e.clientX, startY: e.clientY, startPanX: panX, startPanY: panY }
-  }, [placingType, wiringFrom, canvasToWorld, hitTestComponent, hitTestTerminal, hitTestWire, toggleProbe, seedPinch, circuit.components, panX, panY, zoom, onCompleteWire, onCancelWiring, onSelectComponent, onStartWire, onRotate])
+  }, [placingType, wiringFrom, canvasToWorld, hitTestComponent, hitTestTerminal, hitTestWire, toggleProbe, seedPinch, circuit.components, panX, panY, onCompleteWire, onCancelWiring, onSelectComponent, onStartWire, onRotate])
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (pointersRef.current.has(e.pointerId)) {

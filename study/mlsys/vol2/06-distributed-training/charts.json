@@ -1,0 +1,29 @@
+[
+ {
+  "id": "zero-memory",
+  "kind": "BAR_STACKED",
+  "title": "ZeRO: what stays on the GPU",
+  "xLabel": "sharding stage (7B model, 64-GPU group)",
+  "yLabel": "per-GPU static state (GB)",
+  "caption": "The 112 GB replicated footprint decomposes as weights 14 GB, gradients 14 GB, optimizer 84 GB. ZeRO-1 removes the replicated optimizer (the fat target), ZeRO-2 the gradients, ZeRO-3 the weights. The 80 GB HBM line is crossed after the first stage; full sharding reaches 1.75 GB.",
+  "xPoints": ["DDP (replicated)", "ZeRO-1", "ZeRO-2", "ZeRO-3 / FSDP"],
+  "series": [
+   {"key": "weights", "label": "weights (FP16)", "color": "var(--chart-1)", "values": [14, 14, 14, 0.22]},
+   {"key": "grads", "label": "gradients (FP16)", "color": "var(--chart-2)", "values": [14, 14, 0.22, 0.22]},
+   {"key": "optim", "label": "optimizer (master + 2 moments)", "color": "var(--chart-3)", "values": [84, 1.31, 1.31, 1.31]}
+  ]
+ },
+ {
+  "id": "scaleout-gap",
+  "kind": "BAR_STACKED",
+  "title": "Speedup achieved, and the gap to ideal",
+  "xLabel": "worker count and schedule (GPT-2 scale-out)",
+  "yLabel": "speedup vs 1 worker (x)",
+  "caption": "Each bar's total is ideal linear speedup for that worker count; the filled share is what the measured run achieved. BSP reaches 6.8 of 8 and 40.1 of 64; the stale-synchronous schedule at 64 workers relaxes the barrier and loses slightly more, 38.1 of 64.",
+  "xPoints": ["8 workers · BSP", "64 workers · BSP", "64 workers · SSP"],
+  "series": [
+   {"key": "achieved", "label": "measured speedup", "color": "var(--chart-1)", "values": [6.8, 40.1, 38.1]},
+   {"key": "gap", "label": "gap to ideal (exposed comm + sync)", "color": "var(--chart-4)", "values": [1.2, 23.9, 25.9]}
+  ]
+ }
+]

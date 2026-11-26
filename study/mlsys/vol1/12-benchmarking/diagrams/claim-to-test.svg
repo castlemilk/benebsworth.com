@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="bm-claim-to-test" class="study-fig-fit" viewBox="0 0 408 300" role="img" aria-labelledby="bm-claim-title bm-claim-desc">
+  <title id="bm-claim-title">From claim to controlled test</title>
+  <desc id="bm-claim-desc">A claim enters six fixed components — task and data, model and metrics, harness, machine specification, run rules and report — and exits as a number that can be argued with a measurement.</desc>
+  <style>
+    #bm-claim-to-test { font-family: system-ui, sans-serif; }
+    .dark #bm-claim-to-test [fill="#fbf7f0"] { fill: #201a17; }
+    .dark #bm-claim-to-test [fill="#29231e"] { fill: #f7eee3; }
+    .dark #bm-claim-to-test [fill="#6f6055"] { fill: #c8b8aa; }
+    .dark #bm-claim-to-test [fill="#cfc1b2"] { fill: #8b7f73; }
+    .dark #bm-claim-to-test [fill="#cf8359"] { fill: #d99066; }
+    .dark #bm-claim-to-test [stroke="#b8a89c"] { stroke: #72665c; }
+  </style>
+  <rect width="408" height="300" rx="12" fill="#fbf7f0"/>
+  <text x="24" y="38" fill="#29231e" font-size="21" font-weight="650">A claim becomes a test</text>
+  <text x="24" y="60" fill="#6f6055" font-size="15">Six components fixed before a number counts</text>
+
+  <rect x="24" y="78" width="130" height="34" rx="7" fill="#cfc1b2"/>
+  <text x="89" y="100" text-anchor="middle" fill="#29231e" font-size="15" font-weight="600">"INT8 is faster"</text>
+  <path d="M154 95H188" stroke="#b8a89c" stroke-width="1.6" fill="none"/><path d="M184 89l10 6-10 6z" fill="#b8a89c"/>
+
+  <g font-size="14" fill="#29231e">
+    <rect x="196" y="78" width="188" height="26" rx="5" fill="none" stroke="#b8a89c"/><text x="206" y="95">task + dataset</text>
+    <rect x="196" y="108" width="188" height="26" rx="5" fill="none" stroke="#b8a89c"/><text x="206" y="125">model + metrics</text>
+    <rect x="196" y="138" width="188" height="26" rx="5" fill="none" stroke="#b8a89c"/><text x="206" y="155">measurement harness</text>
+    <rect x="196" y="168" width="188" height="26" rx="5" fill="none" stroke="#b8a89c"/><text x="206" y="185">machine specification</text>
+    <rect x="196" y="198" width="188" height="26" rx="5" fill="none" stroke="#b8a89c"/><text x="206" y="215">run rules</text>
+    <rect x="196" y="228" width="188" height="26" rx="5" fill="none" stroke="#b8a89c"/><text x="206" y="245">report</text>
+  </g>
+  <g fill="#6f6055" font-size="13">
+    <text x="24" y="128">what counts as correct</text>
+    <text x="24" y="158">what counts as better</text>
+    <text x="24" y="188">which machine and state</text>
+    <text x="24" y="218">what a rerun must match</text>
+  </g>
+  <path d="M290 254v16" stroke="#b8a89c" stroke-width="1.6" fill="none"/><path d="M284 264l6 10 6-10z" fill="#b8a89c"/>
+  <rect x="196" y="274" width="188" height="0" fill="none"/>
+  <text x="24" y="288" fill="#cf8359" font-size="15" font-weight="650">out: a number you can argue with a measurement</text>
+</svg>

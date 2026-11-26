@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 504" role="img" aria-labelledby="study-svg-sequence-a-pruned-student-title" aria-describedby="study-svg-sequence-a-pruned-student-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-sequence-a-pruned-student-title">Preparing a pruned student for integer deployment</title>
+  <desc id="study-svg-sequence-a-pruned-student-desc">Each range-changing step precedes final calibration, so the integer scales describe the model that the compiler receives. Choose channel widths: Prune compatible groups to shapes the target kernels handle efficiently. Then Recover task quality: Fine-tune the surviving model, using teacher outputs where helpful. Then Finalize inference: Freeze parameters and apply range-changing inference folds. Then Calibrate the graph: Fit integer ranges on representative inputs for the final topology. Then Export and compare: Measure this candidate alongside the saved intermediate variants.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Choose channel widths</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Prune compatible groups to shapes</tspan>
+    <tspan x="19" y="64">the target kernels handle</tspan>
+    <tspan x="19" y="81">efficiently.</tspan></text>
+  <path d="M172 101v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="121" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="145" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Recover task quality</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="165">Fine-tune the surviving model, using</tspan>
+    <tspan x="19" y="182">teacher outputs where helpful.</tspan></text>
+  <path d="M172 202v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="222" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="246" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Finalize inference</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="266">Freeze parameters and apply</tspan>
+    <tspan x="19" y="283">range-changing inference folds.</tspan></text>
+  <path d="M172 303v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="323" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="347" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Calibrate the graph</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="367">Fit integer ranges on representative</tspan>
+    <tspan x="19" y="384">inputs for the final topology.</tspan></text>
+  <path d="M172 404v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="424" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="448" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Export and compare</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="468">Measure this candidate alongside the</tspan>
+    <tspan x="19" y="485">saved intermediate variants.</tspan></text>
+  </g>
+</svg>

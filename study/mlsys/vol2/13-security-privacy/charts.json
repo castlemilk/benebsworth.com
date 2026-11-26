@@ -1,0 +1,36 @@
+[
+  {
+    "id": "accuracy-cost-at-epsilon",
+    "kind": "BAR_STACKED",
+    "title": "Accuracy cost of the privacy budget",
+    "caption": "Test accuracy below the nonprivate reference at selected privacy budgets, from published DP-SGD results (Abadi 2016, Bu 2020, De 2022). MNIST stays within about 8 points at single-digit epsilon; CIFAR-10 trained from scratch at epsilon = 8 sits 14 to 22 points below its baseline. The cost is task-dependent, not a property of epsilon alone.",
+    "xLabel": "dataset and privacy budget",
+    "yLabel": "accuracy below baseline (points)",
+    "xPoints": ["MNIST, single-digit ε", "CIFAR-10, ε = 8 (Abadi 2016)", "CIFAR-10, ε = 8 (De 2022)"],
+    "series": [
+      {
+        "key": "gap",
+        "label": "accuracy below nonprivate baseline",
+        "color": "var(--chart-1)",
+        "values": [8.3, 22.0, 13.6]
+      }
+    ]
+  },
+  {
+    "id": "aggregation-traffic",
+    "kind": "BAR_STACKED",
+    "title": "Per-worker gradient traffic, N = 64",
+    "caption": "Bytes each worker moves per step for one gradient payload M. Ring AllReduce circulates about 2M; a gather-based coordinate-wise median receives all 63 peer gradients, about 63M, a 32x multiplier that lands in the CommunicationTime term of the Fleet Law.",
+    "xLabel": "aggregation schedule",
+    "yLabel": "per-worker traffic (× gradient size M)",
+    "xPoints": ["ring AllReduce", "gather + coordinate-wise median"],
+    "series": [
+      {
+        "key": "traffic",
+        "label": "per-worker bytes, units of M",
+        "color": "var(--chart-2)",
+        "values": [2.0, 63.0]
+      }
+    ]
+  }
+]

@@ -1,0 +1,81 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "The opening paragraph states the three serving budgets and directs readers to the token walkthrough immediately below."
+    },
+    "Follow one token through the model": {
+      "figure": "/study-research/kolibri/token-path.svg",
+      "teaches": "Trace the residual stream from an embedding through 50 pairs of updates to vocabulary logits.",
+      "source": "Aleph Alpha technical report Figure 4 and Table 2. The schematic omits normalisation, described in the numbered walkthrough."
+    },
+    "Sparse capacity and routing": {
+      "figure": "/study-research/kolibri/sparse-path.svg",
+      "teaches": "Count which expert weights are used for one token and connect the count to active parameters.",
+      "source": "Technical report Table 2 and §2.1.5."
+    },
+    "Attention and long context": {
+      "figure": "/study-research/kolibri/attention-cycle.svg",
+      "teaches": "Predict which positions a local or full layer can read and use the cycle to count layers of each type.",
+      "source": "Technical report §2.1.3."
+    },
+    "Why German changes the tokeniser and the data": {
+      "figure": "/study-research/kolibri/bytes-vs-tokens.svg",
+      "teaches": "Convert equal token rates to unequal time and byte rates for the same passage.",
+      "source": "Illustrative 1,000-byte passage and two token counts from the worked example in the section."
+    },
+    "From raw data to Kolibri Base": {
+      "figure": "/study-research/kolibri/training-stages.svg",
+      "teaches": "Follow the three successive stages and compare context, training budget and data mix.",
+      "source": "Technical report Figure 3 and §2.3."
+    },
+    "Optimisation and the training cluster": {
+      "figure": "/study-research/kolibri/pretraining-cluster.svg",
+      "teaches": "Distinguish expert placement within each node, sharding across nodes and replication across groups of nodes.",
+      "source": "Technical report §2.1.6 and Appendix B.7, pre-training layout only."
+    },
+    "Supervised fine-tuning and the reasoning dial": {
+      "figure": "/study-research/kolibri/effort-labels.svg",
+      "teaches": "Explain why the same trace length can get a different effort label for a different dataset or difficulty.",
+      "source": "Technical report §3.1.2.2 and Figure 26."
+    },
+    "Reinforcement learning from attempts": {
+      "figure": "/study-research/kolibri/rollout-loop.svg",
+      "teaches": "Trace a prompt through sampled attempts, environment scoring and a group-relative training update.",
+      "source": "Technical report §3.2, with a simplified one-segment example in the prose."
+    },
+    "How the released model scores": {
+      "figure": "/study-research/kolibri/checkpoint-benchmarks.svg",
+      "teaches": "Compare the checkpoint gains by task and locate both endpoints in the score table.",
+      "source": "Aleph Alpha technical report Table 25. The report used different sampling settings for the two checkpoints."
+    },
+    "What happens as context grows": {
+      "figure": "/study-research/kolibri/ruler-context.svg",
+      "teaches": "Compare absolute quality with relative rank as base models extend to one million tokens.",
+      "source": "Aleph Alpha technical report Table 18, RULER base-model results at temperature zero."
+    },
+    "Read the evaluations in the right order": {
+      "figure": "/study-research/kolibri/decode-throughput-kpi.svg",
+      "teaches": "Link each throughput multiplier to its baseline, checkpoint and evaluation context.",
+      "source": "Aleph Alpha technical report Figure 1 and Appendix A. The preceding toy chart explains the frontier axes."
+    },
+    "How the pieces ship together": {
+      "proseOnly": "A short note ties the published artifacts to traceability; the report gives no complete dependency graph for the release."
+    },
+    "Figure guide": {
+      "proseOnly": "A lookup table links each report figure to a specific reading prompt."
+    },
+    "The physics": {
+      "proseOnly": "The lookup table preserves exact values, units and assumptions for figures already explained in the guided notes."
+    },
+    "Glossary": {
+      "proseOnly": "Searchable definitions serve as a quick reference while reading the illustrated walkthrough."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Three application prompts ask readers to transfer the earlier mechanisms to their own workloads."
+    },
+    "Open questions": {
+      "proseOnly": "Short questions identify evidence to look for in future evaluations."
+    }
+  }
+}

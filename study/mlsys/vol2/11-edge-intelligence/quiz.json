@@ -1,0 +1,291 @@
+{
+  "title": "Edge Intelligence \u2014 self-test",
+  "questions": [
+    {
+      "id": "q1-local-learning",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A phone already runs a model offline. Why does that not establish that it can adapt the model offline?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Offline inference removes communication delay, so any local training that fits flash can run whenever the scheduler has spare time"
+        },
+        {
+          "id": "b",
+          "label": "Local inference always uses more memory than local training because forward activations dominate every mobile training budget"
+        },
+        {
+          "id": "c",
+          "label": "Training adds backward state, memory traffic, energy, heat and foreground contention beyond the forward pass"
+        },
+        {
+          "id": "d",
+          "label": "The operating system permits any background task to use all installed RAM once the device is charging"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Inference fit only proves that the forward-pass model and its runtime fit. Training introduces gradients, optimizer state, saved activations, workspace and user-facing power and latency costs."
+    },
+    {
+      "id": "q2-training-memory",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "In the chapter's 10M-parameter FP32 example, why does the full update working set reach 360 MB?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Forty MB weights are joined by forty MB gradients, eighty MB Adam state and two hundred MB saved activations"
+        },
+        {
+          "id": "b",
+          "label": "The weights are 360 MB before training starts because gradients and optimizer state reuse the same memory in place"
+        },
+        {
+          "id": "c",
+          "label": "The optimizer stores ten full model copies while activations are released before they consume memory"
+        },
+        {
+          "id": "d",
+          "label": "The example counts flash storage rather than live working memory"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The illustrated stack is 40 + 40 + 80 + 200 MB, or 360 MB. That is 9x the inference weights under the chapter's stated activation assumption."
+    },
+    {
+      "id": "q3-background-ceiling",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A smartphone has 8 GB installed RAM. Why can a 360 MB training working set still be infeasible?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Installed RAM is never available to machine-learning runtimes because mobile operating systems reserve it for the foreground interface"
+        },
+        {
+          "id": "b",
+          "label": "Flash memory is always faster than RAM, so the working set must remain in flash"
+        },
+        {
+          "id": "c",
+          "label": "The model must reserve all memory for federated downloads before training starts"
+        },
+        {
+          "id": "d",
+          "label": "The operative ceiling is the smaller background allowance after the OS and foreground application reserve memory"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The chapter uses a 200-300 MB background-memory allowance for the keyboard profile. Installed RAM overstates what a background learning task may use."
+    },
+    {
+      "id": "q4-admission-charging",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A device is charging, so its energy allowance increases. Why can the adaptation window still be rejected?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Charging disables the high-power accelerators adaptation would otherwise use, so the energy test becomes irrelevant"
+        },
+        {
+          "id": "b",
+          "label": "The update might still violate the thermal power limit or foreground-latency deadline under concurrent adaptation"
+        },
+        {
+          "id": "c",
+          "label": "Energy, thermal and latency are the same test expressed in three units"
+        },
+        {
+          "id": "d",
+          "label": "The battery test applies only when the device is already at full charge"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The admission rule is a conjunction. Charging can enlarge the energy allowance, but it does not remove heat or foreground contention."
+    },
+    {
+      "id": "q5-lora-saving",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "For a 768 by 768 weight matrix, what does rank-4 LoRA shrink from 589,824 to 6,144?",
+      "options": [
+        {
+          "id": "a",
+          "label": "The full model's inference latency by ninety-nine percent, because low rank removes most backward computation"
+        },
+        {
+          "id": "b",
+          "label": "The bytes of the frozen base model stored in flash memory"
+        },
+        {
+          "id": "c",
+          "label": "The number of trainable parameters, not necessarily the backward path or activation memory"
+        },
+        {
+          "id": "d",
+          "label": "The number of examples required for federated aggregation to converge"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "LoRA trains two thin matrices containing r(d_in + d_out) parameters. The frozen base still exists, and activations, workspace and backward computation remain separate costs."
+    },
+    {
+      "id": "q6-freezing",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Which statement correctly describes weight freezing?",
+      "options": [
+        {
+          "id": "a",
+          "label": "It removes gradients and optimizer state for frozen parameters while leaving their forward and possible backward roles intact"
+        },
+        {
+          "id": "b",
+          "label": "It removes frozen weights from memory after the first optimizer step because training no longer needs their forward values during later epochs"
+        },
+        {
+          "id": "c",
+          "label": "It eliminates the backward path through every frozen layer in all implementations"
+        },
+        {
+          "id": "d",
+          "label": "It guarantees better personalization than adapters because fewer parameters are trained"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Freezing reduces trainable state, but it does not make the frozen base or every backward dependency disappear. That distinction governs peak memory."
+    },
+    {
+      "id": "q7-fedavg-weighting",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Under ordinary FedAvg example weighting, what influence does a client with ten times as many local examples receive?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Exactly the same influence as every other participant, because federated objectives always treat users rather than examples as the unit"
+        },
+        {
+          "id": "b",
+          "label": "No influence until user weighting is enabled by the coordinator"
+        },
+        {
+          "id": "c",
+          "label": "Influence proportional only to its network bandwidth and hardware tier"
+        },
+        {
+          "id": "d",
+          "label": "Ten times the influence, because its update is weighted by its share of examples in the round"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Example weighting uses n_k divided by total samples n. The book emphasizes that this is a population policy choice, not a neutral implementation detail."
+    },
+    {
+      "id": "q8-local-epochs",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Why can a larger local-epoch setting reduce communication rounds yet increase total time to target?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Local epochs reduce computation on every participating device, so the server must wait longer even though fewer communication rounds are required"
+        },
+        {
+          "id": "b",
+          "label": "More local work lengthens each round and non-IID client drift can increase the number of rounds needed to reach target quality"
+        },
+        {
+          "id": "c",
+          "label": "The server must retrain the global model from scratch after every additional local epoch"
+        },
+        {
+          "id": "d",
+          "label": "Communication time is independent of update size and network bandwidth"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The chapter ranks settings by measured time to target, not communication count. Each round can become longer, and drift can erode the expected reduction in round count."
+    },
+    {
+      "id": "q9-privacy",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Why is federated learning not inherently private?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Raw data is always uploaded beside every model update, so secure aggregation only hides the final aggregate from clients rather than the server"
+        },
+        {
+          "id": "b",
+          "label": "Secure aggregation reveals every client update but hides the final global model"
+        },
+        {
+          "id": "c",
+          "label": "Returned updates and metadata can leak information; secure aggregation and differential privacy are separate explicit mechanisms"
+        },
+        {
+          "id": "d",
+          "label": "Privacy is impossible whenever more than one client participates in a round"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Data locality removes one transfer path but does not make the released update harmless. Secure aggregation hides individual contributions under assumptions; differential privacy bounds a different release guarantee."
+    },
+    {
+      "id": "q10-continual-acceptance",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A keyboard model adapts nightly for a year. Each update passes its memory and energy admission tests and improves a metric on recent typing. Why must acceptance also measure retained behavior against a recoverable baseline?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Individually useful updates can accumulate into forgetting; retained-task evidence and a compatible recovery point remain necessary"
+        },
+        {
+          "id": "b",
+          "label": "Passing memory and energy admission guarantees that earlier predictions remain unchanged because resource fit and behavior are equivalent budgets"
+        },
+        {
+          "id": "c",
+          "label": "Freezing the backbone prevents head or adapter updates from changing any earlier-task prediction"
+        },
+        {
+          "id": "d",
+          "label": "Improving the recent-data metric establishes quality for all past tasks whenever each update is small"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Continual adaptation is a trajectory problem. Small, individually admitted updates can overwrite earlier competence, so acceptance needs retained-task evidence and a recovery point as well as new-data improvement."
+    },
+    {
+      "id": "q11-memory-numeric",
+      "kind": "NUMERIC",
+      "source": "BOOK",
+      "prompt": "A 10M-parameter FP32 model has 40 MB weights and 40 MB gradients. Adam stores two moment arrays totaling 80 MB. Under a revised activation schedule, saved activations cost 6x the weight bytes, or 240 MB. Ignoring workspace, what is the total working set and its amplification over the weights?",
+      "answer": "400 MB total; 10x amplification over the 40 MB weights",
+      "modelAnswer": "40 + 40 + 80 + 240 = 400 MB. The amplification over weights is 400 / 40 = 10x.",
+      "explanation": "Each memory term has a different owner. The activation multiplier applies only to the activation term, not to the already-counted gradients and optimizer state."
+    },
+    {
+      "id": "q12-uplink-numeric",
+      "kind": "NUMERIC",
+      "source": "BOOK",
+      "prompt": "A weekly raw-image upload would cost 200 MB. A compressed federated update costs 2.5 MB per round. Ignoring downloads, retries and protocol bytes, after how many update rounds do cumulative uploads equal the raw-data volume?",
+      "answer": "80 rounds",
+      "modelAnswer": "200 MB / 2.5 MB per round = 80 rounds. After about 80 rounds, upload bytes alone match the raw-data volume, before counting the rest of the round traffic.",
+      "explanation": "The one-round compression ratio is 80x, but federation repeats the upload every round. Lifetime communication cost must be compared over the training run."
+    },
+    {
+      "id": "q13-release-feynman",
+      "kind": "FEYNMAN",
+      "source": "BOOK",
+      "prompt": "Design a release and rollback policy for a keyboard model that adapts locally across flagship and budget phones. Explain what artifact is versioned, how evidence is gathered, and what happens when a cohort stops reporting.",
+      "modelAnswer": "A strong answer treats the release as a compatible policy bundle: base model, adapter schema, per-tier adaptation strategy, resource admission rules, telemetry policy and rollback plan. Validation uses hardware-in-the-loop tests and cohort-level distributed or privacy-preserving metrics. A frozen shadow model can detect behavioral change but not prove accuracy without labels or a validated proxy. Promotion requires sufficient reporting coverage by cohort. If a cohort stops reporting, the fleet should hold rather than treat silence as health. Rollback restores a compatible set of base model, adapters, schemas and policy, accounting for version skew rather than rolling back one artifact in isolation.",
+      "explanation": "The operational problem is population evidence plus compatibility. Average fleet metrics are insufficient because reporting itself is biased by device capability and connectivity."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 403" role="img" aria-labelledby="study-svg-accept-a-sorter-release-title" aria-describedby="study-svg-accept-a-sorter-release-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-accept-a-sorter-release-title">One acceptance test for the exported sorter</title>
+  <desc id="study-svg-accept-a-sorter-release-desc">Pairing device measurements with decisions on the same replay exposes candidates that satisfy a timing limit while violating a user-facing quality requirement. Fix the contract: Set workload, quality slices, memory, timing and energy limits. Then Replay both builds: Use the deployed pipeline and record per-input outcomes on the target. Then Check every limit: Evaluate sustained device behavior and quality on the specified slices. Then Resolve the outcome: Accept a passing build or trace a failed check to its inputs and operators.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Fix the contract</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Set workload, quality slices,</tspan>
+    <tspan x="19" y="64">memory, timing and energy limits.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Replay both builds</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Use the deployed pipeline and record</tspan>
+    <tspan x="19" y="165">per-input outcomes on the target.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Check every limit</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Evaluate sustained device behavior</tspan>
+    <tspan x="19" y="266">and quality on the specified slices.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Resolve the outcome</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Accept a passing build or trace a</tspan>
+    <tspan x="19" y="367">failed check to its inputs and</tspan>
+    <tspan x="19" y="384">operators.</tspan></text>
+  </g>
+</svg>

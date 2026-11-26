@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="state-budget" class="study-fig-fit" viewBox="0 0 380 278" role="img" aria-labelledby="sb-title sb-desc">
+  <title id="sb-title">2.1 TB of state against 640 GiB of node</title>
+  <desc id="sb-desc">Stacked bar of the 175B reference job's static state — 350 GB weights, 350 GB gradients, 1.4 TB FP32 optimizer — against a second bar showing one node's 640 GiB of HBM. The optimizer term alone is over twice the node's capacity.</desc>
+  <style>
+    .dark #state-budget { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#state-budget { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="278" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">State is the part that doesn't fit</text>
+    <text x="20" y="48" font-size="11.5" fill="var(--fig-rule, #6e6a5b)">175B FP16 reference job · static state, no activations</text>
+
+    <text x="20" y="76" font-size="12" font-weight="650">The job — ~2.1 TB resident</text>
+    <rect x="20" y="86" width="57" height="30" fill="var(--fig-outline, #364c50)"/>
+    <rect x="77" y="86" width="57" height="30" fill="var(--fig-mark, #b45a2d)"/>
+    <rect x="134" y="86" width="226" height="30" fill="var(--fig-rule, #6e6a5b)"/>
+    <g font-size="10.5" fill="var(--fig-paper, #f7f3e9)">
+      <text x="48" y="105" text-anchor="middle">350 GB</text>
+      <text x="105" y="105" text-anchor="middle">350 GB</text>
+      <text x="247" y="105" text-anchor="middle">optimizer ~1.4 TB</text>
+    </g>
+    <g font-size="10.5">
+      <text x="48" y="130" text-anchor="middle">weights</text>
+      <text x="105" y="130" text-anchor="middle">grads</text>
+      <text x="247" y="130" text-anchor="middle">FP32 moments + master</text>
+    </g>
+
+    <text x="20" y="164" font-size="12" font-weight="650">One node — 640 GiB HBM (8 × 80 GB)</text>
+    <rect x="20" y="174" width="196" height="30" rx="4" fill="var(--fig-outline, #364c50)"/>
+    <text x="118" y="193" font-size="10.5" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">640 GiB total</text>
+    <rect x="216" y="174" width="144" height="30" rx="4" fill="none" stroke="var(--fig-rule, #6e6a5b)" stroke-dasharray="3 3"/>
+    <text x="288" y="193" font-size="10.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">+ ~1.5 TB spills</text>
+
+    <text x="20" y="230" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">ZeRO-3 inside the node still leaves &gt;3× HBM per GPU.</text>
+    <text x="20" y="245" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">Reference fit: TP8 × PP8 × DP16 → ~42 GB headroom,</text>
+    <text x="20" y="260" font-size="10.5" fill="var(--fig-rule, #6e6a5b)">~13 GB/GPU once FP32 state shards across replicas.</text>
+  </g>
+</svg>

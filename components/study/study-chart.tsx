@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { Component, useMemo, type ReactNode } from 'react'
 import { LineChart, Line } from '@/components/charts/line-chart'
 import { BarChart } from '@/components/charts/bar-chart'
 import { Bar } from '@/components/charts/bar'
@@ -17,11 +17,38 @@ import { useReducedMotion } from './use-reduced-motion'
  * components/charts. Title/caption stay with the page — this is only the
  * interactive chart surface.
  */
-export function StudyChartFigure({ chart }: { chart: StudyChart }) {
+function StudyChartFigureInner({ chart }: { chart: StudyChart }) {
   if (chart.kind === ChartKind.IRON_LAW_EXPLORER) return <IronLawExplorer chart={chart} />
   if (chart.kind === ChartKind.LINE) return <LineFigure chart={chart} />
   if (chart.kind === ChartKind.BAR_STACKED) return <StackedBarFigure chart={chart} />
   return null
+}
+
+/** One bad chart row used to take the whole chapter down via the root error
+ * boundary after SSR looked fine. Bound the failure to the figure slot. */
+class ChartBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+  render() {
+    if (this.state.failed) {
+      return (
+        <p className="rounded-lg border border-dashed border-border px-4 py-3 font-mono text-xs text-muted-foreground">
+          chart failed to render — caption above still applies
+        </p>
+      )
+    }
+    return this.props.children
+  }
+}
+
+export function StudyChartFigure({ chart }: { chart: StudyChart }) {
+  return (
+    <ChartBoundary>
+      <StudyChartFigureInner chart={chart} />
+    </ChartBoundary>
+  )
 }
 
 function LineFigure({ chart }: { chart: StudyChart }) {
@@ -55,6 +82,9 @@ function LineFigure({ chart }: { chart: StudyChart }) {
   )
 }
 
+const compactFmt = (v: number) =>
+  new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(v)
+
 function StackedBarFigure({ chart }: { chart: StudyChart }) {
   const reduced = useReducedMotion()
   const data = useMemo(
@@ -73,11 +103,19 @@ function StackedBarFigure({ chart }: { chart: StudyChart }) {
         xDataKey="name"
         orientation="horizontal"
         stacked
-        margin={{ top: 8, right: 12, bottom: 8, left: 96 }}
+        margin={{ top: 8, right: 12, bottom: 8, left: 124 }}
         animationDuration={reduced ? 0 : 900}
       >
         {chart.series.map((s) => (
-          <Bar key={s.key} dataKey={s.key} fill={s.color || undefined} />
+          <Bar
+            key={s.key}
+            dataKey={s.key}
+            fill={s.color || undefined}
+            showValue
+            valueLabelFormatter={compactFmt}
+            // chart-2 is a high-luminance yellow — a white label dies on it.
+            valueLabelColor={s.color?.includes('chart-2') ? '#1c1917' : '#fff'}
+          />
         ))}
         <BarYAxis />
         <ChartTooltip />

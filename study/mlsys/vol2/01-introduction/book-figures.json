@@ -1,0 +1,38 @@
+[
+  {
+    "id": "book-mtbf-ladder",
+    "file": "vol2_introduction_mtbf_ladder.svg",
+    "title": "MTBF ladder (book)",
+    "caption": "The book's two-bar log-scale comparison of one GPU's 50,000-hour MTTF against a 25,000-GPU job's ~2-hour MTBF. Ours adds the measured Llama 3 point so the arithmetic meets the production record on the same line."
+  },
+  {
+    "id": "book-ci-knee",
+    "file": "vol2_introduction_ci_knee.svg",
+    "title": "CI knee (book)",
+    "caption": "Communication intensity against fleet size showing where a job crosses fabric balance. Ours derives the same mechanism as arithmetic inside the step anatomy (96→12 sequences per replica) rather than a knee plot."
+  },
+  {
+    "id": "book-fleet-law-step",
+    "file": "fleet-law-step.svg",
+    "title": "Fleet-law step decomposition (book)",
+    "caption": "The book's breakdown of a synchronous step into its compute, communication and coordination spans. Ours uses the measured 1,024-GPU numbers as a single anatomy bar keyed to the fleet-law equation."
+  },
+  {
+    "id": "book-c3-taxonomy",
+    "file": "c3-taxonomy.svg",
+    "title": "C³ taxonomy (book)",
+    "caption": "The book's three-dimension C³ landscape figure. Ours keeps the narrower projection map — D·A·M nouns to C³ verbs — which is what the reader uses to triage an optimization."
+  },
+  {
+    "id": "book-fleet-stack",
+    "file": "fleet-stack.svg",
+    "title": "Fleet stack bands (book)",
+    "caption": "The four coupled bands — Infrastructure, Distribution, Serving, Governance — as the book draws them. Left to the book's figure; our packet keeps the coupling warning in prose."
+  },
+  {
+    "id": "book-scale-discontinuity",
+    "file": "scale-moment-discontinuity.svg",
+    "title": "The scale discontinuity (book)",
+    "caption": "Single-machine memory wall versus the fleet's network-plus-coordination wall. Our scale-climb figure makes the same point quantitatively — the ~4-order fleet ladder against the ~7-order compute ladder."
+  }
+]

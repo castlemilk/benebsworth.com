@@ -1,0 +1,79 @@
+[
+  {
+    "id": "fleet-law",
+    "number": 1,
+    "title": "Fleet law",
+    "latex": "T_{step} = T_{compute} + T_{comm} + T_{coord}",
+    "caption": "A synchronous step's wall-clock splits into local arithmetic, bytes exchanged to keep workers coherent, and the orchestration work that holds the fleet together (barriers, bubbles, scheduling). Only the first term does FLOPs; doubling the fleet taxes the other two first.",
+    "symbols": [
+      {"symbol": "T_{step}", "meaning": "end-to-end wall-clock of one synchronous training step"},
+      {"symbol": "T_{compute}", "meaning": "time doing local arithmetic (matmuls, activations)"},
+      {"symbol": "T_{comm}", "meaning": "time moving bytes — gradient exchange, pipeline sends"},
+      {"symbol": "T_{coord}", "meaning": "coordination tax — pipeline bubble, barrier wait, scheduling"}
+    ]
+  },
+  {
+    "id": "ci-ratio",
+    "number": 2,
+    "title": "Communication intensity",
+    "latex": "CI = \\frac{B_{exch}}{F_{local}} \\quad \\text{vs.} \\quad \\frac{BW_{fabric}}{r_{peak}}",
+    "caption": "Bytes a replica must exchange per FLOP of local work, compared against the fabric's balance ratio (link bandwidth divided by peak compute rate). CI above balance means the network, not the accelerator, is the wall. Growing the fleet shrinks F_local ~linearly while B_exch does not — CI climbs with N.",
+    "symbols": [
+      {"symbol": "CI", "meaning": "communication intensity of the step, bytes per FLOP"},
+      {"symbol": "B_{exch}", "meaning": "bytes one replica exchanges per step (gradient share, activations)"},
+      {"symbol": "F_{local}", "meaning": "FLOPs one replica computes per step — falls ~1/N at fixed global batch"},
+      {"symbol": "BW_{fabric}", "meaning": "per-node fabric bandwidth (e.g. InfiniBand line rate)"},
+      {"symbol": "r_{peak}", "meaning": "per-node peak compute rate"}
+    ]
+  },
+  {
+    "id": "scaling-law",
+    "number": 3,
+    "title": "Scaling law (power-law loss)",
+    "latex": "L(C) = a\\,C^{-\\alpha}",
+    "caption": "Empirical fit: loss falls as a power law in compute (and separately in parameters and data). The small exponent α means each order of magnitude buys a fixed, modest loss gain — but the law held across orders, turning frontier training into a plannable investment. Breaks at regime changes like data exhaustion.",
+    "symbols": [
+      {"symbol": "L(C)", "meaning": "loss as a function of training compute"},
+      {"symbol": "a", "meaning": "fitted constant — efficiency work (architecture, precision) shifts this, not α"},
+      {"symbol": "C", "meaning": "total training compute in FLOPs"},
+      {"symbol": "\\alpha", "meaning": "fitted exponent, small and positive — the marginal return per decade of compute"}
+    ]
+  },
+  {
+    "id": "fleet-mtbf",
+    "number": 4,
+    "title": "Fleet mean time between failures",
+    "latex": "MTBF_{fleet} \\approx \\frac{MTTF_{device}}{N}",
+    "caption": "With N independent devices each failing at rate 1/MTTF, job-level interruptions arrive at rate N/MTTF. A 50,000-hour GPU MTTF gives a 25,000-GPU job a ~2-hour interruption cadence — confirmed in production by Llama 3's ~1-per-3.1-hours record on 16,384 H100s.",
+    "symbols": [
+      {"symbol": "MTBF_{fleet}", "meaning": "mean time between job-level interruptions"},
+      {"symbol": "MTTF_{device}", "meaning": "mean time to failure of one device (~50,000 h for a datacenter GPU)"},
+      {"symbol": "N", "meaning": "devices in the synchronous job — every device is on the critical path"}
+    ]
+  },
+  {
+    "id": "availability",
+    "number": 5,
+    "title": "All-up fleet availability",
+    "latex": "A_{fleet} = A_{node}^{N}",
+    "caption": "If a step needs every node up simultaneously, availability multiplies: 10,000 four-nines nodes give ~e^−1 ≈ 37% chance all are up at once. Raising A helps far less than removing N from the exponent — checkpointing, replication and restartable steps attack the exponent, not the nines.",
+    "symbols": [
+      {"symbol": "A_{fleet}", "meaning": "probability all N nodes are simultaneously available"},
+      {"symbol": "A_{node}", "meaning": "single-node availability (0.9999 = 'four nines')"},
+      {"symbol": "N", "meaning": "nodes required to be up at once"}
+    ]
+  },
+  {
+    "id": "compute-decomp",
+    "number": 6,
+    "title": "Training compute decomposition",
+    "latex": "C = N \\times T \\times r",
+    "caption": "A run's total compute factors into accelerator count, training duration, and achieved per-device rate. Fitting this over ~100 documented runs shows count×duration supplies about half the decade-scale growth — scale-out is half the trend, not a footnote on faster silicon.",
+    "symbols": [
+      {"symbol": "C", "meaning": "total training compute in FLOPs"},
+      {"symbol": "N", "meaning": "accelerator count"},
+      {"symbol": "T", "meaning": "training duration"},
+      {"symbol": "r", "meaning": "achieved per-device rate (e.g. GPT-3's ~24.6 TFLOP/s per V100)"}
+    ]
+  }
+]

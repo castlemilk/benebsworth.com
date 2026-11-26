@@ -1,0 +1,44 @@
+[
+  {
+    "id": "book-python-tax",
+    "file": "fig-python-tax (book plot, generated)",
+    "title": "Python dispatch overhead gantt",
+    "caption": "The book's gantt of five 1-us kernels eagerly dispatched (~15 us host per op, ~94% device idle) against one fused launch. Our dispatch-share chart shows the same law as percentages; theirs shows it as a timeline - read ours for the ends, theirs for the shape of the wait."
+  },
+  {
+    "id": "book-operator-surface",
+    "file": "fig-operator-surface (book plot, generated)",
+    "title": "Eager surfaces vs compiler-facing operator sets",
+    "caption": "The book's grouped bar of PyTorch/TensorFlow eager growth (schemas doubling between snapshots) against Core ATen, XLA HLO, ONNX, and lax. Our chart shows the latest snapshot only; theirs adds the time dimension - both surfaces doubling is itself part of the story."
+  },
+  {
+    "id": "book-compilation-continuum",
+    "file": "fig-compilation-continuum (book plot, generated)",
+    "title": "Total-cost lines across the continuum",
+    "caption": "Compile-plus-execute cost versus production volume on a log scale, with the eager-to-JIT crossover near 2x10^6 executions and JIT-to-AOT near 6.7x10^6. The packet quotes the crossovers; the figure shows why they exist - each strategy is a line with a different intercept and slope."
+  },
+  {
+    "id": "book-bandwidth-hierarchy",
+    "file": "frameworks_bandwidth_hierarchy.svg",
+    "title": "Device interconnect hierarchy",
+    "caption": "The book's margin chart ordering HBM3 (~3.35 TB/s), NVLink-class fabric, and PCIe Gen5 x16 (~64 GB/s) on a log scale - the ~52x HBM-to-PCIe gap that makes placement and pinned staging first-order concerns."
+  },
+  {
+    "id": "book-dispatch-divergence",
+    "file": "frameworks_dispatch_tax_divergence.svg",
+    "title": "Dispatch share diverging with kernel size",
+    "caption": "The book's margin figure of the same 94% / 13% split our dispatch-share chart plots. Where theirs sketches the divergence with kernel duration, ours states it as stacked shares of step time."
+  },
+  {
+    "id": "book-margin-training-memory",
+    "file": "vol1_frameworks_margin_001.svg",
+    "title": "Training peak vs weights, log scale",
+    "caption": "The book's margin bar comparing ~102 MB of FP32 ResNet-50 weights with the 8.4-12.4 GB training peak - an 82-121x ratio our training-peak chart decomposes into its four components."
+  },
+  {
+    "id": "book-margin-pipeline",
+    "file": "vol1_frameworks_margin_002.svg + vol1_frameworks_margin_003.svg",
+    "title": "Serial vs overlapped input pipeline",
+    "caption": "The book's two margin figures on the DataLoader: copy/compute serialization versus stream overlap, and the worker/prefetch/pinned arrangement that keeps the feed ahead of a 1,000 img/s consumer."
+  }
+]

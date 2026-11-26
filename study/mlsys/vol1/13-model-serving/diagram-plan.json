@@ -1,0 +1,59 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "State the serving inversion and the headroom question before the walkthrough."
+    },
+    "The Serving Inversion": {
+      "proseOnly": "Define headroom and static vs dynamic inference; the concepts are claims about scheduling, best carried by the opening question and prose."
+    },
+    "Inside the Server": {
+      "figure": "::fig[arrival-to-answer]",
+      "teaches": "Show that the model is one stage among serial stages, each adding latency and a queue.",
+      "source": "The chapter's request-flow walkthrough: ingress, parse, preprocess, batcher, execute, postprocess, dispatch."
+    },
+    "Queuing Theory: Why the Tail Moves First": {
+      "figure": "::fig[headroom-knee]",
+      "teaches": "Compare successive doublings on a continuous utilization axis as the queue approaches saturation.",
+      "source": "Single-server M/M/1 mean response multiplier derived from W = service time / (1 − utilization)."
+    },
+    "Throughput: What Batching Buys and Costs": {
+      "figure": "::fig[formation-window]",
+      "teaches": "Show formation delay as time the first arrivals spend waiting for the window to fill.",
+      "source": "Formation delay and the latency-throughput frontier; the batch-8 latency omits the wait."
+    },
+    "Inference Runtime and Cold Start": {
+      "proseOnly": "Runtime differences and cold-start composition are enumerated constraints; a table would restate the prose."
+    },
+    "LLM Serving": {
+      "figure": "::fig[queue-lanes]",
+      "teaches": "Show the resident population and why KV memory — not compute — bounds concurrent conversations.",
+      "source": "Little's Law sizing plus the KV-cache concurrency constraint; TTFT/TPOT and the decode floor ride in the equations."
+    },
+    "Economics and the Case Study": {
+      "figure": "::chart[fanout-tail]",
+      "teaches": "Show that a p99 leaf becomes a ~39% user tail at 50-way fan-out; cost and tail both live in width.",
+      "source": "Fan-out tail analysis and the cost-per-SLO-meeting-request framing."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Fallacy list is a review scaffold; diagrams would restate each fallacy's own section figure."
+    },
+    "Summary": {
+      "figure": "::fig[serving-decision-map]",
+      "teaches": "Close the loop: traffic → resident population → utilization tail → batch window → replicas + headroom.",
+      "source": "Synthesis of the chapter's four planning moves for the opening question."
+    },
+    "The physics": {
+      "proseOnly": "Reference table of the chapter's pinned quantities; tabular, not visual."
+    },
+    "Glossary": {
+      "proseOnly": "Definitions list."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Project-specific transfers; prose pointers, not chapter content."
+    },
+    "Open questions": {
+      "proseOnly": "Open prompts for follow-up work."
+    }
+  }
+}

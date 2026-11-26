@@ -1,0 +1,26 @@
+[
+  {
+    "id": "primitive-contracts",
+    "file": "primitive-contracts.svg",
+    "title": "Four contracts, one degree of freedom",
+    "caption": "The four collective primitives as input-to-output contracts over ranks 0-3. AllReduce leaves the same sum on every rank, AllGather leaves the concatenation of all shards, ReduceScatter leaves each rank one reduced shard, and AllToAll transposes chunks. The contract fixes the result; the schedule underneath is where the cost lives."
+  },
+  {
+    "id": "ring-trace",
+    "file": "ring-trace.svg",
+    "title": "Six steps to one sum",
+    "caption": "A four-rank Ring AllReduce trace: three scatter-reduce steps leave each rank owning one fully-reduced chunk, three all-gather steps circulate the completed chunks. Per-rank send volume stays ~2M however large N grows; the price is 2(N-1) startup rounds."
+  },
+  {
+    "id": "crossover-map",
+    "file": "crossover-map.svg",
+    "title": "Tree below, ring above",
+    "caption": "Modeled AllReduce time against message size on log axes for a 256-GPU group at 200 Gbps with 1 us startup. The simple tree's fewer rounds win below the ~1 MB crossover; the ring's smaller byte term wins above it. M* ~ N alpha beta / log2 N moves the boundary with the group size and the fabric."
+  },
+  {
+    "id": "overlap-lanes",
+    "file": "overlap-lanes.svg",
+    "title": "What overlap can and cannot hide",
+    "caption": "The LogP split as two lanes: 100 us of network latency hides beneath 500 us of backward compute, while 2o = 100 us of processor overhead stays exposed on the execution resource. DDP bucket fusion hides every gradient's transfer except the last bucket, which has no later compute left to hide behind."
+  }
+]

@@ -1,0 +1,189 @@
+{
+  "chapterId": "vol1/09_data_selection",
+  "title": "Self-test",
+  "questions": [
+    {
+      "id": "a1",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A team's GPU compute grows ~10x every 3 years while usable public-text corpora grow far slower. Which regime does this trajectory produce for GPT-3-scale runs?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Compute-starved — models shrink to fit the data"
+        },
+        {
+          "id": "b",
+          "label": "Data-starved — runs re-read the same unique tokens many times"
+        },
+        {
+          "id": "c",
+          "label": "Balanced — Chinchilla's ratio holds automatically at larger scale"
+        },
+        {
+          "id": "d",
+          "label": "Label-bound — the binding constraint becomes annotation, not tokens"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Demand outgrows unique supply, so the schedule repeats the corpus — GPT-2 re-read WebText ~17 times; GPT-3 sat at ~1.7 unique tokens per parameter. Below the fitted ~20 tok/param, extra passes buy little new signal."
+    },
+    {
+      "id": "a2",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "True or false: doubling the raw, deduplicated web corpus always doubles the total information a run learns from it.",
+      "options": [
+        {
+          "id": "a",
+          "label": "True"
+        },
+        {
+          "id": "b",
+          "label": "False"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Marginal ICR decays as ~1/(O·D): the next FLOP's yield halves with each doubling. Most marginal tokens are near-duplicates of signal the model already holds."
+    },
+    {
+      "id": "a3",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Under the chapter's illustrative model with I(D) ∝ ln D and linear per-sample compute, marginal ICR scales as:",
+      "options": [
+        {
+          "id": "a",
+          "label": "∝ D — it rises with more data"
+        },
+        {
+          "id": "b",
+          "label": "∝ 1/D — it halves with each doubling"
+        },
+        {
+          "id": "c",
+          "label": "∝ √D — sublinear growth"
+        },
+        {
+          "id": "d",
+          "label": "constant — corpus size does not change the ratio"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "I(D) ∝ ln D gives dI/dD ∝ 1/D; with compute linear in samples, marginal ICR ∝ 1/(O_sample · D). Each doubling halves the next FLOP's learning yield — the frontier bends down."
+    },
+    {
+      "id": "a4",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A team reduces 1,000,000 images to 100,000. Full-data training takes 10 hours; scoring costs 1 hour; subset training costs 3 hours. Does the selection inequality pass, and by what margin?",
+      "options": [
+        {
+          "id": "a",
+          "label": "Fails — selection adds work"
+        },
+        {
+          "id": "b",
+          "label": "Passes by 6 hours"
+        },
+        {
+          "id": "c",
+          "label": "Passes by 7 hours"
+        },
+        {
+          "id": "d",
+          "label": "Passes by 1 hour"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "T_select + T_train(sub) = 1 + 3 = 4 h < T_train(full) = 10 h, a 6-hour margin. The retained fraction (10%) is not the test — time at matched quality is."
+    },
+    {
+      "id": "a5",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Why is MinHash + LSH preferred over exhaustive pairwise Jaccard for near-duplicate detection at corpus scale?",
+      "options": [
+        {
+          "id": "a",
+          "label": "It produces higher recall"
+        },
+        {
+          "id": "b",
+          "label": "Pairwise comparison is quadratic in document count; sketches make detection near-linear with signatures held in RAM"
+        },
+        {
+          "id": "c",
+          "label": "It requires no corpus read"
+        },
+        {
+          "id": "d",
+          "label": "It works only on text, so it is more specialized"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Pairwise Jaccard on ~8M documents is ~3×10^13 comparisons — infeasible. MinHash compresses each doc to a ~128-hash signature (~4.1 GB in RAM for the chapter's corpus) and LSH buckets likely near-dupes so they collide without all-pairs scans."
+    },
+    {
+      "id": "a6",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "In foundation-model amortization with pretraining at 10,000 GPU-hours, fine-tuning at 50 GPU-hours/task, and scratch training at 1,000 GPU-hours/task, the compute-only break-even is:",
+      "options": [
+        {
+          "id": "a",
+          "label": "N = 5 tasks"
+        },
+        {
+          "id": "b",
+          "label": "N = 10 tasks"
+        },
+        {
+          "id": "c",
+          "label": "N = 11 tasks"
+        },
+        {
+          "id": "d",
+          "label": "N = 20 tasks"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "10,000 + 50N < 1,000N ⇒ N > 10.53 ⇒ at least 11 tasks. At N = 10 the prepaid path costs 10,500 GPU-hours against scratch's 10,000 — still behind."
+    },
+    {
+      "id": "f1",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "The selection inequality is a time inequality. Explain to a colleague why 'we pruned 40% of the dataset' is not, by itself, evidence the pipeline saved anything — name at least three terms that can quietly eat the margin.",
+      "rubric": "Score + subset-train < full-train at matched quality is the claim. Retained fraction alone ignores: scorer cost (can exceed the margin), coverage/quality loss on rare slices, the data-path tax (scattered 4 KB reads lose ~375x/14x/<2x bandwidth by tier), and refresh cadence (every re-score re-spends the overhead)."
+    },
+    {
+      "id": "f2",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "Your ImageNet coreset hits top-1 target on 30% of the data, but the rare-class slice dropped 9 points. Using the coverage-floor framing, explain why 'the scores said these were the best examples' is not a defense.",
+      "rubric": "The ranking optimizes an aggregate; floors are the constraint layer enforcing per-slice representation. A rare-class regression means the subset failed its constraint — raise the floor or the budget rather than debate scores. If summed floors exceed the budget, the plan is infeasible regardless of ranking."
+    },
+    {
+      "id": "n1",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "A corpus has 20B unique tokens; the model has 2.5B parameters. (a) What is the tokens-per-parameter ratio, and is the run above or below the fitted ~20? (b) If the schedule demands 75B tokens, how many passes over the corpus does that imply?",
+      "answer": "(a) 20B/2.5B = 8 tok/param — below the fitted ~20, so data-starved. (b) 75B/20B = 3.75 passes — the run re-reads the corpus nearly four times."
+    },
+    {
+      "id": "n2",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "Scoring an ImageNet-scale pool costs at most one forward pass per image — about one-third of an epoch's compute. Training takes 100 epochs on full data and 100 epochs on a 10% subset (≈10x cheaper per epoch). Compute both sides of the selection inequality. What scorer cost (in epoch-equivalents) still leaves selection profitable?",
+      "answer": "Full side: 100 epochs. Selected side: ≤1/3 epoch + 10 epochs ≈ 10.33 epochs — clears by ~89.7. Ceiling: T_select < 100 − 10 = 90 epochs of compute; scoring could cost almost the whole run and still win. In practice quality and coverage bind first."
+    },
+    {
+      "id": "n3",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "Labels cost \\$5 each; pool scoring costs \\$50/round and runs 10 rounds. Compare total spend: (a) random — label 100,000; (b) active — label 50,000 to reach the same accuracy. What must hold for active learning to stay ahead as the pool grows?",
+      "answer": "Random: 100,000 × \\$5 = \\$500,000. Active: 50,000 × \\$5 + 10 × \\$50 = \\$250,500 — about \\$249,500 saved. The advantage survives only if per-round scoring stays sub-linear in pool size; an all-pool rescore every round reintroduces the cost the loop was meant to avoid."
+    }
+  ]
+}

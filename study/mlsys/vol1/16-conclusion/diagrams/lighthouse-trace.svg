@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="lh-trace" class="study-fig-fit" viewBox="0 0 380 340" role="img" aria-labelledby="lh-trace-title lh-trace-desc">
+  <title id="lh-trace-title">Five lighthouses, five limiting terms</title>
+  <desc id="lh-trace-desc">Each lighthouse saturates one resource first. ResNet-50 compute, GPT-2/Llama decode bandwidth, DLRM memory capacity, MobileNetV2 compute inside a power envelope, keyword spotting energy. Each row names the lever that paid and the lever that was wasted.</desc>
+  <style>
+    .dark #lh-trace { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#lh-trace { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="340" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="30" font-size="19" font-weight="650">The regime picks the lever</text>
+    <text x="20" y="50" font-size="11" fill="var(--fig-rule, #6e6a5b)">regime = workload × machine — batch, phase, precision move it</text>
+
+    <g font-size="11.5">
+      <text x="20" y="76" font-weight="650">ResNet-50</text>
+      <rect x="118" y="64" width="76" height="18" rx="4" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="156" y="77" text-anchor="middle">compute</text>
+      <text x="200" y="77" fill="var(--fig-rule, #6e6a5b)">pays:</text>
+      <text x="232" y="77">batch + low precision</text>
+      <text x="200" y="92" font-size="10.5" fill="var(--fig-mark, #a33c20)">wasted: bandwidth past the ridge</text>
+
+      <text x="20" y="112" font-weight="650">GPT-2/Llama</text>
+      <text x="20" y="124" font-size="10" fill="var(--fig-rule, #6e6a5b)">decode</text>
+      <rect x="118" y="104" width="76" height="18" rx="4" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="156" y="117" text-anchor="middle">bandwidth</text>
+      <text x="200" y="117" fill="var(--fig-rule, #6e6a5b)">pays:</text>
+      <text x="232" y="117">batch, quantized weights</text>
+      <text x="200" y="132" font-size="10.5" fill="var(--fig-mark, #a33c20)">wasted: peak FLOPs at batch 1</text>
+
+      <text x="20" y="156" font-weight="650">DLRM</text>
+      <rect x="118" y="144" width="76" height="18" rx="4" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="156" y="157" text-anchor="middle">capacity</text>
+      <text x="200" y="157" fill="var(--fig-rule, #6e6a5b)">pays:</text>
+      <text x="232" y="157">shard + cache embeds</text>
+      <text x="200" y="172" font-size="10.5" fill="var(--fig-mark, #a33c20)">wasted: faster dense arithmetic</text>
+
+      <text x="20" y="196" font-weight="650">MobileNetV2</text>
+      <rect x="118" y="184" width="76" height="18" rx="4" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="156" y="197" text-anchor="middle" font-size="10">compute / W</text>
+      <text x="200" y="197" fill="var(--fig-rule, #6e6a5b)">pays:</text>
+      <text x="232" y="197">depthwise, then INT8</text>
+      <text x="200" y="212" font-size="10.5" fill="var(--fig-mark, #a33c20)">wasted: op cuts on bound layers</text>
+
+      <text x="20" y="236" font-weight="650">KWS (TinyML)</text>
+      <rect x="118" y="224" width="76" height="18" rx="4" fill="none" stroke="var(--fig-outline, #364c50)"/>
+      <text x="156" y="237" text-anchor="middle">power</text>
+      <text x="200" y="237" fill="var(--fig-rule, #6e6a5b)">pays:</text>
+      <text x="232" y="237">sub-MB INT8 on-device</text>
+      <text x="200" y="252" font-size="10.5" fill="var(--fig-mark, #a33c20)">wasted: streaming to the cloud</text>
+    </g>
+
+    <line x1="20" y1="272" x2="360" y2="272" stroke="var(--fig-rule, #b8ad96)" stroke-dasharray="3 3"/>
+    <text x="20" y="292" font-size="12" font-weight="620">the same model crosses regimes</text>
+    <text x="20" y="308" font-size="11">INT8 doubles the ridge — a 16-bit-activation layer</text>
+    <text x="20" y="322" font-size="11">can fall below it and become bandwidth-bound</text>
+  </g>
+</svg>

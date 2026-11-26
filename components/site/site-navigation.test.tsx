@@ -48,7 +48,7 @@ describe('preserved site navigation', () => {
     const nav = view.container.querySelector('[data-desktop-nav]') as HTMLElement
     expect(within(nav).getAllByRole('link').map(link => [link.textContent, link.getAttribute('href')])).toEqual([
       ['Projects', '/projects'], ['Blog', '/blog'], ['Lab', '/lab'],
-      ['Study', '/study'], ['Knowledge', '/knowledge'],
+      ['Learning', '/learning'], ['Knowledge', '/knowledge'],
       ['Vectors', '/vectors'], ['Hiking', '/hiking'], ['About', '/about'],
     ])
     const css = readFileSync('components/site/site-chrome.module.css', 'utf8')

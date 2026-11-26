@@ -1,0 +1,134 @@
+---
+title: ML systems fail silently
+date: '2026-11-26T00:00:00.000Z'
+author: Ben Ebsworth
+description: >-
+  A pedestrian-detection model can lose a third of its margin for error while
+  every health check stays green, because host metrics answer 'is the process
+  alive?' and not 'is the model right?'. The failure mode of production machine
+  learning is silent degradation, and the only way to see it is to measure
+  prediction quality directly.
+labels: 'machine-learning,mlsys'
+draft: false
+release: true
+heroImage: /blog/ml-systems-fail-silently/hero.webp
+takeaways:
+  - >-
+    Host metrics answer 'is the process alive?'; nothing in them answers 'is the
+    model right?'. A system can pass every health check while its predictions
+    rot, and that is the normal failure mode of production ML, not an edge case.
+  - >-
+    Evaluation is statistical evidence over a sampled population, never proof.
+    For a 224×224 image input the ratio of test coverage to input space is
+    effectively zero, so the validation number is a claim about a distribution,
+    not about your traffic.
+  - >-
+    Accuracy decays as the live distribution drifts from the training
+    distribution. Drift detection is a warning signal; only labelled outcomes
+    close the loop.
+  - >-
+    Training-serving skew is a software defect whose symptom is statistical: the
+    same example scored two different ways by two codepaths. It is the one kind
+    of silent failure you can actually prevent rather than detect.
+markdown_url: /blog/ml-systems-fail-silently/
+canonical_url: 'https://benebsworth.com/blog/ml-systems-fail-silently/'
+---
+## Key takeaways
+
+- Host metrics answer 'is the process alive?'; nothing in them answers 'is the model right?'. A system can pass every health check while its predictions rot, and that is the normal failure mode of production ML, not an edge case.
+- Evaluation is statistical evidence over a sampled population, never proof. For a 224×224 image input the ratio of test coverage to input space is effectively zero, so the validation number is a claim about a distribution, not about your traffic.
+- Accuracy decays as the live distribution drifts from the training distribution. Drift detection is a warning signal; only labelled outcomes close the loop.
+- Training-serving skew is a software defect whose symptom is statistical: the same example scored two different ways by two codepaths. It is the one kind of silent failure you can actually prevent rather than detect.
+
+A vehicle vision stack ships a pedestrian detector that validates at 95% recall. One miss in twenty. Winter arrives, the camera angles stay the same, the frame rate holds, the latency budget holds, every health check stays green, and the recall quietly slides to 85%. That does not sound like much until you phrase it the way the road experiences it: the miss rate just tripled, from one pedestrian in twenty to three. Nobody paged anyone, because there was nothing to page. Every metric the dashboard knew how to measure was fine.
+
+This is the failure mode that separates machine learning systems from every other kind of software you have operated. The system is healthy by every measurement the infrastructure team owns, and broken by the only measurement that matters. It fails *silently*.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+This essay is part of a series where I work through *[Machine Learning Systems](https://mlsysbook.ai)* (Vijay Janapa Reddi, Harvard CS249r, CC-BY-NC-SA), one idea per chapter. This is chapter 1, and the idea that stuck: the model is not the system, and the system's characteristic failure is invisible to its own telemetry.
+
+## The dual mandate
+
+Classical software has one job: be correct. The function returns what the spec says, or it is wrong, and the wrongness is usually loud, an exception, a wrong answer in a test, a crashed process. An ML system carries a second mandate alongside the first. Its learned behaviour must be *statistically trustworthy* (the model has to be right often enough, on data that looks like the data it will actually meet) and *physically deliverable* (the answer has to arrive inside a memory, latency, and energy budget, because a correct answer that arrives late or never is not an answer).
+
+Every silent failure lives in the gap between those two mandates. The infrastructure can deliver perfectly while the statistics rot, and the statistics can be immaculate in the lab while the delivery is impossible on the device you actually have. You cannot discharge one mandate with the other.
+
+## Why the dashboard cannot see it
+
+Look at what a healthy-service dashboard actually measures: CPU, memory, request rate, error rate, p99 latency, uptime. Every one of those answers the question *is the process alive and responsive?* Not one of them answers *is the model right?* The green light certifies that predictions are being produced on time. It says nothing about their content.
+
+This is not a tooling oversight you can patch with a better dashboard. It is structural. Correctness in classical software is a property of the code, so you can monitor the code's behaviour. Correctness in an ML system is a property of the relationship between the model and the world it is scoring, and the dashboard does not observe the world. The world is exactly the thing that moves.
+
+> [PullQuote component] Editorial pull-quote. Renders a striking sentence from the surrounding prose as a large, italicised blockquote with a branded accent border. The quote text follows this placeholder verbatim, so the LLM reader still sees the highlighted sentence.
+
+'Is the process alive?' is a different question from 'is the model right?', and only the second one notices this failure.
+
+## The verification gap
+
+Here is the arithmetic that should make you suspicious of any validation number. A pedestrian detector consuming 224×224 RGB frames has an input space of 256^150,528 possible images, a number with over 300,000 digits. The ILSVRC validation set that defined a generation of computer vision has 50,000 images. The ratio of the second to the first is not small; it is indistinguishable from zero. There is no rounding error in the universe that makes 50,000 a meaningful sample of that space.
+
+So what is a validation score? Statistical evidence over a sampled population. The 95% recall is a claim about the distribution the validation set was drawn from: daytime-and-evening-weighted, whatever weather the collectors captured, whatever demographics the scrape produced. It was never a claim about your traffic, in your winter, on your cameras. Evaluation is evidence, not proof, and the evidence has a jurisdiction.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+A golden regression set has exactly this anatomy: sampled evidence about an unbounded input space. That does not make it useless; it makes it a population claim. The discipline is to say which population. "Passes the eval suite" means "accurate on the distribution we sampled", and the moment production traffic is not that distribution, the suite is answering a question nobody asked.
+
+## Accuracy decays with distance
+
+Once you accept that the score belongs to a distribution, the failure mode writes itself down as an equation. As the live distribution $P_t$ drifts away from the training distribution $P_0$, accuracy falls off, roughly in proportion to the divergence:
+
+> [Equation component] Labeled display-math block (KaTeX-rendered). Wraps a `$$...$$` math expression with an optional `id` for cross-references, an explicit `number` like "(3.2)", and a short `caption` shown below in monospace muted text. The math is rendered server-side via `remark-math` + `rehype-katex` (Katex is the rendering engine, not MathJax). Use this for the *important* equations — the ones the reader should remember, the ones the post's argument hinges on. A 2,000-word post should have 3-5 numbered equations, not 30; the rest stay as inline `$...$` math in running prose. Cross-reference via `<a href="#eqn:...">equation (1)</a>`.
+
+```latex
+\mathrm{Acc}(t) \approx \mathrm{Acc}_0 - \lambda\, D\!\left(P_t \,\|\, P_0\right)
+```
+
+$$
+\mathrm{Acc}(t) \approx \mathrm{Acc}_0 - \lambda\, D\!\left(P_t \,\|\, P_0\right)
+$$
+
+Two things in that one line. First, the divergence $D$ is measurable *without labels*: you can watch the input distribution move (the embedding centroids drift, the feature histograms shift) long before anyone knows whether accuracy suffered. That makes drift the early-warning signal. Second, the sensitivity $\lambda$ is not a constant of nature; it is how brittle your particular model is to that particular movement, and you only learn it by comparing predictions against reality. Which means the warning light and the verdict arrive through different instruments, and you need both.
+
+The demo below is the whole argument in one figure. Press play and watch a deployment age. The infrastructure tiles (top) never move: the process stays alive, the latency stays in budget, the uptime counter keeps climbing. Underneath, the live distribution drifts away from the training distribution, and the accuracy readout sags with it. The failure is fully visible in the bottom panel and completely absent from the top one, which is the point: if the top row is what you monitor, this is what you miss.
+
+> [DriftMonitorDemo component] An interactive silent-degradation monitor. A row of infrastructure dashboard tiles (CPU, p99 latency, error rate, uptime) stays green with organic jitter while, below, a live feature distribution drifts away from the training distribution and the recall readout sags from 95 percent through the winter-scenario 85 percent and beyond, the error mass visibly accumulating in the separating tails. Pressing play ages the deployment week by week; nothing in the dashboard row ever flickers, which is the point of the figure. A divergence slider sets the distribution shift directly for inspection. The rendered post has the live version.
+
+Drag the divergence slider yourself and the same story plays out statically: the overlap shrinks, the errors pile up in the gap between the curves, and not a single infrastructure metric so much as flickers.
+
+## Two ways in, and only one is preventable
+
+Silent degradation arrives by two routes that look identical on a graph and could not be more different in kind.
+
+The first is **data drift**, the external route: the world moves. Seasons change, populations shift, a competitor launches, a meme redesigns the inputs. The model did nothing wrong; it is answering last year's questions. The winter pedestrian recall lives here.
+
+The second is **training-serving skew**, the internal route, and it is the sneaky one because it is not statistics at all. It is a software defect. Somewhere in the system there are two codepaths that are supposed to be the same: the transform that prepared the training data, and the transform that prepares live inputs. Someone fixes a bug in one. Someone changes a rounding mode, a resize filter, a feature encoding. Now the same real-world example is scored in a representation the model never trained on, and accuracy craters while every diff passes review. The symptom is statistical; the cause is a plain old software bug, a second implementation of something that should have existed exactly once.
+
+> [Callout component] Styled info-block component (ported from the feelingdesigner project at ~/projects/feelingdesigner). Renders a rounded card with a tinted background, a 1px left accent bar in the type-specific colour, a quarter-circle SVG in the top-left corner that visually "cuts" the corner, and a floating icon badge that sits half-off the top edge. Seven types are available, each with its own accent colour and icon: info (blue, Info icon, neutral information), warning (yellow, AlertCircle, subtle caution), success (blue, CheckCircle, positive confirmation), error (red, XCircle, something is wrong), thinking (orange, Brain, an insight or mental model), feeling (red, Heart, a subjective observation), and doing (yellow, Hammer, a practical step to take). Used in the post to highlight key insights, contrasts, and gotchas without breaking the prose flow.
+
+You cannot prevent the world from drifting; you can only detect it early and retrain. But skew is self-inflicted. It is the one silent failure that engineering discipline actually eliminates: one transform implementation, shared by both paths, tested by replaying training examples through the serving path and diffing the outputs. Cheapest insurance in the whole system.
+
+## The proxy problem, or: flu season
+
+The canonical war story here is Google Flu Trends, and it is worth retelling because it fails in exactly this shape. The idea was elegant: flu-related search volume predicted CDC flu rates well, so maybe search volume *was* a fast, cheap flu sensor. For a while it was. Then it broke badly, overestimating flu prevalence by a wide margin for a long time, because the searches never measured illness. They measured *attention* to illness: media coverage, public panic, school announcements, all of which spike out of proportion to the virus. The proxy and the target drifted apart, and nothing in the search data itself said so.
+
+The fix is the lesson. The system was not repaired with more data or a bigger model; it was repaired by re-anchoring to ground truth, using the CDC's actual case measurements as a continuous feedback signal and demoting the proxy to a feature. A behavioural proxy needs a feedback loop to a trusted measurement, or it is a story you tell yourself at scale.
+
+## So what does monitoring that works look like?
+
+Everything above compresses into one design principle: **monitor the prediction quality, not just the process.** In practice that spans the whole pipeline, ingestion to inference, because the failure can enter anywhere. Watch the input distribution for drift, because that is the early warning that needs no labels. Replay training examples through the serving path, because that is how skew shows itself before production does. And close the loop with ground truth wherever it exists, delayed or partial as it may be: click-throughs, outcomes, audits, because labelled reality is the only instrument that can deliver the actual verdict. Host metrics stay on the dashboard, obviously. You need to know the process is alive. You just cannot let the green lights convince you the model is right.
+
+## Recap
+
+An ML system can pass every health check while its predictions quietly rot, because infrastructure metrics measure liveness and correctness is a property of the model's relationship with a moving world. Validation scores are evidence about a sampled distribution, not proof about yours. Accuracy decays with distribution divergence, drift detection is the early warning, labels are the verdict, and training-serving skew, the one preventable silent failure, is a software bug wearing a statistical costume. The model is not the system; the system includes the world, and the world does not hold still for your dashboard.
+
+## Reading further
+
+- **Sculley et al. (2015), *Hidden Technical Debt in Machine Learning Systems***: the paper that mapped how small the model box is inside the production system around it. A decade old and still the correct mental diagram. [papers.nips.cc](https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html)
+- **Lazer et al. (2014), *The Parable of Google Flu: Traps in Big Data Analysis***: the post-mortem on the flu-trends failure, and the cleanest case study of proxy drift in the wild. [science.org](https://www.science.org/doi/10.1126/science.1248506)
+- **Sutton (2019), *The Bitter Lesson***: the argument that general methods harnessing computation beat encoded knowledge, which is why the constraint moved onto the machine in the first place. [incompleteideas.net](http://www.incompleteideas.net/IncIdeas/BitterLesson.html)
+- **Janapa Reddi, *Machine Learning Systems*, chapter 1**: the chapter this essay works through, with the dual mandate and the D·A·M diagnostic loop in full. [mlsysbook.ai](https://mlsysbook.ai)
+
+---
+
+*Next in the series: chapter 2, system paradigms, where the same failure takes on different shapes depending on where the model physically lives: cloud, edge, and the tiers in between.*

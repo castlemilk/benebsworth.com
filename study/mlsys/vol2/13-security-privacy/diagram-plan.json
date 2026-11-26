@@ -1,0 +1,67 @@
+{
+ "source": "packet.md",
+ "sections": {
+  "Thesis": {
+   "proseOnly": "The thesis frames security and privacy as properties of the release path rather than the uptime dashboard; prose carries the argument."
+  },
+  "Green Dashboards, Open Doors": {
+   "figure": "::fig[attack-surface]",
+   "teaches": "Attacks enter through the interfaces the fleet exposes on purpose: each lifecycle stage has its own threat class and its own first control, and no availability or accuracy signal moves when one succeeds.",
+   "source": "Book expanded attack surface section and lifecycle threat map; redrawn as a stage-by-objective grid."
+  },
+  "Security and Privacy Are Different Problems": {
+   "proseOnly": "The CIA-versus-inference distinction and the four breach cases are worked in prose; the breach lessons are historical analogies, not diagrams."
+  },
+  "Write the Threat Model Before the Defense": {
+   "proseOnly": "The four fields, the access-knowledge-timing axes and the likelihood-impact matrix are enumerations the prose carries; the matrix itself is a book figure reference."
+  },
+  "Five Ways In at Five Lifecycle Gates": {
+   "proseOnly": "The five attack objectives map to lifecycle entry points; the section is a taxonomy walkthrough with the bilevel poisoning equation inline."
+  },
+  "Theft Is Priced in Queries": {
+   "figure": "::fig[extraction-budget]",
+   "teaches": "Exact artifact theft and behavioral theft need different controls; a daily rate limit slows collection without capping its lifetime total, so extraction is bounded by cumulative per-principal budgets and the output contract.",
+   "source": "Book model theft and extraction defense sections; redrawn as two attack branches converging on a lifetime budget gate rather than the book's cost-regime curves."
+  },
+  "Authorized Callers Still Leak": {
+   "proseOnly": "Membership inference, inversion and memorization are three escalation levels of authorized-output leakage; the audit-versus-bound gap is explained in prose with the DP ceiling equation."
+  },
+  "Poisoning Is a Bilevel Problem": {
+   "proseOnly": "The bilevel formulation, taxonomy and Nightshade dose-response are carried by the equations and prose; the book's dose grid is referenced as a book figure."
+  },
+  "Inside the Fleet the Boundary Moves": {
+   "proseOnly": "The breakdown-point-zero mean, the 32x gather traffic ratio, plaintext RDMA, prefix-cache timing and attestation-on-the-coordination-axis are quantitative claims worked inline."
+  },
+  "Hardware Is Four Decisions": {
+   "proseOnly": "The four hardware decisions and their failure modes (speculative execution, fault injection, power analysis, debug ports, supply chain) are a survey the prose carries; assembly and trace figures are book references."
+  },
+  "Defenses Are a Stack, Not a Product": {
+   "figure": "::fig[defense-stack]",
+   "teaches": "Controls layer from hardware roots through platform isolation, model-level shaping and data-level privacy; each tier answers a different boundary and each spends a different C3 axis of the Fleet Law.",
+   "source": "Book comprehensive defense architectures section; redrawn as four tiers with the trust boundary each one owns."
+  },
+  "Differential Privacy Is an Account, Not a Label": {
+   "figure": "::fig[privacy-budget-account]",
+   "teaches": "Privacy loss accumulates across every data-dependent release about the same population; basic composition adds the per-release bounds, a tested accountant tightens them, and querying a fixed released model is free post-processing.",
+   "source": "Book privacy budget composition section and margin figure of ten epsilon=1 releases; redrawn as an accumulating account with the accountant bound below the basic bound."
+  },
+  "Sequence by Maturity, Not by Hype": {
+   "proseOnly": "The seven deployment contexts and five-layer maturity model are selection tables the prose summarizes; fallacies are collected in their own section."
+  },
+  "Fallacies and Pitfalls": {
+   "proseOnly": "The fallacy list is prose by nature; each entry names the misconception and the mechanism that defeats it."
+  },
+  "The physics": {
+   "proseOnly": "The physics table is a reference surface, not a figure."
+  },
+  "→ Ben's world": {
+   "proseOnly": "Ben's-world connections are prose bridges to his own stack."
+  },
+  "Glossary": {
+   "proseOnly": "Searchable term definitions; the concept index consumes them."
+  },
+  "Open questions": {
+   "proseOnly": "Unresolved questions for review."
+  }
+ }
+}

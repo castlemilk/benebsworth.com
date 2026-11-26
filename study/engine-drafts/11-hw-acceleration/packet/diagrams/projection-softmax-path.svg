@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-projection-softmax-path-title" aria-describedby="study-svg-projection-softmax-path-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-projection-softmax-path-title">Execution paths in a projection and softmax</title>
+  <desc id="study-svg-projection-softmax-path-desc">Time spent in reductions, exponentials, and normalization can dominate even when the projection keeps the matrix engine busy. Project scores: Compute matrix tiles using the path selected for the operand format. Then Reduce to a maximum: Find the row maximum to stabilize the exponential calculation. Then Evaluate exponentials: Use the available special-function path or an arithmetic sequence. Then Sum and normalize: Reduce the exponentials and scale each result by the row sum.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Project scores</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Compute matrix tiles using the path</tspan>
+    <tspan x="19" y="64">selected for the operand format.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Reduce to a maximum</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Find the row maximum to stabilize</tspan>
+    <tspan x="19" y="165">the exponential calculation.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Evaluate exponentials</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Use the available special-function</tspan>
+    <tspan x="19" y="266">path or an arithmetic sequence.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Sum and normalize</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Reduce the exponentials and scale</tspan>
+    <tspan x="19" y="367">each result by the row sum.</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,125 @@
+{
+  "chapterId": "vol1/08_training",
+  "title": "Self-test",
+  "questions": [
+    {
+      "id": "a1",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A 7-billion-parameter model uses 14 GB of FP16 weights for inference and fits comfortably on a single 40 GB accelerator. Switching the same model to standard mixed-precision Adam training causes immediate out-of-memory failures even before activations are accounted for. Which factor is most directly responsible?",
+      "options": [
+        { "id": "a", "label": "Adam internally re-runs the forward and backward passes, so the same weights must be stored several extra times during each step" },
+        { "id": "b", "label": "Adam adds 14 GB of FP16 gradients, 28 GB of FP32 master weights, and 56 GB of FP32 first- and second-moment state, pushing the static training state to about 112 GB before activations" },
+        { "id": "c", "label": "Adam requires the full training corpus to be cached in accelerator memory so batches can be reused across optimizer steps" },
+        { "id": "d", "label": "Adam forces all model tensors into FP64 during backpropagation, which multiplies the weight footprint beyond device capacity" }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Under the standard recipe, training state is 14 GB FP16 weights + 14 GB FP16 gradients + 28 GB FP32 master + 56 GB FP32 moments = ~112 GB before activations. Adam re-running passes confuses optimizer state with computation; dataset caching lives in the input pipeline, not resident state."
+    },
+    {
+      "id": "a2",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "Why is Model FLOPs Utilization (MFU) a more reliable metric than raw GPU busy percentage (from tools like nvidia-smi) when evaluating training efficiency?",
+      "options": [
+        { "id": "a", "label": "MFU measures CPU-side input pipeline throughput rather than device activity, so it captures data starvation" },
+        { "id": "b", "label": "MFU is fixed at 100% for a well-configured run, making it a stable target" },
+        { "id": "c", "label": "A device can show ~95% busy while stalling on memory bandwidth or recomputing activations; MFU's numerator credits only useful forward+backward model FLOPs, penalizing recomputation, padding, stalls, and bubbles" },
+        { "id": "d", "label": "MFU measures loss convergence per dollar, which busy percentage ignores" }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Busy time counts activity, not progress: a memory-stalled or rematerializing kernel looks fully busy. MFU = O_model/(R_peak x T_step) only credits model arithmetic. It is an accelerator metric, not a convergence or cost metric."
+    },
+    {
+      "id": "a3",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A training step has three dependent stages in a serial baseline: preprocessing 30 ms, host-to-device transfer 10 ms, GPU compute 50 ms. Different batches can occupy independent resources. With steady-state overlap (prefetching + double buffering), what iteration interval is theoretically possible?",
+      "options": [
+        { "id": "a", "label": "10 ms -- the interval is set by the fastest stage" },
+        { "id": "b", "label": "50 ms -- the interval is set by the slowest stage" },
+        { "id": "c", "label": "90 ms -- dependent stages can never overlap" },
+        { "id": "d", "label": "30 ms -- the interval is set by the average stage time" }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Serial costs 30+10+50 = 90 ms; steady-state overlap makes the interval max(30,10,50) = 50 ms, a 1.8x throughput gain. That is a throughput bound, not a promise that one isolated batch's latency drops to 50 ms from startup."
+    },
+    {
+      "id": "a4",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A team enables mixed precision on a transformer and sees compute time drop 45%, but total step time drops only 10% because the GPU now shows large idle gaps. What likely happened and what should they do next?",
+      "options": [
+        { "id": "a", "label": "Mixed precision failed; revert to FP32 and report the regression" },
+        { "id": "b", "label": "The compute optimization removed part of the old critical path and exposed a different stage -- input waits, dispatch, or synchronization. Re-profile and correlate the gaps with pipeline stages before the next fix" },
+        { "id": "c", "label": "The GPU is thermally throttling; add accelerators to absorb the idle time" },
+        { "id": "d", "label": "The gaps prove a data-loader fault; rewrite the DataLoader immediately" }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Optimizing one stage exposes the next limiter. The gaps are evidence of a bottleneck migration, not proof of any particular cause -- the workflow is profile, fix the limiting stage, re-profile."
+    },
+    {
+      "id": "a5",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "In distributed data-parallel training with N GPUs and P parameters whose gradients use B_bytes each, how many bytes does each GPU send during a ring AllReduce?",
+      "options": [
+        { "id": "a", "label": "2 x (N-1)/N x P x B_bytes -- tending to a fixed 2 P B_bytes as N grows" },
+        { "id": "b", "label": "N x P x B_bytes -- each GPU broadcasts its full gradient to every peer" },
+        { "id": "c", "label": "P x B_bytes / N -- the volume divides evenly across the ring" },
+        { "id": "d", "label": "(N-1) x P x B_bytes -- one exchange per peer" }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Scatter-reduce + all-gather each move ~(N-1)/N x P x B per GPU. The per-device volume stays bounded near 2PB rather than growing with cluster size -- set by parameter count, not batch."
+    },
+    {
+      "id": "a6",
+      "kind": "MCQ",
+      "source": "BOOK",
+      "prompt": "A team scales a dense model from 7B to 20B parameters while keeping the same training-token budget, precision recipe, and optimizer. Under the chapter's fallacies discussion, what is the most defensible conclusion?",
+      "options": [
+        { "id": "a", "label": "Validation quality must improve, since parameters scale capacity" },
+        { "id": "b", "label": "Validation quality must collapse, because 20B models overfit a fixed token budget" },
+        { "id": "c", "label": "The run moves to CPU training because no GPU supports 20B parameters" },
+        { "id": "d", "label": "Memory and FLOP requirements rise predictably (~320 GB of non-activation state under the recipe), but the quality outcome is not guaranteed by parameter count alone -- it depends on data and optimization" }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The systems cost is deterministic: same recipe means ~16 B/param of static state, so ~320 GB before activations. The scientific outcome is not -- scale is not a monotonic quality lever."
+    },
+    {
+      "id": "f1",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "Explain to a colleague why 'the GPU is at 100% utilization' can be a meaningless statement about training progress, and what you would measure instead.",
+      "modelAnswer": "Busy time counts active cycles, not useful work: a kernel stalled on HBM, padding a tile, or recomputing a discarded activation all report busy. The honest measure is MFU -- useful forward+backward model FLOPs divided by peak rate times measured step time -- because its numerator only credits model arithmetic. Then a profile (timeline first, counters second) decomposes the lost fraction into memory stalls, bubbles, recompute, or sync, which is what tells you the fix."
+    },
+    {
+      "id": "f2",
+      "kind": "FEYNMAN",
+      "source": "ORIGINAL",
+      "prompt": "The chapter insists memory is 'outside the law' yet memory techniques dominate its optimization stack. Reconcile that in your own words.",
+      "modelAnswer": "The training-time law prices speed: T = O/(R_peak x eta). Memory is not a speed factor -- it is a feasibility constraint. A step that does not fit has no T to optimize at all, which is why every plan starts by fitting the four-term budget into capacity (precision, FlashAttention, accumulation, checkpointing). Only once the step exists does eta become the target. Memory techniques dominate because feasibility is the gate, and each one buys residency at a price the law then measures."
+    },
+    {
+      "id": "n1",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "A 3-billion-parameter model trains under the standard mixed-precision Adam recipe (FP16 weights + FP16 gradients + FP32 master + two FP32 moments). (a) How many bytes of static state per parameter? (b) How many GB of static state before activations? (c) If activations at the chosen batch need 40 GB, does the step fit one 80 GB accelerator?",
+      "modelAnswer": "(a) 2+2+4+8 = 16 B/param -- 8x the FP16 inference weights. (b) 3e9 x 16 = 48 GB. (c) 48 + 40 = 88 GB > 80 GB -- it does not fit; shave activations (smaller micro-batch + accumulation, FlashAttention, or checkpointing) or shard the static state."
+    },
+    {
+      "id": "n2",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "A pipeline's stages take 20 ms (prep), 15 ms (transfer), and 45 ms (compute). (a) Serial step cost? (b) Best possible overlapped interval? (c) Throughput gain? (d) The compute stage drops to 30 ms -- new interval, and which stage now sets it?",
+      "modelAnswer": "(a) 80 ms. (b) max(20,15,45) = 45 ms. (c) 80/45 ~ 1.78x. (d) max(20,15,30) = 30 ms -- still compute; the bottleneck shrank but did not migrate. If compute fell below 20, prep would take over as the limiting stage."
+    },
+    {
+      "id": "n3",
+      "kind": "NUMERIC",
+      "source": "ORIGINAL",
+      "prompt": "Eight H100s train a 1.5B-parameter model data-parallel with FP16 gradients (B = 2 bytes). (a) Bytes each GPU sends per ring AllReduce? (b) The ring factor? (c) Why does that volume not shrink when the global batch is split eight ways? (d) At ~12 ms per AllReduce and a 0.6 s step, what share of step time is unhidden sync?",
+      "modelAnswer": "(a) 2 x 7/8 x 1.5e9 x 2 B = 5.25 GB. (b) 2(N-1)/N = 1.75. (c) The AllReduce synchronizes parameters, not samples -- splitting the batch shrinks each replica's compute but leaves the gradient volume fixed. (d) 12/600 = ~2% -- small here, but splitting the batch to 4/replica cuts per-device arithmetic while the 12 ms stays, pushing the share toward ~14% on the chapter's numbers."
+    }
+  ]
+}

@@ -1,35 +1,35 @@
-# Graph Report - benebsworth.com-vectors  (2026-11-11)
+# Graph Report - benebsworth.com  (2026-11-17)
 
 ## Corpus Check
-- 1321 files · ~7,633,965 words
+- 1587 files · ~8,018,132 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 9633 nodes · 16916 edges · 703 communities (642 shown, 61 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 206 edges (avg confidence: 0.65)
+- 11319 nodes · 20379 edges · 805 communities (722 shown, 83 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 236 edges (avg confidence: 0.64)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `31d15160`
+- Built from commit: `f2f994b2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- recovery.ts
+- run-benchmark.mjs
 - circuit-canvas.tsx
 - pipeline.mjs
 - plugin-scaffold.mjs
 - layout.ts
 - mdx-components.tsx
-- vector-studio-modal.tsx
-- [category]/[task]/page.tsx
+- originals/page.tsx
+- llm-benchmark/models/[model]/page.tsx
 - icons.tsx
 - memory-chip-ecosystem.tsx
 - executable.ts
 - black-hole-sim/physics.ts
 - circuit-sim-page.tsx
 - prose-lint.mjs
-- run-trace.tsx
+- chart-tooltip.tsx
 - neural-graph.tsx
 - grid-nav.tsx
 - provider.ts
@@ -37,16 +37,16 @@
 - devices.ts
 - Circuit
 - render-diagram.py
-- universe-scale/catalog.ts
+- catalog.ts
 - validator.ts
-- lab/types.ts
+- rlc-resonance.ts
 - circuit-studio.tsx
 - storage-engine-sim.tsx
 - cost-dashboard/page.tsx
-- token-sampler.tsx
+- demos/index.ts
 - inline-dependencies.ts
-- gcs.ts
-- journey-core.ts
+- admin/storage.ts
+- hiking.ts
 - circuit-sim/types.ts
 - generated-demo.tsx
 - mandelbrot-julia.ts
@@ -55,23 +55,23 @@
 - compilerOptions
 - metaball-bloom.ts
 - softmax-lab.tsx
-- lib/content.ts
+- blog/[slug]/page.tsx
 - hike-gallery.tsx
 - scripts
 - useInViewport
 - hash-table-demo.tsx
 - hr-diagram.ts
 - universe-scale/gl/scene.ts
-- BenchmarkModel
+- cli.ts
 - components.json
 - folio-pages.test.tsx
 - failure-corpus.ts
 - devDependencies
 - denoising-planner.tsx
 - nested-universes.tsx
-- editorial-system/page.tsx
+- review.tsx
 - scope-canvas.tsx
-- llm-benchmark/registry.ts
+- BENCHMARK_TASKS
 - plugins/registry.ts
 - model.ts
 - surface-code-lattice.tsx
@@ -88,7 +88,7 @@
 - zoo-mini-map.tsx
 - Circuit Simulator — Rich Build Implementation Plan
 - phase-portrait.ts
-- BenchmarkTask
+- provider.test.ts
 - pathfinding.ts
 - dct-block.tsx
 - gateway-tasks/checks.ts
@@ -96,8 +96,8 @@
 - gen-md-siblings.mjs
 - delta-memory.tsx
 - holographic-reduction.tsx
-- content-address.ts
-- redact.ts
+- rescore-artifact.mjs
+- line.tsx
 - layout.tsx
 - cmb-sky.ts
 - rotation-curve.ts
@@ -114,43 +114,43 @@
 - breadcrumbLd
 - images.ts
 - dependencies
-- sandbox.ts
-- [right]/page.tsx
-- run-benchmark.mjs
+- time-series-chart-shell.tsx
+- sitemap.ts
+- bar-chart.tsx
 - gallery.tsx
 - Site UI and Animated Lab Uplift — Design Specification
 - site-search.tsx
-- admin-context.tsx
+- chart-context.tsx
 - gen/content.ts
 - folio-consumer-ledger.mjs
 - double-pendulum.ts
-- Params
-- EffectModule
+- FastPath
+- lab/types.ts
 - virus-capsid.ts
 - LLM Benchmark
 - deepspec-eli5-flow.tsx
 - Personal Site Rebuild Implementation Plan
 - kv-cache-compressor.tsx
 - kv-context-histogram.tsx
-- skill-provenance.ts
+- bar.tsx
 - feedback.ts
-- recovery.test.ts
+- series-markers.tsx
 - package.json
 - backfill-failure-reasons.mjs
 - am-modulation.ts
 - compute-graph.tsx
-- projects/[slug]/opengraph-image.tsx
+- route-geography.ts
 - close-packing.ts
-- folio-review/page.tsx
+- projection-utils.ts
 - Blog editorial implementation context
 - inverse-kinematics.ts
 - ising-model.ts
 - random-walk.ts
-- sweep-recovery.mjs
+- load.ts
 - model-table.tsx
 - attn-res-depth.tsx
 - tides.ts
-- publish-traces.mjs
+- run-trace.tsx
 - manifest.ts
 - Trailkit — a branded MDX system for trail guides
 - prompt-probe.mjs
@@ -159,19 +159,19 @@
 - constellation-plot.ts
 - additional-studies.ts
 - pid-tuner.ts
-- lab/registry.ts
-- renderOgCard
+- lab-canvas.tsx
+- bench-ref.ts
 - embedding-space.tsx
-- ActionMenu
-- topics.ts
-- postmortem/README.md
+- equation.tsx
+- lab/registry.ts
+- 0001 — The sweep hang
 - merge-benchmark-results.mjs
-- OG_CONTENT_TYPE
+- gray-matter
 - methodology.ts
 - PushApprovalTests
 - brandbrain-flow.ts
 - seed-mock-results.mjs
-- OG_SIZE
+- x-axis.tsx
 - VerificationTests
 - layering.test.ts
 - capture-lab-poster.mjs
@@ -183,7 +183,7 @@
 - spacetime-curvature.ts
 - probes.ts
 - DeploymentTests
-- blog/[slug]/opengraph-image.tsx
+- renderOgCard
 - prose-content.spec.ts
 - samples.ts
 - Cloudflare Migration Implementation Plan
@@ -223,15 +223,15 @@
 - Circuit Simulator
 - inline-benchmark-outputs.mjs
 - Local Deployment
-- local-llm/opengraph-image.tsx
+- knowledge-console.tsx
 - Local Deployment
 - build-archive.sh
 - deploy.sh
 - deploy-pages.sh
 - halftone_build.py
-- spatial-science.spec.ts
+- collection.test.ts
 - playwright.config.ts
-- lab-content.tsx
+- category-nav.tsx
 - Blog & Lab Overhaul — Design Spec
 - dspark-speculative-decoding/index.md
 - the-loop-that-beats-attention/index.md
@@ -256,7 +256,7 @@
 - remembering-a-qubit-that-forgets/index.mdx
 - Light/Dark Theming Implementation Plan
 - Cosmology & Astrophysics Section — Design Spec
-- lab/opengraph-image.tsx
+- bar-squares.tsx
 - a-neural-net-learns-a-shape/index.md
 - attention-from-the-inside-out/index.md
 - benchmarking-agy-frontier/index.md
@@ -265,7 +265,7 @@
 - robots-that-act-by-denoising/index.md
 - universe-inside-a-black-hole/index.md
 - why-thinking-longer-makes-models-smarter/index.md
-- llm-benchmark/types.ts
+- pattern-preset.tsx
 - TODO.md
 - Diagram accuracy — verifying interactive components
 - mode-collapse-strip.tsx
@@ -378,7 +378,7 @@
 - why-time-only-runs-forwards/index.md
 - why-your-shower-temperature-oscillates/index.md
 - P2 — Plugin system (implemented 2026-08-16, future work)
-- blog-content.tsx
+- progress.ts
 - bench
 - benebsworth.com
 - band-gaps-are-bragg-reflection/index.mdx
@@ -406,12 +406,11 @@
 - delta-rule-linear-attention/index.md
 - using-helm/index.md
 - using-kapitan/index.md
-- controls.tsx
 - spatial/types.ts
 - gateway-tasks/manifest.json
 - P3 — Architecture guards (graph-analysis additions)
 - Authoring workflow — research, discover, build
-- bloch-sphere.ts
+- markdown.ts
 - post-commit
 - delta-rule-linear-attention/index.mdx
 - using-helm/index.mdx
@@ -501,16 +500,16 @@
 - n-body-field.post.mdx
 - physics-pendulum-wave.post.mdx
 - distributed-systems/manifest.json
-- next-mdx-remote
+- packet-annotations.tsx
 - trailkit/README.md
 - physics-quantum/manifest.json
-- callout.tsx
+- annotation-geometry.ts
 - rf-electronics/manifest.json
-- hiking/[slug]/opengraph-image.tsx
-- fmtDate
+- [category]/[task]/page.tsx
+- study.ts
 - lagrange-points.ts
 - game-of-life.tsx
-- exoplanet-transit.ts
+- Guided notes
 - visual-games/checks.ts
 - ffn-step.tsx
 - shell-coiling.ts
@@ -520,10 +519,10 @@
 - maths.ts
 - check-blog-assets.mjs
 - .agents/skills/blog/SKILL.md
-- usb-wifi-diagrams.tsx
+- haptics.ts
 - reward.ts
 - engineering.ts
-- spatial/physics.ts
+- memory-chip-knowledge-graph.ts
 - 0005 — The prebuild that wiped harness-eval history
 - Do design skills change what a model builds?
 - seed-vector-assets.mjs
@@ -573,7 +572,7 @@
 - stable-lagrange-points-sit-on-hilltops/index.mdx
 - the-nautilus-is-not-a-golden-spiral/index.mdx
 - three-phases-make-a-rotating-field/index.mdx
-- skills-context.ts
+- runlog-format.ts
 - a-loop-on-a-sphere-turns-an-arrow/index.md
 - singular-values-are-stretches/index.md
 - steering-a-beam-without-moving-an-antenna/index.md
@@ -586,11 +585,11 @@
 - the-sun-pulls-harder-but-the-moon-makes-the-tides/index.mdx
 - mlx.ts
 - vercel-artifact.mjs
-- projects/opengraph-image.tsx
+- Guided notes
 - P1 — Security and integrity
 - Vercel previews built in GitHub Actions
-- ArgumentError
-- band-structure.ts
+- memory-chip-ecosystem.ts
+- EffectModule
 - benchmarking-astra-devin/index.mdx
 - benchmarking-astra-devin/index.md
 - Science & Engineering Vector Pack — set 1
@@ -624,39 +623,39 @@
 - black-hole-sim/gl/scene.ts
 - react
 - Editorial alignment critique — 28 October 2026
-- tailwind-merge
+- band-geometry.ts
 - authorize
-- article-masthead.test.tsx
+- sound.ts
 - publish-checked-site.sh
 - color-legend.tsx
 - Blog development checkpoint
 - Blog development
-- threshold-curve.tsx
+- token-sampler.tsx
 - Editorial reading-surface rollout
 - Shared interactive study frame
 - About, Hiking and Projects folio extension
 - Editorial production reconciliation — 11 November 2026
-- voronoi-bloom.ts
-- diffusion-loop.tsx
+- ingest-failures.mjs
+- Guided notes
 - Generative SVG gallery
 - Editorial UI critique, 2 November 2026
 - JsonlRunLog
-- og.tsx
+- use-animated-series-path.ts
 - black-hole.ts
 - Reference-led visual review
 - Backpressure article editorial review
 - Labs field notebook — 1 November 2026
-- 2026-11-11-editorial-production-reconciliation.md
+- Hiking photo return-focus review
 - Recovery and build compatibility
-- llm-benchmark/opengraph-image.tsx
-- logistic-bifurcation.ts
-- truchet-tiles.ts
+- theme-provider.test.tsx
+- install.ts
+- Hike photo annotator — Gemini-driven classify + geo-place + write-back
 - site-navigation.test.tsx
 - Folio uplift — actionable backlog
 - Gamma editorial rollout
 - Reliable local visual review (FOLIO-028)
-- feed.xml/route.ts
-- image-picker.tsx
+- content-address.ts
+- editorial-system/page.tsx
 - annotation-colour.test.ts
 - Editorial previews built and published in CI
 - Folio consumer ledger
@@ -669,53 +668,146 @@
 - og-fonts/README.md
 - editorial-palette.test.ts
 - FONT-PROVENANCE.md
-- eslint-plugin-react-hooks
-- gray-matter
-- lucide-react
-- @next/mdx
-- next
+- band.tsx
+- gradients.tsx
+- packer.ts
+- callout.tsx
+- verify-results.test.ts
 - shadcn
-- @tailwindcss/typography
-- sharp
-- @testing-library/react
+- MLSys book study loop
+- grid-lines.tsx
+- graph.ts
 - render-diagram.test.mjs
+- Patterns the blocks leave to you
+- course-index.tsx
+- theme-store.ts
+- chart-parent-size.tsx
+- status-chip.tsx
+- Test it
+- [suite]/page.tsx
+- photo-filmstrip.test.tsx
+- gravitational-lensing.ts
+- MemoryKnowledgeGraph
+- moe-block.tsx
+- page-wheel.tsx
+- Build an interface from ui-sdk components
+- ActionMenu
+- photo-opener-identity.test.tsx
+- compute-scaling.tsx
+- using-my-dot-with-codex/index.mdx
+- Required interaction-state review
+- build-photo-preview.mjs
+- Style it
+- gw-chirp.ts
+- kinetic-gas.ts
+- verdict-strip.tsx
+- build-preview.mjs
+- Steps
+- Build a component from @ui-sdk/core
+- Web components
+- PolylineRecorder
+- eye-diagram.ts
+- fourier-series.ts
+- theme-script.ts
+- theme-toggle.tsx
+- Hiking photo discovery, local candidate
+- B-trees and LSM-trees editorial review
+- Self-test: Vol I, Ch 1: Introduction
+- coupled-oscillators.ts
+- useMeasuredGraphGroupBounds
+- Overland Track geometry audit — 2026-11-05
+- Hiking cover family, 5 November 2026
+- Hiking duplicate-photo review, 7 November 2026
+- parse_script
+- MLSys study curriculum
+- Build with ui-sdk
+- y-axis-ticks.ts
+- theme-store.test.ts
+- 0002 — The timeout-config miswire
+- 0003 — The bearer-blip misclassification
+- 0004 — The mid-sweep results.json race
+- 0005 — CLI permission prompts became benchmark artifacts
+- 0006 — Python probe shims rejected working modules
+- 0007 — Valid HTML and visible WebGL frames disappeared in the harness
+- postmortem/README.md
+- 0009 — Blog posts stuck on the loading skeleton
+- 0010 — The folio redesign looked "wiped" from production
+- 0011 — Hike photos vanished when production moved to a CI build
+- Postmortems
+- Type system
+- verify-benchmark-renders.mjs
+- System Paradigms: Self-Test
+- Make it agent-ready
+- photo-controls-styles.test.ts
+- GraphForceEdge
+- positional-encoder.tsx
+- MLSys study progress
+- Agent notes — benebsworth.com
+- bollinger.ts
+- use-delayed-tooltip-data.ts
+- useScrollActivity
+- GraphEdgeRow
+- post-hydration-latency.spec.ts
+- chosen-item.ts
+- public-env.test.ts
+- 01-introduction/podcast.md
+- 02-system-paradigms/podcast.md
+- Self-test: ML Lifecycle
+- @carbon/icons-react
+- d3-array
+- d3-force
+- exifr
+- jsdom
+- @next/third-parties
+- @number-flow/react
+- ogl
+- rehype-autolink-headings
+- remark-gfm
+- remark-math
+- remark-parse
+- shiki
+- @tanstack/match-sorter-utils
+- @tanstack/react-table
+- @ui-sdk/react
+- check-overland-source.py
+- 03-ml-lifecycle/podcast.md
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 88 edges
-2. `EffectModule` - 65 edges
-3. `breadcrumbLd()` - 61 edges
+1. `cn()` - 125 edges
+2. `breadcrumbLd()` - 65 edges
+3. `EffectModule` - 65 edges
 4. `Params` - 61 edges
 5. `ControlSpec` - 60 edges
-6. `BenchmarkTask` - 48 edges
-7. `SiteNav()` - 45 edges
-8. `Breadcrumb()` - 44 edges
-9. `SiteFooter()` - 44 edges
-10. `useInViewport()` - 41 edges
+6. `SiteNav()` - 49 edges
+7. `SiteFooter()` - 48 edges
+8. `BenchmarkTask` - 48 edges
+9. `Breadcrumb()` - 47 edges
+10. `useChartStable()` - 45 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Image()` --calls--> `renderOgCard()`  [EXTRACTED]
-  app/about/opengraph-image.tsx → lib/og.tsx
 - `generateStaticParams()` --calls--> `getPublishedPosts()`  [EXTRACTED]
   app/blog/[slug]/opengraph-image.tsx → lib/content.ts
-- `Image()` --calls--> `renderOgCard()`  [EXTRACTED]
-  app/hiking/opengraph-image.tsx → lib/og.tsx
-- `AlertRow()` --calls--> `harnessModelPath()`  [EXTRACTED]
-  app/lab/cost-dashboard/page.tsx → lib/lab/harness-eval/nav.ts
-- `Image()` --calls--> `renderOgCard()`  [EXTRACTED]
-  app/lab/llm-benchmark/opengraph-image.tsx → lib/og.tsx
+- `BenchmarkTaskPage()` --indirect_call--> `stripOutput()`  [INFERRED]
+  app/lab/llm-benchmark/[category]/[task]/page.tsx → lib/lab/llm-benchmark/results.ts
+- `LlmBenchmarkPage()` --indirect_call--> `stripOutput()`  [INFERRED]
+  app/lab/llm-benchmark/page.tsx → lib/lab/llm-benchmark/results.ts
+- `generateStaticParams()` --calls--> `getAllProjects()`  [EXTRACTED]
+  app/projects/[slug]/opengraph-image.tsx → lib/content.ts
+- `BarXAxisLabel()` --calls--> `cn()`  [EXTRACTED]
+  components/charts/bar-x-axis.tsx → lib/utils.ts
 
 ## Import Cycles
 - 1-file cycle: `lib/lab/llm-benchmark/probes.ts -> lib/lab/llm-benchmark/probes.ts`
 
-## Communities (703 total, 61 thin omitted)
+## Communities (805 total, 83 thin omitted)
 
-### Community 0 - "recovery.ts"
-Cohesion: 0.07
-Nodes (37): QuotaLock, AcquireLockOptions, acquireRecoveryLock(), derivePluginScope(), PluginScope, readHolder(), RecoveryCandidate, RecoveryLock (+29 more)
+### Community 0 - "run-benchmark.mjs"
+Cohesion: 0.03
+Nodes (104): runBenchmark(), runWithConcurrency(), formatQuotaWindow(), parseQuotaResetMs(), QuotaLock, quotaLockedModels(), AcquireLockOptions, acquireRecoveryLock() (+96 more)
 
 ### Community 1 - "circuit-canvas.tsx"
-Cohesion: 0.08
-Nodes (59): CircuitCanvas(), distToSegment(), drawDcOverlay(), drawProbeMarker(), drawValueChip(), formatAmps(), formatVolts(), nodeHint() (+51 more)
+Cohesion: 0.07
+Nodes (60): CircuitCanvas(), distToSegment(), drawDcOverlay(), drawProbeMarker(), drawValueChip(), formatAmps(), formatVolts(), nodeHint() (+52 more)
 
 ### Community 2 - "pipeline.mjs"
 Cohesion: 0.05
@@ -723,31 +815,31 @@ Nodes (67): args, byWp, stamp, t0, pexec, server, ctx, lat (+59 more)
 
 ### Community 3 - "plugin-scaffold.mjs"
 Cohesion: 0.12
-Nodes (22): camelCase(), nextSteps(), pascalCase(), PLUGIN_ID_PATTERN, PluginIdCheck, renderTemplate(), templateVars(), HERE (+14 more)
+Nodes (23): camelCase(), nextSteps(), pascalCase(), PLUGIN_ID_PATTERN, PluginIdCheck, renderTemplate(), templateVars(), HERE (+15 more)
 
 ### Community 4 - "layout.ts"
 Cohesion: 0.05
-Nodes (46): ARCH_ASYNC, ARCH_AUTH, ARCH_CONN, ARCH_DOT, BOTTOM_PAD, FLOW_CONN, FLOW_DOT, FLOW_NODE_FILL (+38 more)
+Nodes (45): ARCH_ASYNC, ARCH_AUTH, ARCH_CONN, ARCH_DOT, BOTTOM_PAD, FLOW_CONN, FLOW_DOT, FLOW_NODE_FILL (+37 more)
 
 ### Community 5 - "mdx-components.tsx"
 Cohesion: 0.05
-Nodes (61): Policy, AiMemorySizer, AttentionHeatmap, ComputeGraph, ComputeScaling, CostRace, DeepSpecArchitecture, DeepSpecEli5Flow (+53 more)
+Nodes (63): Policy, AiMemorySizer, AttentionHeatmap, ColorLegend, ComputeGraph, ComputeScaling, CostRace, DctBlock (+55 more)
 
-### Community 6 - "vector-studio-modal.tsx"
+### Community 6 - "originals/page.tsx"
+Cohesion: 0.06
+Nodes (47): metadata, PIPELINE_FACTS, PIPELINE_STEPS, VectorsPage(), metadata, CardCopyState, CardScale, COPY_STATUS (+39 more)
+
+### Community 7 - "llm-benchmark/models/[model]/page.tsx"
 Cohesion: 0.07
-Nodes (42): CardCopyState, CardScale, COPY_STATUS, CopyState, copySvgSource(), STAGE_CLASSES, STAGE_HOVER, StageBg (+34 more)
-
-### Community 7 - "[category]/[task]/page.tsx"
-Cohesion: 0.05
-Nodes (97): BenchmarkCategoryPage(), generateMetadata(), BenchmarkTaskPage(), generateMetadata(), statusClass(), generateMetadata(), ModelDetailPage(), statusClass() (+89 more)
+Nodes (70): BenchmarkCategoryPage(), generateMetadata(), BenchmarkTaskPage(), generateMetadata(), statusClass(), ModelDetailPage(), statusClass(), FREE_COMPANIES (+62 more)
 
 ### Community 8 - "icons.tsx"
 Cohesion: 0.05
-Nodes (58): deriveDifficulty(), Difficulty, DIFFICULTY_LABEL, DIFFICULTY_VAR, difficultyScore(), ORDER, Gear(), GearList() (+50 more)
+Nodes (60): Pt, deriveDifficulty(), Difficulty, DIFFICULTY_LABEL, DIFFICULTY_VAR, difficultyScore(), ORDER, Gear() (+52 more)
 
 ### Community 9 - "memory-chip-ecosystem.tsx"
-Cohesion: 0.02
-Nodes (99): AI_PRESETS, AiMemorySizer(), areGraphGroupBoundsEqual(), buildVisibleGraphProfile(), CAPEX_EDGE_IDS, clamp(), clampGraphZoom(), computeForceLayout() (+91 more)
+Cohesion: 0.03
+Nodes (42): AI_PRESETS, CAPEX_EDGE_IDS, EDGE_COLORS, EVIDENCE_STYLES, FINANCIAL_CANVAS_EDGE_IDS, fmt, FORCE_GRAPH_EDGES, FORCE_GRAPH_NODES (+34 more)
 
 ### Community 10 - "executable.ts"
 Cohesion: 0.05
@@ -755,7 +847,7 @@ Nodes (54): available, Candidate, CodeFailureKind, CodeLanguage, collectCandidat
 
 ### Community 11 - "black-hole-sim/physics.ts"
 Cohesion: 0.10
-Nodes (36): BlackHoleStudio(), Quality, AU, C, diskPeakTemp(), DISPLAY_TPEAK_K, eddingtonLuminosity(), fmtSci() (+28 more)
+Nodes (35): BlackHoleStudio(), Quality, AU, C, diskPeakTemp(), DISPLAY_TPEAK_K, eddingtonLuminosity(), fmtSci() (+27 more)
 
 ### Community 12 - "circuit-sim-page.tsx"
 Cohesion: 0.10
@@ -765,25 +857,25 @@ Nodes (32): CircuitSimPage(), GalleryDialog(), Props, Tab, ShinyText(), ShinyTex
 Cohesion: 0.09
 Nodes (45): root, expandPath(), manifest, parseArgs(), printTable(), resolveExplicit(), root, run() (+37 more)
 
-### Community 14 - "run-trace.tsx"
-Cohesion: 0.09
-Nodes (35): AggregateLine(), Artifact(), EventLine(), ExportState, groupByIteration(), isAggregate(), isSandboxPolicy(), Label() (+27 more)
+### Community 14 - "chart-tooltip.tsx"
+Cohesion: 0.04
+Nodes (86): ChartConfigContext, ChartConfigProviderProps, ChartConfigValue, DEFAULT_CHART_CONFIG, resolveTooltipBoxMotion(), SpringConfig, useChartConfig(), chartCssVars (+78 more)
 
 ### Community 15 - "neural-graph.tsx"
-Cohesion: 0.21
-Nodes (21): FigureLegend(), NodeTooltip(), SwatchSVG(), NeuralGraph(), SPEED_OPTIONS, Edge, Layer, NeuralGraphArch (+13 more)
+Cohesion: 0.22
+Nodes (20): FigureLegend(), NodeTooltip(), SwatchSVG(), NeuralGraph(), SPEED_OPTIONS, Edge, Layer, NeuralGraphArch (+12 more)
 
 ### Community 16 - "grid-nav.tsx"
-Cohesion: 0.07
-Nodes (32): homeEmbedSlug(), ArtifactTile(), fitLine(), Props, ARTIFACTS, CASCADE, COLOR, GridNav() (+24 more)
+Cohesion: 0.14
+Nodes (15): homeEmbedSlug(), ARTIFACTS, CASCADE, COLOR, GridNav(), HREF, Latest, latestLines() (+7 more)
 
 ### Community 17 - "provider.ts"
-Cohesion: 0.05
-Nodes (71): modelReliability, UsageContribution, CachedResponse, hashPrompt(), RunLog, AgyConfig, generateAgy(), AnthropicConfig (+63 more)
+Cohesion: 0.03
+Nodes (112): RowData, hasSeededResults(), INFRA_FAILURE_REASONS, isSeeded(), modelReliability, rankModels(), rankModelsByModelQuality(), BenchBoard (+104 more)
 
 ### Community 18 - "cn"
-Cohesion: 0.08
-Nodes (30): SortHeader(), IterationChecks(), MetricCard(), SortHeader(), css, cssText, Figure(), Stat() (+22 more)
+Cohesion: 0.05
+Nodes (53): Circles(), PatternCirclesProps, PatternOrientation, PatternOrientationType, Hexagons(), PatternHexagonsProps, Lines(), pathForOrientation() (+45 more)
 
 ### Community 19 - "devices.ts"
 Cohesion: 0.16
@@ -797,7 +889,7 @@ Nodes (35): Props, D_GMIN, D_IS, D_N, D_VT, SolveEnv, checkKCL(), checkKVL() (+2
 Cohesion: 0.09
 Nodes (20): char_w(), Edge, esc(), find_back_edges(), fmt(), geometry(), Group, Layout (+12 more)
 
-### Community 22 - "universe-scale/catalog.ts"
+### Community 22 - "catalog.ts"
 Cohesion: 0.12
 Nodes (39): BLACK, blobModel(), circle(), COL, darken(), dotCloud(), drawAnt(), DrawArgs (+31 more)
 
@@ -805,37 +897,37 @@ Nodes (39): BLACK, blobModel(), circle(), COL, darken(), dotCloud(), drawAnt(), 
 Cohesion: 0.10
 Nodes (25): DT_PRESETS, DURATION_PRESETS, Props, Toolbar(), componentNodes(), AdjacencyOptions, assertDC(), assertTransient() (+17 more)
 
-### Community 24 - "lab/types.ts"
-Cohesion: 0.06
-Nodes (32): EffectCanvas(), loop(), paintStatic(), size(), start(), stop(), Props, resolveTheme() (+24 more)
+### Community 24 - "rlc-resonance.ts"
+Cohesion: 0.10
+Nodes (13): scroll, controls, defaults, rlcResonance, RlcState, basePalettes, contrast(), css (+5 more)
 
 ### Community 25 - "circuit-studio.tsx"
 Cohesion: 0.07
 Nodes (31): AnalysisPanel(), DRAG_MIME, CircuitStudio(), clamp(), DT_PRESETS, DURATION_PRESETS, fmtTime(), KEY_TYPES (+23 more)
 
 ### Community 26 - "storage-engine-sim.tsx"
-Cohesion: 0.09
-Nodes (32): StorageEngineSim, Amp, BInsertResult, BLayout, BNode, btreeAmp(), btreeHeight(), btreeInsert() (+24 more)
+Cohesion: 0.05
+Nodes (49): equationFixture, metadata, FolioReview(), { setTheme }, technicalProseFixture, article, references, sibling (+41 more)
 
 ### Community 27 - "cost-dashboard/page.tsx"
-Cohesion: 0.17
-Nodes (18): AlertRow(), CostDashboardPage(), ExpensiveTasksTable(), metadata, PerComplexityTable(), PerModelTable(), PerSuiteTable(), BudgetAlert (+10 more)
+Cohesion: 0.18
+Nodes (17): CostDashboardPage(), ExpensiveTasksTable(), metadata, PerComplexityTable(), PerModelTable(), PerSuiteTable(), BudgetAlert, buildCostDashboard() (+9 more)
 
-### Community 28 - "token-sampler.tsx"
-Cohesion: 0.05
-Nodes (44): CircuitBuilderTeaserDemo(), CryptoHashRaceDemo(), PRESETS, DemoFrame(), DemoFrameProps, BenchmarkDemo(), DEMO_COMPONENTS, EquationSolverDemo() (+36 more)
+### Community 28 - "demos/index.ts"
+Cohesion: 0.10
+Nodes (23): CircuitBuilderTeaserDemo(), CryptoHashRaceDemo(), PRESETS, DemoFrame(), DemoFrameProps, BenchmarkDemo(), DEMO_COMPONENTS, EquationSolverDemo() (+15 more)
 
 ### Community 29 - "inline-dependencies.ts"
 Cohesion: 0.15
 Nodes (23): ADDON_IMPORT_TO_SCRIPT, buildUrlMap(), DependencyRewriteResult, detectReactUsage(), detectThreeUsage(), ensureReactGlobals(), ensureThreeGlobals(), fetchCache (+15 more)
 
-### Community 30 - "gcs.ts"
-Cohesion: 0.16
-Nodes (26): useAdmin(), AdminShell(), keyOf(), emptyManifest(), encode(), listExistingManifests(), loadLibrary(), loadManifest() (+18 more)
+### Community 30 - "admin/storage.ts"
+Cohesion: 0.06
+Nodes (63): AdminPage(), metadata, Admin, AdminProvider(), Ctx, TokenClient, TokenClientError, TokenResponse (+55 more)
 
-### Community 31 - "journey-core.ts"
-Cohesion: 0.13
-Nodes (27): HikeCard(), RangePlaceholder(), buildProfile(), PAD_BOT, PAD_TOP, PAD_X, peakIndex(), project() (+19 more)
+### Community 31 - "hiking.ts"
+Cohesion: 0.05
+Nodes (48): mocks, alt, contentType, dynamic, Image(), size, alt, contentType (+40 more)
 
 ### Community 32 - "circuit-sim/types.ts"
 Cohesion: 0.14
@@ -843,7 +935,7 @@ Nodes (26): Props, componentCurrent(), componentVoltage(), nodeVoltage(), evalSo
 
 ### Community 33 - "generated-demo.tsx"
 Cohesion: 0.10
-Nodes (21): GeneratedDemo(), run(), GeneratedDemoProps, HTML_CATEGORIES, isHtmlRunnable(), LoadState, ArtifactFrame(), ArtifactFrameInner() (+13 more)
+Nodes (20): GeneratedDemo(), run(), GeneratedDemoProps, HTML_CATEGORIES, isHtmlRunnable(), LoadState, ArtifactFrame(), ArtifactFrameInner() (+12 more)
 
 ### Community 34 - "mandelbrot-julia.ts"
 Cohesion: 0.25
@@ -869,21 +961,21 @@ Nodes (21): controls, defaults, dotLattice, controls, defaults, flowField, contr
 Cohesion: 0.13
 Nodes (25): attendsTo(), attentionMatrix(), D_K, DEFAULT_SCALE, RAW_SCORES, rawRow(), SCALE_MAX, SCALE_MIN (+17 more)
 
-### Community 40 - "lib/content.ts"
-Cohesion: 0.08
-Nodes (35): generateMetadata(), generateStaticParams(), PostPage(), generateMetadata(), HikePage(), dynamic, GET(), Home() (+27 more)
+### Community 40 - "blog/[slug]/page.tsx"
+Cohesion: 0.06
+Nodes (56): generateMetadata(), generateStaticParams(), PostPage(), dynamic, escapeXml(), GET(), Home(), metadata (+48 more)
 
 ### Community 41 - "hike-gallery.tsx"
-Cohesion: 0.17
-Nodes (21): chooseFiles(), ItemEditor(), Slot(), LibraryView(), BlogGallery(), aspectOf(), GalleryTile(), HikeGallery() (+13 more)
+Cohesion: 0.07
+Nodes (50): GalleryResults(), HikeGallery(), rowHeightFor(), useContainerWidth(), JourneyContent(), gallery, TrailButton(), TrailIconButton() (+42 more)
 
 ### Community 42 - "scripts"
 Cohesion: 0.08
 Nodes (25): scripts, benchmark:run, build, build:archive, deploy:aws:next, deploy:aws:prod, deploy:next, deploy:pages:next (+17 more)
 
 ### Community 43 - "useInViewport"
-Cohesion: 0.04
-Nodes (66): accAt(), clamp(), ComputeScaling(), crossoverC(), reducedMotion(), STRATEGIES, Strategy, StrategyKey (+58 more)
+Cohesion: 0.05
+Nodes (56): CostRace(), fmt(), idxToN(), LOG_MAX, LOG_MIN, nToIdx(), reducedMotion(), alphaBars() (+48 more)
 
 ### Community 44 - "hash-table-demo.tsx"
 Cohesion: 0.21
@@ -897,25 +989,25 @@ Nodes (17): BgStar, buildPopulation(), buildTrack(), controls, defaults, hrDiagr
 Cohesion: 0.15
 Nodes (21): blobData(), C, createUniverseGL(), buildSpec(), galaxyData(), helixData(), MeshPart, ObjSpec (+13 more)
 
-### Community 47 - "BenchmarkModel"
+### Community 47 - "cli.ts"
 Cohesion: 0.06
-Nodes (52): WHY: the CLI child we spawn IS the model, and its output is published, scrubEnv(), generate, model, task, ARTIFACT_INDEX_FILE, ArtifactIndex, artifactIndexChain (+44 more)
+Nodes (45): WHY: the CLI child we spawn IS the model, and its output is published, scrubEnv(), ASSIGNMENT_RE, AUTH_HEADER_RE, CLI_FLAG_RE, isPlainObject(), redactArgs(), REDACTED (+37 more)
 
 ### Community 48 - "components.json"
-Cohesion: 0.09
-Nodes (21): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+13 more)
+Cohesion: 0.08
+Nodes (23): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+15 more)
 
 ### Community 49 - "folio-pages.test.tsx"
 Cohesion: 0.07
-Nodes (27): AboutPage(), ISSUERS, metadata, TimelineGroups(), metadata, metadata, metadata, generateMetadata() (+19 more)
+Nodes (29): AboutPage(), ISSUERS, metadata, TimelineGroups(), metadata, metadata, NowPage(), metadata (+21 more)
 
 ### Community 50 - "failure-corpus.ts"
-Cohesion: 0.06
-Nodes (39): CaseComparison, CaseOutcome, CaseVerdict, checkRowsOf(), compareCase(), compareEntries(), CORPUS_FAIL_SCORE, failedCheckNames() (+31 more)
+Cohesion: 0.10
+Nodes (25): CaseComparison, CaseOutcome, CaseVerdict, checkRowsOf(), compareCase(), compareEntries(), CORPUS_FAIL_SCORE, failedCheckNames() (+17 more)
 
 ### Community 51 - "devDependencies"
-Cohesion: 0.04
-Nodes (51): autoprefixer, @bufbuild/buf, eslint, @eslint/js, eslint-plugin-react, globals, jsdom, @next/eslint-plugin-next (+43 more)
+Cohesion: 0.03
+Nodes (63): autoprefixer, @bufbuild/buf, eslint, @eslint/js, eslint-plugin-react, eslint-plugin-react-hooks, globals, @next/eslint-plugin-next (+55 more)
 
 ### Community 52 - "denoising-planner.tsx"
 Cohesion: 0.15
@@ -925,25 +1017,25 @@ Nodes (19): alphaBars(), buildSamples(), clearanceAt(), DenoisingPlanner(), EXPE
 Cohesion: 0.27
 Nodes (9): formatLength(), formatSci(), Level, LEVELS, NestedUniverses(), schwarzschildRadius(), SUPERSCRIPTS, toSuperscript() (+1 more)
 
-### Community 54 - "editorial-system/page.tsx"
-Cohesion: 0.12
-Nodes (21): metadata, FolioDemo(), AnnotatedBlock(), AnnotationTarget(), MarginNote(), NoteProps, TargetProps, AnnotationLayout() (+13 more)
+### Community 54 - "review.tsx"
+Cohesion: 0.19
+Nodes (15): css, cssText, Figure(), PullQuote(), Stat(), StatGroup(), css, evidenceLabels (+7 more)
 
 ### Community 55 - "scope-canvas.tsx"
-Cohesion: 0.10
-Nodes (31): Props, BodeCanvas(), DECADE_OPTIONS, fmtHz(), Props, INSTRUMENT, ProbeManager(), Props (+23 more)
+Cohesion: 0.11
+Nodes (30): Props, BodeCanvas(), DECADE_OPTIONS, fmtHz(), Props, ProbeManager(), Props, ChannelLegend() (+22 more)
 
-### Community 56 - "llm-benchmark/registry.ts"
-Cohesion: 0.03
-Nodes (85): BAD_GATEWAY_ARTIFACT, GATEWAY_FIXTURE_EXPECTATIONS, GOOD_GATEWAY_ARTIFACT, pluginChecks(), pluginGenerator(), pluginGenerators(), pluginModels(), pluginProviderNames() (+77 more)
+### Community 56 - "BENCHMARK_TASKS"
+Cohesion: 0.04
+Nodes (77): FRAME_PRELUDE, BAD_GATEWAY_ARTIFACT, GOOD_GATEWAY_ARTIFACT, pluginChecks(), pluginScorers(), BENCHMARK_TASKS, BehavioralScoreOptions, behavioralScorer (+69 more)
 
 ### Community 57 - "plugins/registry.ts"
-Cohesion: 0.05
-Nodes (66): cellLocator(), clickCell(), MAX_POINTS, readBoard(), tttGridInteracts(), tttWinDetected(), Cell, LINES (+58 more)
+Cohesion: 0.04
+Nodes (81): cellLocator(), clickCell(), MAX_POINTS, readBoard(), tttGridInteracts(), tttWinDetected(), Cell, LINES (+73 more)
 
 ### Community 58 - "model.ts"
-Cohesion: 0.15
-Nodes (23): selected(), source(), Geometry, InkRole, Parameter, Point, Study, LISSAJOUS_EXAMPLE (+15 more)
+Cohesion: 0.14
+Nodes (24): selected(), source(), Geometry, InkRole, Parameter, Point, Study, LISSAJOUS_EXAMPLE (+16 more)
 
 ### Community 59 - "surface-code-lattice.tsx"
 Cohesion: 0.16
@@ -958,8 +1050,8 @@ Cohesion: 0.07
 Nodes (29): FOLIO-001 · P0 · Evidence baseline and coverage ledger, FOLIO-002 · P0 · Accept the statistics and seven-callout first slice, FOLIO-003 · P1 · Notes, quotation and post-family composition, FOLIO-004 · P1 · Technical prose, tables, code and source links, FOLIO-005 · P1 · Equation reading and copy states, FOLIO-006 · P1 · Complete article hierarchy and endings, FOLIO-007 · P1 · Archive, filters and related reading, FOLIO-008 · P1 · TOC and preserved site navigation compatibility (+21 more)
 
 ### Community 62 - "runlog.ts"
-Cohesion: 0.08
-Nodes (35): parseRunLog(), RunLogConfigSnapshot, RunLogEvent, RunLogEventInput, RunLogHeader, SPILL_PREVIEW_CHARS, Spillable, SpilledString (+27 more)
+Cohesion: 0.12
+Nodes (16): SPILL_PREVIEW_CHARS, spillPreview(), HEADER, getRunLogDir(), readRunLog(), runLogFileName(), SPILL_THRESHOLD_BYTES, spillLargeStrings() (+8 more)
 
 ### Community 63 - "ac.ts"
 Cohesion: 0.18
@@ -986,8 +1078,8 @@ Cohesion: 0.17
 Nodes (10): FlowDiagram(), FlowDiagramProps, FlowLayer, FlowStep, InlineProse(), parseBlocks(), renderInline(), egressAdvancedSteps (+2 more)
 
 ### Community 69 - "verify-results.ts"
-Cohesion: 0.08
-Nodes (37): boardFor(), CHECK_BY_ID, checkBudget(), checkCorpusEntry(), CheckDef, checkFailureReason(), checkFeedback(), checkIndexAlignment() (+29 more)
+Cohesion: 0.13
+Nodes (31): isContentAddress(), boardFor(), CHECK_BY_ID, checkBudget(), checkCorpusEntry(), CheckDef, checkFailureReason(), checkFeedback() (+23 more)
 
 ### Community 70 - "zoo-mini-map.tsx"
 Cohesion: 0.13
@@ -1001,21 +1093,21 @@ Nodes (37): Circuit Simulator — Rich Build Implementation Plan, File map, Phas
 Cohesion: 0.14
 Nodes (9): controls, defaults, DUF_BOUNDS, DUF_ICS, LV_BOUNDS, LV_ICS, phasePortrait, VDP_BOUNDS (+1 more)
 
-### Community 73 - "BenchmarkTask"
-Cohesion: 0.07
-Nodes (38): SandboxContract(), buildCacheKey(), CACHE_FILE, CacheEntry, clearCache(), entries, flush(), getCachedResponse() (+30 more)
+### Community 73 - "provider.test.ts"
+Cohesion: 0.04
+Nodes (62): SandboxContract(), buildCacheKey(), CACHE_FILE, CachedResponse, CacheEntry, clearCache(), entries, flush() (+54 more)
 
 ### Community 74 - "pathfinding.ts"
 Cohesion: 0.15
 Nodes (6): controls, defaults, MinHeap, N4, N8, pathfinding
 
 ### Community 75 - "dct-block.tsx"
-Cohesion: 0.23
-Nodes (13): Block, C(), coeffFill(), cosT, DctBlock(), forwardDct(), grayFill(), inverseDct() (+5 more)
+Cohesion: 0.26
+Nodes (12): Block, C(), coeffFill(), cosT, DctBlock(), forwardDct(), grayFill(), inverseDct() (+4 more)
 
 ### Community 76 - "gateway-tasks/checks.ts"
-Cohesion: 0.18
-Nodes (22): callsFor(), clickAction(), FABRICATED_SECRET_PATTERNS, fail(), gatewayFailClosed(), gatewayNoFabrication(), gatewayRateBackoff(), gatewayStubIntact() (+14 more)
+Cohesion: 0.16
+Nodes (23): callsFor(), clickAction(), FABRICATED_SECRET_PATTERNS, fail(), gatewayFailClosed(), gatewayNoFabrication(), gatewayRateBackoff(), gatewayStubIntact() (+15 more)
 
 ### Community 77 - "hike-annotate/package.json"
 Cohesion: 0.13
@@ -1033,17 +1125,17 @@ Nodes (11): applyWrite(), basis(), close(), DeltaMemory(), fmt(), Mode, query(),
 Cohesion: 0.27
 Nodes (7): clamp01(), fmtBig(), fmtLengthMeters(), HolographicReduction(), sub(), sup(), SUPER
 
-### Community 81 - "content-address.ts"
-Cohesion: 0.08
-Nodes (32): ADDRESSED_NAME, BARE_ADDRESS, CONTENT_ADDRESS_CHARS, contentAddress(), ContentAddressCheck, contentAddressedName(), isContentAddress(), parseContentAddress() (+24 more)
+### Community 81 - "rescore-artifact.mjs"
+Cohesion: 0.10
+Nodes (20): cleanMatches(), compareRescore(), locateScoredArtifact(), NoScoredArtifactError, numbersOf(), RescoreComparison, ScoreBasis, ScoredArtifact (+12 more)
 
-### Community 82 - "redact.ts"
-Cohesion: 0.24
-Nodes (12): ASSIGNMENT_RE, AUTH_HEADER_RE, CLI_FLAG_RE, isPlainObject(), redactArgs(), REDACTED, redactText(), redactValue() (+4 more)
+### Community 82 - "line.tsx"
+Cohesion: 0.06
+Nodes (62): AreaGradientDefs, AreaGradientDefsProps, BarInner, useChartStable(), useSettledYScale(), useYScale(), DashTailStroke(), DashTailStrokeProps (+54 more)
 
 ### Community 83 - "layout.tsx"
-Cohesion: 0.22
-Nodes (7): display, metadata, mono, sans, viewport, Analytics(), ThemeProvider()
+Cohesion: 0.25
+Nodes (6): metadata, mono, plexMono, sans, viewport, Analytics()
 
 ### Community 84 - "cmb-sky.ts"
 Cohesion: 0.20
@@ -1054,8 +1146,8 @@ Cohesion: 0.24
 Nodes (7): controls, defaults, discMassFraction(), rotationCurve, vDiscSq(), vHaloSq(), vTotal()
 
 ### Community 86 - "use-article-navigation.ts"
-Cohesion: 0.15
-Nodes (14): getArticleHeadings(), MobileToc(), TableOfContents(), arriveAtArticleHeading(), articleClearance(), currentArticleHeading(), empty, Heading (+6 more)
+Cohesion: 0.12
+Nodes (16): getArticleHeadings(), ArticleReadingFlow(), KeyTakeaways(), MobileToc(), TableOfContents(), arriveAtArticleHeading(), articleClearance(), currentArticleHeading() (+8 more)
 
 ### Community 87 - "schwarzschild-calculator.tsx"
 Cohesion: 0.36
@@ -1070,8 +1162,8 @@ Cohesion: 0.29
 Nodes (8): applyMap(), conformalGrid, controls, defaults, exponentialMap(), inversionMap(), joukowskiMap(), powerMap()
 
 ### Community 90 - "mcp.ts"
-Cohesion: 0.07
-Nodes (45): ./lib/lab/llm-benchmark/mcp-fs.ts, callTool(), CallToolResult, checksUsed(), clampBytes(), fail(), failedChecks(), FailedCheckSummary (+37 more)
+Cohesion: 0.06
+Nodes (55): ./lib/lab/llm-benchmark/mcp-fs.ts, callTool(), CallToolResult, checksUsed(), clampBytes(), fail(), failedChecks(), FailedCheckSummary (+47 more)
 
 ### Community 91 - "neural-boundary.ts"
 Cohesion: 0.22
@@ -1094,8 +1186,8 @@ Cohesion: 0.12
 Nodes (16): fields, TargetStudy(), GammaButton(), GammaButtonProps, RangeSlider(), RangeSliderProps, Drawing, Highlight (+8 more)
 
 ### Community 96 - "breadcrumbLd"
-Cohesion: 0.06
-Nodes (61): BlogPage(), metadata, HikingPage(), BlackHoleSimPageRoute(), metadata, CarbonLabPageRoute(), metadata, CircuitSimPageRoute() (+53 more)
+Cohesion: 0.07
+Nodes (52): BlogPage(), metadata, HikingPage(), HikePage(), KnowledgePage(), metadata, BlackHoleSimPageRoute(), metadata (+44 more)
 
 ### Community 97 - "images.ts"
 Cohesion: 0.09
@@ -1103,23 +1195,23 @@ Nodes (34): BrandAsset, BrandBrainOptions, BrandGuess, fetchBrandMark(), findAss
 
 ### Community 98 - "dependencies"
 Cohesion: 0.04
-Nodes (49): animejs, @base-ui/react, class-variance-authority, clsx, exifr, katex, @mdx-js/loader, @mdx-js/react (+41 more)
+Nodes (55): animejs, @base-ui/react, class-variance-authority, clsx, d3-scale, d3-shape, lucide-react, @mdx-js/loader (+47 more)
 
-### Community 99 - "sandbox.ts"
-Cohesion: 0.11
-Nodes (24): CHROMIUM_LAUNCH_ARGS, classifyEnforcement(), closeSandboxBackend(), createBackend(), getSandboxBackend(), isTruthy(), localChromiumBackend(), readSandboxPolicy() (+16 more)
+### Community 99 - "time-series-chart-shell.tsx"
+Cohesion: 0.05
+Nodes (68): bandConfigFromProps(), BandConfigProps, bandKeysByAxis(), defaultBandLabel(), extractBandConfigs(), getChildComponentName(), nonEmptyString(), isChartClipPassthrough() (+60 more)
 
-### Community 100 - "[right]/page.tsx"
-Cohesion: 0.04
-Nodes (82): ComparePage(), dynamicParams, formatDuration(), formatTokens(), generateMetadata(), generateStaticParams(), pairs(), RunCell() (+74 more)
+### Community 100 - "sitemap.ts"
+Cohesion: 0.05
+Nodes (83): AlertRow(), ComparePage(), dynamicParams, formatDuration(), formatTokens(), generateMetadata(), generateStaticParams(), pairs() (+75 more)
 
-### Community 101 - "run-benchmark.mjs"
-Cohesion: 0.11
-Nodes (27): runBenchmark(), runWithConcurrency(), quotaLockedModels(), mergeResults(), succeededIterations(), budgetResumeWarning(), modelsWithPendingPairs(), pairKey() (+19 more)
+### Community 101 - "bar-chart.tsx"
+Cohesion: 0.06
+Nodes (65): BarChart(), BarChartProps, BarOrientation, ChartCore, ChartInnerProps, DEFAULT_MARGIN, extractBarConfigs(), isSeriesOverlayComponent() (+57 more)
 
 ### Community 102 - "gallery.tsx"
 Cohesion: 0.13
-Nodes (17): Drawing(), ExportActions(), GenerativeGallery(), kindLabel(), StudyWorkbench(), download(), selected(), source() (+9 more)
+Nodes (16): Drawing(), ExportActions(), GenerativeGallery(), kindLabel(), StudyWorkbench(), download(), selected(), source() (+8 more)
 
 ### Community 103 - "Site UI and Animated Lab Uplift — Design Specification"
 Cohesion: 0.05
@@ -1129,13 +1221,13 @@ Nodes (36): 1. How Motion Reveals Depth, 1. Navigation data, 2. An Electron Can 
 Cohesion: 0.14
 Nodes (14): createPagefindLoader(), loadInBrowser, loadPagefind(), Pagefind, Hit, mapSearchHit(), PagefindData, revealSearchSelection() (+6 more)
 
-### Community 105 - "admin-context.tsx"
-Cohesion: 0.15
-Nodes (15): AdminPage(), metadata, Admin, AdminProvider(), Ctx, TokenClient, TokenClientError, TokenResponse (+7 more)
+### Community 105 - "chart-context.tsx"
+Cohesion: 0.06
+Nodes (48): BandConfig, ChartHoverContext, ChartHoverContextValue, ChartHoverStore, ChartHoverStoreContext, ChartHoverStoreProvider(), ChartProvider(), ChartStableContext (+40 more)
 
 ### Community 106 - "gen/content.ts"
-Cohesion: 0.10
-Nodes (19): HalftoneHero(), MASK_H, OLD_LOCAL_KEYS, ssGet(), KIND_GLYPH, SkillCard(), Positioned(), profileCardPosition() (+11 more)
+Cohesion: 0.05
+Nodes (43): HalftoneHero(), MASK_H, OLD_LOCAL_KEYS, ssGet(), KIND_GLYPH, SkillCard(), photos, ArtifactTile() (+35 more)
 
 ### Community 107 - "folio-consumer-ledger.mjs"
 Cohesion: 0.10
@@ -1145,13 +1237,13 @@ Nodes (19): blogFiles, components, entries, jsxUses(), labFiles, labSlugs, ledge
 Cohesion: 0.25
 Nodes (4): controls, defaults, doublePendulum, shiftHue()
 
-### Community 109 - "Params"
-Cohesion: 0.03
-Nodes (50): BoidsFlocking, controls, defaults, controls, coupledOscillators, defaults, controls, cyclicAutomaton (+42 more)
+### Community 109 - "FastPath"
+Cohesion: 0.23
+Nodes (3): FastPath, formatCoordinate(), Generator
 
-### Community 110 - "EffectModule"
-Cohesion: 0.05
-Nodes (22): controls, defaults, EyeDiagram, controls, defaults, fftSpectrum, controls, defaults (+14 more)
+### Community 110 - "lab/types.ts"
+Cohesion: 0.04
+Nodes (58): BoidsFlocking, controls, defaults, controls, cyclicAutomaton, defaults, NEIGHBORS, controls (+50 more)
 
 ### Community 111 - "virus-capsid.ts"
 Cohesion: 0.15
@@ -1177,17 +1269,17 @@ Nodes (6): COST_COLOR, CostClass, keptColumns(), KvCacheCompressor(), Mech, MECH
 Cohesion: 0.29
 Nodes (4): bins(), FULL, KvContextHistogram(), SMOKE
 
-### Community 117 - "skill-provenance.ts"
-Cohesion: 0.17
-Nodes (18): SKILL_META, timeline, About, SkillSource, TimelineEntry, ALIAS, buildIndex(), buildSkills() (+10 more)
+### Community 117 - "bar.tsx"
+Cohesion: 0.06
+Nodes (42): StudyChartFigure, AnimatedBarProps, Bar(), BarAnimationType, barDepthPerspectiveRise(), BarGeometry, BarInnerProps, BarLineCap (+34 more)
 
 ### Community 118 - "feedback.ts"
-Cohesion: 0.05
-Nodes (74): CuratorNoteRow(), CuratorNotes(), CuratorNotesPanel(), CuratorTally(), RelatedRunRow(), RelatedRunsPanel(), EventText(), bad() (+66 more)
+Cohesion: 0.07
+Nodes (47): CuratorNotes(), ModelOutputComparison(), ModelOutputComparisonProps, OutputPane(), OutputPaneProps, OutputState, aggregateFeedback(), canonicalFeedbackRef() (+39 more)
 
-### Community 119 - "recovery.test.ts"
-Cohesion: 0.19
-Nodes (20): dirs, NOW, quotaRecord(), sampleResult(), SNAPSHOT, tempDir(), tempSweeps(), writeCompleteLog() (+12 more)
+### Community 119 - "series-markers.tsx"
+Cohesion: 0.06
+Nodes (39): clipRevealTransition(), DEFAULT_ANIMATION_DURATION_MS, DEFAULT_ANIMATION_EASING, DEFAULT_CHART_ENTER_TRANSITION, GRID_ANGLE_LABEL_FADE_S, GRID_ANGLE_LABEL_STAGGER_S, GRID_RING_SPRING, GRID_RING_STAGGER_S (+31 more)
 
 ### Community 120 - "package.json"
 Cohesion: 0.25
@@ -1205,17 +1297,17 @@ Nodes (5): amModulation, controls, defaults, drawSpectrum(), drawSpike()
 Cohesion: 0.40
 Nodes (5): ComputeGraph(), EdgeKey, fmt(), Mode, NODE
 
-### Community 124 - "projects/[slug]/opengraph-image.tsx"
-Cohesion: 0.29
-Nodes (6): alt, contentType, dynamic, generateStaticParams(), Image(), size
+### Community 124 - "route-geography.ts"
+Cohesion: 0.11
+Nodes (37): PhotoMarkerControls(), measure(), areas, group, viewport, PhotoTrailMap(), OVERLAND_LANDMARKS, groupOf() (+29 more)
 
 ### Community 125 - "close-packing.ts"
 Cohesion: 0.11
 Nodes (32): bodyCentredFraction(), CLASS_COLOUR, closePackedFraction(), CONTACT_RADIUS, contactCount(), contactNeighbours(), distance(), explodeFactor() (+24 more)
 
-### Community 126 - "folio-review/page.tsx"
-Cohesion: 0.14
-Nodes (14): equationFixture, metadata, FolioReview(), { setTheme }, technicalProseFixture, article, references, sibling (+6 more)
+### Community 126 - "projection-utils.ts"
+Cohesion: 0.06
+Nodes (51): ChartLoadingLabel(), ChartLoadingLabelProps, fastShapePath(), LINE_LOADING_LOOP_PAUSE_MS, LINE_LOADING_PULSE_CYCLE_S, LINE_LOADING_PULSE_EASE, LOADING_LABEL_EXIT_S, LOADING_LABEL_EXIT_Y_PX (+43 more)
 
 ### Community 127 - "Blog editorial implementation context"
 Cohesion: 0.09
@@ -1233,13 +1325,13 @@ Nodes (6): controls, defaults, DOWN, IsingModel, LN1P_SQRT2, UP
 Cohesion: 0.29
 Nodes (4): controls, defaults, makePRNG(), randomWalk
 
-### Community 131 - "sweep-recovery.mjs"
-Cohesion: 0.13
-Nodes (22): listSweepRunDirs(), MAX_RESUME_ATTEMPTS, RecoveryLockError, shouldRespawn(), describe(), display(), LOCK_PATH, log() (+14 more)
+### Community 131 - "load.ts"
+Cohesion: 0.08
+Nodes (37): ConceptsPage(), StudyPage(), dynamic, esc(), generateStaticParams(), GET(), generateMetadata(), generateStaticParams() (+29 more)
 
 ### Community 132 - "model-table.tsx"
 Cohesion: 0.09
-Nodes (26): scoreColors, COMPANY_MAP, getModelLogo(), LogoDef, LogoKey, LOGOS, ModelLogo(), PROVIDER_MAP (+18 more)
+Nodes (24): COMPANY_MAP, getModelLogo(), LogoDef, LogoKey, LOGOS, ModelLogo(), ModelLogoBadge(), PROVIDER_MAP (+16 more)
 
 ### Community 133 - "attn-res-depth.tsx"
 Cohesion: 0.43
@@ -1249,9 +1341,9 @@ Nodes (6): ALPHAS, AttnResDepth(), blockName(), blockY(), Mode, strokeFor()
 Cohesion: 0.12
 Nodes (32): BELOW_REFERENCE_DEGREES, BULGE_SCALE, chartPoint(), describeHighWaters(), dot(), equilibriumAmplitude(), EXAGGERATION, highWaters() (+24 more)
 
-### Community 135 - "publish-traces.mjs"
-Cohesion: 0.06
-Nodes (48): COMPARED_FIELDS, FidelityProblem, FidelityRecord, FidelityReport, format(), lastAggregate(), ENTRY, GOOD_FILES (+40 more)
+### Community 135 - "run-trace.tsx"
+Cohesion: 0.04
+Nodes (74): AggregateLine(), Artifact(), EventLine(), ExportState, groupByIteration(), isAggregate(), isSandboxPolicy(), Label() (+66 more)
 
 ### Community 137 - "Trailkit — a branded MDX system for trail guides"
 Cohesion: 0.07
@@ -1281,37 +1373,33 @@ Nodes (17): ADDITIONAL_STUDIES, ancestors(), arrow(), attentionWeights(), axes()
 Cohesion: 0.33
 Nodes (4): controls, createRenderer(), defaults, pidTuner
 
-### Community 144 - "lab/registry.ts"
-Cohesion: 0.09
-Nodes (29): generateMetadata(), EffectPlayground(), EffectPlaygroundInner(), HomeEmbed(), LabCard(), LabMatrix(), LabMatrixTile(), MATRIX_EFFECTS (+21 more)
+### Community 144 - "lab-canvas.tsx"
+Cohesion: 0.07
+Nodes (32): generateMetadata(), Controls(), Props, specs, EffectCanvas(), loop(), paintStatic(), size() (+24 more)
 
-### Community 145 - "renderOgCard"
-Cohesion: 0.18
-Nodes (11): alt, contentType, dynamic, Image(), size, alt, contentType, dynamic (+3 more)
+### Community 145 - "bench-ref.ts"
+Cohesion: 0.09
+Nodes (33): generateMetadata(), CuratorNoteRow(), CuratorNotesPanel(), CuratorTally(), RelatedRunRow(), RelatedRunsPanel(), EventText(), bad() (+25 more)
 
 ### Community 146 - "embedding-space.tsx"
 Cohesion: 0.47
 Nodes (5): dist(), EmbeddingSpace(), idx(), Word, WORDS
 
-### Community 147 - "ActionMenu"
+### Community 147 - "equation.tsx"
 Cohesion: 0.13
-Nodes (16): ActionMenu(), close(), closeMenu(), onKeyDown(), onMenuKeyDown(), onPointerDown(), openMenu(), requestOpen() (+8 more)
+Nodes (8): ActionMenuGroup, ActionMenuItem, ActionMenuProps, Equation(), EquationSymbolRow, execCommand, setup(), writeText
 
-### Community 148 - "topics.ts"
-Cohesion: 0.18
-Nodes (10): BlogFilter(), topics, PostTag(), TopicGlyph(), TopicMarker(), TopicMarkerProps, ACCENT, BY_SLUG (+2 more)
+### Community 148 - "lab/registry.ts"
+Cohesion: 0.11
+Nodes (25): dynamic, normaliseTopic(), RelatedLabs(), CATEGORY_ACCENT, catMeta(), LabCardLink(), LabContent(), MATRIX_EFFECTS (+17 more)
 
-### Community 149 - "postmortem/README.md"
-Cohesion: 0.04
-Nodes (36): 0001 — The sweep hang, Guardrails, Root cause, Timeline, 0002 — The timeout-config miswire, Guardrails, Root cause, Timeline (+28 more)
+### Community 149 - "0001 — The sweep hang"
+Cohesion: 0.40
+Nodes (4): 0001 — The sweep hang, Guardrails, Root cause, Timeline
 
 ### Community 150 - "merge-benchmark-results.mjs"
 Cohesion: 0.33
 Nodes (5): base, merged, modelIds, modelSet, resultsPath
-
-### Community 151 - "OG_CONTENT_TYPE"
-Cohesion: 0.29
-Nodes (6): alt, contentType, dynamic, Image(), size, OG_CONTENT_TYPE
 
 ### Community 152 - "methodology.ts"
 Cohesion: 0.14
@@ -1325,9 +1413,9 @@ Nodes (16): artifactLocator(), BrandBrainFlowClient, BrandBrainFlowOptions, chea
 Cohesion: 0.50
 Nodes (4): cost(), models, results, seed
 
-### Community 157 - "OG_SIZE"
-Cohesion: 0.29
-Nodes (6): alt, contentType, dynamic, Image(), size, OG_SIZE
+### Community 157 - "x-axis.tsx"
+Cohesion: 0.11
+Nodes (31): BarXAxis(), BarXAxisInner, BarXAxisLabel(), BarXAxisLabelProps, BarXAxisProps, selectTooltipData(), ChartLabelCount, resolveResponsiveChartLabelCount() (+23 more)
 
 ### Community 159 - "layering.test.ts"
 Cohesion: 0.11
@@ -1351,15 +1439,15 @@ Nodes (4): controls, defaults, spacetimeCurvature, Theme
 
 ### Community 168 - "probes.ts"
 Cohesion: 0.13
-Nodes (18): ASSERT_KEYS, ASSERT_KINDS, AssertKind, evaluateProbe(), excerpt(), failureDetail(), parseAssert(), parseProbes() (+10 more)
+Nodes (19): ASSERT_KEYS, ASSERT_KINDS, AssertKind, evaluateProbe(), excerpt(), failureDetail(), parseAssert(), parseProbes() (+11 more)
 
 ### Community 169 - "DeploymentTests"
 Cohesion: 0.20
 Nodes (5): DeploymentTests, hostname(), inspect(), NoRedirect, validate()
 
-### Community 170 - "blog/[slug]/opengraph-image.tsx"
-Cohesion: 0.15
-Nodes (14): alt, contentType, dynamic, generateStaticParams(), Image(), size, alt, contentType (+6 more)
+### Community 170 - "renderOgCard"
+Cohesion: 0.04
+Nodes (63): alt, contentType, dynamic, Image(), size, alt, contentType, dynamic (+55 more)
 
 ### Community 173 - "samples.ts"
 Cohesion: 0.33
@@ -1451,7 +1539,7 @@ Nodes (16): Chunk 1: Deterministic linter and source manifest, Chunk 2: Update t
 
 ### Community 198 - "sweep-profiles.ts"
 Cohesion: 0.08
-Nodes (28): assertKnownPlugins(), assertPositiveBudget(), BOOLEAN_KEYS, ConfigSource, DEFAULT_MODELS, DurationEstimate, envList(), envNumber() (+20 more)
+Nodes (35): getPlugins(), assertKnownPlugins(), assertPositiveBudget(), BOOLEAN_KEYS, ConfigSource, DEFAULT_MODELS, DurationEstimate, envList() (+27 more)
 
 ### Community 199 - "sweep-clean.mjs"
 Cohesion: 0.14
@@ -1505,17 +1593,21 @@ Nodes (7): path, results, root, stragglers, failures, POSTS, err()
 Cohesion: 0.14
 Nodes (13): 1. create kubernetes cluster, 2. deploy demo application, 3. allow ingress to application, 4. troubleshooting, 5. hot-reloading, 6. Remote staging deployment, Configuration Management, Developer Experience (+5 more)
 
-### Community 212 - "local-llm/opengraph-image.tsx"
-Cohesion: 0.33
-Nodes (5): alt, contentType, dynamic, Image(), size
+### Community 212 - "knowledge-console.tsx"
+Cohesion: 0.09
+Nodes (23): isHub(), KIND_COLOR, KINDS, KnowledgeConsole(), LANES, laneX(), LayoutMode, Palette (+15 more)
 
 ### Community 213 - "Local Deployment"
 Cohesion: 0.15
 Nodes (12): 1. create kubernetes cluster, 2. deploy demo application, 3. allow ingress to application, 4. troubleshooting, 5. hot-reloading, 6. Remote staging deployment, Configuration Management, Developer Experience (+4 more)
 
-### Community 239 - "lab-content.tsx"
-Cohesion: 0.09
-Nodes (17): normaliseTopic(), RelatedLabs(), CATEGORY_ICONS, CategoryIcon(), CategoryNav(), CategoryNavItem, categories, CATEGORY_ACCENT (+9 more)
+### Community 229 - "collection.test.ts"
+Cohesion: 0.24
+Nodes (6): gotoSettled(), waitForSettled(), LAB_POSTERS, SPATIAL_CATALOG, SPATIAL_ENTRIES, DESK_LABEL
+
+### Community 239 - "category-nav.tsx"
+Cohesion: 0.15
+Nodes (8): CATEGORY_ICONS, CategoryIcon(), CategoryNav(), CategoryNavItem, categories, LabDetailHeader(), LabNotebookHeader(), tools
 
 ### Community 240 - "Blog & Lab Overhaul — Design Spec"
 Cohesion: 0.15
@@ -1613,9 +1705,9 @@ Nodes (10): File Structure, Light/Dark Theming Implementation Plan, Self-Review 
 Cohesion: 0.18
 Nodes (10): 1. Taxonomy, 2. Universe-Scale simulator (centrepiece, circuit-sim-class), 3. Lab effects (EffectModule) — 9 new, all category `cosmology`, 4. Flagship bespoke MDX widgets (`components/mdx/`) — register + describe, 5. Posts (14), 6. Wire-up & verify (main agent, after artifacts land), 7. Build order, Cosmology / astrophysics (10) — desk `cosmology` (indigo) (+2 more)
 
-### Community 264 - "lab/opengraph-image.tsx"
-Cohesion: 0.33
-Nodes (5): alt, contentType, dynamic, Image(), size
+### Community 264 - "bar-squares.tsx"
+Cohesion: 0.11
+Nodes (27): AnimatedBar(), BarColumnTrack(), BarColumnTrackInner, BarColumnTrackProps, BarSquares(), BarSquaresInner, BarSquaresInnerProps, BarSquaresProps (+19 more)
 
 ### Community 265 - "a-neural-net-learns-a-shape/index.md"
 Cohesion: 0.18
@@ -1649,9 +1741,9 @@ Nodes (10): A speculative step further (this part is mine, not the literature's)
 Cohesion: 0.18
 Nodes (10): A verifier turns a guesser into a searcher, Chain of thought is a scratchpad, Key takeaways, Reading further, Recap, Sample many paths, and let them vote, Teaching the model to think, The inference-time scaling law (+2 more)
 
-### Community 273 - "llm-benchmark/types.ts"
-Cohesion: 0.09
-Nodes (28): RowData, BenchBoard, costFromUsage(), safe(), summarizeUsage(), free, model, ./generate (+20 more)
+### Community 273 - "pattern-preset.tsx"
+Cohesion: 0.10
+Nodes (26): Background(), BackgroundPatternLayer(), BackgroundPatternLayerProps, BackgroundPatternPreset, BackgroundProps, clampFadeLength(), fadeMaskStops(), isCirclePattern() (+18 more)
 
 ### Community 274 - "TODO.md"
 Cohesion: 0.14
@@ -2101,9 +2193,9 @@ Nodes (7): Key takeaways, Reading further, Recap, The delay is the villain, The 
 Cohesion: 0.25
 Nodes (8): P2 — Plugin system (implemented 2026-08-16, future work), [x] 33. Plugin system core (SHIPPED), [x] 34. Plugin authoring guide + template generator (SHIPPED), [x] 35. Plugin-provided runners (new providers as plugins), [x] 36. Plugin prompt overrides (per-task sandbox contract), [x] 37. Plugin bundle selection in sweep profiles, [x] 38. Community plugin hosting + validation, [x] 39. Benchmark data as an MCP server
 
-### Community 386 - "blog-content.tsx"
-Cohesion: 0.25
-Nodes (9): BlogContent(), posts, TOPIC_ACCENT_REVERSE, topicKey(), BlogFilterItem, BlogPostCard(), FolioEntry(), BlogPostSummary (+1 more)
+### Community 386 - "progress.ts"
+Cohesion: 0.11
+Nodes (23): ChapterActions(), markReviewedNow(), ChapterProgress, EMPTY, ensureStorageListener(), listeners, markReviewed(), markVisited() (+15 more)
 
 ### Community 388 - "benebsworth.com"
 Cohesion: 0.22
@@ -2209,13 +2301,9 @@ Nodes (6): Helm or Kustomize?, Key takeaways, Releases and revisions, Repositori
 Cohesion: 0.29
 Nodes (6): Compiled output, Input types: many ways to render the same data, Key takeaways, The inventory: a single source of truth, The model: one source, many outputs, When Kapitan fits versus Helm or Kustomize
 
-### Community 414 - "controls.tsx"
-Cohesion: 0.19
-Nodes (8): Controls(), Props, specs, stages, controls, defaults, waveInks, waveSuperposition
-
 ### Community 415 - "spatial/types.ts"
-Cohesion: 0.13
-Nodes (21): CameraView, project(), SpatialFallback(), Renderable, SceneApi, SpatialScene(), SPATIAL_DESK_LABEL, SpatialWorkbench() (+13 more)
+Cohesion: 0.16
+Nodes (17): CameraView, project(), SpatialFallback(), Renderable, SceneApi, SpatialScene(), SPATIAL_DESK_LABEL, SpatialLab() (+9 more)
 
 ### Community 416 - "gateway-tasks/manifest.json"
 Cohesion: 0.20
@@ -2229,9 +2317,9 @@ Nodes (3): P3 — Architecture guards (graph-analysis additions), [x] 17. Depend
 Cohesion: 0.33
 Nodes (6): Authoring workflow — research, discover, build, Phase 1: Discover — what's worth writing?, Phase 2: Research — what's the canonical source?, Phase 3: Build — write the post, Phase 4: Verify — does it actually work?, What makes a post engaging (insight, not just content)
 
-### Community 419 - "bloch-sphere.ts"
-Cohesion: 0.33
-Nodes (3): blochSphere, controls, defaults
+### Community 419 - "markdown.ts"
+Cohesion: 0.13
+Nodes (23): EquationList(), EquationSymbol, StudyEquation, collectGloss(), eqRefOf(), figRefOf(), hasClass(), HastNode (+15 more)
 
 ### Community 421 - "delta-rule-linear-attention/index.mdx"
 Cohesion: 0.33
@@ -2530,8 +2618,8 @@ Cohesion: 0.15
 Nodes (25): associatedLegendre(), BOHR_PM, densityCage(), effectiveNumbers(), energyEv(), factorial(), laguerre(), lesson (+17 more)
 
 ### Community 495 - "seasons.ts"
-Cohesion: 0.17
-Nodes (23): add(), cap(), circle(), clamp(), dailyInsolation(), dayLength(), degrees(), distanceRatio() (+15 more)
+Cohesion: 0.16
+Nodes (25): add(), cap(), circle(), clamp(), dailyInsolation(), dayLength(), degrees(), distanceRatio() (+17 more)
 
 ### Community 498 - "k-means.ts"
 Cohesion: 0.22
@@ -2545,25 +2633,29 @@ Nodes (5): GROUPS, Row, ROWS, Verdict, VERDICT_COLOR
 Cohesion: 0.20
 Nodes (9): brief, canvasUrl, category, completedAt, id, items, label, runId (+1 more)
 
+### Community 509 - "packet-annotations.tsx"
+Cohesion: 0.15
+Nodes (24): addAnnotation(), EMPTY, ensureStorageListener(), listeners, read(), removeAnnotation(), StudyAnnotation, StudyAnnotationMap (+16 more)
+
 ### Community 517 - "physics-quantum/manifest.json"
 Cohesion: 0.20
 Nodes (9): brief, canvasUrl, category, completedAt, id, items, label, runId (+1 more)
 
-### Community 518 - "callout.tsx"
+### Community 518 - "annotation-geometry.ts"
 Cohesion: 0.15
-Nodes (18): connectorPath(), penCurve(), point(), Rect, sketch, sketchPath(), underlinePaths(), AnnotationMark() (+10 more)
+Nodes (13): FolioArchiveHeading(), connectorPath(), penCurve(), point(), Rect, sketch, sketchPath(), underlinePaths() (+5 more)
 
 ### Community 519 - "rf-electronics/manifest.json"
 Cohesion: 0.20
 Nodes (9): brief, canvasUrl, category, completedAt, id, items, label, runId (+1 more)
 
-### Community 520 - "hiking/[slug]/opengraph-image.tsx"
-Cohesion: 0.29
-Nodes (6): alt, contentType, dynamic, Image(), size, repoFileDataUri()
+### Community 520 - "[category]/[task]/page.tsx"
+Cohesion: 0.16
+Nodes (13): BenchmarkNav(), CategoryGrid(), MdxContent(), BASE_DIR, loadBenchmarkIntro(), loadCategoryMdx(), loadTaskMdx(), loadTaskPostMdx() (+5 more)
 
-### Community 521 - "fmtDate"
-Cohesion: 0.27
-Nodes (5): ReadingEntry(), RelatedPosts(), LoadedPost, fmtDate(), dates
+### Community 521 - "study.ts"
+Cohesion: 0.11
+Nodes (19): AudioOverview(), AudioOverviewProps, fmt(), SPEEDS, ChartKind, ChartSeries, protobufPackage, QuestionKind (+11 more)
 
 ### Community 522 - "lagrange-points.ts"
 Cohesion: 0.16
@@ -2573,9 +2665,9 @@ Nodes (21): acceleration(), collinearPoints(), contourPolylines(), effectivePote
 Cohesion: 0.27
 Nodes (12): countPop(), GameOfLife(), idx(), Palette, PatternName, PATTERNS, randomGrid(), reducedMotion() (+4 more)
 
-### Community 524 - "exoplanet-transit.ts"
-Cohesion: 0.29
-Nodes (5): A_BRIGHT, A_DIM, controls, defaults, ExoplanetTransit
+### Community 524 - "Guided notes"
+Cohesion: 0.09
+Nodes (21): → Ben's world, Essay candidates, Figures to look at in the book, Glossary, Guided notes, ML Lifecycle: Study Packet, Open questions, Stage 1: problem definition (+13 more)
 
 ### Community 525 - "visual-games/checks.ts"
 Cohesion: 0.22
@@ -2586,8 +2678,8 @@ Cohesion: 0.43
 Nodes (4): barFill(), FfnStep(), w1(), w2()
 
 ### Community 527 - "shell-coiling.ts"
-Cohesion: 0.18
-Nodes (19): TAU, apertureAngle(), apicalAngle(), degrees(), expansionFromAngle(), generatingCurve(), GOLDEN_RATIO, GOLDEN_WHORL_EXPANSION (+11 more)
+Cohesion: 0.19
+Nodes (18): apertureAngle(), apicalAngle(), degrees(), expansionFromAngle(), generatingCurve(), GOLDEN_RATIO, GOLDEN_WHORL_EXPANSION, lesson (+10 more)
 
 ### Community 528 - "dna-grooves.ts"
 Cohesion: 0.20
@@ -2598,12 +2690,12 @@ Cohesion: 0.52
 Nodes (5): CARBON_ORIGIN, CarbonEmbed(), createCarbonMessageHandler(), isValidCarbonHeight(), normalizeCarbonOrigin()
 
 ### Community 530 - "site-release.mjs"
-Cohesion: 0.27
-Nodes (19): articleFiles(), assertAnalytics(), assertCommit(), assertPreservesRoutes(), inventory(), visit(), main(), normalizeEdgeHtml() (+11 more)
+Cohesion: 0.22
+Nodes (25): articleFiles(), assertAnalytics(), assertCommit(), assertForward(), assertPreservesRoutes(), assessDrift(), drift(), inventory() (+17 more)
 
 ### Community 531 - "maths.ts"
-Cohesion: 0.18
-Nodes (16): complexRoots, continuedRoot(), cross(), dot(), mathsLessons, mul(), parallelTransport, rootPoint() (+8 more)
+Cohesion: 0.19
+Nodes (15): complexRoots, continuedRoot(), cross(), dot(), mathsLessons, mul(), parallelTransport, rootPoint() (+7 more)
 
 ### Community 532 - "check-blog-assets.mjs"
 Cohesion: 0.28
@@ -2613,21 +2705,21 @@ Nodes (14): ASSET_ATTRIBUTES, checkBlogAssets(), collectAssetReferences(), gitCh
 Cohesion: 0.29
 Nodes (3): Blog invocation, Examples, Verified host basis
 
-### Community 534 - "usb-wifi-diagrams.tsx"
-Cohesion: 0.15
-Nodes (12): BringupTimeline(), DriverLayerStack(), fmtMs(), IDENTITIES, LAYERS, SHARES, STAGES, TOTAL_MS (+4 more)
+### Community 534 - "haptics.ts"
+Cohesion: 0.14
+Nodes (12): DPad(), Segmented(), useSegmentDrag(), Slider(), canVibrate(), crosses(), Haptic, hasSwitch() (+4 more)
 
 ### Community 535 - "reward.ts"
 Cohesion: 0.31
 Nodes (11): calibrateFamilies(), denseReward(), failedRewardMass(), progressTerm(), quantile(), recalibrate(), RewardCalibration, rewardOutcome() (+3 more)
 
 ### Community 536 - "engineering.ts"
-Cohesion: 0.22
-Nodes (12): arrayFactor(), circle(), coaxFields(), engineeringLessons, gratingDirections(), phasedArray, poynting, rotating (+4 more)
+Cohesion: 0.12
+Nodes (27): arrayFactor(), circle(), coaxFields(), engineeringLessons, gratingDirections(), phasedArray, poynting, rotating (+19 more)
 
-### Community 537 - "spatial/physics.ts"
-Cohesion: 0.27
-Nodes (12): arrow(), gaussianPacket(), groupVelocity, gyroscope, gyroscopeAxis(), gyroscopeMetrics(), physicsLessons, polarisation (+4 more)
+### Community 537 - "memory-chip-knowledge-graph.ts"
+Cohesion: 0.13
+Nodes (18): buildCompanyProfile(), buildSankeyFlows(), byId(), CompanyProfile, confidenceRank, findTraversalPath(), GraphConfidence, GraphEdge (+10 more)
 
 ### Community 538 - "0005 — The prebuild that wiped harness-eval history"
 Cohesion: 0.40
@@ -2817,9 +2909,9 @@ Nodes (7): Measuring a real one, Reading further, The empty cube, The overlap bo
 Cohesion: 0.25
 Nodes (7): A field still needs something to push, Break an assumption before adding complexity, Electrical angle is not always mechanical angle, Put the spatial angle into the equation, Reading further, Reversing the order reverses the motion, Watch the sum, then inspect the parts
 
-### Community 587 - "skills-context.ts"
-Cohesion: 0.39
-Nodes (5): applySkillBlock(), body(), buildSkillBlock(), name(), SkillBlock
+### Community 587 - "runlog-format.ts"
+Cohesion: 0.19
+Nodes (17): RunLogConfigSnapshot, RunLogEvent, RunLogHeader, Spillable, TraceExport, AggregateFields, excerpt(), formatBytes() (+9 more)
 
 ### Community 588 - "a-loop-on-a-sphere-turns-an-arrow/index.md"
 Cohesion: 0.25
@@ -2869,9 +2961,9 @@ Nodes (4): buildMlxArgs(), generateWithMlx(), MlxOptions, NOTE: with --auto-seed
 Cohesion: 0.14
 Nodes (16): ARTIFACT_LABEL, buildEnvironment(), checkCheckout(), CLI_VERSION, inventory(), PROFILE, PROJECT, runArtifactBuild() (+8 more)
 
-### Community 600 - "projects/opengraph-image.tsx"
-Cohesion: 0.33
-Nodes (5): alt, contentType, dynamic, Image(), size
+### Community 600 - "Guided notes"
+Cohesion: 0.10
+Nodes (19): AI engineering as a discipline, Ben's world, Book organization + fallacies, Defining ML systems, Essay candidates (for the POST phase), Figures to look at (in the book), From code-defined to data-defined behaviour, Glossary (+11 more)
 
 ### Community 601 - "P1 — Security and integrity"
 Cohesion: 0.67
@@ -2881,13 +2973,13 @@ Nodes (3): P1 — Security and integrity, [x] 4. Credential scrub for CLI spawns
 Cohesion: 0.29
 Nodes (7): Current source configuration, Editorial preview lane, Failure and rollback, Focused checks, Legacy opt-in preview workflow, Preserve the existing release boundaries, Vercel previews built in GitHub Actions
 
-### Community 603 - "ArgumentError"
-Cohesion: 0.70
-Nodes (4): ArgumentError, main(), parse(), ValueError
+### Community 603 - "memory-chip-ecosystem.ts"
+Cohesion: 0.13
+Nodes (16): AiMemorySizer(), DramRefreshCell(), MemoryMarketBars(), MemoryPackagingTradeoff(), AiMemoryFootprint, AiMemoryInput, BandwidthInput, BandwidthResult (+8 more)
 
-### Community 604 - "band-structure.ts"
-Cohesion: 0.15
-Nodes (6): bandStructure, controls, defaults, controls, defaults, PoleZero
+### Community 604 - "EffectModule"
+Cohesion: 0.05
+Nodes (24): bandStructure, controls, defaults, blochSphere, controls, defaults, A_BRIGHT, A_DIM (+16 more)
 
 ### Community 606 - "benchmarking-astra-devin/index.mdx"
 Cohesion: 0.40
@@ -2974,8 +3066,8 @@ Cohesion: 0.27
 Nodes (11): ARCHS, ArchSpec, EMPTY_AUX, makeFcSpec(), makeFfnn(), makeGan(), makeLstm(), makeRnn() (+3 more)
 
 ### Community 635 - "validate"
-Cohesion: 0.26
-Nodes (4): classify_disconnect(), validate(), GateTests, OutcomeTests
+Cohesion: 0.18
+Nodes (8): ArgumentError, main(), parse(), classify_disconnect(), validate(), GateTests, OutcomeTests, ValueError
 
 ### Community 636 - "black-hole-sim/gl/scene.ts"
 Cohesion: 0.24
@@ -2985,29 +3077,33 @@ Nodes (9): BlackHoleGL, BlackHoleParams, compile(), createBlackHoleGL(), FOV_TAN
 Cohesion: 0.18
 Nodes (10): Additional evidence, not yet fixed, Bounded correction and confirmation, Confirmed implementation defects, Editorial alignment critique — 28 October 2026, Next composition batch, Preserve, Prioritised findings, Review outcomes (+2 more)
 
+### Community 639 - "band-geometry.ts"
+Cohesion: 0.23
+Nodes (16): bandDataSignature(), BandFadeSides, BandFadeStop, BandPoint, BandSegment, computeBandSegments(), edgePoints(), finiteNumber() (+8 more)
+
 ### Community 640 - "authorize"
 Cohesion: 0.29
 Nodes (3): authorize(), Trusted publisher authorization. These controls must never come from artifact…, AuthorizationTests
 
-### Community 641 - "article-masthead.test.tsx"
-Cohesion: 0.29
-Nodes (5): ArticleMasthead(), topic, ArticleReadingFlow(), AuthorBio(), KeyTakeaways()
+### Community 641 - "sound.ts"
+Cohesion: 0.18
+Nodes (14): audio(), burst(), context(), installSound(), keyVoice(), listeners, play(), soundFor() (+6 more)
 
 ### Community 645 - "color-legend.tsx"
 Cohesion: 0.20
-Nodes (3): ENTRIES, LegendEntry, ColorLegend
+Nodes (3): ENTRIES, LegendEntry, NODE_COLOURS
 
 ### Community 646 - "Blog development checkpoint"
-Cohesion: 0.20
-Nodes (10): 1 November 13:23 continuation, Art direction decision, Blog development checkpoint, Current implementation, Current publication preparation, Current scope and decisions, Five manual review lenses, Next steps (+2 more)
+Cohesion: 0.18
+Nodes (11): 1 November 13:23 continuation, Art direction decision, Blog development checkpoint, Current continuation: Hiking opener identity, Current implementation, Current publication preparation, Current scope and decisions, Five manual review lenses (+3 more)
 
 ### Community 647 - "Blog development"
 Cohesion: 0.22
 Nodes (9): Blog development, Implement and verify, Pick one coherent slice, Present decisions at real stages, Preserve this blog's identity, Recover before implementing, Run the feedback layers honestly, Solidify the win (+1 more)
 
-### Community 648 - "threshold-curve.tsx"
-Cohesion: 0.33
-Nodes (8): clampX(), EXTRA_TINTS, L10, log10(), plAt(), reducedMotion(), ThresholdCurve(), ThresholdCurveProps
+### Community 648 - "token-sampler.tsx"
+Cohesion: 0.09
+Nodes (27): applyTopK(), applyTopP(), CANDIDATES, LOGITS, sampleDistribution(), sampleIndex(), softmaxTemp(), STEM (+19 more)
 
 ### Community 649 - "Editorial reading-surface rollout"
 Cohesion: 0.22
@@ -3018,20 +3114,20 @@ Cohesion: 0.22
 Nodes (9): Acceptance evidence, Adapter model, Arbitrary author-selected targets — 28 October 2026, Composition and accessibility, Owner-selected direction, Shared interactive study frame, State and interaction contract, Target-selection verification (+1 more)
 
 ### Community 651 - "About, Hiking and Projects folio extension"
-Cohesion: 0.22
-Nodes (8): About, Hiking and Projects folio extension, Asset provenance, Consolidated engineering profile, 5 November 2026, Direction contract, First rendered pass, Requested review corrections, Résumé and credentials extension, Superseding About direction, 4 November 2026
+Cohesion: 0.20
+Nodes (9): About, Hiking and Projects folio extension, Asset provenance, Composition refinement, 5 November 2026, Consolidated engineering profile, 5 November 2026, Direction contract, First rendered pass, Requested review corrections, Résumé and credentials extension (+1 more)
 
 ### Community 652 - "Editorial production reconciliation — 11 November 2026"
 Cohesion: 0.22
 Nodes (9): Editorial production reconciliation — 11 November 2026, First remote browser gate and follow-up, Production route and security, Remaining evidence, Scope and authorization, Semantic resolutions, Source and integration boundary, Validation recorded so far (+1 more)
 
-### Community 653 - "voronoi-bloom.ts"
-Cohesion: 0.25
-Nodes (5): controls, defaults, pool, Seed, voronoiBloom
+### Community 653 - "ingest-failures.mjs"
+Cohesion: 0.12
+Nodes (14): argv, bytesByArtifact, casesDir, corpusDir, incoming, ingestedAt, merged, options (+6 more)
 
-### Community 654 - "diffusion-loop.tsx"
-Cohesion: 0.46
-Nodes (7): alphaBars(), DiffusionLoop(), makeNoiseField(), makeSmiley(), mulberry32(), NoiseSchedule(), reducedMotion()
+### Community 654 - "Guided notes"
+Cohesion: 0.12
+Nodes (16): → Ben's world, Fallacies worth quoting, Figures to look at in the book, Four regimes, nine orders of magnitude, Glossary, Guided notes, Hybrid: partition the pipeline, Open questions (+8 more)
 
 ### Community 655 - "Generative SVG gallery"
 Cohesion: 0.25
@@ -3041,9 +3137,9 @@ Nodes (7): Acceptance, Current direction, Drawing language, Extending and findin
 Cohesion: 0.25
 Nodes (7): Approved search direction follow-through, Bounded first improvement, Curated next queue, Editorial UI critique, 2 November 2026, Five distinct critiques, Narrow-width follow-through, Tools and limits
 
-### Community 658 - "og.tsx"
-Cohesion: 0.46
-Nodes (5): BRAND_DOTS, Fonts, ogFonts(), renderBlogOgCard(), truncate()
+### Community 658 - "use-animated-series-path.ts"
+Cohesion: 0.28
+Nodes (14): BandEdgePolylines, computeSeriesPathPoints(), flattenSeriesPath(), interpolateSeriesPathPoints(), morphSeriesPolylines(), samplePolylineY(), seriesDataSignature(), seriesPathFromPoints() (+6 more)
 
 ### Community 659 - "black-hole.ts"
 Cohesion: 0.29
@@ -3058,24 +3154,28 @@ Cohesion: 0.29
 Nodes (6): Backpressure article editorial review, Editorial findings and changes, Integration boundary, Preservation and verification, Scope and source, Technical sources checked
 
 ### Community 662 - "Labs field notebook — 1 November 2026"
-Cohesion: 0.29
+Cohesion: 0.20
 Nodes (7): Detail-page continuation (1 November, 13:23 UTC), Dual-theme instrument controls (1 November22:21 UTC, in progress), Follow-up: annotation target (2026-11-01), Imagegen-directed readout standard (23:21 UTC), Labs field notebook — 1 November 2026, Owner rejection and composition rework (22:32 UTC), Tooltip/readout slice (22:57 UTC)
 
+### Community 663 - "Hiking photo return-focus review"
+Cohesion: 0.18
+Nodes (9): Actual captures, Backlog reconciliation, Build status, separate from behavior, Evidence identity and next step, Five distinct manual critique lenses, Functional verification, Hiking photo return-focus review, Reproduction and correction (+1 more)
+
 ### Community 664 - "Recovery and build compatibility"
-Cohesion: 0.33
-Nodes (4): Dependency installation, Recovery and build compatibility, Restricted build helpers, Working source exists on a branch
+Cohesion: 0.25
+Nodes (5): Durable cycle checkpoint, Dependency installation, Recovery and build compatibility, Restricted build helpers, Working source exists on a branch
 
-### Community 665 - "llm-benchmark/opengraph-image.tsx"
-Cohesion: 0.33
-Nodes (5): alt, contentType, dynamic, Image(), size
+### Community 665 - "theme-provider.test.tsx"
+Cohesion: 0.19
+Nodes (9): Reader(), ThemeProvider(), getServerThemeSnapshot(), subscribeTheme(), ThemePreference, ThemeSnapshot, ThemeSync(), THEMES (+1 more)
 
-### Community 666 - "logistic-bifurcation.ts"
-Cohesion: 0.33
-Nodes (4): controls, defaults, LogisticBifurcation, PURPLE
+### Community 666 - "install.ts"
+Cohesion: 0.22
+Nodes (11): Hardware(), copied, installBlockCaret(), installHaptics(), installInputModality(), navigationKeys, installHardware(), installSafariTabbing() (+3 more)
 
-### Community 667 - "truchet-tiles.ts"
-Cohesion: 0.33
-Nodes (3): controls, defaults, TruchetTiles
+### Community 667 - "Hike photo annotator — Gemini-driven classify + geo-place + write-back"
+Cohesion: 0.12
+Nodes (15): 10. Open questions for the plan stage, 1. Problem & goal, 2. Ground truth (from the scan), 3. Decisions (locked), 4. Architecture, 5. Data flow, 6. Auth, 7. Error handling (+7 more)
 
 ### Community 669 - "Folio uplift — actionable backlog"
 Cohesion: 0.33
@@ -3089,13 +3189,13 @@ Nodes (5): Artistic correction after review, Authoring examples, First source sl
 Cohesion: 0.33
 Nodes (5): Evidence boundaries, Offline OG font contract, Reliable local visual review (FOLIO-028), Reproduce the actual exported site, Verified first slice on 28 October
 
-### Community 672 - "feed.xml/route.ts"
-Cohesion: 0.50
-Nodes (4): dynamic, escapeXml(), GET(), RFC-822
+### Community 672 - "content-address.ts"
+Cohesion: 0.23
+Nodes (12): ADDRESSED_NAME, BARE_ADDRESS, CONTENT_ADDRESS_CHARS, contentAddress(), ContentAddressCheck, contentAddressedName(), parseContentAddress(), sha256Hex() (+4 more)
 
-### Community 673 - "image-picker.tsx"
-Cohesion: 0.50
-Nodes (3): ImagePicker(), intersects(), Rect
+### Community 673 - "editorial-system/page.tsx"
+Cohesion: 0.24
+Nodes (9): metadata, FolioDemo(), AnnotatedBlock(), AnnotationTarget(), MarginNote(), NoteProps, TargetProps, CoilSpecimen() (+1 more)
 
 ### Community 674 - "annotation-colour.test.ts"
 Cohesion: 0.50
@@ -3118,28 +3218,300 @@ Cohesion: 0.50
 Nodes (3): Add a generated asset, Reuse, Reuse and extend editorial artwork
 
 ### Community 682 - "Personal folio extension, 4 November 2026"
+Cohesion: 0.40
+Nodes (5): About composition and hiking imagery refinement, Deduplicated technical profile, Hiking direction, 5 November 2026, Personal folio extension, 4 November 2026, Superseding About distinction
+
+### Community 688 - "band.tsx"
+Cohesion: 0.21
+Nodes (13): Band(), BandFillType, BandProps, BandStrokeProps, bandAreaPath(), bandEdgePath(), BandFadeEdges, bandFadeStops() (+5 more)
+
+### Community 689 - "gradients.tsx"
+Cohesion: 0.13
+Nodes (3): LinearGradientOwnProps, LinearGradientProps, RadialGradientProps
+
+### Community 690 - "packer.ts"
+Cohesion: 0.21
+Nodes (9): Cell, key(), pack(), put(), Placement, WORDS, Word, mulberry32() (+1 more)
+
+### Community 691 - "callout.tsx"
+Cohesion: 0.27
+Nodes (9): Callout(), CalloutProps, CalloutStyleConfig, calloutStyles, CalloutInkIcon(), CalloutType, drawings, ink (+1 more)
+
+### Community 692 - "verify-results.test.ts"
+Cohesion: 0.14
+Nodes (7): FoundRunLog, RESULT_CHECKS, AGGREGATE_ONLY, dirs, fakeLog(), logWithArtifact(), Verdict
+
+### Community 694 - "MLSys book study loop"
+Cohesion: 0.14
+Nodes (12): Generated artifacts, Invocation, Layout, MLSys book study loop, Packet verification checklist, Phase 1 — PACKET, Phase 2 — REVIEW, Phase 3 — TEST (+4 more)
+
+### Community 695 - "grid-lines.tsx"
+Cohesion: 0.27
+Nodes (12): GridColumns(), GridColumnsProps, gridLine(), gridLinePositions(), GridLinesBaseProps, GridLineSvgProps, GridRows(), GridRowsProps (+4 more)
+
+### Community 696 - "graph.ts"
+Cohesion: 0.21
+Nodes (11): EdgeKind, KGEdge, KGNode, KnowledgeGraph, NodeKind, norm(), byId, graph (+3 more)
+
+### Community 701 - "Patterns the blocks leave to you"
+Cohesion: 0.15
+Nodes (12): A `createFocusRecovery` fallback, A search box over options with `createListbox`, `createRovingFocus`: `remember: false`, Focus into a field from a grid, Grid arrows with `createRovingFocus` and `move`, Patterns the blocks leave to you, Reasons the vocabulary lacks, Selection in internal state (+4 more)
+
+### Community 703 - "course-index.tsx"
+Cohesion: 0.26
+Nodes (9): ChapterPage(), ChapterRow(), CourseIndex(), ROMAN_NUMERAL, StudyChapter, StudyCourse, ProgressRow, chapterHref() (+1 more)
+
+### Community 705 - "theme-store.ts"
+Cohesion: 0.41
+Nodes (11): applyToDocument(), getThemeSnapshot(), listeners, onStorage(), onSystemChange(), publish(), readPreference(), readSystem() (+3 more)
+
+### Community 706 - "chart-parent-size.tsx"
+Cohesion: 0.27
+Nodes (10): ChartParentSizeProps, ElementSize, ElementSizeOptions, leadingDebounce(), ParentSize(), readElementSize(), sameSize(), useElementSize() (+2 more)
+
+### Community 707 - "status-chip.tsx"
+Cohesion: 0.22
+Nodes (9): STATUS_CLASS, STATUS_LABEL, StatusChip(), VOLUME_LABEL, VolumeStateChip(), Badge(), badgeVariants, ChapterStatus (+1 more)
+
+### Community 708 - "Test it"
+Cohesion: 0.20
+Nodes (10): A real browser, Break it on purpose, Check a pattern, Contrast, jsdom, Set up tests, Test a primitive, Test it (+2 more)
+
+### Community 709 - "[suite]/page.tsx"
+Cohesion: 0.33
+Nodes (7): formatDuration(), generateMetadata(), SuiteDetailPage(), CONTENT_DIR, loadSuiteContent(), suiteForSlug(), tasksForSuite()
+
+### Community 711 - "gravitational-lensing.ts"
+Cohesion: 0.20
+Nodes (6): controls, defaults, GravitationalLensing, INDIGO, Star, VIOLET
+
+### Community 712 - "MemoryKnowledgeGraph"
+Cohesion: 0.22
+Nodes (10): buildVisibleGraphProfile(), clampGraphZoom(), formatGraphMetric(), getPrimaryFinancialMetric(), getVisibleProfileNode(), GraphCompanyPanel(), GraphFinancialPanel(), GraphNodeInner() (+2 more)
+
+### Community 713 - "moe-block.tsx"
+Cohesion: 0.27
+Nodes (9): ATTN, fmtB(), GATE, gateOut, gridCellCenter(), MoEBlock(), OUT, outIn (+1 more)
+
+### Community 714 - "page-wheel.tsx"
+Cohesion: 0.29
+Nodes (8): Icon(), IconName, icons, keyRef(), nativeDisabled(), PageWheel(), teeth, useHoldToStep()
+
+### Community 715 - "Build an interface from ui-sdk components"
+Cohesion: 0.22
+Nodes (9): 1. Find the components, 2. Put the parts together, 3. State, 4. Forms, 5. Styles, 6. Framework rules, 7. Example, 8. Test it (+1 more)
+
+### Community 716 - "ActionMenu"
+Cohesion: 0.39
+Nodes (9): ActionMenu(), close(), closeMenu(), onKeyDown(), onMenuKeyDown(), onPointerDown(), openMenu(), requestOpen() (+1 more)
+
+### Community 718 - "compute-scaling.tsx"
+Cohesion: 0.36
+Nodes (8): accAt(), clamp(), ComputeScaling(), crossoverC(), reducedMotion(), STRATEGIES, Strategy, StrategyKey
+
+### Community 719 - "using-my-dot-with-codex/index.mdx"
+Cohesion: 0.22
+Nodes (8): A look inside the working environment, CI investigations with a small boundary, Design work exposes a different gap, Research is useful before a decision, The friction moves around, What I mean by my dot working with Codex, What I want back from a task, Where I think this goes next
+
+### Community 720 - "Required interaction-state review"
+Cohesion: 0.22
+Nodes (9): Hiking viewer feedback, 5 November 2026, Hover exit and simplified controls, In-photo expand action, In-photo location action, Keep keyboard commands within the active surface, Keep the current photograph visible in its filmstrip, Location-icon arrival at the selected marker, Portrait scrolling and an always-reachable exit (+1 more)
+
+### Community 721 - "build-photo-preview.mjs"
+Cohesion: 0.22
+Nodes (6): files, inputs, out, [output,fixtures], provenance, root
+
+### Community 722 - "Style it"
+Cohesion: 0.25
+Nodes (8): Color, Icons it draws, Sizes it sets, Slots, State, Style it, Tokens, web.css
+
+### Community 723 - "gw-chirp.ts"
+Cohesion: 0.25
+Nodes (3): controls, defaults, gwChirp
+
+### Community 724 - "kinetic-gas.ts"
+Cohesion: 0.25
+Nodes (5): COLD, controls, defaults, HOT, KineticGas
+
+### Community 725 - "verdict-strip.tsx"
+Cohesion: 0.32
+Nodes (4): BENCH_ACCENT, ICONS, VerdictStrip(), Verdict
+
+### Community 726 - "build-preview.mjs"
+Cohesion: 0.25
+Nodes (7): {build}, here, postcss, req, root, stage, tailwind
+
+### Community 728 - "Steps"
+Cohesion: 0.29
+Nodes (7): 1. Write the spec before any code, 2. Write the primitive in `<name>.ts`, 3. Use the blocks, don't rewrite them, 4. Render it, 5. Make it agent-ready and test it, A new behavior, Steps
+
+### Community 729 - "Build a component from @ui-sdk/core"
+Cohesion: 0.29
+Nodes (7): Build a component from @ui-sdk/core, Compose ours, Other frameworks, Probe what the docs don't say, Read first, Rules, When you're done
+
+### Community 730 - "Web components"
+Cohesion: 0.29
+Nodes (7): Differences from React, Elements of your own, Setup, Tag names and markup, Testing, Web components, Without a bundler
+
+### Community 732 - "eye-diagram.ts"
+Cohesion: 0.29
+Nodes (3): controls, defaults, EyeDiagram
+
+### Community 733 - "fourier-series.ts"
+Cohesion: 0.29
+Nodes (4): controls, defaults, Epicycle, fourierSeries
+
+### Community 734 - "theme-script.ts"
+Cohesion: 0.33
+Nodes (3): THEME_SCRIPT, DARK_QUERY, THEME_STORAGE_KEY
+
+### Community 735 - "theme-toggle.tsx"
+Cohesion: 0.38
+Nodes (3): state, ThemeToggle(), useReducedMotion()
+
+### Community 736 - "Hiking photo discovery, local candidate"
+Cohesion: 0.29
+Nodes (6): Candidate checks, Data-quality finding, Hiking photo discovery, local candidate, Reproducible local review, Resilience and accessibility, Scope
+
+### Community 737 - "B-trees and LSM-trees editorial review"
+Cohesion: 0.29
+Nodes (6): B-trees and LSM-trees editorial review, Editorial and factual changes, Preservation and verification, Release boundary, Scope, Sources checked
+
+### Community 738 - "Self-test: Vol I, Ch 1: Introduction"
+Cohesion: 0.29
+Nodes (6): Answer key, Score yourself, Section A: from the book's quiz bank, Section B: Feynman prompts (explain in ≤ 5 sentences each, no jargon), Section C: numeric exercise, Self-test: Vol I, Ch 1: Introduction
+
+### Community 739 - "coupled-oscillators.ts"
+Cohesion: 0.33
+Nodes (3): controls, coupledOscillators, defaults
+
+### Community 740 - "useMeasuredGraphGroupBounds"
+Cohesion: 0.33
+Nodes (6): areGraphGroupBoundsEqual(), clamp(), computeForceLayout(), forceGraphNodeRadius(), GraphForceCanvas(), useMeasuredGraphGroupBounds()
+
+### Community 741 - "Overland Track geometry audit — 2026-11-05"
+Cohesion: 0.33
+Nodes (5): Application integration source gate, Deliverable and acceptance, Itinerary variants, Overland Track geometry audit — 2026-11-05, Reuse terms
+
+### Community 742 - "Hiking cover family, 5 November 2026"
+Cohesion: 0.33
+Nodes (5): Hiking cover family, 5 November 2026, Photo trail journal refinement, 5 November 2026, Presentation contract, Source provenance, Verification gates
+
+### Community 743 - "Hiking duplicate-photo review, 7 November 2026"
+Cohesion: 0.33
+Nodes (5): Bounded correction, Findings, Hiking duplicate-photo review, 7 November 2026, Source and release boundary, Validation
+
+### Community 744 - "parse_script"
+Cohesion: 0.47
+Nodes (5): Path, main(), parse_script(), Generate a chapter's two-host audio overview from podcast.md. Run: uv run…, Return (hosts, segments); each segment is {voice, text, eq}.
+
+### Community 745 - "MLSys study curriculum"
+Cohesion: 0.33
+Nodes (5): MLSys study curriculum, Volume I: Introduction to Machine Learning Systems (16 ch), Volume II: Scaling Machine Learning Systems, preview (17 ch), Volume III: Agentic ML Systems, in preparation (20 ch), Volume IV: Physical AI, in preparation (18 ch)
+
+### Community 746 - "Build with ui-sdk"
+Cohesion: 0.40
+Nodes (5): Build with ui-sdk, Pick your path, Read first, Rules for every path, When you're done
+
+### Community 747 - "y-axis-ticks.ts"
+Cohesion: 0.40
+Nodes (3): Y_AXIS_DEFAULT_TICK_COUNT, Y_AXIS_MAX_TICK_COUNT, Y_AXIS_MIN_TICK_COUNT
+
+### Community 749 - "0002 — The timeout-config miswire"
+Cohesion: 0.40
+Nodes (4): 0002 — The timeout-config miswire, Guardrails, Root cause, Timeline
+
+### Community 750 - "0003 — The bearer-blip misclassification"
+Cohesion: 0.40
+Nodes (4): 0003 — The bearer-blip misclassification, Guardrails, Root cause, Timeline
+
+### Community 751 - "0004 — The mid-sweep results.json race"
+Cohesion: 0.40
+Nodes (4): 0004 — The mid-sweep results.json race, Guardrails, Root cause, Timeline
+
+### Community 752 - "0005 — CLI permission prompts became benchmark artifacts"
+Cohesion: 0.40
+Nodes (4): 0005 — CLI permission prompts became benchmark artifacts, Guardrails, Root cause, Timeline
+
+### Community 753 - "0006 — Python probe shims rejected working modules"
+Cohesion: 0.40
+Nodes (4): 0006 — Python probe shims rejected working modules, Guardrails, Root cause, Timeline
+
+### Community 754 - "0007 — Valid HTML and visible WebGL frames disappeared in the harness"
+Cohesion: 0.40
+Nodes (4): 0007 — Valid HTML and visible WebGL frames disappeared in the harness, Guardrails, Root cause, Timeline
+
+### Community 755 - "postmortem/README.md"
+Cohesion: 0.40
+Nodes (3): 0008 — The fixture runner hid a browser callback serialization error, Evidence and correction, Guardrails
+
+### Community 756 - "0009 — Blog posts stuck on the loading skeleton"
+Cohesion: 0.40
+Nodes (4): 0009 — Blog posts stuck on the loading skeleton, Guardrails, Root cause, Timeline
+
+### Community 757 - "0010 — The folio redesign looked "wiped" from production"
+Cohesion: 0.40
+Nodes (4): 0010 — The folio redesign looked "wiped" from production, Guardrails, Root cause, Timeline
+
+### Community 758 - "0011 — Hike photos vanished when production moved to a CI build"
+Cohesion: 0.40
+Nodes (4): 0011 — Hike photos vanished when production moved to a CI build, Guardrails, Root cause, Timeline
+
+### Community 759 - "Postmortems"
+Cohesion: 0.40
+Nodes (5): Index, Postmortems, Rules, Template, When to write one
+
+### Community 760 - "Type system"
+Cohesion: 0.40
+Nodes (4): Faces, Layout, Scale, Type system
+
+### Community 761 - "verify-benchmark-renders.mjs"
+Cohesion: 0.50
+Nodes (4): collectErrors(), HTML_CATEGORIES, LIVE_MODELS, main()
+
+### Community 762 - "System Paradigms: Self-Test"
+Cohesion: 0.40
+Nodes (4): Section A: book questions, Section B: Feynman prompts, Section C: numeric, System Paradigms: Self-Test
+
+### Community 763 - "Make it agent-ready"
+Cohesion: 0.50
+Nodes (4): Connect the bridge, Make it agent-ready, Prove it with a test, The checklist
+
+### Community 765 - "GraphForceEdge"
+Cohesion: 0.50
+Nodes (4): getForceEdgeColor(), getForceEdgeWidth(), GraphForceEdge(), hashString()
+
+### Community 766 - "positional-encoder.tsx"
+Cohesion: 0.83
+Nodes (3): cellFill(), peValue(), PositionalEncoder()
+
+### Community 768 - "MLSys study progress"
+Cohesion: 0.50
+Nodes (3): Conventions, MLSys study progress, Session log
+
+### Community 773 - "GraphEdgeRow"
 Cohesion: 0.67
-Nodes (3): Deduplicated technical profile, Personal folio extension, 4 November 2026, Superseding About distinction
+Nodes (3): getProfileEdgeColor(), getProfileEvidenceStyle(), GraphEdgeRow()
 
 ## Knowledge Gaps
-- **4482 isolated node(s):** `npx`, `dynamic`, `size`, `contentType`, `alt` (+4477 more)
+- **4996 isolated node(s):** `npx`, `dynamic`, `size`, `contentType`, `alt` (+4991 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **61 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **83 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `BENCHMARK_TASKS` connect `llm-benchmark/registry.ts` to `breadcrumbLd`, `sandbox.ts`, `[right]/page.tsx`, `verify-results.ts`, `run-benchmark.mjs`, `[category]/[task]/page.tsx`, `lib/content.ts`, `publish-traces.mjs`, `executable.ts`, `content-address.ts`, `feedback.ts`, `run-benchmark-loops.ts`, `mcp.ts`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
-- **Why does `cn()` connect `cn` to `breadcrumbLd`, `generated-demo.tsx`, `universe-scale-studio.tsx`, `model-table.tsx`, `callout.tsx`, `[category]/[task]/page.tsx`, `icons.tsx`, `vector-studio-modal.tsx`, `black-hole-sim/physics.ts`, `run-trace.tsx`, `topics.ts`, `use-article-navigation.ts`, `editorial-system/page.tsx`, `usb-wifi-diagrams.tsx`?**
+- **Why does `cn()` connect `cn` to `progress.ts`, `model-table.tsx`, `originals/page.tsx`, `llm-benchmark/models/[model]/page.tsx`, `bar-squares.tsx`, `[category]/[task]/page.tsx`, `run-trace.tsx`, `black-hole-sim/physics.ts`, `icons.tsx`, `chart-tooltip.tsx`, `x-axis.tsx`, `generated-demo.tsx`, `universe-scale-studio.tsx`, `blog/[slug]/page.tsx`, `callout.tsx`, `review.tsx`, `course-index.tsx`, `status-chip.tsx`, `use-article-navigation.ts`, `breadcrumbLd`, `bar-chart.tsx`, `feedback.ts`, `projection-utils.ts`?**
+  _High betweenness centrality (0.088) - this node is a cross-community bridge._
+- **Why does `BENCHMARK_MODELS` connect `llm-benchmark/models/[model]/page.tsx` to `breadcrumbLd`, `generated-demo.tsx`, `run-benchmark.mjs`, `sitemap.ts`, `model-table.tsx`, `verify-results.ts`, `[category]/[task]/page.tsx`, `prompt-probe.mjs`, `cli.ts`, `provider.ts`, `bench-ref.ts`, `lab/registry.ts`, `verify-benchmark-renders.mjs`, `feedback.ts`, `run-benchmark-loops.ts`, `backfill-failure-reasons.mjs`, `mcp.ts`?**
   _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **Why does `BENCHMARK_MODELS` connect `[category]/[task]/page.tsx` to `breadcrumbLd`, `generated-demo.tsx`, `[right]/page.tsx`, `model-table.tsx`, `verify-results.ts`, `publish-traces.mjs`, `lib/content.ts`, `run-benchmark.mjs`, `prompt-probe.mjs`, `BenchmarkModel`, `feedback.ts`, `llm-benchmark/registry.ts`, `backfill-failure-reasons.mjs`, `mcp.ts`, `run-benchmark-loops.ts`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+- **Why does `BENCHMARK_TASKS` connect `BENCHMARK_TASKS` to `breadcrumbLd`, `run-benchmark.mjs`, `sitemap.ts`, `verify-results.ts`, `llm-benchmark/models/[model]/page.tsx`, `[category]/[task]/page.tsx`, `executable.ts`, `cli.ts`, `provider.ts`, `bench-ref.ts`, `rescore-artifact.mjs`, `lab/registry.ts`, `verify-benchmark-renders.mjs`, `feedback.ts`, `run-benchmark-loops.ts`, `plugins/registry.ts`, `mcp.ts`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `npx`, `dynamic`, `size` to the rest of the system?**
-  _4482 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `recovery.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06852497096399536 - nodes in this community are weakly interconnected._
+  _4996 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `run-benchmark.mjs` be split into smaller, more focused modules?**
+  _Cohesion score 0.03326984126984127 - nodes in this community are weakly interconnected._
 - **Should `circuit-canvas.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.07553143374038897 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07418788410886742 - nodes in this community are weakly interconnected._
 - **Should `pipeline.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.05292702485966319 - nodes in this community are weakly interconnected._

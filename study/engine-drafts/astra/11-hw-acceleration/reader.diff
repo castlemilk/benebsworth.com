@@ -1,0 +1,573 @@
+--- 11-hw-acceleration/packet/packet.md
++++ astra/11-hw-acceleration/packet/packet.md
+@@ -9,135 +9,157 @@
+ ## Thesis
+ 
+-Which part of an accelerator limits this workload, and what evidence would justify changing the hardware or the mapping? Start with an operator at the shapes, batch sizes, and precision the application actually uses. Count its arithmetic and the bytes that cross each relevant memory interface, then check whether its tiles fit in local storage and whether the compiler selects the intended execution units. Compare the resulting performance bounds with a profile to see which resource is saturated and which units are waiting. Carry the investigation through launches, transfers, synchronization, and sustained deployment conditions. A change earns its place when an experiment confirms that it relieves the diagnosed bottleneck and improves the application metric that motivated the work.
++Which part of an accelerator limits this workload, and what evidence would justify changing the hardware or the mapping? Start with one operator on the request's critical path. Its shape and precision determine the arithmetic it needs. Its execution schedule determines how often operands cross each memory boundary. Compare the time required for that work and traffic with the observed kernel time, then follow the result through the rest of the request. A change earns its place when it moves the predicted limiting metric, preserves output quality, and improves the deployment outcome that matters.
+ 
+ ## Guided notes
+ 
+-### Identify the work worth specializing
+-
+-An accelerator trades some of a general-purpose processor's flexibility for efficient execution of recurring operations. A CPU spends chip area and energy on machinery that handles branches, speculation, and a wide variety of instruction sequences. A dense linear layer offers a more regular workload. Its multiply-accumulate operations can share instruction control and reuse operands across many arithmetic units. Local storage and data paths make that reuse practical by delivering values at the rate the units consume them. As specialization raises arithmetic throughput, operand delivery can become the limiting resource. This integration bottleneck explains why a wider array may spend much of its time idle and why a smaller model file can leave request latency nearly unchanged.
+-
+-Profile dense arithmetic, elementwise work, reductions, and irregular control separately at the deployed batch size. Follow a weight from its checkpoint through conversion, memory, and the matrix unit: storage in a narrow format reduces traffic only on interfaces it crosses while still narrow. Hold shapes and precision fixed when comparing hardware. A wider array also increases demand on local storage and data paths; ==operand delivery sets a boundary=={Additional arithmetic units help only when the data path can supply useful work to them.}
+-
+-Consider an illustrative sensor classifier with irregular feature gathering followed by a dense projection. Suppose a batch-one trace attributes 8 ms to gathering and 2 ms to projection. Even eliminating projection time would reduce latency only from 10 ms to 8 ms, so investigate gathering first. For a large batch, suppose those phases take 10 ms and 40 ms respectively. Test the matrix engine there, then measure the complete pipeline; a faster projection matters only to the extent that its savings survive the remaining phases.
+-
+-::fig[specialization-diagnosis]
+-
+-Read the flow from phase profile through operand delivery to the full-workload test. If a larger array is chosen solely for its MAC count, the batch-one trace predicts little benefit because gathering dominates. Compare phase times and matrix-unit activity before and after the change; if activity is low while operand stalls are high, investigate the data path. The next step is to identify which execution units actually run each operator.
+-
+-### Follow an operator to its execution units
+-
+-A model graph exposes several kinds of work that call for different execution units. Vector operations apply the same instruction across many elements. Matrix operations organize multiply-accumulates into tiles so each fetched input or weight contributes to multiple outputs. Special function units and dedicated instruction paths help evaluate operations such as the exponential in softmax or the reciprocal square root in normalization. SIMD issues one instruction across lanes, while GPU SIMT exposes individual threads that typically issue instructions in groups. Tensor Cores execute instruction-driven matrix tiles. A systolic array passes values between neighboring processing elements in a timed pattern, reducing repeated register-file accesses. A single layer can move among these paths, so its performance depends on the mix of work and the cost of moving data between units.
+-
+-Follow a score tile through the projection: input and weight tiles are staged in nearby storage, while partial sums remain close to the arithmetic cells before the scores pass to softmax. Check deployed shapes for partial tiles, SIMT branch divergence, and systolic fill and drain; each can consume cycles without useful work. Record multiply and accumulator precision separately. ==Zeros need a matching path=={A dense instruction still performs work on zero weights unless a supported sparse representation and kernel let it skip that work.}
+-
+-For an illustrative ranking service, suppose a trace assigns 2 ms to projection and 6 ms to softmax, with high matrix-unit activity during projection. The softmax trace uses a general arithmetic sequence for exponentials. The flow's first step produces scores; the next subtracts their row maximum, followed by exponentials, a sum, and normalization. Benchmark a supported softmax implementation on the same inputs and compare both elapsed time and output error. If it meets the error requirement and reduces end-to-end latency, prefer that change before buying a faster matrix engine.
+-
+-::fig[projection-softmax-path]
+-
+-The path after projection contains reductions as well as exponentials, so speeding up exponentials alone need not remove all softmax time. A sparse-weight optimization would also be a poor response if the trace still selects dense matrix instructions. Inspect the selected kernel and instruction path, then retest the full operation. Next, account for the bytes moving between storage and those execution paths.
+-
+-### Find which interface carries the bytes
+-
+-An accelerator moves tensors through a hierarchy that trades capacity against access speed. Registers and local SRAM feed arithmetic quickly but hold small working sets. Device DRAM, including HBM on some accelerators, holds much larger tensors and supplies less bandwidth than the combined local paths. A discrete accelerator also exchanges data with the host over a separate link. The same tensor can cross several of these interfaces, so count traffic at the one under investigation. A dense operation can repeatedly use values already in local storage, while token-by-token decoding at small batch sizes can stream weights from device memory with little reuse. The memory wall appears when an interface reaches sustainable bandwidth and the arithmetic units wait for data.
+-
+-Trace a weight tile from device DRAM into SRAM, through the compute units, and then account for result writes. Count every crossing of the interface being studied: a reload or an intermediate spill adds traffic even though it adds no new tensor to the model. Tensor sizes establish a capacity requirement; the execution schedule and hardware counters reveal traffic. ==Residency is not throughput=={A tensor can fit in device memory and still arrive too slowly to keep arithmetic units busy.}
+-
+-The dominant objects change by phase: early vision layers may pressure activation storage, decoding reads weights and attention state, and training also retains gradients and optimizer state. On a shared timeline, compare host copies with kernels. Keeping intermediates on the device avoids host-link crossings; asynchronous copies can overlap work only when dependencies permit.
+-
+-For an illustrative decoder, assume each separate request reads the same 64 MiB weight block once per token step. Four separate requests therefore read 4 × 64 = 256 MiB. If a batched kernel instead fetches the block once and reuses it for all four, it reads 64 MiB total, or 16 MiB per request. This accounting excludes activations and attention state. Measure those bytes and batch formation delay before deciding whether the batch improves the service.
+-
+-::fig[tensor-interface-path]
+-
+-Follow the flow from host transfer through DRAM, SRAM and result writes: each step has a separate byte count. If the model fits but device-memory bandwidth is saturated while compute units wait, adding capacity alone targets the wrong resource. Check interface counters and the copy/kernel timeline, then test reuse or device residency at the pressured crossing. Those byte counts also provide the input for a roofline estimate.
+-
+-### Predict whether compute or bandwidth limits a kernel
+-
+-The roofline model estimates kernel throughput from the arithmetic peak of the execution path and the bandwidth of a specified memory interface. Arithmetic intensity is the number of operations performed per byte crossing that interface. The bandwidth ceiling is bandwidth multiplied by intensity, and the kernel's modeled throughput is bounded by the lower of that ceiling and the compute peak. Their intersection, the ridge point, equals peak compute divided by bandwidth. A kernel below the ridge can benefit from moving fewer bytes or using a faster interface. A kernel above it has more reason to pursue better execution-unit utilization or a higher arithmetic rate. Profile the kernel to check whether it approaches the predicted ceiling.
+-
+-For one kernel invocation, count operations and bytes at the chosen interface, then compare the time each resource would need. Use a consistent operation convention: if a multiply and an add count separately, each MAC is two operations, and the compute peak must use that convention too. The larger of operations divided by compute rate and bytes divided by bandwidth is a time lower bound. ==A bound is not a prediction=={Dependencies, poor utilization and sequential work can make elapsed time longer than either ideal resource time.}
+-
+-Choose the peak for the supported precision path and bandwidth suited to the access pattern. If measured throughput lies far below both ceilings, inspect access efficiency, tile utilization, stalls and fixed overhead before selecting an upgrade.
+-
+-Consider an illustrative kernel with 8 GFLOP and 2 GB of device-memory traffic, using decimal units. Its intensity is 4 FLOP/byte. At 16 TFLOP/s peak and 1 TB/s sustainable bandwidth, the ridge is 16 FLOP/byte; the lower ceiling is 4 TFLOP/s. Arithmetic needs at least 0.5 ms and transfer at least 2 ms, so the time bound is 2 ms. Doubling bandwidth raises the ceiling to 8 TFLOP/s and lowers the bound to 1 ms; doubling compute alone leaves it unchanged.
+-
+-::fig[roofline-upgrade-comparison]
+-
+-Read the bars as modeled throughput ceilings for that same kernel: baseline and doubled compute both reach 4 TFLOP/s, while doubled bandwidth reaches 8. Buying compute on the assumption that its peak halves runtime would miss the modeled byte limit. Check whether a profile actually shows device-memory saturation before testing a bandwidth upgrade. Next, examine whether operand and accumulator tiles fit on chip, since their placement can change traffic and intensity.
++### Why the same projection can need two different machines
++
++Consider a visual inspection service that projects each image's feature vectors into a new representation. Each output is a sum of products. A CPU can evaluate these sums with a short loop, but it still spends instruction and register bandwidth directing the work. A matrix engine can direct many products with one instruction and distribute an operand to several arithmetic units. The benefit depends on how much of that regular work the service presents at once. One feature vector and a batch of vectors use the same learned weights, yet they offer quite different opportunities to reuse a weight after fetching it.
++
++Write the projection as Y = XW. X has M rows of K features, and W has K rows and N columns. Each of the MN outputs takes K multiply-accumulates, for MKN in total. Count the rows the kernel actually receives. One image can contribute many spatial positions, and batching images increases M further if their positions share a projection.
++
++Pick one weight, W[k,n]. It multiplies X[m,k] once for every row m, updating a different Y[m,n] each time. Those rows offer a ==reuse opportunity=={Several uses share a device-memory fetch only if the weight stays available on chip between uses.} A kernel can keep a weight tile nearby while visiting several rows, provided it also has room for their inputs and live sums. Trace an idle multiplier back to its missing operand. Even a resident tile can leave the multiplier waiting for a register read port or a wire carrying an activation. Adding multipliers increases demand on both.
++
++For an illustrative service, assume one row per request, a weight matrix of S bytes, and a fresh device-memory read of the whole matrix per request. Eight separate requests then read 8S weight bytes. Schedule all eight rows against each weight tile before releasing it, and one pass reads S bytes, or S/8 per row. Test this schedule under representative arrivals. Record weight bytes per completed row and measure latency from arrival, including the wait for the eighth row. Adopt batching if it delivers the traffic saving and meets the service latency budget.
++
++::fig[trace-one-weight]
++
++The last step in the diagram counts reads of the weight traced in the first step. Eight distinct output sums are compatible with either one fetch or eight. If a smaller weight file leaves latency unchanged, inspect the bytes the running kernel reads and the instructions consuming them. Expansion before multiplication can change the execution path. If weight traffic did fall, time activation transfers and fixed request costs before predicting a further gain.
++
++### Find the unit that executes each instruction
++
++A projection followed by normalization exercises several parts of a chip. A matrix instruction forms a tile of dot products. Vector lanes can add a bias or compare activation values, and a reciprocal square root can use a special-function path. On a GPU, groups of threads issue instructions together and may cooperate on one matrix tile. On a systolic array, neighboring processing elements pass operands along a regular route and accumulate products as values meet. Both organizations exploit regularity, but a short reduction, a partially filled tile, or an unsupported numerical format can leave much of the advertised arithmetic capacity unavailable.
++
++Consider clipping negative activations to zero. In SIMD code, a vector instruction compares several elements at once, one per lane. In SIMT code, a programmer can assign one element to each thread. The GPU groups threads to issue a common instruction. A maximum with zero works across the whole group. If a more elaborate activation compiles to branches and threads disagree on the branch, the group can issue instructions for each path with only the participating lanes active.
++
++Now follow an activation entering the left edge of a weight-stationary systolic array. The first cell multiplies it by a resident weight and forwards the activation right. On the next cycle the neighbor uses it with another weight, saving a second central register-file read. It takes cycles for inputs to reach the far cells and for the last results to emerge. A long stream spreads those fill and drain costs over many outputs. A short stream can finish entering the array before all cells have useful work.
++
++For an instruction-driven matrix tile, distinguish the ==operand and accumulator types=={A wide running sum can preserve contributions across a reduction even when the instruction reads narrow inputs.} Inspect both input types, the accumulation type and the supported tile dimensions. An edge tile may occupy a full instruction with only part of its output useful. Likewise, arithmetic savings from sparsity require a matching pattern, its expected representation and an instruction that skips products.
++
++Suppose an illustrative trace starts with INT8 weights and activations. The runtime applies their quantization scales, produces floating-point tiles, then issues a floating-point matrix multiply. The stored tensors explain the compact model size. The emitted instruction determines the applicable arithmetic ceiling, and the conversions consume time before that instruction starts. Try a kernel accepting the actual dimensions, layout and scale scheme. Inspect the new trace for integer input operands and the intended accumulation type. Compare outputs against the reference on the same inputs, then time the projection from its first conversion through its final output. Select the integer path if it meets the error tolerance and reduces that elapsed time.
++
++::fig[inspect-precision-path]
++
++Read the audit from stored operands through to the result. A tensor containing many zeros can pass the first inspection and still reach a dense instruction at the third. Check the emitted operation before budgeting fewer arithmetic cycles. If the projection accelerates but request latency barely moves, time the following normalization. Its lanes must combine partial sums before the reciprocal square root can operate on the resulting variance. Even inside a fused kernel that dependency persists. Inspect repeated reads and writes around the reduction to determine which memory boundary carries the remaining traffic.
++
++### Count bytes at the boundary the operator crosses
++
++The byte count for a projection depends on where the observer stands. A weight might cross the host link once at startup, cross from device memory into on-chip storage once per batch, and travel from local storage to arithmetic units many times. Each boundary has its own bandwidth and its own opportunities for reuse. Capacity determines whether data can stay at a level. Access order determines whether successive operations find it there and whether each memory transaction carries useful values. A plausible diagnosis names the tensor, the boundary, and the interval over which traffic is counted.
++
++Open the device-memory ledger when the projection’s first kernel starts and close it when its final dependent kernel finishes. Charge each weight tile when it enters the chip, including any refill after eviction. Count input activation reads and final output writes on the same basis. A partial sum held in registers adds no device-memory traffic during the reduction. If one kernel writes that sum to device memory and a second kernel reads it to finish the projection, enter the write under the producer and the read under the consumer. This ==accounting by crossing=={Changing the tile schedule can change the byte count even when the tensor shapes and arithmetic stay fixed.} captures what an implementation spends to produce the result.
++
++Which tensor deserves local storage depends on when it will be used again. In single-row decoding, the next token can require another pass over the weight matrix. Processing several ready rows together can let each weight serve several rows before eviction. In an early vision layer, filters may already fit on chip while neighboring output tiles repeatedly fetch overlapping strips of a large input map. Retaining the shared activation strip can then save a refill on each successive tile.
++
++Consider an illustrative single-row projection with 4,096 inputs and 4,096 outputs. Assume FP16 weights, inputs and outputs, one device-memory fetch per weight and input element, one final write per output element, and on-chip accumulation throughout. The matrix contains 4,096 × 4,096 weights. At two bytes each, they account for 33,554,432 bytes of reads. Counting a multiply and an add per weight gives 33,554,432 FLOPs, or one FLOP per weight byte. The input read and output write add 8,192 bytes apiece. The ledger therefore predicts 33,562,624 bytes read and 8,192 bytes written, for an intensity just under one FLOP per byte.
++
++Compare those two entries with measured device-memory transaction bytes summed over every kernel in the projection. Excess reads warrant checking for tile refills or transactions that fetch unused values. To estimate the bandwidth the projection sustains, divide its measured read-plus-write total by elapsed time from the first kernel’s start to the final dependent kernel’s completion. Pairing both kernels’ traffic with only the producer’s duration would inflate the rate and could make a bandwidth upgrade look justified.
++
++::fig[separate-memory-boundaries]
++
++Follow one weight across the three boundaries. Its startup upload can disappear from the steady-state host trace while its device-to-local refill recurs on every token. At the engine, forwarding the value between cells can supply another multiply without another local-store read. If the weights already fit in device memory and counters still record roughly a matrix read per token, test whether processing ready rows together reduces bytes per row. If uploads recur, check the host timeline separately. A prefetch can hide its full transfer time only when the schedule permits independent computation, the copy and compute paths progress together, and the data arrives before its consumer needs it. Once the recurring crossing is identified, its byte count and bandwidth give a time floor to compare with the observed invocation time.
++
++### Use the roofline to make a falsifiable prediction
++
++For a kernel doing F operations and moving D bytes across a chosen interface, arithmetic intensity is F/D. Let P be the compute ceiling for the instructions in use, and B the bandwidth ceiling at that interface. Arithmetic needs at least F/P seconds and transfer needs at least D/B seconds. Even with perfect overlap, the kernel takes at least the larger of those times. Equivalently, its throughput is bounded by min(P, B × F/D). The ceilings meet at intensity P/B, called the ridge point. A kernel far below both ceilings calls for another measurement before either resource can be blamed.
++
++Follow one projection from its instruction count to its device-memory counters. If each fused multiply-add contributes two FLOPs to the work, use the two-FLOP convention for the arithmetic rate too. Select the rate for the precision and instructions the kernel actually executes. For the transfer calculation, pair device-memory read and write bytes with a bandwidth for that interface. Substituting local-store bandwidth would shorten the calculated transfer time even though the same bytes still have to cross device memory.
++
++Work backward from a throughput target before committing to a hardware change. At intensity I, every FLOP requires an average of 1/I bytes at the chosen boundary. Delivering R FLOP/s therefore requires R/I bytes/s. Compare that demand with bandwidth sustained for a similar access pattern and read/write mix. If the demand exceeds even the interface ceiling, the target is out of reach at the current traffic count. Look for repeated tile fetches or spilled partial sums. Eliminating a crossing increases intensity while leaving the projection's useful work fixed. Raising compute peak alone leaves the ==bandwidth demand at a given rate=={For fixed work and traffic, a target throughput requires the same bytes per second on a faster arithmetic engine.} unchanged.
++
++Take an illustrative projection with 24 GFLOP of work and 6 GB of device-memory traffic, using decimal units. Suppose its instruction path supports 60 TFLOP/s and device memory supports 1.5 TB/s. Dividing 24 by 6 gives 4 FLOP/byte. The ridge is 60/1.5 = 40 FLOP/byte, so at this intensity the bandwidth ceiling permits only 1.5 × 4 = 6 TFLOP/s. A target of 12 TFLOP/s would require 3 TB/s. At the existing bandwidth ceiling, hitting that target would require cutting traffic to at most 3 GB for the same work.
++
++Read each bar below as the minimum time for one resource to do its share. The arithmetic floor is 24 GFLOP divided by 60,000 GFLOP/s, or 0.4 ms. Moving 6 GB at 1,500 GB/s takes at least 4 ms. Doubling compute peak would halve the shorter bar and leave the 4 ms floor in place. If profiling confirms bandwidth saturation, test a mapping that reduces bytes.
++
++::fig[compare-kernel-time-floors]
++
++The tenfold difference in bar length predicts which resource sets the optimistic floor. It does not tell you how the kernel spent each millisecond. For example, an illustrative duration of 4.2 ms with 6 GB of counted traffic implies about 1.43 TB/s, close to the stated ceiling. A much longer duration with the same bytes implies lower delivered bandwidth. Before buying a wider interface, check whether dependent loads leave too few requests outstanding, partial tiles leave execution lanes idle, or the timing interval includes launch gaps. If counters instead identify repeated refills at high bandwidth, size the operand tiles and accumulators together to see which crossings a revised on-chip layout can eliminate.
+ 
+ ### Fit operands and accumulators on chip
+ 
+-A tile can exploit local reuse only when all values live at the same time fit in the storage available to its execution group. The working set includes input and weight tiles, partial sums, and temporary workspace. Double buffering reserves two copies of an operand tile so the next can load while the current one is in use. Accumulators often use a wider format than the operands, so their footprint can be substantial even with a single buffer. In a matrix multiply, reducing the output tile width shrinks the weight tile and the accumulator tile while the input tile stays the same size. That change can make a schedule feasible, but it can also produce more tiles and alter how often the input is loaded.
+-
+-Budget each live allocation as element count × bytes per element × resident copies, then add workspace and other overlapping state. Follow an input tile as its current buffer feeds the matrix unit while the next buffer is filled; both occupy SRAM even though only one is being consumed. An accumulator remains live across reduction steps and may use more bytes per element.
+-
+-Check each physical storage tier separately: registers cannot rescue an oversized shared-memory allocation. Account for padding, alignment, and concurrent tiles against the capacity actually available to the execution group. ==A capacity pass is only a feasibility test=={Execution-unit dimensions and measured reloads still determine whether the schedule is useful.}
+-
+-For an illustrative shared SRAM budget, take a 96 × 128 input and 128 × 64 weights, both double buffered at 2 bytes per element. Their allocations are 48 KiB and 32 KiB. A single 96 × 64 accumulator at 4 bytes per element adds 24 KiB, and workspace adds 12 KiB. With 1 KiB = 1024 bytes and no other allocations, the total is 116 KiB against 96 KiB available: reject this candidate because it exceeds capacity by 20 KiB.
++A tile promises local reuse only if all values needed at the same time fit in the available on-chip storage. During a double-buffered matrix multiply, one input buffer can feed the current computation while another receives the next block. The weights can use the same arrangement. Meanwhile, the output's partial sums must survive until the reduction finishes, and the kernel may need separate workspace. A tile capacity check counts every simultaneously resident allocation, using its own element width and buffer count, before crediting the schedule with any traffic savings.
++
++Freeze the schedule just before the matrix unit finishes a reduction block. It still needs the current A and B blocks. Meanwhile, the transfer engine needs destinations for the incoming A and B blocks. Mark all four address ranges as occupied. When the transfers finish and the matrix unit releases the current pair, the two pairs can exchange roles. Overwriting either current block before its last read would feed the arithmetic values from the wrong reduction step.
++
++Follow one output element across that exchange. Its accumulated products occupy one FP32 slot, and the next reduction step updates that same slot. The other output elements have the same lifetime. Converting the completed result to a smaller format saves bytes on the final store, but the conversion happens too late to shrink the live accumulator. The workspace also stays allocated through the exchange. Size the SRAM for ==peak live storage=={Two allocations can share an address range only when their lifetimes do not overlap.} at this point in the schedule. Changing the depth of a reduction block changes the size of both operand blocks while leaving the number of output slots fixed.
++
++Consider an illustrative tile in a single 96 KiB SRAM, with 1 KiB equal to 1024 bytes. Assume tightly packed arrays, no alignment overhead and no allocations beyond those listed. One 96 × 128 input block at two bytes per element occupies 24 KiB. The current and incoming blocks together account for the 48 KiB input bar. One 128 × 64 weight block at the same precision occupies 16 KiB, so the weight bar is 32 KiB.
++
++Each of the 96 × 64 output positions needs four bytes throughout the reduction. Those 24,576 bytes give the 24 KiB accumulator bar. Adding the separate 12 KiB workspace gives 48 + 32 + 24 + 12 = 116 KiB. The signed margin is capacity minus demand, or 96 − 116 = −20 KiB. Reject the planned overlap for this tile.
+ 
+ ::fig[baseline-tile-storage]
+ 
+-The bars separate the four allocations from their total and the SRAM limit. Counting only the 80 KiB of operands would incorrectly accept the baseline; the accumulator and workspace remain live too. Check the compiler's allocation report for each storage tier and any spill or launch failure, then resize the tile or reduce residency. After finding a feasible candidate, inspect matrix-unit compatibility and profile input reloads: splitting an output region can require loading the same input again. The next mapping decision determines whether that potential reuse is actually captured.
+-
+-### Turn reuse in the equations into reuse on the chip
+-
+-Mapping turns a tensor operation into a plan for where work runs, what data each processing element holds, and in which order loops execute. A weight-stationary schedule keeps weights local while inputs stream past them. An output-stationary schedule keeps partial sums near the units that update them. An input-stationary schedule keeps input values local while different filters or output channels use them. Each schedule saves traffic for one operand and places different demands on storage, parallelism, and communication. Tile dimensions determine how much reuse fits, tensor layout determines whether accesses use memory efficiently, and fusion can keep intermediates near their producers. Choose these together because a locally attractive choice can force a layout conversion, spill, or synchronization elsewhere.
+-
+-Start with the operator's loops and choose which values remain in registers or SRAM across iterations. Changing loop order, tile size, and placement together changes both the local working set and the traffic needed to refill it. Reject schedules that exceed a storage budget or violate execution-unit constraints before estimating traffic.
+-
+-Logical shape alone is insufficient: inspect whether adjacent lanes access contiguous physical locations, and charge any layout conversion to the full comparison. Fusion can avoid writing and rereading an intermediate, but extends live ranges and may cause spills or reduce occupancy. ==Saved transfers must repay their costs=={A fused schedule can lose time if its extra live state restricts parallel execution.} Different operators in a graph can therefore merit different mappings.
+-
+-Consider an illustrative audio classifier with a depthwise convolution whose filter coefficients are reused across time positions. One candidate reloads coefficients for every output tile; another assigns nearby positions to processing elements that retain their channel's coefficients. If the coefficients stay resident, predict fewer device-memory weight reads for the second candidate. Measure total bytes and elapsed time at the application's shapes: smaller channel groups may leave lanes idle, offsetting the saved reads.
+-
+-::fig[mapping-candidate-selection]
+-
+-Read the flow from reuse discovery through placement, storage and layout checks, fusion, and profiling. A largest-fitting-tile rule skips the last comparison and can select a schedule with too few independent tiles or costly edge handling. Inspect unit activity, traffic, and timing while comparing feasible tile sizes; choose the faster candidate under representative conditions. Then verify that the compiler and runtime actually execute the selected plan.
+-
+-### Verify the plan the compiler and runtime actually execute
+-
+-A machine learning compiler preserves tensor operations long enough to make graph-wide decisions about fusion, layout, precision, and memory lifetimes. It optimizes the graph, chooses kernels, plans storage, schedules computations, and generates code for the target. The runtime makes that plan work under current conditions by selecting a compatible variant, obtaining workspace, launching work, and enforcing dependencies between kernels and copies. Ahead-of-time compilation can specialize common shapes and shift compilation out of the request path. Just-in-time compilation can specialize a newly encountered shape, with compilation time on or near its first use. Changing shapes, concurrency, or available memory can change the selected path and move the bottleneck.
+-
+-Follow an intermediate activation from its producer to its last consumer. The compiler can assign its buffer to a later tensor once that consumer finishes, but an asynchronous kernel may still be reading it after launch. Overlapping requests also keep multiple activations and workspaces live. ==A launch is not completion=={Reusing a buffer before dependent device work finishes can corrupt a later result.} Compiler diagnostics reveal fusion boundaries, layout conversions, kernel choices, and supported precision; a device trace establishes which choices actually ran.
+-
+-Consider an illustrative image service with a common shape and an occasional wider shape. The common shape has a precompiled fused variant. The first wider request triggers compilation, then caches its variant. Hold the model, device, and other request conditions fixed while tracing a cold wider request and a subsequent warm one. Compare compilation, allocation, kernel, copy, and wait durations. If only the cold request exceeds the latency target and the warm variant meets it, precompile the wider shape when its frequency warrants the startup and cache costs.
+-
+-::fig[graph-to-device-trace]
+-
+-Read the flow from graph optimization through dispatch: the last step tests whether the earlier plan applies to this request. A fused graph alone could prompt an engineer to ignore a slow fallback. Check the selected variant and kernel launches for the wider shape, including under workspace pressure. If a generic path or synchronization remains slow when warm, investigate that path rather than compilation alone. The same trace discipline extends to transfers and waits between devices.
+-
+-### Extend the bottleneck analysis across accelerators
+-
+-Multiple accelerators can provide aggregate memory capacity, higher throughput, or shorter computation time. Each device still needs an efficient local mapping, and partitioning adds communication to account for. Data parallelism gives devices separate batches, normally with a model replica on each device. Training replicas must coordinate gradient updates. Model parallelism partitions layers or individual tensor operations so weights and runtime state can span devices, with activations or partial results crossing the partition. The location of that boundary matters. Chiplets communicate inside a package, wafer-scale designs keep more communication within the device, and board-level or network links impose their own bandwidth, latency, and contention limits. End-to-end latency depends on the communication and waiting exposed on the critical path.
+-
+-A tensor shard produced on one device may be needed by an operation on another. Its transfer time depends on bytes, effective directional bandwidth, and message latency; many small messages can spend much of their time on fixed per-message costs. Shared links can reduce the bandwidth available to each transfer. ==Only exposed communication delays the critical path=={A transfer hidden completely behind useful work does not add its full duration to elapsed time.} Keep the workload and latency objective fixed when comparing mappings, and use a timeline to find dependent waits and unbalanced stages.
+-
+-Take an illustrative operator that fits on one device and runs in 6 ms. A two-device partition reduces critical-path compute to 3 ms, but adds 4 ms of communication and synchronization with no overlap. Its predicted latency is 3 + 4 = 7 ms, so retain one device for this latency target. For a larger shape that exceeds one device's memory, evaluate sharding as a capacity solution and measure its latency at that shape. Independent replicas are another throughput option when the model fits on each device.
+-
+-::fig[device-partition-critical-path]
+-
+-Follow the flow from partition choice to per-device fit, messages, and exposed waits before comparing outcomes. Assuming two devices halve latency would favor the partition despite its slower 7 ms critical path. A timeline showing the next operation stalled on a transfer supports keeping the local mapping or reducing the exposed exchange. Subsequent end-to-end analysis should also include the rest of the pipeline and sustained power conditions.
+-
+-### Map the full pipeline under a sustained power budget
+-
+-A heterogeneous system-on-chip combines CPU cores, GPU execution units, digital signal processors, and neural processing units connected to shared memory. A deployment can assign each pipeline stage to the engine that handles its operations efficiently. Shared memory helps with data exchange, but engines may still require different layouts or precisions and wait for each other at boundaries. Unsupported operators or shapes can cause an accelerator delegate to split a graph and send part of it to another engine. At the same time, sustained work heats the device and can reduce clock rates. The best mapping therefore depends on whole-pipeline latency, shared memory traffic, and energy after the device has reached a representative operating temperature.
+-
+-Trace one audio window from DSP features through the NPU graph to the CPU decision. Check delegate coverage at the deployed shapes and data types: an unsupported operation can split that graph, forcing the intermediate tensor to leave the NPU and return. At each boundary, account for the dependency wait, any layout or precision conversion, and cache maintenance required by the participating engines. ==Shared storage is not shared readiness=={A consumer must still see the producer's completed, correctly formatted data.} Concurrent stages can also compete for DRAM bandwidth, even when they use different engines.
+-
+-For an illustrative wearable, keep the input windows, duty cycle, enclosure, and decision threshold fixed. The DSP extracts features, the NPU runs the keyword model, and the CPU applies the decision rule. A reduction inside the model falls back to the CPU, creating NPU-to-CPU and CPU-to-NPU handoffs. Test a delegate-supported formulation of that reduction after validating its output quality. Run both graphs until temperature and clocks stabilize; compare response latency and energy per detection window. Retain the formulation only if it meets the quality and deadline requirements and improves the desired metric.
+-
+-::fig[soc-pipeline-evaluation]
+-
+-The pipeline evaluation proceeds from assignment and fallback inspection to a full sustained run. A shared buffer may hide the cost of two waits and conversions in an operator-only profile; assuming those handoffs are free could lead to optimizing the NPU kernel while the pipeline still misses its deadline. Inspect delegate partitions and a cross-engine timeline, then check latency and frequency as the device warms. If the split dominates, remove it where quality permits; if latency rises with falling clocks, revisit the power budget or schedule. Those measurements also inform the hardware comparison that follows.
+-
+-### Choose hardware by useful work delivered
+-
+-Accelerator selection starts with constraints on memory capacity, numerical quality, latency, throughput, and power. Compare candidates using the actual operation mix, shapes, and software stack. Dense training can reward matrix throughput and fast interconnects. Small-batch decoding can put more weight on memory bandwidth and capacity. An embedded pipeline can depend on operator coverage and sustained power. Diagnose the limiting resource with traces and counters, then change one relevant factor and measure the effect. Rank feasible candidates by useful requests per unit cost and joules per useful request at the system boundary. Those figures reflect utilization, host work, and idle time when the measurement includes them. Emissions estimates also depend on cooling overhead, the electricity mix, and embodied hardware impacts.
+-
+-Hold the request mix, quality threshold, and tail-latency target fixed while measuring each candidate. Count only successful responses delivered within the target, and measure power at the same system boundary. The resource limiting a request might be memory bandwidth, arithmetic capacity, or time lost to launches and communication; a peak compute rating cannot distinguish them. ==Useful throughput sets the denominator=={Work that misses the service requirement consumes energy without increasing the counted output.} Compare traces and counters, then vary one relevant shape, batch size, or mapping choice to test the suspected limit.
+-
+-For an illustrative queued service, require at least 1,400 useful requests/s and assume additional throughput can be used. Both servers meet the same quality and tail-latency targets. A delivers 1,800 requests/s at 900 W for \$3.60/hour; B delivers 1,500 at 600 W for \$2.70/hour. Divide watts by requests/s: A uses 0.50 J/request and B uses 0.40 J/request. Divide hourly price by hourly useful output: A costs about \$0.56 per million requests and B costs \$0.50. Choose B under these assumptions; reconsider replica counts if demand exceeds its capacity.
+-
+-::fig[accelerator-evaluation-sequence]
+-
+-The evaluation sequence first filters by service requirements, then measures useful output, tests the bottleneck, and compares feasible systems. Ranking by peak performance per watt would skip those gates and could select a server that wastes power on idle time or late responses. Check system power and timely completions over a representative period, alongside latency and resource counters. If a candidate misses the target, adjust its configuration or reject it; otherwise compare energy and total cost at realistic load, including host, network, and capacity headroom.
++Every allocation bar ends below the SRAM limit. Reading them one at a time would approve a schedule that needs all four at once. Compare the baseline total with the limit, then inspect the compiler’s allocation report at the prefetch step. If a kernel with these dimensions runs within 96 KiB, check whether the transfer starts only after the current operand storage becomes free, or whether the kernel places some state elsewhere. Either change affects the performance prediction. Rebuild the ledger for the schedule that actually runs before deciding which values are worth keeping local.
++
++### Choose which values stay near the arithmetic
++
++Two schedules for the same projection can execute identical arithmetic and generate different memory traffic. An output-stationary schedule assigns an output block to processing elements and holds its partial sums locally as successive blocks of the reduction dimension arrive. A weight-stationary schedule holds a weight block and brings it successive input rows. The choice shifts traffic among weights, inputs, and partial sums. Placement, layout, and fusion then determine how far values travel, how efficiently the machine accesses them, and whether the next operator can consume them before they leave the chip.
++
++Pick one block of output columns and trace the loops at the boundary of a processing element’s local store. Suppose the projection spans R blocks of input rows and K blocks of reduction depth. Finishing one output block at a time brings in K input blocks and K weight blocks for that row block. If only the current operand pair fits alongside the sums, the same K weights must enter again for each of the R row blocks. The sums stay in place until the final store.
++
++Now keep one weight block through all R row blocks before advancing the reduction. Each of the K weight blocks enters once, and each visit to a row block still needs its matching input. Trace the ==stationarity interval=={A refill is saved only when the next use occurs while the tile is still resident.} through to the next update of a particular sum. If each unfinished sum block must leave the local store between updates, it incurs a store and a reload at each of the K − 1 transitions. Where those transfers land matters when comparing them with the weight refills saved.
++
++Check the addresses issued by adjacent lanes as well. Lanes reading neighboring elements can share a transaction. With a large stride, each lane may touch a different transaction and use only a few bytes from it. If a transpose makes the reads contiguous, charge its read, write and execution time to the candidate that needs it.
++
++Assume an illustrative projection produces a 4 MiB intermediate whose sole consumer adds bias and clamps each element. With separate kernels, suppose the producer writes all 4 MiB to device memory and the consumer reads all 4 MiB back. Place the bias and clamp after the last reduction update in the producer. Each completed value can then pass directly to the activation arithmetic. The predicted saving at that boundary is 4 MiB written + 4 MiB read = 8 MiB. Both schedules still write the final output. Try the fused epilogue if the backend supports the operations and the tile fits. Retain it if outputs agree, counters confirm the predicted saving and the combined stage runs faster.
++
++::fig[evaluate-a-mapping]
++
++Read the flow from output placement through profiling. A count of weight refills gets only partway through the transaction step. Check partial-sum transfers and bytes per useful lane, then time the producer and consumer together. If fusion cuts intermediate traffic but elapsed time rises, inspect registers per thread, concurrent blocks and spill loads and stores. A larger live register set can limit concurrency or push temporary values into memory. Compare a smaller fused tile with the separate kernels on common shapes and on edge tiles where padding or masked lanes consume work. Carry the winning schedule into a request trace to see whether the stage saving reaches the critical path.
++
++### Trace the compiled schedule through a real request
++
++A tensor compiler can see that one operator produces a value consumed immediately by the next. While that relationship is explicit, it can fuse operations, choose a matrix kernel, plan storage lifetimes, and schedule transfers. Code generation turns those choices into executable instructions. The runtime then dispatches work under the shapes, workspace limits, and concurrency of an actual request. A fast compiled variant helps only on requests that select it, and a fast device kernel can still be preceded by a long host-side wait.
++
++Pick one intermediate tensor and find its producer and every consumer in the optimized graph. If a projection and its activation fuse, the kernel can apply the activation before storing the result. If the next region requires a different layout, the plan may still materialize the tensor and launch a conversion. Match those regions to launches and copies on the device timeline. A conversion that reads one buffer and writes another accounts for traffic that a count of projection inputs and outputs would miss.
++
++For each region, record the ==variant selection guard=={A cached executable is reusable only for inputs that satisfy its selection conditions.} alongside the variant that ran. An ahead-of-time build can prepare profiles for common dimensions. A just-in-time compiler can specialize an unfamiliar shape on arrival, then reuse that executable on a cache hit. Check when the stack makes each choice. TensorRT’s builder selects tactics using the permitted workspace, and its runtime selects a valid profile. Once the runtime submits a launch, hardware schedules its thread blocks.
++
++Suppose a camera service normally sends 256 feature rows and occasionally sends 257. Keep the element type, layout, device, and workspace limit fixed. Warm the 256-row path, then submit two identical 257-row requests in sequence, waiting for the first to complete before submitting the second. For each request, mark arrival, cache lookup, compilation if any, launch, and completion. Compare host time before launch separately from device execution time.
++
++If only the first 257-row request compiles and both dispatch the same kernel with comparable execution times, prepare that variant before serving traffic and repeat the first-request test. If both 257-row requests select a different kernel from the 256-row baseline and take longer on device, inspect the profile boundary and tile coverage. One extra row can leave most lanes in a final tile idle. Confirm the kernel’s tile shape before attributing the difference to that effect.
++
++::fig[follow-the-compiled-plan]
++
++Read the flow backward from dispatch. A warm replay can confirm that emitted code runs quickly while missing a wait introduced at the scheduling step. Replay the production mix concurrently and correlate each request’s selected profile, workspace allocation, and stream waits. If a launch waits for another request to release scratch space, test a lower concurrency limit and compare both tail latency and throughput. If it waits on a producer event, locate that producer. Its completion may include a transfer from another device.
++
++### Decide what has to cross a device boundary
++
++A workload can outgrow one accelerator because its state exceeds device memory or because one device misses the throughput target. Those pressures lead to different partitions. Replicating the model lets devices handle independent inference requests, but each replica must fit. Splitting layers sends activations between stages. Splitting a matrix operation can require a collective exchange within the operator. Package-level chiplets, links between accelerators in a server, and links between servers impose different costs on these transfers. The single-chip roofline still applies to local kernels, but it cannot price the synchronization that joins them.
++
++Trace one output element back to its input features. Each feature supplies a product of an activation and a weight. Divide the features between two devices and give each the corresponding weight rows. Both devices now compute a contribution to every output element. The ==partial output shape=={Dividing the reduction dimension leaves each device with as many partial sums as there are elements in the full output.} determines how much data a device must contribute to the combine step.
++
++Locate the consumer before pricing that step. If it runs on one device, the other can send its partial sums there for addition. Identify the physical route those bytes take. Chiplets join dies inside a package, and wafer-scale designs keep more work on one device. A split across server accelerators uses their actual peer connection. A split across machines also traverses the network.
++
++Suppose the model fits on each of two accelerators and independent requests already keep one busy. Put a replica on each, route whole requests to each replica, and count completions per second at the required latency. This mapping adds capacity without introducing a partial-sum exchange. Now consider a single projection whose consumer needs the complete result on the first device. For illustrative timings, assume 100 µs on one device. With an equal feature split, suppose the two partial kernels start together and finish at 50 and 60 µs. If the transfer and addition then take 45 µs, the consumer starts at 105 µs. Keep the single-device projection for this latency goal.
++
++::fig[trace-a-split-reduction]
++
++At “Release the output,” follow both incoming contributions back through the combine step. Adding the faster kernel time to the exchange would predict a speedup while overlooking the late participant. Timestamp both partial completions and the consumer’s first usable input. If the implementation exchanges completed tiles early, charge only communication still exposed on the critical path. The same test applies when the producer and consumer are different engines on one chip.
++
++### Follow an inspection frame across a heterogeneous chip
++
++On a camera device, the projection shares a system-on-chip with image processing, control code, and rendering. A neural processing unit can execute supported dense layers, a DSP can process a sensor stream, and a CPU can handle irregular decisions. These blocks may share physical memory while using different layouts and synchronization protocols. Moving one operator to a faster block can therefore add waits and conversions at both ends. Sustained performance also depends on the power and heat generated by all active blocks in the enclosure.
++
++Follow one frame from the sensor. The image signal processor prepares the pixels, a DSP extracts streaming features, and the NPU projects the feature tensor. The CPU can apply a decision rule to the resulting candidates, and the GPU can draw the overlay. At each handoff, record who owns the buffer, its layout and strides, and which event lets the consumer read it. A ==completion fence=={The consumer can receive a buffer handle before the producer has finished writing its contents.} lets the runtime express that dependency. If the engines lack coherent caches, the handoff may also require cache maintenance. If the consumer needs channels first and the producer stored aligned channels last, a conversion reads and rewrites the tensor through the shared memory system.
++
++Assume the delegate report lists two NPU regions separated by a custom CPU scoring function. Use the split implementation as the baseline. For the same recorded frames, time the wait and input preparation, the scorer itself, and the preparation and dispatch needed to resume NPU work. Then express the score using supported operators and check that the delegate forms one region. Compare scores on representative defects, including cases near the decision threshold. Replay both mappings at the same capture rate with rendering enabled until temperature and engine clocks settle. Keep the supported implementation if it preserves the required decisions and improves sustained capture-to-overlay latency at the required frame rate.
++
++::fig[trace-mobile-fallback]
++
++Read the four boxes as a timeline for one tensor. A short CPU scoring interval between two long preparation intervals points to the cost of leaving and re-entering the NPU region. Optimizing the scorer on the assumption that shared buffers make both handoffs free would leave most of that delay in place. Check the fence timestamps and conversion traffic separately. If deadline misses grow only after warm-up, compare engine frequency, temperature, power and shared-memory bandwidth across the run. Falling clocks at a thermal limit call for retesting the sustained power budget. Count the frames that actually meet their deadlines when comparing devices.
++
++### Choose hardware using completed work at the required service level
++
++Hardware selection starts with a workload contract specifying input shapes, arrival patterns, accuracy, latency, and sustained throughput. Measure competing systems against that contract over the same interval. Useful throughput counts results that satisfy it. Dividing system energy and operating cost by that count connects a kernel-level improvement to a deployment decision. A credible case for new hardware identifies the saturated resource, shows how the candidate changes it, and verifies that the gain survives host work, communication, queueing, and sustained operation.
++
++Timestamp a request when it arrives and when its result becomes available to the caller. Replay the same shapes and arrival times on each candidate. Increasing batch size can keep the device busy while the first request in each batch spends its latency budget waiting for the last one. Report latency percentiles over the offered requests, account for drops and timeouts, and count the results that meet the quality and deadline criteria. Measure energy over a ==common accounting interval=={Quiet periods consume energy even when they add no accepted results to the count.} that includes the idle time typical of deployment.
++
++For a fleet, reserve enough capacity for arrival-rate variation. Divide the required result rate by the useful rate one server sustains at the planned utilization, then round up to whole servers. Include the energy of every provisioned server and state whether the measurement includes cooling. Turning that energy into operational emissions requires the electricity mix at the site. A lifecycle estimate also needs emissions from manufacturing the equipment. Cost per useful result requires prices, including purchase or rental charges over the service period.
++
++Assume illustrative whole-server wall measurements over 60 seconds, excluding facility cooling. Both servers meet the service targets. A averages 300 W and returns 1,200 accepted results. Its energy is 300 J/s × 60 s = 18,000 J, or 15 J per accepted result. B averages 420 W and returns 2,100 accepted results, giving 25,200 J ÷ 2,100 = 12 J per accepted result. The bars labeled Server A and Server B use those quotients. Choose B if the objective is minimum energy per useful result at this load. Pricing is still needed to select on cost.
++
++::fig[compare-energy-per-result]
++
++B's shorter bar comes from completing 35 useful results per second against A's 20. Choosing A from the wattmeter reading alone would spend 3 extra joules per accepted result under these assumptions. Before ordering B, replay the deployment trace against the best validated mapping on A. If B's proposed advantage is reduced device-memory traffic, check bytes per request in hardware counters and time the affected operator. Then check arrival-to-result latency and accepted throughput. If queueing or host work absorbs the kernel gain, repeat the energy calculation with the observed useful count before committing to the fleet.
+ 
+ ## The physics
+@@ -145,50 +167,43 @@
+ | Quantity | Value | Use |
+ | --- | --- | --- |
+-| Amdahl's law | Speedup = 1 / ((1 − f) + f / s), for accelerated time fraction f and phase speedup s | Bound full-workload speedup when only one phase is accelerated. |
+-| SIMD register capacity | 512 bits / 32 bits per value = 16 values | Count FP32 elements held in one 512-bit vector register; actual useful lanes depend on the operation and mask. |
+-| Traffic time lower bound | Bytes crossing an interface ÷ sustainable interface bandwidth, assuming steady transfer | Estimate the minimum time needed to move the counted bytes across that interface. |
+-| Roofline throughput bound | Throughput ≤ min(compute peak, interface bandwidth × arithmetic intensity), with intensity in FLOP/byte | Compare compute and interface ceilings for a specified execution path and traffic count. |
+-| Live storage footprint | Σ(elements × bytes per element × resident copies) + workspace bytes, for overlapping allocations in the same storage tier | Compare with the bytes allocatable to the execution group. |
+-| Loop-order search bound | n! orders for n distinct loops, ignoring dependencies and equivalent orderings | Estimate the size of a naive ordering search before applying legality and feasibility constraints. |
+-| Safe buffer reuse | After the last asynchronous consumer completes | Determine when a tensor's storage can be assigned to another live value. |
+-| Critical-path latency for the illustrative partition | 3 ms compute + 4 ms exposed communication and synchronization = 7 ms | Compare the partition with the 6 ms single-device latency. |
+-| Energy per detection window | J/window = energy consumed in joules ÷ detection windows processed | Compare sustained mappings over the same representative workload and measurement boundary. |
+-| Energy per useful request | J/request = average system power in W ÷ useful requests per second, at a steady operating point | Compare feasible systems measured at the same boundary and service requirements. |
++| Dense projection work | MKN multiply-accumulates for (M × K) times (K × N) | Count M from the rows submitted to the projection, including spatial positions that use the same weights. |
++| Matrix tile output utilization | Useful output elements / issued output slots, a dimensionless fraction | For a fixed tile shape, count padded edge slots in the denominator when estimating the fraction of tile arithmetic spent on useful outputs. |
++| Arithmetic intensity of a single-row projection, counting weight reads alone | 2 FLOPs per FP16 weight ÷ 2 bytes per weight = 1 FLOP/byte, assuming one fetch per weight | Add all other reads and writes at the same boundary to obtain the invocation's device-memory intensity. |
++| Bandwidth required for a target throughput | B_required = R/I, in bytes/s for R in FLOP/s and I in FLOP/byte | Compare the requirement with sustainable bandwidth at the interface used to count bytes. |
++| SRAM capacity margin | Available KiB − peak simultaneously allocated KiB | A negative margin gives the storage shortfall. Include each live buffer at its allocated precision. |
++| Intermediate traffic removed by fusion | 2S bytes for an S-byte intermediate written once and read once in full across the chosen boundary | Count the eliminated producer store and consumer load. Account separately for the final output and any spill traffic. |
++| Request latency through device completion | L = (t_submit − t_arrival) + (t_complete − t_submit), in ms on a common timeline | Use the first submission for the request and completion of its final dependent operation. The second interval includes any device queue waits. |
++| Remote partial-sum payload | M × N × s bytes for one dense M-by-N partial output sent once, with s bytes per partial sum | For a reduction onto one device, divide this payload by the directional link bandwidth in bytes/s to bound transfer time from below. |
++| Memory traffic for a layout conversion | 2S bytes of logical buffer traffic for one full read and one full write of an S-byte tensor with equal input and output sizes | Estimate the work of a materialized conversion. Cache residency and padding can change the bytes observed at DRAM. |
++| System energy per useful result | Mean system power (W) × elapsed time (s) ÷ accepted results = J per useful result | Sum energy across the provisioned systems and count accepted results over the same interval. |
+ 
+ ## Glossary
+ 
+-- **Multiply-accumulate (MAC)**: An operation that multiplies two operands and adds the product to a running sum.
+-- **SIMD**: Single instruction, multiple data. One issued instruction applies across multiple data lanes.
+-- **SIMT**: Single instruction, multiple threads. Programmers express work as threads, and hardware typically issues instructions to groups of those threads.
+-- **Tensor Core**: An instruction-driven matrix unit that performs multiply-accumulates on small tiles in supported number formats.
+-- **Systolic array**: A grid of processing elements that pass operands or partial results between neighbors in a timed pattern.
+-- **Special function unit (SFU)**: A dedicated execution unit for operations such as exponentials or reciprocal square roots, depending on the architecture.
+-- **Arithmetic intensity**: Operations performed per byte transferred across a specified memory interface.
+-- **Roofline model**: A throughput bound given by the lower of compute peak and the product of bandwidth and arithmetic intensity.
+-- **Ridge point**: The arithmetic intensity at which the roofline's compute and bandwidth ceilings meet.
+-- **Tile capacity**: The limit on the tile operands, accumulators, and workspace that can reside together in the storage available to an execution group.
+-- **Local reuse**: Using an operand or partial sum multiple times while it resides near the execution units, avoiding repeated transfers from a slower tier.
+-- **On-chip storage**: Registers and SRAM within the chip that provide fast access to data near execution units.
+-- **Stationary dataflow**: A schedule that keeps a chosen operand or partial sum local while other values move through the compute units.
+-- **Kernel fusion**: Combining operations into one kernel so intermediate values can stay local and separate launches may be avoided.
+-- **Runtime fallback**: Execution through an alternate kernel or device when the preferred path cannot handle the current operation or conditions.
+-- **Critical path**: The longest chain of dependent work and waits that determines the earliest time a result can be ready.
+-- **Useful throughput**: The rate of successful results that meet the workload's quality and service requirements.
++- **Multiply-accumulate**: An operation that adds the product of two inputs to a running sum. A floating-point multiply-accumulate conventionally counts as two FLOPs.
++- **Arithmetic intensity**: Operations performed per byte transferred across a specified memory interface during the same work interval.
++- **Ridge point**: The intensity where the compute ceiling equals bandwidth times intensity for a particular device, precision path, and memory interface.
++- **Tile capacity**: The storage budget available for all simultaneously resident data needed to execute a tile.
++- **Local reuse**: Using a value multiple times after one fetch across a more distant memory boundary.
++- **On-chip storage**: Storage on the processor die, including registers and local SRAM, that supplies nearby execution units.
++- **Double buffering**: Using two storage regions so one block can be filled while the other is being consumed.
++- **Stationary dataflow**: A schedule that retains a selected operand or partial sum near a processing element while other values move through it.
++- **Systolic array**: A grid of processing elements that pass values between neighbors in a coordinated sequence to perform repeated arithmetic.
++- **Kernel fusion**: Executing compatible operations in one kernel so intermediate values can remain local across their producer and consumer.
++- **Runtime fallback**: Dispatch of an operation to an alternative implementation or engine when the preferred path cannot handle it.
++- **Critical path**: The longest chain of dependent work and waits that determines when a request can finish.
++- **Useful throughput**: The rate of completed outputs that meet the deployment's quality and service requirements.
+ 
+ ## → Ben's world
+ 
+-- When choosing a low-precision deployment path, verify that the compiler preserves narrow operands through memory and selects native instructions, then compare quality and latency at the target batch sizes.
+-- When a kernel spills or a tile is rejected, inventory simultaneously live allocations and compare feasible tile shapes using traffic counters, execution-unit activity, and elapsed time.
+-- When deciding between fusion and a hardware upgrade, use an interface-specific roofline estimate and test whether eliminating an intermediate write and read moves the measured bottleneck.
+-- When adding a second accelerator, use per-device memory estimates and a communication timeline to decide whether to replicate the model, split layers, or shard individual operations.
+-- When deploying a model on a mobile SoC, compare delegate coverage and handoff costs, then run the complete pipeline long enough to measure sustained latency and energy.
+-- When buying inference capacity, compare feasible deployments using useful requests per second, tail latency, cost per useful request, and system energy per useful request.
++- Decide whether to batch inspection requests by measuring weight traffic per image, queueing delay, and the fraction of images returned before the deadline.
++- Evaluate a precision change by checking emitted instructions, bytes transferred, end-to-end time, and accuracy on the same inputs.
++- Review a proposed fused kernel using a live-storage ledger and a prediction of intermediate traffic saved, then compare both with compiler reports and counters.
++- Choose between model replication and partitioning by checking per-device capacity, independence of requests, and communication on the critical path.
++- Compare procurement candidates with the same arrival trace and report cost and energy per accepted result at the required latency.
+ 
+ ## Open questions
+ 
+-- For the narrow tile on a specific target, how do real alignment, workspace, and concurrency requirements affect its local storage needs, and does additional input traffic change which mapping is fastest?
+-- At what request mix and batch sizes does a deployed decoder move from streaming weights to another dominant cost such as attention-state traffic or matrix execution?
+-- Which fused kernels stay within register and SRAM limits across the production shape distribution, and where do spills reverse the expected traffic savings?
+-- Under concurrent traffic on the target interconnect, how much communication can a model partition hide, and which partition minimizes tail latency while meeting memory limits?
+-- How does the best CPU, DSP, GPU, and NPU placement change as the intended enclosure heats up and other device workloads contend for shared memory?
+-- Which candidate platform delivers the lowest cost and energy per useful request over the observed load cycle once idle periods, replica counts, and host resources are included?
++- At what arrival rate does batching first reduce the inspection service's deadline hit rate, and how does that threshold shift when the mix of input shapes changes?
++- Which tensor accounts for the gap between predicted and measured device-memory traffic on the production projection, and which schedule change would distinguish reloads from spills?
++- On the target camera, how much of the sustained frame-time increase comes from reduced clocks, shared-memory contention, or delegate handoffs? Which controlled runs would isolate each contribution?
++- For the intended multi-device topology, which projection shapes save enough local computation to cover the measured cost of combining partial results?
+--- 11-hw-acceleration/packet/quiz.md
++++ astra/11-hw-acceleration/packet/quiz.md
+@@ -1,63 +1,63 @@
+ # Hardware Acceleration self-test
+ 
+-1. A batch-one service spends 7 ms gathering features and 3 ms in a dense projection. A proposed matrix engine halves projection time but does not affect gathering. Which decision best follows for reducing request latency?
+-   - A. Replace the matrix engine first; it saves 5 ms per request.
+-   - B. Investigate gathering first; the new engine saves 1.5 ms per request.
+-   - C. Replace the matrix engine first; it halves total request latency.
+-   - D. Investigate gathering first; the new engine saves 3 ms per request.
++1. A camera submits one frame at a time. Its runtime launches a separate projection for each of 24 spatial positions, all ready together and using identical weights. Each launch streams the weights from device memory. Waiting for another frame would miss the deadline. Which mapping should the team test first?
++   - A. Group consecutive frames as rows of one tiled projection.
++   - B. Group the ready positions as rows of one tiled projection.
++   - C. Keep separate launches and distribute positions across more matrix engines.
++   - D. Keep separate launches and divide each position into smaller feature blocks.
+ 
+-2. A projection has half its weights set to zero. It runs with a dense matrix kernel on hardware that also supports a particular structured sparse format. The weights are not encoded in that format. Explain why the zeros may not reduce projection time and what you would test.
++2. A runtime fuses a projection and row normalization into one GPU kernel. On identical inputs a new matrix instruction halves the time spent forming dot products, yet the kernel time changes little. A trace places most remaining cycles between the last product and the first normalized output. Explain how that can happen and how to distinguish two possible causes.
+ 
+-3. A decoder keeps all weights in device memory. Profiling shows the host link is mostly idle, device-memory bandwidth is saturated, and compute units often wait. Which change should the engineer test first?
+-   - A. Add device-memory capacity to hold a larger model.
+-   - B. Increase host-link bandwidth to accelerate transfers.
+-   - C. Batch requests to reuse weight reads across them.
+-   - D. Choose a device with a higher arithmetic peak.
++3. A vision kernel's filters stay in on-chip storage throughout an invocation. A device-memory trace attributes most reads to the same input rows being fetched for adjacent output tiles. The host finishes its upload before inference begins. Which mapping change should you test first to reduce device-memory reads?
++   - A. Reserve additional on-chip storage for filters across adjacent output tiles.
++   - B. Prefetch the next image from the host while computing the current image.
++   - C. Process adjacent output tiles consecutively and retain their shared input rows on chip.
++   - D. Keep completed output tiles on chip until the last tile has finished.
+ 
+-4. A kernel performs 12 GFLOP and transfers 3 GB across device memory. Its execution path has a 24 TFLOP/s compute peak and 2 TB/s sustainable device-memory bandwidth. Decimal units apply. If a mapping change halves device-memory traffic without changing the operation count, explain how the modeled limiting resource and minimum time change.
++4. A gather kernel performs 8 GFLOP and reads 4 GB from device memory, with negligible writes. Its arithmetic path peaks at 40 TFLOP/s, and independent reads of the same transaction size sustain 1 TB/s. Use decimal units. The kernel takes 20 ms. A trace reveals that the address of each read depends on the previous result within its chain. Explain the gap and propose a test that keeps the work and byte count fixed. Assume several independent chains are ready.
+ 
+-5. A hypothetical matrix multiply uses a 96 × 128 input tile and a 128 × 64 weight tile. Both operands use 2 bytes per element and are double buffered; the 96 × 64 accumulator uses 4 bytes per element and is single buffered. A separate 12 KiB workspace is resident. Available SRAM is 96 KiB; 1 KiB = 1024 bytes. There are no other allocations, padding, or alignment. Halve the output width to 32, keeping all other dimensions, buffering, precision, and workspace unchanged. Calculate each allocation and the total in KiB. Does the tile fit, and how much SRAM remains?
++5. A matrix multiply uses a 96 × 128 input tile and a 128 × 64 weight tile. Halve the output tile width from 64 to 32, keeping the row count and reduction depth fixed. Inputs and weights each use two buffers and two bytes per element. The accumulator uses one buffer and four bytes per element. A separate 12 KiB workspace stays resident. The SRAM has 96 KiB, with 1024 bytes per KiB and no padding, alignment overhead or other allocations. What are the four contributions and their total? Decide whether the tile fits and report the signed capacity margin.
+ 
+-6. A convolution kernel has two feasible mappings at the application's input shape. Mapping A uses a larger tile and estimates fewer weight reads, but profiling shows low lane utilization and longer elapsed time. Mapping B uses smaller tiles, has higher lane utilization, and completes sooner; both produce the required output. Which mapping should the engineer select for this workload?
+-   - A. Select mapping A because its estimated weight traffic is lower.
+-   - B. Select mapping A because its larger tile fits in local storage.
+-   - C. Select mapping B only after increasing its tile to match A.
+-   - D. Select mapping B and validate it across representative inputs.
++6. A projection must minimize elapsed time for a fixed batch. Two supported schedules give equivalent outputs on that batch. Repeated timings include every required layout conversion and vary by less than 1 µs. The weight-stationary schedule takes 38 µs and reads each weight tile once. The output-stationary schedule takes 31 µs and reads each weight tile twice. Counters show frequent partial-sum stores and reloads only in the weight-stationary run. Which deployment decision follows?
++   - A. Deploy the weight-stationary schedule for its lower weight refill count.
++   - B. Defer selection until the two schedules use the same loop order.
++   - C. Defer selection until the layout conversion times are excluded.
++   - D. Deploy the output-stationary schedule for its shorter measured stage time.
+ 
+-7. A service has a precompiled fused variant for a fixed input shape. The same shape is fast with one request at a time but slow under concurrent requests, and traces show a different kernel variant with less workspace. Explain a plausible cause and how to test it.
++7. Two concurrent requests hit the same compiled profile. Each uses a separate stream, and their inputs are already resident. The allocator gives both requests the same scratch address and inserts an event before the second kernel can use it. Kernel durations match an isolated replay, but the second request finishes late. Explain the delay and propose a test that preserves correctness.
+ 
+-8. An inference model fits on each of two accelerators. One replica completes a request in 10 ms. Sharding it across both reduces critical-path compute to 4 ms but adds 3 ms of non-overlapping communication. The objective is to minimize latency for one request. Which mapping should the engineer choose, assuming no other overhead?
+-   - A. Shard the request across both accelerators for a predicted 7 ms latency.
+-   - B. Run the request on one accelerator for a predicted 10 ms latency.
+-   - C. Run independent replicas and expect one request to finish in 5 ms.
+-   - D. Shard the request across both accelerators and expect a 4 ms latency.
++8. Two accelerators now split a projection by output columns. Each holds the full input and all weights for its assigned columns. The next operator applies an elementwise activation on the same device, and later consumers accept column shards. Which dispatch decision satisfies these dependencies with the least inter-device traffic?
++   - A. Launch each local activation as soon as its own output columns are ready.
++   - B. Gather both column shards on one device before launching the activation there.
++   - C. Sum the two column shards across devices before launching each local activation.
++   - D. Exchange copies of the column shards before launching the two local activations.
+ 
+-9. An audio pipeline runs a supported NPU layer, an unsupported CPU operation, then another supported NPU layer. CPU and NPU share DRAM, but use different tensor layouts and do not share coherent caches. The NPU layers are individually fast, yet end-to-end latency is high. Explain what to inspect and how a supported replacement for the CPU operation could change latency.
++9. An inspection camera must decide on each frame within 20 ms of capture. A runtime update makes its scorer compatible with the NPU. The delegate now reports one region, conversion events disappear, and defect decisions still match. Frames meet the deadline on startup. After ten minutes in the sealed enclosure, NPU frequency falls as the device reaches its thermal limit and frames begin arriving late. How would you test whether changing the scoring implementation again would recover the deadline?
+ 
+-10. A service needs 800 timely, successful requests/s. Two servers meet the same quality and tail-latency targets at their stated steady rates, and the service can use all additional throughput. Server X delivers 1,000 useful requests/s at 700 W; server Y delivers 900 useful requests/s at 540 W. Which single-server choice minimizes operational energy per useful request?
+-    - A. Choose server X.
+-    - B. Choose server Y.
+-    - C. Use either server; their energy per request is equal.
+-    - D. Reject both servers for insufficient capacity.
++10. A site must deliver 90 quality-approved inspections per second within its deadline. At the allowed utilization, including reserved headroom, one X server sustains 40 such results/s and one Y server sustains 50. Provision whole servers of one type. Assume each provisioned X draws 200 W and each Y draws 260 W throughout the hour, including spare capacity. Both fleets receive the same steady demand, and cooling is outside the boundary. Which configuration meets demand with the least wall energy?
++    - A. Provision three X servers for the inspection service.
++    - B. Provision two Y servers for the inspection service.
++    - C. Provision two X servers for the inspection service.
++    - D. Provision three Y servers for the inspection service.
+ 
+ ## Answer key
+ 
+-1. B. The projection falls from 3 ms to 1.5 ms, so total latency falls from 10 ms to 8.5 ms. The closest competing choice counts the entire original projection time as saved, which would require eliminating that phase rather than halving it.
++1. B. The positions already supply independent rows, so one kernel can reuse a weight tile across them within the frame deadline. Grouping frames also creates reuse, but incurs the arrival delay the service cannot afford.
+ 
+-2. The dense instructions still execute the matrix operations for zero-valued weights. Check whether the zero pattern meets the hardware's structured sparsity rules, encode it in the supported format if it does, and benchmark a kernel that uses that format. Compare projection and end-to-end time, including encoding or operand-handling costs, and verify output accuracy.
++2. Normalization needs row statistics. Threads can form partial sums independently, but their results must be combined before the inverse standard deviation is available to scale an output. Fusion removes a launch while preserving that dependency. Inspect the reduction instructions and synchronization stalls to see whether lanes are waiting for other partial sums. Then inspect the reciprocal-square-root instruction or approximation sequence and its dependent stalls. Time those intervals separately to decide whether to change the reduction mapping or the special-function path.
+ 
+-3. C. A higher arithmetic peak is a strong competing choice, but the units are waiting for weight data. Reusing weight reads targets the saturated device-memory interface; extra capacity or host-link bandwidth does not address the observed limit.
++3. C. Retaining the shared rows removes a device-memory fetch on the next tile's visit. Extra filter storage targets an already resident tensor, so it leaves the observed repeated reads in place.
+ 
+-4. Initially the intensity is 4 FLOP/byte, so the bandwidth ceiling is 8 TFLOP/s and the minimum time is 1.5 ms. Halving traffic to 1.5 GB raises intensity to 8 FLOP/byte and the bandwidth ceiling to 16 TFLOP/s. That remains below the 24 TFLOP/s compute peak, so the kernel is still bandwidth limited in the model, and its minimum time falls to 0.75 ms. A profile is needed to establish whether the implementation approaches that bound.
++4. The arithmetic floor is 0.2 ms. The independent-read bandwidth gives a 4 ms transfer estimate, but the kernel delivers only 4 GB / 0.020 s = 200 GB/s. A chain has to wait for a result before issuing its next read, so too few simultaneous chains can leave the interface idle even while execution stalls on memory. Interleave more of the ready chains, preserving the order within each one. Verify the same transaction bytes and look for more outstanding reads, higher delivered bandwidth and shorter execution. That combination would support limited memory parallelism as the cause.
+ 
+-5. Input buffers: 96 × 128 × 2 × 2 / 1024 = 48 KiB. Weight buffers: 128 × 32 × 2 × 2 / 1024 = 16 KiB. Accumulator: 96 × 32 × 4 / 1024 = 12 KiB. Workspace: 12 KiB. The total is 48 + 16 + 12 + 12 = 88 KiB, so it fits in 96 KiB with 8 KiB remaining.
++5. Input storage stays at 96 × 128 × 2 × 2 / 1024 = 48 KiB. Weights need 128 × 32 × 2 × 2 / 1024 = 16 KiB. The accumulator needs 96 × 32 × 4 / 1024 = 12 KiB. Workspace adds 12 KiB. The total is 48 + 16 + 12 + 12 = 88 KiB. The tile fits with a signed margin of 96 − 88 = +8 KiB.
+ 
+-6. D. Mapping B already completes sooner at the relevant shape. The strongest competitor, A, saves estimated weight reads, but its low lane utilization and longer measured time show that reuse alone does not determine the result.
++6. D. The 31 µs schedule meets the stated objective and its timing advantage exceeds the observed variation. Reading each weight tile once favors the other schedule on one counter, but its partial sums cross the storage boundary repeatedly. The measured time includes both effects and the required conversions.
+ 
+-7. Concurrent requests can reduce available workspace, causing the runtime to select a compatible lower-workspace variant even though the shape has not changed. Compare variant IDs, workspace availability, allocations, and kernel durations at low and high concurrency. Then adjust workspace limits or concurrency and repeat the trace to see whether the original variant returns and latency improves.
++7. Both kernels need exclusive use of the same scratch bytes. The event orders the second use after the first kernel releases them, so the second request spends time waiting even though its kernel runs at the usual speed. With enough free device memory, assign disjoint scratch buffers and replay the pair. Check whether the event wait disappears, whether completion latency falls, and whether both outputs remain correct. Separate streams permit overlap when hardware resources are available.
+ 
+-8. A. The sharded critical path is 4 + 3 = 7 ms, below the single-device 10 ms. The strongest competing choice, one accelerator, avoids communication but retains the full 10 ms of compute. Independent replicas can increase throughput but do not split one request; sharding still pays the exposed communication cost.
++8. A. Each device reduces over all input features for its own columns, so its local values are complete. Gathering would produce a valid dense tensor, but the activation reads one element at a time and downstream consumers accept the existing shards. The gather would introduce a transfer and a dependency without supplying a needed operand.
+ 
+-9. Inspect the two graph boundaries in a timeline, including waits, layout conversions, cache maintenance, and intermediate DRAM traffic. A supported replacement can keep the intermediate on the NPU and remove both cross-engine handoffs, reducing those costs. Validate output quality and measure the full pipeline because the replacement's own execution cost may offset the savings.
++9. Trace late frames from capture to decision and check whether time accumulates in the scorer, elsewhere in the NPU region, or in a queue waiting for earlier frames. Compare the old and new mappings at the same capture rate after each reaches thermal equilibrium, recording power, clocks and deadline misses. The update removed the conversion work, but a lower sustained clock can lengthen the remaining work and let a queue grow. Change scoring again only if a quality-preserving alternative reduces sustained critical-path time enough to recover the deadline.
+ 
+-10. B. X uses 700 ÷ 1,000 = 0.70 J/request; Y uses 540 ÷ 900 = 0.60 J/request. Both exceed the required capacity, so Y minimizes energy per useful request. X's higher throughput is the strongest competing reason to choose it, but its power rises enough to make each useful request cost more energy.
++10. B. Two Y servers sustain 100 useful results/s and use 520 Wh in the hour. Three X servers also meet demand, but together they use 600 Wh despite the lower wattage of each server. Two X servers fall short at 80 results/s, and a third Y adds power without increasing the required work.
+--- 11-hw-acceleration/packet/diagrams.json
++++ astra/11-hw-acceleration/packet/diagrams.json
+@@ -1,62 +1,62 @@
+ [
+   {
+-    "id": "specialization-diagnosis",
+-    "title": "From workload shape to a hardware hypothesis",
+-    "caption": "The operation mix identifies candidate execution units, and the operand path determines whether those units can stay busy.",
+-    "file": "specialization-diagnosis.svg"
++    "id": "trace-one-weight",
++    "title": "Follow one projection weight",
++    "caption": "A weight fetch can serve several outputs only when the schedule brings the corresponding input rows to the engine while that weight is still available.",
++    "file": "trace-one-weight.svg"
+   },
+   {
+-    "id": "projection-softmax-path",
+-    "title": "Execution paths in a projection and softmax",
+-    "caption": "Time spent in reductions, exponentials, and normalization can dominate even when the projection keeps the matrix engine busy.",
+-    "file": "projection-softmax-path.svg"
++    "id": "inspect-precision-path",
++    "title": "Audit an INT8 projection",
++    "caption": "The trace locates where compact weights survive into execution and where conversion work enters the timed path.",
++    "file": "inspect-precision-path.svg"
+   },
+   {
+-    "id": "tensor-interface-path",
+-    "title": "Follow a tensor across memory interfaces",
+-    "caption": "Each crossing has its own byte count and bandwidth, so a saturated host link and a saturated device-memory interface call for different changes.",
+-    "file": "tensor-interface-path.svg"
++    "id": "separate-memory-boundaries",
++    "title": "Three places to count a weight",
++    "caption": "These counts answer different questions. A startup host copy tells little about the device-memory bandwidth needed for each subsequent request.",
++    "file": "separate-memory-boundaries.svg"
+   },
+   {
+-    "id": "roofline-upgrade-comparison",
+-    "title": "Modeled ceilings for the same kernel",
+-    "caption": "At the assumed intensity of 4 FLOP/byte, doubling bandwidth raises the roofline ceiling while doubling only the arithmetic peak leaves it unchanged.",
+-    "file": "roofline-upgrade-comparison.svg"
++    "id": "compare-kernel-time-floors",
++    "title": "Time floors for the hypothetical projection",
++    "caption": "The transfer floor is ten times the compute floor. Even complete overlap cannot bring this kernel below 4 ms under the stated traffic and bandwidth assumptions.",
++    "file": "compare-kernel-time-floors.svg"
+   },
+   {
+     "id": "baseline-tile-storage",
+     "title": "Baseline tile storage",
+-    "caption": "The four allocations sum to 116 KiB. The baseline exceeds the 96 KiB SRAM limit by 20 KiB, even though its operand buffers fit by themselves.",
++    "caption": "The first four bars sum to 116 KiB. Comparing that total with the 96 KiB SRAM limit exposes a 20 KiB shortfall during the planned overlap.",
+     "file": "baseline-tile-storage.svg"
+   },
+   {
+-    "id": "mapping-candidate-selection",
+-    "title": "Compare schedules for the same tensor operation",
+-    "caption": "Capacity establishes which schedules can run. Traffic estimates and profiling reveal whether their reuse improves elapsed time.",
+-    "file": "mapping-candidate-selection.svg"
++    "id": "evaluate-a-mapping",
++    "title": "Test a candidate schedule",
++    "caption": "A reuse claim becomes testable when the proposed loop order predicts which transfers disappear and which transfers still have to occur.",
++    "file": "evaluate-a-mapping.svg"
+   },
+   {
+-    "id": "graph-to-device-trace",
+-    "title": "From graph optimization to a running request",
+-    "caption": "The compiled plan describes available execution paths. The runtime trace shows which path a particular request took and where it waited.",
+-    "file": "graph-to-device-trace.svg"
++    "id": "follow-the-compiled-plan",
++    "title": "From tensor graph to timed execution",
++    "caption": "Comparing the emitted plan with the dispatched variant identifies where a shape, allocation, or synchronization decision changes the observed request.",
++    "file": "follow-the-compiled-plan.svg"
+   },
+   {
+-    "id": "device-partition-critical-path",
+-    "title": "Evaluate a partition across devices",
+-    "caption": "A partition improves request latency only when the computation it removes from the critical path outweighs the communication and waiting it adds there.",
+-    "file": "device-partition-critical-path.svg"
++    "id": "trace-a-split-reduction",
++    "title": "A projection split across its reduction dimension",
++    "caption": "The output becomes usable only after the partial results are combined, so the exchange can sit directly on one request's critical path.",
++    "file": "trace-a-split-reduction.svg"
+   },
+   {
+-    "id": "soc-pipeline-evaluation",
+-    "title": "Evaluate a heterogeneous pipeline in steady operation",
+-    "caption": "Engine support and handoff costs determine the executable mapping, while a sustained run reveals whether it keeps meeting the deadline.",
+-    "file": "soc-pipeline-evaluation.svg"
++    "id": "trace-mobile-fallback",
++    "title": "Where one unsupported operation costs time",
++    "caption": "Timing the two handoffs separately from the CPU arithmetic reveals whether scoring or moving its inputs and outputs causes the delay.",
++    "file": "trace-mobile-fallback.svg"
+   },
+   {
+-    "id": "accelerator-evaluation-sequence",
+-    "title": "From workload requirements to procurement",
+-    "caption": "Reject candidates that miss service requirements before ranking the feasible platforms by the cost and energy of delivering useful work.",
+-    "file": "accelerator-evaluation-sequence.svg"
++    "id": "compare-energy-per-result",
++    "title": "Energy per accepted inspection result",
++    "caption": "Under the assumed 60-second workload, server B draws more power but completes enough additional accepted results to use 3 fewer joules per result.",
++    "file": "compare-energy-per-result.svg"
+   }
+ ]

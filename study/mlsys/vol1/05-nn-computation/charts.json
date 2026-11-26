@@ -1,0 +1,104 @@
+[
+  {
+    "id": "intensity-batch",
+    "kind": "BAR_STACKED",
+    "title": "Arithmetic intensity vs batch size (main-memory traffic model)",
+    "caption": "Packet-owned computation from the chapter's running network: FLOPs over bytes moved under a stream-everything model, I = 2B·109,184 / (4B·986 + 4·109,386). Batching reuses each weight read across examples, climbing the bandwidth slope from ~0.5 to ~12 at batch 32 — and past the ~20 ridge by batch 128, where the model overstates real traffic because runtimes keep weights resident between steps. Book confirms ~0.5 (B=1) and ~12 (B=32).",
+    "xLabel": "Batch size",
+    "yLabel": "FLOP / byte",
+    "xPoints": [
+      "batch 1",
+      "batch 8",
+      "batch 32",
+      "batch 128"
+    ],
+    "series": [
+      {
+        "key": "intensity",
+        "label": "Arithmetic intensity (FLOP/byte)",
+        "color": "var(--chart-1)",
+        "values": [
+          0.49,
+          3.7,
+          12.4,
+          29.6
+        ]
+      }
+    ]
+  },
+  {
+    "id": "state-budget",
+    "kind": "BAR_STACKED",
+    "title": "Training vs inference memory at batch 32 (KB, FP32)",
+    "caption": "The four-state decomposition for the running network. Inference keeps weights plus the largest adjacent pair of activation buffers (~462 KB total); a training step adds gradients, one momentum-style optimizer copy, and all saved layer outputs (~1.3 MB, ~3x). Simplified single-device accounting matching the book's budget table; real runtimes add workspace and framework overhead.",
+    "xLabel": "Phase",
+    "yLabel": "Memory (KB)",
+    "xPoints": [
+      "inference",
+      "training step"
+    ],
+    "series": [
+      {
+        "key": "weights",
+        "label": "Weights",
+        "color": "var(--chart-1)",
+        "values": [
+          437.5,
+          437.5
+        ]
+      },
+      {
+        "key": "activations",
+        "label": "Activations (pair vs all saved)",
+        "color": "var(--chart-2)",
+        "values": [
+          24.6,
+          25.8
+        ]
+      },
+      {
+        "key": "gradients",
+        "label": "Gradients",
+        "color": "var(--chart-4)",
+        "values": [
+          0,
+          437.5
+        ]
+      },
+      {
+        "key": "optimizer",
+        "label": "Optimizer state",
+        "color": "var(--chart-3)",
+        "values": [
+          0,
+          437.5
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mac-share",
+    "kind": "BAR_STACKED",
+    "title": "MACs per layer: the first layer holds 91.9%",
+    "caption": "Multiply-accumulates per digit by layer for 784-128-64-10. The input layer dominates because it meets the widest operand (784) at the widest matrix, 100,352 of 109,184 MACs. This is why input resolution is a cost axis, not just a fidelity axis: a 56x56 input would roughly quadruple the dominant term.",
+    "xLabel": "Layer",
+    "yLabel": "MACs / digit",
+    "xPoints": [
+      "784 -> 128",
+      "128 -> 64",
+      "64 -> 10"
+    ],
+    "series": [
+      {
+        "key": "macs",
+        "label": "MACs per digit",
+        "color": "var(--chart-1)",
+        "values": [
+          100352,
+          8192,
+          640
+        ]
+      }
+    ]
+  }
+]

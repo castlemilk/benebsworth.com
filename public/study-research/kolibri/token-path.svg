@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 447" role="img" aria-labelledby="title desc">
+  <title id="title">From prompt token to next-token logits</title>
+  <desc id="desc">An embedding starts a 2,560-wide residual stream. Each of 50 blocks adds an attention update that reads the prefix and an expert update at this position. The vocabulary projection produces 128,000 logits.</desc>
+  <style>
+    text {font: 23px system-ui,sans-serif; fill:#202d2c}
+    .small {font-size:21px; fill:#394e49}
+    .label {font-weight:700}
+    .box {fill:#e7eeeb; stroke:#849893}
+    .branch {fill:#bce5d8; stroke:#257660}
+    .flow {fill:none; stroke:#257660; stroke-width:2.5; marker-end:url(#head)}
+  </style>
+  <defs><marker id="head" markerWidth="7" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L7 4L0 8z" fill="#257660"/></marker></defs>
+  <rect width="600" height="447" rx="12" fill="#f8faf9"/>
+  <rect class="box" x="22" y="20" width="556" height="70" rx="9"/>
+  <text x="40" y="49" class="label">Token ID → embedding</text>
+  <text x="40" y="76" class="small">Start a 2,560-wide residual stream</text>
+  <rect x="22" y="114" width="556" height="234" rx="9" fill="none" stroke="#849893" stroke-dasharray="6 5"/>
+  <text x="40" y="145" class="label">Repeat 50 blocks</text>
+  <path class="flow" d="M122 90v105"/>
+  <path class="flow" d="M122 230v57"/>
+  <path class="flow" d="M122 322v49"/>
+  <path class="flow" d="M122 183h81M122 272h81"/>
+  <rect class="branch" x="206" y="169" width="351" height="76" rx="9"/>
+  <text x="225" y="199" class="label">Attention</text>
+  <text x="225" y="227" class="small">Reads earlier positions and itself</text>
+  <path class="flow" d="M206 213h-64"/>
+  <circle cx="122" cy="213" r="17" fill="#f8faf9" stroke="#257660"/>
+  <text x="122" y="221" text-anchor="middle">+</text>
+  <rect class="branch" x="206" y="261" width="351" height="76" rx="9"/>
+  <text x="225" y="291" class="label">Six routed + one shared expert</text>
+  <text x="225" y="319" class="small">Transform this position</text>
+  <path class="flow" d="M206 305h-64"/>
+  <circle cx="122" cy="305" r="17" fill="#f8faf9" stroke="#257660"/>
+  <text x="122" y="313" text-anchor="middle">+</text>
+  <rect class="box" x="22" y="373" width="556" height="56" rx="9"/>
+  <text x="40" y="408" class="label">Vocabulary projection → 128,000 logits</text>
+</svg>

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "impact-set",
+    "file": "impact-set.svg",
+    "title": "Registry impact-set traversal",
+    "caption": "An upstream model version bump traverses recorded dependency edges into an impact set, re-evaluates every consumer, blocks promotion until all pass, and rolls out in compatible stages. An unrecorded consumer edge, like the fraud model, is silently unflagged.",
+    "alt": "Upstream model update fanning through recorded dependency edges to consumers, a re-evaluation gate, staged rollout and an unrecorded dashed edge"
+  },
+  {
+    "id": "evaluation-contract",
+    "file": "evaluation-contract.svg",
+    "title": "One evaluation contract, five evidence planes",
+    "caption": "Offline behavior, system performance, responsibility and safety, online experiment and recovery and audit all bind to a single versioned contract. Promotion needs every required sign-off on the same artifact; an invalidated plane sends the candidate back to its owning gate.",
+    "alt": "Five evidence planes feeding one evaluation contract box then a promotion gate with an invalidation path back"
+  },
+  {
+    "id": "slo-vector",
+    "file": "slo-vector.svg",
+    "title": "Fleet health is a vector, not an average",
+    "caption": "The chapter's example consumes 40 percent of the availability budget, 60 percent of latency, 130 percent of freshness and 50 percent of quality. The mean of 0.70 looks healthy, but freshness over one stops promotion: fleet health requires every dimension at or below its budget.",
+    "alt": "Four budget-consumption bars against a limit of one, freshness over budget while the mean looks healthy"
+  },
+  {
+    "id": "build-vs-buy",
+    "file": "build-vs-buy.svg",
+    "title": "Owned fleet cost crosses cloud cost near month 26",
+    "caption": "For a 1,024-GPU cluster under the chapter's plotted assumptions, ownership pays a capital step then a shallow operating slope while cloud rental grows linearly. The cumulative lines cross near month 26; below the break-even occupancy, renting wins.",
+    "alt": "Two cumulative cost curves, a stepped owned-fleet line and a linear cloud line, crossing near month 26"
+  }
+]

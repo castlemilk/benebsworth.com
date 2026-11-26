@@ -134,7 +134,7 @@ export function ModeCollapseStrip({
   const [sep, setSep] = useState(() =>
     Math.min(SEP_MAX, Math.max(SEP_MIN, initialSep)),
   )
-  const [running, setRunning] = useState(true)
+  const [running] = useState(true)
   const [dragging, setDragging] = useState(false)
   const [phase, setPhase] = useState(0) // 0..1 shimmer phase (cosmetic)
 
@@ -252,7 +252,7 @@ export function ModeCollapseStrip({
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [running, dragging, inView])
 
   // small vertical bob for each sample dot (deterministic per-index, cosmetic)

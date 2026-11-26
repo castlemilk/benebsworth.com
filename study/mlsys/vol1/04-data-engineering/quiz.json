@@ -1,0 +1,190 @@
+{
+ "chapterId": "vol1/04_data_engineering",
+ "title": "Self-test: Vol I, Ch 4: Data Engineering",
+ "questions": [
+  {
+   "id": "a1",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A team discovers the same sensor event can appear in multiple log partitions feeding their training set. They deduplicate within each partition and declare the leakage risk handled. What did they miss?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Nothing — deduplication within partitions removes all duplicate-driven leakage"
+    },
+    {
+     "id": "b",
+     "label": "Cross-partition duplicates and near-duplicates of one source record can still land on opposite sides of a split — splits must be group-keyed, not just deduplicated locally"
+    },
+    {
+     "id": "c",
+     "label": "Deduplication itself causes leakage by removing variance from the training distribution"
+    },
+    {
+     "id": "d",
+     "label": "Leakage only occurs through preprocessing fitted before the split, not through record duplication"
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Leakage crosses split boundaries wherever the same underlying entity appears on both sides: duplicates, modified copies, and members of one group (device, household, speaker). Deduplicating within partitions leaves the cross-boundary cases. The chapter's rule is splits keyed by the grouping entity plus transforms fitted on train only — option (d) names a second channel but doesn't excuse (b)."
+  },
+  {
+   "id": "a2",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A pipeline runs full synchronous schema and distribution checks inline on a real-time event stream, then misses a slow distribution shift for months. Which pillar combination best explains the failure?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Quality alone — schema checks were too weak to catch malformed records"
+    },
+    {
+     "id": "b",
+     "label": "Reliability and scalability — the checks ran per-record while the shift was a windowed statistical effect, and inline distribution checks were quietly throttled under load"
+    },
+    {
+     "id": "c",
+     "label": "Governance alone — no contract recorded who owned the stream"
+    },
+    {
+     "id": "d",
+     "label": "Quality and governance — the team lacked labeled production data for validation"
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Distribution shift is not a per-record property — it needs windowed statistics (PSI, K-S) run asynchronously off the hot path. Inline synchronous checks either can't express the comparison or get shed under backpressure, trading reliability for throughput silently. The chapter's split: synchronous schema at the boundary, asynchronous statistical checks over accepted windows."
+  },
+  {
+   "id": "a3",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "Two annotators agree on 92% of clips, but the non-wake class is 90% of the corpus. Why is the raw agreement figure misleading, and what should the team report instead?",
+   "options": [
+    {
+     "id": "a",
+     "label": "It isn't misleading — 92% is above the standard 90% quality bar"
+    },
+    {
+     "id": "b",
+     "label": "Chance agreement on a 90/10 split is already ~82% — report Cohen's kappa, which discounts agreement-by-chance, plus gold-standard checks on a seeded sample"
+    },
+    {
+     "id": "c",
+     "label": "They should report predictive entropy instead — agreement metrics are meaningless on audio"
+    },
+    {
+     "id": "d",
+     "label": "They should label everything twice more and take majority vote — consensus always fixes class-imbalance artifacts"
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "If both annotators label 'non-wake' 90% of the time independently, expected chance agreement is 0.9² + 0.1² = 0.82 — so observed 92% yields kappa ≈ (0.92−0.82)/(1−0.82) ≈ 0.56, far weaker than the headline. Kappa plus gold checks bound label quality; entropy is a complementary model-side signal, not a replacement."
+  },
+  {
+   "id": "a4",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "During serving, an engineer computes z-scores (x − μ)/σ for a numerical feature. Where must μ and σ come from, and what failure results if they're recomputed on live traffic?",
+   "options": [
+    {
+     "id": "a",
+     "label": "From the training split only, persisted with the model and replayed identically — recomputing on live data causes training-serving skew"
+    },
+    {
+     "id": "b",
+     "label": "From live traffic — serving must adapt to the current distribution to avoid drift"
+    },
+    {
+     "id": "c",
+     "label": "From the full dataset before splitting — using all data gives the most stable constants"
+    },
+    {
+     "id": "d",
+     "label": "From either training or serving — z-scoring is a stateless operation so the source doesn't matter"
+    }
+   ],
+   "correctOptionId": "a",
+   "explanation": "Fitted state (normalization constants, vocabularies, gain handling) is part of the model artifact: fit once on the training split, persist with the model, replay identically at serving. Recomputing on live traffic makes the same raw value map to a different feature — a skewed feature is still a valid vector, so it degrades silently. Fitting on the full pre-split dataset also leaks test statistics into training."
+  },
+  {
+   "id": "a5",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "A KWS evaluation produces zero false wakes over 500 hours of representative non-keyword audio. Does this establish a budget of one false wake per month? Why or why not?",
+   "options": [
+    {
+     "id": "a",
+     "label": "Yes — zero observed failures always proves the rate is below the budget"
+    },
+    {
+     "id": "b",
+     "label": "No — under the rule of three, 500 hours (~0.68 months) bounds the rate only to roughly 4.4/month; a one-per-month claim needs ~3 months of representative zero-wake listening"
+    },
+    {
+     "id": "c",
+     "label": "Yes — 500 hours exceeds the 100-hour minimum the budget implies"
+    },
+    {
+     "id": "d",
+     "label": "No — false wakes can never be measured, only inferred from aggregate accuracy"
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "Zero events bound a rate only with uncertainty: the ~95% one-sided upper bound is ~3/n. At ~730 hours/month, 500 hours is ~0.68 months, bounding the rate at ~4.4/month — the one-per-month claim is unestablished, not refuted. Fix listening duration and confidence before evaluating, and accept only when the upper bound meets the target."
+  },
+  {
+   "id": "a6",
+   "kind": "MCQ",
+   "source": "BOOK",
+   "prompt": "An architect must serve (a) millisecond point lookups of feature vectors at inference, (b) bulk sequential scans for nightly training, (c) point-in-time-correct training sets. Which arrangement matches all three?",
+   "options": [
+    {
+     "id": "a",
+     "label": "One object store for everything — cheap storage handles every access pattern"
+    },
+    {
+     "id": "b",
+     "label": "A feature store: online low-latency store for serving lookups, offline warehouse/lake for scans, and as-of (point-in-time) joins for training reconstruction"
+    },
+    {
+     "id": "c",
+     "label": "An OLTP database for all three — transactions guarantee correctness"
+    },
+    {
+     "id": "d",
+     "label": "A data warehouse alone — OLAP scans cover both lookups and time travel"
+    }
+   ],
+   "correctOptionId": "b",
+   "explanation": "No medium is both cheap and fast, and training's sequential scans pull opposite to serving's point lookups — that tension is exactly what the feature store's split (offline + online) resolves. The third requirement is the ML-specific one: as-of retrieval so each training example sees only feature values that existed at its timestamp, which neither a plain warehouse nor an OLTP store gives you."
+  },
+  {
+   "id": "b1",
+   "kind": "FEYNMAN",
+   "source": "ORIGINAL",
+   "prompt": "Explain to a junior engineer why a data cascade is more expensive than a code bug of comparable 'size' — use the silence property and the widening rework bill.",
+   "modelAnswer": "A code bug fails loudly at a known location: stack trace, failing test, page. A data defect produces valid-looking outputs that are simply less accurate, so nothing alarms — it passes schemas and tests because schemas check shape, not truth. Each downstream stage then treats the corrupted input as trustworthy and converts it into new derived state: ingested records, labels, features, trained weights, dashboards. When it finally surfaces at deployment, the fix isn't one patch — it's rebuilding every artifact that consumed the defect, retraining, revalidating, possibly rolling back contaminated predictions in downstream stores. Cost scales with distance traveled and artifacts produced, and prevention belongs at the source because that's where one check stops the whole cascade."
+  },
+  {
+   "id": "b2",
+   "kind": "FEYNMAN",
+   "source": "ORIGINAL",
+   "prompt": "'Labels are the specification.' Explain what this means for label errors, labeling economics, and why kappa and gold checks exist.",
+   "modelAnswer": "Training treats labels as the definition of a correct answer, so a labeling error isn't noise around the spec — it rewrites the spec. A 3% label-error rate means every run fits corrupted targets. Economically, labels usually dominate dataset cost (the chapter's ratio: labeling runs hundreds to a thousand times a single training run's compute), and granularity sets per-label cost — a class tag is a click, a good bounding box ~35 seconds. Because quality can't be assumed and checking every label defeats the economics, the pipeline bounds it: Cohen's kappa discounts agreement that would happen by chance on imbalanced classes; gold-standard items with known answers audit annotators continuously; consensus and expert review are spent selectively where the spec is ambiguous."
+  },
+  {
+   "id": "c1",
+   "kind": "NUMERIC",
+   "source": "ORIGINAL",
+   "prompt": "An always-on detector evaluates ~2.88M windows/month (one window every ~0.9 s) and budgets 0.5 expected false wakes/month. What is the per-window FPR bound, and how many months of zero-false-wake listening does a claim at that rate require?",
+   "modelAnswer": "FPR_win ≤ FW_budget / W_month = 0.5 / 2.88M ≈ 1.7×10⁻⁷ — each window may false-fire roughly once in six million. By the rule of three, zero events over n trials bounds the rate at ~3/n, so a 0.5/month claim needs n ≈ 3/0.5 = 6 months of representative zero-false-wake listening before the upper bound meets the target. Less listening yields a weaker bound (e.g. 3 months ⇒ ~1/month), not a pass."
+  },
+  {
+   "id": "c2",
+   "kind": "NUMERIC",
+   "source": "ORIGINAL",
+   "prompt": "A trainer needs 2,000 samples/s at 25 KB each. Storage sustains 40 MB/s and the loader path adds 15% overhead. Compute the supply rate in samples/s and state whether the accelerator is fed or starved.",
+   "modelAnswer": "Required demand = 2,000 × 25 KB = 50 MB/s. Supply = 40 MB/s × (1 − 0.15) = 34 MB/s, i.e. 34 MB/s ÷ 25 KB/sample ≈ 1,360 samples/s — only 68% of demand. The accelerator is starved: T_step = max(T_compute, T_IO) is IO-bound with a feeding loss of about 32%. Fixes target the supply side: faster storage tier, a more efficient format (columnar reads), more loader workers or prefetch, or smaller samples — not faster compute."
+  }
+ ]
+}

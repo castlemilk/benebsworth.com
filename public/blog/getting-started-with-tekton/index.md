@@ -5,6 +5,7 @@ author: Ben Ebsworth
 description: >-
   Developing basic CI and CD pipelines in Tekton and deploying this both to
   local and cloud based environments
+heroImage: /blog/getting-started-with-tekton/hero.webp
 labels: 'technology,CI/CD,GCP,kubernetes,containers,kaniko,developer experience'
 keywords: >-
   technology,CI/CD,GCP,kubernetes,containers,kaniko,developer

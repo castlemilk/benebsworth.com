@@ -1,0 +1,49 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "Opening case carries the decision (the 8.71 s step decomposition); the figures live in the sections that derive each term."
+    },
+    "The Scale Moment": {
+      "figure": "::fig[scale-climb]",
+      "teaches": "Fleet counts climb ~4 orders while compute climbs ~7 — the gap between the two ladders is per-device rate, and ~half the compute growth is count×duration.",
+      "source": "Compute trend decomposition + cluster-size landmarks (2 GTX 580 → 10k V100 → 16,384 H100)."
+    },
+    "From Single Node to Fleet": {
+      "figure": "::fig[step-anatomy]",
+      "teaches": "The 8.71 s step split into compute / bubble / exchange: the two non-compute terms are what fleet growth taxes first, and why doubling N cannot halve wall-clock.",
+      "source": "Instrumented 1,024-GPU reference step: 8.71 s = 7.25 + 0.53 + 0.93."
+    },
+    "AI Scaling Laws": {
+      "proseOnly": "The power-law relationship and its breakdown regimes are carried by the scaling-law equation and the compute-orders chart."
+    },
+    "Constraints of Scale": {
+      "figure": "::fig[mtbf-ladder]",
+      "teaches": "Per-device MTTF divides by N under independent failures: 50,000 h on one GPU becomes ~2 h at 25,000 GPUs, matching Llama 3's measured ~1 interruption per 3.1 h.",
+      "source": "MTBF arithmetic + the Llama 3 405B production interruption record."
+    },
+    "The C³ Taxonomy": {
+      "figure": "::fig[c3-map]",
+      "teaches": "D·A·M names the workload; C³ names what the fleet spends the step doing. Map each optimization to the term it relieves — a faster chip only relieves Compute.",
+      "source": "The C³ projection: Compute, Communication, Coordination as the fleet's verbs."
+    },
+    "The Fleet Stack and Lighthouse Archetypes": {
+      "proseOnly": "The four bands and three archetypes are organizing prose; the archetypes get full treatment in their own chapters."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Each fallacy reuses a worked number from earlier sections — no new mechanism to draw."
+    },
+    "The physics": {
+      "proseOnly": "Reference table."
+    },
+    "Glossary": {
+      "proseOnly": "Term index feeding /study/concepts."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Transfer bridges."
+    },
+    "Open questions": {
+      "proseOnly": "Open threads into later chapters."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 386" role="img" aria-labelledby="study-svg-deployment-acceptance-test-title" aria-describedby="study-svg-deployment-acceptance-test-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-deployment-acceptance-test-title">Production acceptance gates</title>
+  <desc id="study-svg-deployment-acceptance-test-desc">The same exported candidate must meet the resource and quality limits. Passing the memory and timing gates cannot compensate for failing a required quality slice. Define release gates: Set resource limits, task quality floors, and required input slices. Then Run the full workload: Use the target device, production input path, and expected load. Then Check every gate: Compare repeated measurements and slice results with each threshold. Then Release or diagnose: Accept the tested artifact only when it meets all required limits.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Define release gates</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Set resource limits, task quality</tspan>
+    <tspan x="19" y="64">floors, and required input slices.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Run the full workload</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Use the target device, production</tspan>
+    <tspan x="19" y="165">input path, and expected load.</tspan></text>
+  <path d="M172 185v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="205" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="229" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Check every gate</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="249">Compare repeated measurements and</tspan>
+    <tspan x="19" y="266">slice results with each threshold.</tspan></text>
+  <path d="M172 286v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="306" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="330" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Release or diagnose</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="350">Accept the tested artifact only when</tspan>
+    <tspan x="19" y="367">it meets all required limits.</tspan></text>
+  </g>
+</svg>

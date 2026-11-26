@@ -29,6 +29,7 @@ vi.mock('@/components/about/halftone-hero', () => ({ HalftoneHero: (props: objec
 vi.mock('@/components/motion/skill-marquee', () => ({ SkillMarquee: ({ skills, layout }: { skills: Skill[]; layout?: string }) => <div data-skills={JSON.stringify(skills)} data-skill-layout={layout} /> }))
 vi.mock('@/components/media/youtube', () => ({ YouTube: (props: object) => <div data-youtube={JSON.stringify(props)} /> }))
 vi.mock('@/components/mdx/mdx-content', () => ({ MdxContent: ({ source }: { source: string }) => <div data-mdx-source={source} /> }))
+// eslint-disable-next-line @next/next/no-html-link-for-pages -- static-markup mock of a client component; renderToStaticMarkup has no router for <Link>
 vi.mock('@/components/blog/related-labs', () => ({ RelatedLabs: ({ intro, ...props }: { intro?: React.ReactNode }) => <div data-related-labs={JSON.stringify(props)}><h2>Try it in the lab</h2>{intro}<a href="/lab/">All effects</a></div> }))
 
 function render(Page: () => React.JSX.Element) {

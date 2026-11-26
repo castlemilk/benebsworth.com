@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="participation-funnel" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="participation-funnel-title participation-funnel-desc">
+  <title id="participation-funnel-title">Participation becomes the training population</title>
+  <desc id="participation-funnel-desc">A funnel from deployed fleet through admission, selection and completed round, with the coverage-ratio definition below.</desc>
+  <style>
+    .dark #participation-funnel { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#participation-funnel { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="18" font-weight="650">Admission shapes the learning population</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">stage sizes are illustrative, not measurements</text>
+    <g font-size="9">
+      <text x="24" y="74" font-weight="650">deployed fleet</text>
+      <rect x="126" y="62" width="224" height="22" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.82"/>
+      <text x="238" y="77" text-anchor="middle" fill="var(--fig-paper, #f7f3e9)">every cohort</text>
+      <text x="24" y="116" font-weight="650">passes admission</text>
+      <rect x="126" y="104" width="166" height="22" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.64"/>
+      <text x="304" y="114" font-size="8" fill="var(--fig-rule, #6e6a5b)">energy + thermal</text>
+      <text x="304" y="125" font-size="8" fill="var(--fig-rule, #6e6a5b)">+ latency</text>
+      <text x="24" y="158" font-weight="650">selected cohort</text>
+      <rect x="126" y="146" width="116" height="22" rx="4" fill="var(--fig-outline, #364c50)" opacity="0.48"/>
+      <text x="254" y="156" font-size="8" fill="var(--fig-rule, #6e6a5b)">sampling +</text>
+      <text x="254" y="167" font-size="8" fill="var(--fig-rule, #6e6a5b)">over-selection</text>
+      <text x="24" y="200" font-weight="650">completes round</text>
+      <rect x="126" y="188" width="72" height="22" rx="4" fill="var(--fig-mark, #b4571f)" opacity="0.78"/>
+      <text x="210" y="198" font-size="8" fill="var(--fig-rule, #6e6a5b)">deadline +</text>
+      <text x="210" y="209" font-size="8" fill="var(--fig-rule, #6e6a5b)">dropout</text>
+    </g>
+    <line x1="126" y1="225" x2="314" y2="225" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1"/>
+    <text x="126" y="244" font-size="9" fill="var(--fig-rule, #6e6a5b)">coverage ratio =</text>
+    <text x="126" y="258" font-size="9" font-weight="650">cohort share of completed updates</text>
+    <text x="126" y="272" font-size="9" font-weight="650">/ cohort share of fleet</text>
+    <text x="126" y="288" font-size="8.5" fill="var(--fig-mark, #b4571f)">far below 1: underrepresented · near 1: proportional</text>
+  </g>
+</svg>

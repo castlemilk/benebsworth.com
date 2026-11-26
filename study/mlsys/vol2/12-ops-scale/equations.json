@@ -1,0 +1,229 @@
+[
+  {
+    "id": "platform-roi",
+    "number": "12.1",
+    "title": "Platform benefit-cost ratio",
+    "latex": "BCR=\\frac{N_{\\mathrm{models}}\\,T_{\\mathrm{saved}}\\,C_{\\mathrm{eng}}}{C_{\\mathrm{platform}}}",
+    "caption": "A platform repays when recovered engineering time, valued at loaded hourly cost, exceeds the platform's total cost. The ratio is linear in model count: the 50-model scenario in the chapter reaches 1.25 and the 20-model scenario 0.5.",
+    "symbols": [
+      {
+        "symbol": "BCR",
+        "name": "benefit-cost ratio",
+        "meaning": "gross recovered-capacity value divided by total platform cost; 1 is break-even, above 1 is net return"
+      },
+      {
+        "symbol": "N_{\\mathrm{models}}",
+        "name": "model count",
+        "meaning": "production models whose toil the platform absorbs"
+      },
+      {
+        "symbol": "T_{\\mathrm{saved}}",
+        "name": "hours saved per model-month",
+        "meaning": "engineering hours the platform recovers per model per month; the chapter's LEGO scenario uses 40"
+      },
+      {
+        "symbol": "C_{\\mathrm{eng}}",
+        "name": "loaded engineer cost",
+        "meaning": "fully loaded hourly cost of an ML engineer, about 150 dollars per hour in the chapter scenarios"
+      },
+      {
+        "symbol": "C_{\\mathrm{platform}}",
+        "name": "platform total cost",
+        "meaning": "annual running cost of the platform team plus its infrastructure"
+      }
+    ]
+  },
+  {
+    "id": "freshness-latency",
+    "number": "12.2",
+    "title": "Feature freshness latency",
+    "latex": "L_{\\mathrm{fresh}}=T_{\\mathrm{available}}-T_{\\mathrm{event}}",
+    "caption": "Freshness is measured on availability time, the moment the feature store can serve the value, not the event time the underlying fact happened. Backfills and late arrivals make the two clocks diverge, so watermarks bound the gap.",
+    "symbols": [
+      {
+        "symbol": "L_{\\mathrm{fresh}}",
+        "name": "freshness latency",
+        "meaning": "how stale a served feature value is, in time units"
+      },
+      {
+        "symbol": "T_{\\mathrm{available}}",
+        "name": "availability time",
+        "meaning": "when the feature record became queryable in the store"
+      },
+      {
+        "symbol": "T_{\\mathrm{event}}",
+        "name": "event time",
+        "meaning": "when the source event that produced the feature occurred"
+      }
+    ]
+  },
+  {
+    "id": "ab-sample-size",
+    "number": "12.3",
+    "title": "A/B sample size per variant",
+    "latex": "n=\\frac{(z_{\\alpha}+z_{\\beta})^{2}\\,2p(1-p)}{\\delta^{2}}",
+    "caption": "Two-proportion sizing for one variant: baseline rate p, detectable absolute difference delta, z_alpha for confidence and z_beta for power. Detecting a 10 percent relative lift on a 5 percent click-through rate needs about 30,000 samples per variant; a 1 percent baseline at 5 percent relative needs about 621,000.",
+    "symbols": [
+      {
+        "symbol": "n",
+        "name": "samples per variant",
+        "meaning": "independent observations needed in each arm of the experiment"
+      },
+      {
+        "symbol": "z_{\\alpha}",
+        "name": "confidence quantile",
+        "meaning": "z-score for the chosen confidence level; 1.96 at 95 percent"
+      },
+      {
+        "symbol": "z_{\\beta}",
+        "name": "power quantile",
+        "meaning": "z-score for statistical power; 0.84 at 80 percent power"
+      },
+      {
+        "symbol": "p",
+        "name": "baseline rate",
+        "meaning": "expected outcome proportion under control, e.g. click-through rate"
+      },
+      {
+        "symbol": "\\delta",
+        "name": "detectable difference",
+        "meaning": "smallest absolute change worth detecting, e.g. 0.005 for half a percentage point"
+      }
+    ]
+  },
+  {
+    "id": "rollout-risk",
+    "number": "12.4",
+    "title": "Rollout exposure risk",
+    "latex": "R=P_{\\mathrm{reg}}\\,I_{\\mathrm{reg}}\\,E_{\\mathrm{exp}}",
+    "caption": "Release risk prices the probability of regression times the impact per exposed unit times the number of units exposed. A 5 percent canary cuts blast radius twentyfold against a 100 percent cutover, and stage duration is set by required samples over traffic rate times traffic fraction.",
+    "symbols": [
+      {
+        "symbol": "R",
+        "name": "rollout risk",
+        "meaning": "expected harm from a release, in impact-weighted exposed units"
+      },
+      {
+        "symbol": "P_{\\mathrm{reg}}",
+        "name": "regression probability",
+        "meaning": "estimated chance the candidate degrades the guarded metric"
+      },
+      {
+        "symbol": "I_{\\mathrm{reg}}",
+        "name": "impact per unit",
+        "meaning": "harm each exposed unit suffers if the regression ships"
+      },
+      {
+        "symbol": "E_{\\mathrm{exp}}",
+        "name": "exposed units",
+        "meaning": "requests, users or regions receiving the candidate during a stage"
+      }
+    ]
+  },
+  {
+    "id": "slo-budget-vector",
+    "number": "12.5",
+    "title": "SLO vector consumption",
+    "latex": "\\mathrm{healthy}\\iff\\max_{d}\\frac{O_{d}}{B_{d}}\\le 1",
+    "caption": "Each reliability dimension consumes a fraction of its error budget. The fleet is healthy only when the worst dimension stays at or below one; the chapter's example has freshness at 1.30 while the mean of 0.70 hides it.",
+    "symbols": [
+      {
+        "symbol": "O_{d}",
+        "name": "observed violations",
+        "meaning": "budget-consuming events observed on dimension d in the window"
+      },
+      {
+        "symbol": "B_{d}",
+        "name": "allowed budget",
+        "meaning": "violations permitted on dimension d before the SLO breaks"
+      },
+      {
+        "symbol": "\\max_{d}",
+        "name": "worst dimension",
+        "meaning": "the single reliability dimension closest to or past its limit"
+      }
+    ]
+  },
+  {
+    "id": "false-alert-rate",
+    "number": "12.6",
+    "title": "Fleet false-alert probability",
+    "latex": "P(\\ge 1)=1-(1-\\alpha)^{N}",
+    "caption": "Independent monitors multiply false crossings. One hundred models with ten metrics each, checked every five minutes at a 0.003 false-positive rate, produce about 864 raw false crossings per day; loosening to two sigma pushes the daily count past 14,000.",
+    "symbols": [
+      {
+        "symbol": "\\alpha",
+        "name": "false-positive rate",
+        "meaning": "probability one monitor check crosses its threshold with nothing wrong"
+      },
+      {
+        "symbol": "N",
+        "name": "monitor checks",
+        "meaning": "models times metrics times checks per day; the chapter's example is 288,000"
+      },
+      {
+        "symbol": "P(\\ge 1)",
+        "name": "at least one false crossing",
+        "meaning": "probability the fleet sees a false alarm somewhere, which approaches one as N grows"
+      }
+    ]
+  },
+  {
+    "id": "canary-duration",
+    "number": "12.8",
+    "title": "Canary stage duration",
+    "latex": "t_{\\mathrm{stage}}=\\frac{n_{\\mathrm{required}}}{r_{\\mathrm{traffic}}\\,f_{\\mathrm{stage}}}",
+    "caption": "Stage length is set by the experiment's sample requirement divided by request rate times traffic fraction. At 1 million requests per hour and 10,000 required samples, a 1 percent stage needs about an hour and a 5 percent stage about 12 minutes; delayed labels and guardrail windows can extend it.",
+    "symbols": [
+      {
+        "symbol": "t_{\\mathrm{stage}}",
+        "name": "stage duration",
+        "meaning": "time a rollout stage must run to collect its required evidence"
+      },
+      {
+        "symbol": "n_{\\mathrm{required}}",
+        "name": "required samples",
+        "meaning": "observations per variant the evaluation contract demands, e.g. 10,000 guardrail samples"
+      },
+      {
+        "symbol": "r_{\\mathrm{traffic}}",
+        "name": "traffic rate",
+        "meaning": "requests per unit time arriving at the service"
+      },
+      {
+        "symbol": "f_{\\mathrm{stage}}",
+        "name": "traffic fraction",
+        "meaning": "share of traffic routed to the candidate during the stage, e.g. 0.01 for canary"
+      }
+    ]
+  },
+  {
+    "id": "ml-tco",
+    "number": "12.7",
+    "title": "ML total cost of ownership",
+    "latex": "TCO=C_{\\mathrm{train}}+C_{\\mathrm{infer}}+C_{\\mathrm{data}}+C_{\\mathrm{iter}}",
+    "caption": "The four cost planes over one horizon with no double counting. The chapter's constructed budgets show iteration dominating a startup at 84 percent of monthly cost while inference dominates a 50-model production fleet at 41 percent; the dominant term changes over the lifecycle.",
+    "symbols": [
+      {
+        "symbol": "C_{\\mathrm{train}}",
+        "name": "training cost",
+        "meaning": "GPU time, energy and failure overhead for model training runs"
+      },
+      {
+        "symbol": "C_{\\mathrm{infer}}",
+        "name": "inference cost",
+        "meaning": "provisioned accelerator capacity serving live traffic at its SLO"
+      },
+      {
+        "symbol": "C_{\\mathrm{data}}",
+        "name": "data cost",
+        "meaning": "storage, egress and processing for feature and training data"
+      },
+      {
+        "symbol": "C_{\\mathrm{iter}}",
+        "name": "iteration cost",
+        "meaning": "engineering time and compute per experiment, including the roughly nine in ten that improve nothing"
+      }
+    ]
+  }
+]

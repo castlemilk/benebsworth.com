@@ -4,7 +4,7 @@ import { SiteFooter } from '@/components/site/site-footer'
 import { JsonLd, breadcrumbLd } from '@/components/seo/json-ld'
 import { buildKnowledgeGraph } from '@/lib/knowledge/graph'
 import { Hardware } from '@/components/ui/hardware'
-import { KnowledgeConsole } from '@/components/knowledge/knowledge-console'
+import { KnowledgeConsoleLoader } from '@/components/knowledge/knowledge-console-loader'
 
 export const metadata: Metadata = {
   title: 'Knowledge — the map of everything here',
@@ -26,7 +26,7 @@ export default function KnowledgePage() {
           Posts, lab studies and packet chapters link through shared tags, lab categories and the concepts the
           study packets define. Search nodes, flip layers, switch between drift, lane and orbit layouts.
         </p>
-        <Hardware keyColor={{ l: 0.64, c: 0.31, h: 48 }}><KnowledgeConsole graph={graph} /></Hardware>
+        <Hardware keyColor={{ l: 0.64, c: 0.31, h: 48 }}><KnowledgeConsoleLoader graph={graph} /></Hardware>
       </main>
       <SiteFooter />
     </>

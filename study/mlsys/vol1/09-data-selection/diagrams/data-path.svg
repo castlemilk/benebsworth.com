@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="study-fig-fit ds9-data-path" viewBox="0 0 336 186" role="img" aria-labelledby="ds9-data-path-title ds9-data-path-desc">
+  <title id="ds9-data-path-title">What changes after selection?</title>
+  <desc id="ds9-data-path-desc">Follow the comparison from stored examples to bytes read and training time. Measure quality on the same held-out slices at the end.</desc>
+  <style>
+    .ds9-data-path { --ink: #253741; --quiet: #435861; --accent: #086653; --wash: #c9e8dd; --line: #858e8a; }
+    .dark .ds9-data-path { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; }
+    @media (prefers-color-scheme: dark) { :root.ds9-data-path { --ink: #f0ede5; --quiet: #c0c9c5; --accent: #88d5bf; --wash: #264b41; --line: #83938b; } }
+    .ds9-data-path text { font: 16px system-ui, sans-serif; fill: var(--ink); }
+    .ds9-data-path .ds-title { font-weight: 650; }
+    .ds9-data-path .ds-note { font-size: 14px; fill: var(--quiet); }
+    .ds9-data-path .ds-track { fill: none; stroke: var(--line); stroke-width: 1.5; }
+    .ds9-data-path .ds-focus { fill: var(--wash); stroke: var(--accent); stroke-width: 1.5; }
+  </style>
+<path class="ds-track" d="M16 20v143"/>
+<g class="ds-focus"><circle cx="16" cy="23" r="6"/><circle cx="16" cy="65" r="6"/><circle cx="16" cy="107" r="6"/><circle cx="16" cy="149" r="6"/></g>
+<text class="ds-title" x="36" y="28">Selection</text><text class="ds-note" x="148" y="28">Time spent ranking</text>
+<text class="ds-title" x="36" y="70">Storage</text><text class="ds-note" x="148" y="70">Physical bytes read</text>
+<text class="ds-title" x="36" y="112">Training</text><text class="ds-note" x="148" y="112">Time to target</text>
+<text class="ds-title" x="36" y="154">Evaluation</text><text class="ds-note" x="148" y="154">Quality on each slice</text>
+</svg>

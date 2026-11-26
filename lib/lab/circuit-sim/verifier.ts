@@ -1,10 +1,8 @@
 import type { Circuit } from './types'
-import { validateCircuit, assertDC, findFloatingNodes, type CircuitDiagnostic } from './validator'
+import { validateCircuit } from './validator'
 import { solveDC } from './solver'
 import { transientStep } from './transient'
 import { generateWires } from './wiring'
-import { renderCircuit } from './placement'
-import { getTerminalPositions, gridSnap } from './draw'
 
 // ── Comprehensive circuit verification report ─────────────────────
 

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="extraction-budget" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="extraction-budget-title extraction-budget-desc">
+  <title id="extraction-budget-title">Two thefts, two budgets</title>
+  <desc id="extraction-budget-desc">Artifact theft requires a storage or registry compromise and is stopped by encryption, signing and access control, yielding an exact copy. Behavioral theft needs only query access and is bounded by a cumulative per-principal budget plus the output contract, yielding an approximate surrogate.</desc>
+  <style>
+    .dark #extraction-budget { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094; --fig-danger:#e88f8f }
+    @media (prefers-color-scheme: dark) { svg:root#extraction-budget { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094; --fig-danger:#e88f8f } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="26" font-size="19" font-weight="650">Two thefts, two budgets</text>
+    <text x="20" y="44" font-size="11" fill="var(--fig-rule, #6e6a5b)">the attack splits on what the thief must reach</text>
+
+    <line x1="190" y1="56" x2="190" y2="252" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1" stroke-dasharray="4 3"/>
+
+    <g text-anchor="middle">
+      <text x="100" y="72" font-size="13" font-weight="650">artifact theft</text>
+      <text x="280" y="72" font-size="13" font-weight="650">behavioral theft</text>
+    </g>
+
+    <g font-size="10">
+      <text x="30" y="100" font-weight="650" fill="var(--fig-rule, #6e6a5b)">requires</text>
+      <text x="30" y="116">storage or</text>
+      <text x="30" y="132">registry compromise</text>
+      <text x="30" y="162" font-weight="650" fill="var(--fig-rule, #6e6a5b)">stopped by</text>
+      <text x="30" y="178">encryption · signing</text>
+      <text x="30" y="194">access control</text>
+      <text x="30" y="228" font-size="12" font-weight="650" fill="var(--fig-mark, #b4571f)">exact copy</text>
+
+      <text x="210" y="100" font-weight="650" fill="var(--fig-rule, #6e6a5b)">requires</text>
+      <text x="210" y="116">only query</text>
+      <text x="210" y="132">access</text>
+      <text x="210" y="162" font-weight="650" fill="var(--fig-rule, #6e6a5b)">bounded by</text>
+      <text x="210" y="178">cumulative budget</text>
+      <text x="210" y="194">+ output contract</text>
+      <text x="210" y="228" font-size="12" font-weight="650" fill="var(--fig-danger, #b4571f)">approx surrogate</text>
+    </g>
+
+    <rect x="30" y="206" width="140" height="1" fill="var(--fig-rule, #6e6a5b)" opacity="0.5"/>
+    <rect x="210" y="206" width="140" height="1" fill="var(--fig-rule, #6e6a5b)" opacity="0.5"/>
+
+    <text x="190" y="272" font-size="10" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">a daily rate limit slows collection; it never caps the total</text>
+    <text x="190" y="290" font-size="10" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">different boundary, different control</text>
+  </g>
+</svg>

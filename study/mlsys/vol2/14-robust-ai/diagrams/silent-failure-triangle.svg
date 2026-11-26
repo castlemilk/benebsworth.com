@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" role="img" aria-label="Three pillars of robust AI, each with its evidence family and first defense">
+  <style>
+    .bg{fill:var(--diagram-bg,#fff)}
+    .panel{fill:var(--diagram-panel,#f6f6f4);stroke:var(--diagram-edge,#999);stroke-width:1.2;rx:8}
+    .title{font:600 15px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sub{font:11px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .lbl{font:12px var(--font-sans,sans-serif);fill:var(--diagram-ink,#1c1c1e)}
+    .sm{font:10.5px var(--font-sans,sans-serif);fill:var(--diagram-ink-soft,#5a5a60)}
+    .chip{fill:var(--diagram-accent-soft,#e8eefb);stroke:var(--diagram-accent,#3c64c8);stroke-width:1}
+    .ev{fill:none;stroke:var(--diagram-accent,#3c64c8);stroke-width:1.4}
+    .sym{font:600 13px var(--font-sans,sans-serif);fill:var(--diagram-accent,#3c64c8)}
+    .sym2{font:600 13px var(--font-sans,sans-serif);fill:var(--diagram-warn,#c85a3c)}
+  </style>
+  <rect class="bg" width="760" height="420"/>
+  <text class="title" x="30" y="34">Three pillars, three evidence families</text>
+  <text class="sub" x="30" y="53">Each pillar produces different evidence — a passed row proves nothing about the others.</text>
+  <!-- shared symptom -->
+  <rect x="230" y="72" width="300" height="40" rx="20" class="chip"/>
+  <text class="sym2" x="380" y="90" text-anchor="middle">shared symptom</text>
+  <text class="lbl" x="380" y="104" text-anchor="middle">accuracy falls · latency green · uptime green</text>
+  <!-- pillar columns -->
+  <g>
+    <rect class="panel" x="30" y="140" width="218" height="200" rx="8"/>
+    <text class="title" x="46" y="166" font-size="13">Environmental shifts</text>
+    <text class="sm" x="46" y="184">evidence: statistical</text>
+    <text class="lbl" x="46" y="206">population statistics move</text>
+    <text class="sm" x="46" y="226">PSI · KL divergence · KS tests</text>
+    <text class="sm" x="46" y="244">per-bin decomposition</text>
+    <text class="sm" x="46" y="266">first defense:</text>
+    <text class="sm" x="46" y="284">calibrated alerts → investigation,</text>
+    <text class="sm" x="46" y="300">never automatic retraining</text>
+    <text class="sym" x="46" y="326">detection · reweight · retrain</text>
+  </g>
+  <g>
+    <rect class="panel" x="271" y="140" width="218" height="200" rx="8"/>
+    <text class="title" x="287" y="166" font-size="13">Input-level attacks</text>
+    <text class="sm" x="287" y="184">evidence: adversarial</text>
+    <text class="lbl" x="287" y="206">boundary optimized against</text>
+    <text class="sm" x="287" y="226">FGSM · PGD · C&amp;W · surrogate</text>
+    <text class="sm" x="287" y="244">physical patches · suffixes</text>
+    <text class="sm" x="287" y="266">first defense:</text>
+    <text class="sm" x="287" y="284">adaptive evaluation under a</text>
+    <text class="sm" x="287" y="300">stated threat model</text>
+    <text class="sym" x="287" y="326">detection · harden · certify</text>
+  </g>
+  <g>
+    <rect class="panel" x="512" y="140" width="218" height="200" rx="8"/>
+    <text class="title" x="528" y="166" font-size="13">System-level faults</text>
+    <text class="sm" x="528" y="184">evidence: behavioral</text>
+    <text class="lbl" x="528" y="206">machinery corrupts itself</text>
+    <text class="sm" x="528" y="226">bit flips · preprocessing bugs</text>
+    <text class="sm" x="528" y="244">NaN checks pass — finite values</text>
+    <text class="sm" x="528" y="266">first defense:</text>
+    <text class="sm" x="528" y="284">invariants, golden-input canaries,</text>
+    <text class="sm" x="528" y="300">sampled cross-replica comparison</text>
+    <text class="sym" x="528" y="326">detection · contain · roll back</text>
+  </g>
+  <line class="ev" x1="380" y1="112" x2="139" y2="140"/>
+  <line class="ev" x1="380" y1="112" x2="380" y2="140"/>
+  <line class="ev" x1="380" y1="112" x2="621" y2="140"/>
+  <!-- per-request row -->
+  <rect class="panel" x="30" y="360" width="700" height="40" rx="8"/>
+  <text class="lbl" x="48" y="384">+ per-request competence row: calibration · OOD score · selective prediction — because aggregates never certify the single request.</text>
+</svg>

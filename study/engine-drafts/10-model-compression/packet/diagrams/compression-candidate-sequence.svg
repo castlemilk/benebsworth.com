@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 521" role="img" aria-labelledby="study-svg-compression-candidate-sequence-title" aria-describedby="study-svg-compression-candidate-sequence-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-compression-candidate-sequence-title">Order of work for a combined candidate</title>
+  <desc id="study-svg-compression-candidate-sequence-desc">Structural changes precede final range fitting, and the benchmark follows runtime lowering so each decision uses the representation that will ship. Locate the limit: Profile the target workload and identify the binding budget. Then Set model structure: Prune, factorize, or train the student when the bottleneck warrants it. Then Fit numeric ranges: Calibrate or train at the supported precision after the graph settles. Then Compile the artifact: Verify kernel selection, fusion, conversions, and fallback. Then Compare candidates: Measure quality and device costs, then revisit the remaining bottleneck.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Locate the limit</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Profile the target workload and</tspan>
+    <tspan x="19" y="64">identify the binding budget.</tspan></text>
+  <path d="M172 84v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="104" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="128" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Set model structure</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="148">Prune, factorize, or train the</tspan>
+    <tspan x="19" y="165">student when the bottleneck warrants</tspan>
+    <tspan x="19" y="182">it.</tspan></text>
+  <path d="M172 202v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="222" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="246" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Fit numeric ranges</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="266">Calibrate or train at the supported</tspan>
+    <tspan x="19" y="283">precision after the graph settles.</tspan></text>
+  <path d="M172 303v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="323" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="347" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Compile the artifact</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="367">Verify kernel selection, fusion,</tspan>
+    <tspan x="19" y="384">conversions, and fallback.</tspan></text>
+  <path d="M172 404v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="424" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="448" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Compare candidates</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="468">Measure quality and device costs,</tspan>
+    <tspan x="19" y="485">then revisit the remaining</tspan>
+    <tspan x="19" y="502">bottleneck.</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+[
+ {
+  "file": "images/svg/collective-primitives-overview.svg",
+  "title": "Four Central Collective Primitives",
+  "note": "The book's four-panel contract figure: what each rank holds after AllReduce, AllGather, ReduceScatter, AllToAll."
+ },
+ {
+  "file": "images/svg/ring-allreduce.svg",
+  "title": "Ring AllReduce",
+  "note": "The scatter-reduce and all-gather phases drawn as a ring schedule with chunk flow per step."
+ },
+ {
+  "file": "images/svg/hierarchical-allreduce.svg",
+  "title": "Hierarchical AllReduce",
+  "note": "The three-phase schedule: intra-node reduce, inter-node ring per shard group, intra-node broadcast."
+ },
+ {
+  "file": "images/svg/torus-reduction.svg",
+  "title": "Dimension-ordered reduction on a torus",
+  "note": "The 4x4 grid reducing along each dimension in turn: 12 rounds against a flat ring's 30."
+ },
+ {
+  "file": "images/svg/comm-compute-overlap.svg",
+  "title": "Communication-computation overlap",
+  "note": "The two-lane timeline the packet's overlap figure redraws: layer-wise AllReduce hidden beneath backward compute, last bucket exposed."
+ },
+ {
+  "file": "images/svg/sharp-innetwork.svg",
+  "title": "SHARP in-network reduction",
+  "note": "Aggregation arithmetic moved into switch silicon on supported paths."
+ }
+]

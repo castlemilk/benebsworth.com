@@ -1,0 +1,19 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {"proseOnly": "The thesis frames serving as admission control under recurring cost; prose carries the argument."},
+    "The Serving Tax": {"proseOnly": "The serving-tax equation and TTFT/TPOT distinction carry the mechanism."},
+    "Serving Cost Dominance": {"proseOnly": "The first-year cost chart carries the quantitative comparison."},
+    "Workloads Do Not Share One Bottleneck": {"proseOnly": "The workload contrast is a taxonomy argument clearer in prose than in a single figure."},
+    "Batching Trades Waiting for Reuse": {"figure": "::fig[iteration-admission]", "teaches": "Static membership leaves completed rows padded while continuous batching admits replacement work at iteration boundaries. The visual makes the recovered slots concrete without implying the gain is unconditional.", "source": "Book continuous-batching diagram and padding-waste scenario; redrawn to contrast fixed membership with replacement admission directly."},
+    "KV Cache Is the Real Batch Limit": {"figure": "::fig[kv-admission]", "teaches": "Long-context KV state converts admission into a memory budget: twelve 128K requests can exhaust an eight-H100 node's KV pool even after GQA. Paging recovers fragmentation but cannot shrink tensor payload.", "source": "Book KV-capacity estimator and ladder figure; redrawn as a budget bar plus admission blocks."},
+    "Prefill and Decode Are Different Machines": {"figure": "::fig[phase-lanes]", "teaches": "Prefill is one wide compute-oriented pass while decode is a chain of narrow bandwidth-oriented steps. Disaggregation separates the lanes but pays a KV handoff.", "source": "Book prefill/decode roofline, chunked-prefill and disaggregated-serving figures; redrawn as a simplified two-lane timing diagram."},
+    "Sharding and Routing Are Capacity Decisions": {"figure": "::fig[fanout-tail]", "teaches": "Fan-out makes the slowest leaf dominate the assembled request; one percent slow leaves at fan-out 100 produce about 63 percent slow requests.", "source": "Book tail-latency fan-out analysis; redrawn as a request fan-out diagram with the inversion budget."},
+    "Capacity Control Completes the System": {"proseOnly": "Autoscaling, warm pools, multi-tenancy and spot capacity are policy tradeoffs carried by prose."},
+    "Fallacies and Pitfalls": {"proseOnly": "Textual corrections of common misreadings."},
+    "The physics": {"proseOnly": "Reference table."},
+    "Glossary": {"proseOnly": "Definitions."},
+    "→ Ben's world": {"proseOnly": "Connections."},
+    "Open questions": {"proseOnly": "Unresolved items."}
+  }
+}

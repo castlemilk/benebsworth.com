@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="headroom-knee-art" class="study-fig-fit" viewBox="0 0 380 291" role="img" aria-labelledby="headroom-knee-title headroom-knee-desc">
+  <title id="headroom-knee-title">Waiting near saturation</title>
+  <desc id="headroom-knee-desc">In a single-server M/M/1 queue, mean time in system divided by mean service time is 1/(1 − utilization). Moving from 80% to 90% load doubles the multiplier from 5× to 10×. The next five percentage points double it again. At a balanced peak of 1,000 requests/s and 285 requests/s per replica, four replicas run at 88% and five at 70%. Five is the candidate to load-test. Measure request p99 on peak traffic to verify the deadline.</desc>
+  <style>
+    .dark #headroom-knee-art { --fig-paper:#252a27; --fig-ink:#efece1; --fig-grid:#5c635d; --fig-axis:#b6c0b4; --fig-curve:#ffab7c }
+    @media (prefers-color-scheme: dark) { svg:root#headroom-knee-art { --fig-paper:#252a27; --fig-ink:#efece1; --fig-grid:#5c635d; --fig-axis:#b6c0b4; --fig-curve:#ffab7c } }
+  </style>
+  <rect width="380" height="291" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="18" y="30" font-size="19" font-weight="650">The last few points of headroom</text>
+    <text x="18" y="52" font-size="14">Mean response time ÷ mean service time</text>
+    <g transform="translate(0 14)">
+    <path d="M48 172.5h300" stroke="var(--fig-grid, #cbc9bc)" stroke-dasharray="2 3"/><text x="40" y="177.5" text-anchor="end" font-size="13">5×</text>
+    <path d="M48 134.0h300" stroke="var(--fig-grid, #cbc9bc)" stroke-dasharray="2 3"/><text x="40" y="139.0" text-anchor="end" font-size="13">10×</text>
+    <path d="M48 95.5h300" stroke="var(--fig-grid, #cbc9bc)" stroke-dasharray="2 3"/><text x="40" y="100.5" text-anchor="end" font-size="13">15×</text>
+    <path d="M48 57.0h300" stroke="var(--fig-grid, #cbc9bc)" stroke-dasharray="2 3"/><text x="40" y="62.0" text-anchor="end" font-size="13">20×</text>
+    <path d="M48 56v155h302" fill="none" stroke="var(--fig-axis, #555f54)"/>
+    <polyline points="48.00,195.60 51.33,195.44 54.67,195.29 58.00,195.12 61.33,194.96 64.67,194.79 68.00,194.62 71.33,194.44 74.67,194.26 78.00,194.08 81.33,193.89 84.67,193.70 88.00,193.50 91.33,193.30 94.67,193.09 98.00,192.88 101.33,192.67 104.67,192.45 108.00,192.22 111.33,191.99 114.67,191.75 118.00,191.51 121.33,191.26 124.67,191.00 128.00,190.74 131.33,190.47 134.67,190.19 138.00,189.90 141.33,189.61 144.67,189.31 148.00,189.00 151.33,188.68 154.67,188.35 158.00,188.01 161.33,187.67 164.67,187.31 168.00,186.94 171.33,186.56 174.67,186.16 178.00,185.75 181.33,185.33 184.67,184.90 188.00,184.45 191.33,183.98 194.67,183.50 198.00,183.00 201.33,182.48 204.67,181.94 208.00,181.38 211.33,180.80 214.67,180.20 218.00,179.57 221.33,178.92 224.67,178.23 228.00,177.52 231.33,176.78 234.67,176.00 238.00,175.19 241.33,174.33 244.67,173.44 248.00,172.50 251.33,171.51 254.67,170.47 258.00,169.38 261.33,168.22 264.67,167.00 268.00,165.71 271.33,164.33 274.67,162.88 278.00,161.32 281.33,159.67 284.67,157.90 288.00,156.00 291.33,153.96 294.67,151.77 298.00,149.40 301.33,146.83 304.67,144.04 308.00,141.00 311.33,137.67 314.67,134.00 318.00,129.95 321.33,125.44 324.67,120.41 328.00,114.75 331.33,108.33 334.67,101.00 338.00,92.54 341.33,82.67 344.67,71.00 348.00,57.00" stroke="var(--fig-curve, #a44322)" stroke-width="3" fill="none"/>
+    <circle cx="48.0" cy="195.6" r="3.5" fill="var(--fig-curve, #a44322)"/><path d="M48.0 211v4" stroke="var(--fig-axis, #555f54)"/><text x="48.0" y="235" text-anchor="middle" font-size="13">50%</text>
+    <circle cx="181.3" cy="185.3" r="3.5" fill="var(--fig-curve, #a44322)"/><path d="M181.3 211v4" stroke="var(--fig-axis, #555f54)"/><text x="181.3" y="235" text-anchor="middle" font-size="13">70%</text>
+    <circle cx="248.0" cy="172.5" r="3.5" fill="var(--fig-curve, #a44322)"/><path d="M248.0 211v4" stroke="var(--fig-axis, #555f54)"/><text x="248.0" y="235" text-anchor="middle" font-size="13">80%</text>
+    <circle cx="314.7" cy="134.0" r="3.5" fill="var(--fig-curve, #a44322)"/><path d="M314.7 211v4" stroke="var(--fig-axis, #555f54)"/><text x="314.7" y="235" text-anchor="middle" font-size="13">90%</text>
+    <circle cx="348.0" cy="57.0" r="3.5" fill="var(--fig-curve, #a44322)"/><path d="M348.0 211v4" stroke="var(--fig-axis, #555f54)"/><text x="348.0" y="235" text-anchor="middle" font-size="13">95%</text>
+    <g font-size="14" fill="var(--fig-ink, #252923)">
+      <text x="72" y="151">5 replicas · 70%</text>
+      <path d="M152 155l28 27" fill="none" stroke="var(--fig-axis, #555f54)"/>
+      <text x="170" y="102">4 replicas · 88%</text>
+      <path d="M258 106l40 41" fill="none" stroke="var(--fig-axis, #555f54)"/>
+      <circle cx="299.46" cy="148.3" r="3.5" fill="var(--fig-ink, #252923)"/>
+    </g>
+    <text x="198" y="260" text-anchor="middle" font-size="15">Server utilization</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "book-precision-roofline",
+    "file": "model_compression_quantization_roofline.svg",
+    "title": "Quantization on the roofline",
+    "caption": "The source puts two workloads on a roofline so you can see which resource limits each one. The packet follows actual byte categories in a modeled decode token."
+  },
+  {
+    "id": "book-fused-activation-traffic",
+    "file": "vol1_model_compression_margin_002.svg",
+    "title": "Activation traffic with operator fusion",
+    "caption": "Follow the memory reads and writes around three adjacent operators. The packet follows a second use of fusion, consuming packed weights inside the matrix multiplication."
+  },
+  {
+    "id": "book-sparse-kernel-threshold",
+    "file": "vol1_model_compression_margin_003.svg",
+    "title": "Sparse-kernel break-even",
+    "caption": "The book sketches the hardware-dependent point where a sparse kernel becomes faster. The packet computes a separate storage threshold from explicit index widths."
+  },
+  {
+    "id": "book-confidence-quality-gate",
+    "file": "model_compression_int8_beforeafter.svg",
+    "title": "An INT8 quality gate",
+    "caption": "The source illustrates a quantized candidate crossing a confidence-calibration error limit. The camera exercise applies a similar quality check using night recall alongside a frame deadline and resource gates."
+  }
+]

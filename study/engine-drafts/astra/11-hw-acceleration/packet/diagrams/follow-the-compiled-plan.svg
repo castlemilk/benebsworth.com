@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 344 521" role="img" aria-labelledby="study-svg-follow-the-compiled-plan-title" aria-describedby="study-svg-follow-the-compiled-plan-desc" class="study-fig-fit" font-family="system-ui, sans-serif">
+  <title id="study-svg-follow-the-compiled-plan-title">From tensor graph to timed execution</title>
+  <desc id="study-svg-follow-the-compiled-plan-desc">Comparing the emitted plan with the dispatched variant identifies where a shape, allocation, or synchronization decision changes the observed request. Optimize the graph: Choose compatible fusions and preserve required precision and dependencies. Then Select kernels: Match shapes, data types, and layouts to supported implementations. Then Plan and schedule: Allocate live tensors and order computation, transfers, and reuse. Then Emit target code: Generate instructions or calls to target-specific kernels. Then Trace dispatch: Record the selected variant, waits, launches, and completion times.</desc>
+  <g font-family="ui-monospace, monospace">
+  <rect x="3" y="3" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="27" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Optimize the graph</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="47">Choose compatible fusions and</tspan>
+    <tspan x="19" y="64">preserve required precision and</tspan>
+    <tspan x="19" y="81">dependencies.</tspan></text>
+  <path d="M172 101v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="121" width="338" height="94" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="145" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Select kernels</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="165">Match shapes, data types, and</tspan>
+    <tspan x="19" y="182">layouts to supported</tspan>
+    <tspan x="19" y="199">implementations.</tspan></text>
+  <path d="M172 219v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="239" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="263" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Plan and schedule</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="283">Allocate live tensors and order</tspan>
+    <tspan x="19" y="300">computation, transfers, and reuse.</tspan></text>
+  <path d="M172 320v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="340" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="364" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Emit target code</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="384">Generate instructions or calls to</tspan>
+    <tspan x="19" y="401">target-specific kernels.</tspan></text>
+  <path d="M172 421v14m-4-4 4 4 4-4" fill="none" stroke="var(--blog, #984720)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3" y="441" width="338" height="77" rx="8" fill="var(--surface, #fbf7f0)" stroke="var(--border, #c9bbae)"/>
+  <text x="19" y="465" font-size="15" font-weight="700" fill="var(--fg, #31251d)">Trace dispatch</text>
+  <text font-size="13.5" fill="var(--fg, #31251d)"><tspan x="19" y="485">Record the selected variant, waits,</tspan>
+    <tspan x="19" y="502">launches, and completion times.</tspan></text>
+  </g>
+</svg>

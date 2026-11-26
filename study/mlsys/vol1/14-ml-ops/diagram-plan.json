@@ -1,0 +1,60 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "State the silent-failure inversion and the closed-loop question before the walkthrough."
+    },
+    "Silent Failure: Green Dashboards, Red Quality": {
+      "figure": "::fig[green-but-dying]",
+      "teaches": "Show every infrastructure check green while accuracy slides — two different instruments.",
+      "source": "The chapter's opening scenario: HTTP 200, p99 inside budget, 99.99% uptime, 94→88% in four weeks."
+    },
+    "Technical Debt: Where the Coupling Hides": {
+      "figure": "::fig[debt-map]",
+      "teaches": "Show the model as ~5% of the code with the debt in the couplings around it.",
+      "source": "Sculley 5%/95% audit plus the debt taxonomy (boundary erosion, cascades, consumers, loops, config, glue)."
+    },
+    "Development Infrastructure": {
+      "proseOnly": "Feature store, versioning and CI/CD are enumerated machinery; the skew-loss equation and reproducibility function carry the section."
+    },
+    "Releasing Models": {
+      "figure": "::fig[release-ladder]",
+      "teaches": "Trace who receives the request and who can answer in shadow and canary modes. Use the canary share to bound exposure.",
+      "source": "Shadow → canary → blue-green progression, rollback drills and calibrated triggers."
+    },
+    "Production Monitoring": {
+      "proseOnly": "Drift statistics and detection bounds are constraints in prose; the mde-sample equation carries the price of evidence."
+    },
+    "Retraining Decisions": {
+      "figure": "::chart[retrain-cost]",
+      "teaches": "Show the total-cost minimum at T* ≈ 3 days where amortized run meets accrued staleness.",
+      "source": "Napkin Math 14.6: C_r=$5,000, Q=1M/day, v=$0.50, A₀=0.94, δ=0.24%/day."
+    },
+    "Incident Response, Governance, and Maturity": {
+      "proseOnly": "Diagnosis-before-remediation and maturity rubric are practices; a diagram would restate the fallacy list."
+    },
+    "Case Studies": {
+      "proseOnly": "The two regimes (label-fast feedback vs power-bound edge) contrast best as parallel prose."
+    },
+    "Fallacies and Pitfalls": {
+      "proseOnly": "Fallacy list is a review scaffold; each fallacy's own section figure covers it."
+    },
+    "Summary": {
+      "figure": "::fig[ops-loop]",
+      "teaches": "Close the loop: deploy → monitor → detect → diagnose → retrain → release.",
+      "source": "Synthesis: the chapter's whole argument is that this loop is the product."
+    },
+    "The physics": {
+      "proseOnly": "Reference table of pinned quantities; tabular, not visual."
+    },
+    "Glossary": {
+      "proseOnly": "Definitions list."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Project-specific transfers."
+    },
+    "Open questions": {
+      "proseOnly": "Open prompts for follow-up."
+    }
+  }
+}

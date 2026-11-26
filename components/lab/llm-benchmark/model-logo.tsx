@@ -212,7 +212,7 @@ function LogoImg({ src, alt, size }: { src: string; alt: string; size: number })
   // For SVG, object-contain ensures 16px favicons scale cleanly to 18-20px
   const isPng = src.endsWith('.png')
   return (
-    // eslint-disable-next-line @next/next/no-img-element
+     
     <img
       src={src}
       alt={alt}

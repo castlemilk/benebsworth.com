@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="lora-slimming" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="lora-slimming-title lora-slimming-desc">
+  <title id="lora-slimming-title">Low-rank adaptation budget</title>
+  <desc id="lora-slimming-desc">A frozen 768 by 768 matrix beside thin rank-4 trainable projections, showing the trainable-parameter saving and the costs that remain.</desc>
+  <style>
+    .dark #lora-slimming { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#lora-slimming { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Freeze the matrix, train the thin path</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">rank-4 LoRA in a 768 × 768 layer</text>
+    <rect x="36" y="74" width="132" height="132" rx="6" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="2"/>
+    <text x="102" y="128" font-size="11" text-anchor="middle">frozen base</text>
+    <text x="102" y="144" font-size="10" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">589,824 params</text>
+    <text x="102" y="161" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">no gradient or optimizer state</text>
+    <rect x="226" y="82" width="20" height="112" rx="3" fill="var(--fig-mark, #b4571f)"/>
+    <rect x="250" y="134" width="88" height="20" rx="3" fill="var(--fig-mark, #b4571f)" opacity="0.72"/>
+    <text x="236" y="73" font-size="9" text-anchor="middle" fill="var(--fig-mark, #b4571f)">down 4×768</text>
+    <text x="294" y="124" font-size="9" text-anchor="middle" fill="var(--fig-mark, #b4571f)">up 768×4</text>
+    <path d="M169 139 C190 139 202 139 224 139" fill="none" stroke="var(--fig-rule, #6e6a5b)" stroke-width="1.2" stroke-dasharray="3 3"/>
+    <text x="280" y="174" font-size="10" text-anchor="middle" font-weight="650">6,144 trainable</text>
+    <text x="280" y="190" font-size="9" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">99% fewer trainable params</text>
+    <text x="28" y="236" font-size="9.2" fill="var(--fig-mark, #b4571f)">Still in budget: backward traversal, activations,</text>
+    <text x="28" y="252" font-size="9.2" fill="var(--fig-mark, #b4571f)">adapter optimizer state and runtime workspace.</text>
+    <text x="28" y="276" font-size="9" fill="var(--fig-rule, #6e6a5b)">The artifact shrinks; the whole training problem does not disappear.</text>
+  </g>
+</svg>

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "request-ceiling",
+    "kind": "BAR_STACKED",
+    "title": "A faster stage has a smaller request effect",
+    "caption": "Illustrative serial request. A 200 µs baseline contains 80 µs of projection and 120 µs of other work. Halving only the projection gives 160 µs. Making it instantaneous leaves 120 µs.",
+    "xLabel": "Projection speed",
+    "yLabel": "microseconds per request",
+    "xPoints": [
+      "Baseline",
+      "2× projection",
+      "Instant projection"
+    ],
+    "series": [
+      {
+        "key": "projection",
+        "label": "Projection",
+        "color": "var(--chart-2)",
+        "values": [
+          80,
+          40,
+          0
+        ]
+      },
+      {
+        "key": "other",
+        "label": "Other work",
+        "color": "var(--chart-1)",
+        "values": [
+          120,
+          120,
+          120
+        ]
+      }
+    ]
+  },
+  {
+    "id": "projection-floors",
+    "kind": "BAR_STACKED",
+    "title": "The lower ideal floor changes with batch",
+    "caption": "Illustrative one-pass FP16 projection. At batch 1, compute machine A has a 67.14 µs floor and bandwidth machine B has 33.57 µs — B wins. At batch 256, A has an 85.90 µs floor and B has 171.80 µs — A wins. Compare machines within a batch: batch 256 does 256 times as much work. These optimistic bounds do not establish measured latency.",
+    "xLabel": "Batch and machine",
+    "yLabel": "microseconds per batch",
+    "xPoints": [
+      "1 · A",
+      "1 · B",
+      "256 · A",
+      "256 · B"
+    ],
+    "series": [
+      {
+        "key": "floor",
+        "label": "Larger of compute and transfer floors",
+        "color": "var(--chart-2)",
+        "values": [
+          67.14,
+          33.57,
+          85.9,
+          171.8
+        ]
+      }
+    ]
+  },
+  {
+    "id": "energy-per-result",
+    "kind": "BAR_STACKED",
+    "title": "Lower power can spend more energy per result",
+    "caption": "Illustrative whole-system averages over matched steady intervals: system C draws 200 W at 1,000 results/s (0.20 J/result). System D draws 150 W at 500 results/s (0.30 J/result). The output and quality must be comparable.",
+    "xLabel": "System",
+    "yLabel": "joules per result",
+    "xPoints": [
+      "C · 200 W",
+      "D · 150 W"
+    ],
+    "series": [
+      {
+        "key": "energy",
+        "label": "Joules per completed result",
+        "color": "var(--chart-2)",
+        "values": [
+          0.2,
+          0.3
+        ]
+      }
+    ]
+  }
+]

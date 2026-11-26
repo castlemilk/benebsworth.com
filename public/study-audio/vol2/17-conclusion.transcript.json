@@ -1,0 +1,8734 @@
+{
+  "hosts": {
+    "A": "Marcus",
+    "B": "Iris"
+  },
+  "segments": [
+    {
+      "speaker": "A",
+      "text": "Today we close out volume two with chapter seventeen, the conclusion. I'm Marcus, and with me is Iris. The opening move of the chapter: a team celebrates shipping their model to a fifty-thousand-query-per-second production service, and the chapter asks what discipline they just entered. Not bigger machine learning, but a different kind of engineering entirely. What changed?",
+      "start": 0.0,
+      "end": 24.65,
+      "words": [
+        {
+          "text": "Today",
+          "start": 0.0,
+          "end": 0.58
+        },
+        {
+          "text": "we",
+          "start": 0.58,
+          "end": 0.8
+        },
+        {
+          "text": "close",
+          "start": 0.8,
+          "end": 1.1
+        },
+        {
+          "text": "out",
+          "start": 1.1,
+          "end": 1.34
+        },
+        {
+          "text": "volume",
+          "start": 1.34,
+          "end": 1.76
+        },
+        {
+          "text": "two",
+          "start": 1.76,
+          "end": 2.2
+        },
+        {
+          "text": "with",
+          "start": 2.2,
+          "end": 2.46
+        },
+        {
+          "text": "chapter",
+          "start": 2.46,
+          "end": 2.76
+        },
+        {
+          "text": "17,",
+          "start": 2.76,
+          "end": 3.38
+        },
+        {
+          "text": "the",
+          "start": 3.78,
+          "end": 3.84
+        },
+        {
+          "text": "conclusion.",
+          "start": 3.84,
+          "end": 4.2
+        },
+        {
+          "text": "I'm",
+          "start": 4.92,
+          "end": 5.14
+        },
+        {
+          "text": "Marcus",
+          "start": 5.14,
+          "end": 5.46
+        },
+        {
+          "text": "and",
+          "start": 5.46,
+          "end": 5.84
+        },
+        {
+          "text": "with",
+          "start": 5.84,
+          "end": 6.02
+        },
+        {
+          "text": "me",
+          "start": 6.02,
+          "end": 6.28
+        },
+        {
+          "text": "is",
+          "start": 6.28,
+          "end": 6.5
+        },
+        {
+          "text": "Iris.",
+          "start": 6.5,
+          "end": 6.88
+        },
+        {
+          "text": "The",
+          "start": 7.64,
+          "end": 7.76
+        },
+        {
+          "text": "opening",
+          "start": 7.76,
+          "end": 8.1
+        },
+        {
+          "text": "move",
+          "start": 8.1,
+          "end": 8.5
+        },
+        {
+          "text": "of",
+          "start": 8.5,
+          "end": 8.68
+        },
+        {
+          "text": "the",
+          "start": 8.68,
+          "end": 8.78
+        },
+        {
+          "text": "chapter.",
+          "start": 8.78,
+          "end": 9.18
+        },
+        {
+          "text": "A",
+          "start": 9.68,
+          "end": 9.8
+        },
+        {
+          "text": "team",
+          "start": 9.8,
+          "end": 10.06
+        },
+        {
+          "text": "celebrates",
+          "start": 10.06,
+          "end": 10.72
+        },
+        {
+          "text": "shipping",
+          "start": 10.72,
+          "end": 11.02
+        },
+        {
+          "text": "their",
+          "start": 11.02,
+          "end": 11.28
+        },
+        {
+          "text": "model",
+          "start": 11.28,
+          "end": 11.64
+        },
+        {
+          "text": "to",
+          "start": 11.64,
+          "end": 11.82
+        },
+        {
+          "text": "a",
+          "start": 11.82,
+          "end": 11.96
+        },
+        {
+          "text": "50",
+          "start": 11.96,
+          "end": 12.26
+        },
+        {
+          "text": ",000",
+          "start": 12.26,
+          "end": 12.86
+        },
+        {
+          "text": "query",
+          "start": 12.86,
+          "end": 13.14
+        },
+        {
+          "text": "per",
+          "start": 13.14,
+          "end": 13.42
+        },
+        {
+          "text": "second",
+          "start": 13.42,
+          "end": 13.76
+        },
+        {
+          "text": "production",
+          "start": 13.76,
+          "end": 14.08
+        },
+        {
+          "text": "service,",
+          "start": 14.08,
+          "end": 14.78
+        },
+        {
+          "text": "and",
+          "start": 15.14,
+          "end": 15.36
+        },
+        {
+          "text": "the",
+          "start": 15.36,
+          "end": 15.46
+        },
+        {
+          "text": "chapter",
+          "start": 15.46,
+          "end": 15.8
+        },
+        {
+          "text": "asks",
+          "start": 15.8,
+          "end": 16.24
+        },
+        {
+          "text": "what",
+          "start": 16.24,
+          "end": 16.5
+        },
+        {
+          "text": "discipline",
+          "start": 16.5,
+          "end": 17.02
+        },
+        {
+          "text": "they",
+          "start": 17.02,
+          "end": 17.32
+        },
+        {
+          "text": "just",
+          "start": 17.32,
+          "end": 17.54
+        },
+        {
+          "text": "entered.",
+          "start": 17.54,
+          "end": 17.98
+        },
+        {
+          "text": "Not",
+          "start": 18.5,
+          "end": 18.78
+        },
+        {
+          "text": "bigger",
+          "start": 18.78,
+          "end": 19.18
+        },
+        {
+          "text": "machine",
+          "start": 19.18,
+          "end": 19.56
+        },
+        {
+          "text": "learning,",
+          "start": 19.56,
+          "end": 20.04
+        },
+        {
+          "text": "but",
+          "start": 20.26,
+          "end": 20.32
+        },
+        {
+          "text": "a",
+          "start": 20.32,
+          "end": 20.46
+        },
+        {
+          "text": "different",
+          "start": 20.46,
+          "end": 20.66
+        },
+        {
+          "text": "kind",
+          "start": 20.66,
+          "end": 21.0
+        },
+        {
+          "text": "of",
+          "start": 21.0,
+          "end": 21.18
+        },
+        {
+          "text": "engineering",
+          "start": 21.18,
+          "end": 21.7
+        },
+        {
+          "text": "entirely.",
+          "start": 21.7,
+          "end": 22.22
+        },
+        {
+          "text": "What",
+          "start": 23.14,
+          "end": 23.34
+        },
+        {
+          "text": "changed?",
+          "start": 23.34,
+          "end": 23.76
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The coupling. On a workstation, the model, the data, the execution, and the deployment are all within arm's reach and one person's head. In the fleet, those concerns cross machines, teams, datacenter fabrics, and legal jurisdictions. Distributed machine learning engineering is what you call the discipline once the coupling, not the arithmetic, is what can hurt you.",
+      "start": 24.65,
+      "end": 46.47,
+      "words": [
+        {
+          "text": "The",
+          "start": 24.6,
+          "end": 25.04
+        },
+        {
+          "text": "coupling.",
+          "start": 25.04,
+          "end": 25.28
+        },
+        {
+          "text": "On",
+          "start": 25.28,
+          "end": 26.04
+        },
+        {
+          "text": "a",
+          "start": 26.04,
+          "end": 26.18
+        },
+        {
+          "text": "workstation,",
+          "start": 26.18,
+          "end": 26.6
+        },
+        {
+          "text": "the",
+          "start": 27.04,
+          "end": 27.14
+        },
+        {
+          "text": "model,",
+          "start": 27.14,
+          "end": 27.4
+        },
+        {
+          "text": "the",
+          "start": 27.64,
+          "end": 27.7
+        },
+        {
+          "text": "data,",
+          "start": 27.7,
+          "end": 27.98
+        },
+        {
+          "text": "the",
+          "start": 28.16,
+          "end": 28.22
+        },
+        {
+          "text": "execution,",
+          "start": 28.22,
+          "end": 28.68
+        },
+        {
+          "text": "and",
+          "start": 28.94,
+          "end": 29.08
+        },
+        {
+          "text": "the",
+          "start": 29.08,
+          "end": 29.18
+        },
+        {
+          "text": "deployment",
+          "start": 29.18,
+          "end": 29.56
+        },
+        {
+          "text": "are",
+          "start": 29.56,
+          "end": 29.88
+        },
+        {
+          "text": "all",
+          "start": 29.88,
+          "end": 30.14
+        },
+        {
+          "text": "within",
+          "start": 30.14,
+          "end": 30.36
+        },
+        {
+          "text": "arms",
+          "start": 30.36,
+          "end": 30.74
+        },
+        {
+          "text": "reach",
+          "start": 30.74,
+          "end": 31.02
+        },
+        {
+          "text": "and",
+          "start": 31.02,
+          "end": 31.28
+        },
+        {
+          "text": "one",
+          "start": 31.28,
+          "end": 31.46
+        },
+        {
+          "text": "person's",
+          "start": 31.46,
+          "end": 32.0
+        },
+        {
+          "text": "head.",
+          "start": 32.0,
+          "end": 32.16
+        },
+        {
+          "text": "In",
+          "start": 32.8,
+          "end": 32.94
+        },
+        {
+          "text": "the",
+          "start": 32.94,
+          "end": 33.04
+        },
+        {
+          "text": "fleet,",
+          "start": 33.04,
+          "end": 33.26
+        },
+        {
+          "text": "those",
+          "start": 33.72,
+          "end": 33.82
+        },
+        {
+          "text": "concerns",
+          "start": 33.82,
+          "end": 34.26
+        },
+        {
+          "text": "cross",
+          "start": 34.26,
+          "end": 34.7
+        },
+        {
+          "text": "machines,",
+          "start": 34.7,
+          "end": 35.22
+        },
+        {
+          "text": "teams,",
+          "start": 35.7,
+          "end": 36.06
+        },
+        {
+          "text": "data",
+          "start": 36.34,
+          "end": 36.5
+        },
+        {
+          "text": "center",
+          "start": 36.5,
+          "end": 36.76
+        },
+        {
+          "text": "fabrics,",
+          "start": 36.76,
+          "end": 37.18
+        },
+        {
+          "text": "and",
+          "start": 37.46,
+          "end": 37.56
+        },
+        {
+          "text": "legal",
+          "start": 37.56,
+          "end": 37.78
+        },
+        {
+          "text": "jurisdictions.",
+          "start": 37.78,
+          "end": 38.28
+        },
+        {
+          "text": "Distributed",
+          "start": 39.28,
+          "end": 39.84
+        },
+        {
+          "text": "machine",
+          "start": 39.84,
+          "end": 40.18
+        },
+        {
+          "text": "learning",
+          "start": 40.18,
+          "end": 40.64
+        },
+        {
+          "text": "engineering",
+          "start": 40.64,
+          "end": 41.2
+        },
+        {
+          "text": "is",
+          "start": 41.2,
+          "end": 41.56
+        },
+        {
+          "text": "what",
+          "start": 41.56,
+          "end": 41.68
+        },
+        {
+          "text": "you",
+          "start": 41.68,
+          "end": 41.8
+        },
+        {
+          "text": "call",
+          "start": 41.8,
+          "end": 42.04
+        },
+        {
+          "text": "the",
+          "start": 42.04,
+          "end": 42.18
+        },
+        {
+          "text": "discipline",
+          "start": 42.18,
+          "end": 42.56
+        },
+        {
+          "text": "once",
+          "start": 42.56,
+          "end": 42.82
+        },
+        {
+          "text": "the",
+          "start": 42.82,
+          "end": 43.02
+        },
+        {
+          "text": "coupling,",
+          "start": 43.02,
+          "end": 43.32
+        },
+        {
+          "text": "not",
+          "start": 43.74,
+          "end": 43.94
+        },
+        {
+          "text": "the",
+          "start": 43.94,
+          "end": 44.12
+        },
+        {
+          "text": "arithmetic,",
+          "start": 44.12,
+          "end": 44.44
+        },
+        {
+          "text": "is",
+          "start": 44.98,
+          "end": 45.14
+        },
+        {
+          "text": "what",
+          "start": 45.14,
+          "end": 45.3
+        },
+        {
+          "text": "can",
+          "start": 45.3,
+          "end": 45.44
+        },
+        {
+          "text": "hurt",
+          "start": 45.44,
+          "end": 45.66
+        },
+        {
+          "text": "you.",
+          "start": 45.66,
+          "end": 45.88
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The chapter compresses the whole volume into six principles. Walk me through the shape of them.",
+      "start": 46.47,
+      "end": 53.02,
+      "words": [
+        {
+          "text": "The",
+          "start": 46.8,
+          "end": 46.94
+        },
+        {
+          "text": "chapter",
+          "start": 46.94,
+          "end": 47.28
+        },
+        {
+          "text": "compresses",
+          "start": 47.28,
+          "end": 48.0
+        },
+        {
+          "text": "the",
+          "start": 48.0,
+          "end": 48.14
+        },
+        {
+          "text": "whole",
+          "start": 48.14,
+          "end": 48.38
+        },
+        {
+          "text": "volume",
+          "start": 48.38,
+          "end": 48.96
+        },
+        {
+          "text": "into",
+          "start": 48.96,
+          "end": 49.22
+        },
+        {
+          "text": "six",
+          "start": 49.22,
+          "end": 49.56
+        },
+        {
+          "text": "principles.",
+          "start": 49.56,
+          "end": 50.04
+        },
+        {
+          "text": "Walk",
+          "start": 50.64,
+          "end": 50.94
+        },
+        {
+          "text": "me",
+          "start": 50.94,
+          "end": 51.26
+        },
+        {
+          "text": "through",
+          "start": 51.26,
+          "end": 51.54
+        },
+        {
+          "text": "the",
+          "start": 51.54,
+          "end": 51.72
+        },
+        {
+          "text": "shape",
+          "start": 51.72,
+          "end": 52.0
+        },
+        {
+          "text": "of",
+          "start": 52.0,
+          "end": 52.18
+        },
+        {
+          "text": "them.",
+          "start": 52.18,
+          "end": 52.38
+        },
+        {
+          "text": "Each",
+          "start": 52.38,
+          "end": 53.48
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Each principle is a truth about the fleet's physical or institutional structure, paired with the question it answers and the metric that tests it. Infrastructure determines capability, which answers what is possible, tested by rates: floating point operations per second, memory capacity, bisection bandwidth, rack power. Communication can dominate, which answers what is the bottleneck, tested by exposed communication and scaling efficiency.",
+      "start": 53.02,
+      "end": 79.35,
+      "visual": {
+        "src": "/study/vol2/17-conclusion/diagrams/six-principles.svg",
+        "title": "Six principles, six questions",
+        "alt": "Each principle pairs a governing question with the metric that tests it. Infrastructure, communication, failure, serving contract, responsibility, sustainability \u2014 the fleet can bind at any layer."
+      },
+      "words": [
+        {
+          "text": "principle",
+          "start": 53.48,
+          "end": 53.84
+        },
+        {
+          "text": "is",
+          "start": 53.84,
+          "end": 54.16
+        },
+        {
+          "text": "a",
+          "start": 54.16,
+          "end": 54.26
+        },
+        {
+          "text": "truth",
+          "start": 54.26,
+          "end": 54.5
+        },
+        {
+          "text": "about",
+          "start": 54.5,
+          "end": 54.76
+        },
+        {
+          "text": "the",
+          "start": 54.76,
+          "end": 54.92
+        },
+        {
+          "text": "fleet's",
+          "start": 54.92,
+          "end": 55.24
+        },
+        {
+          "text": "physical",
+          "start": 55.24,
+          "end": 55.54
+        },
+        {
+          "text": "or",
+          "start": 55.54,
+          "end": 55.86
+        },
+        {
+          "text": "institutional",
+          "start": 55.86,
+          "end": 56.4
+        },
+        {
+          "text": "structure,",
+          "start": 56.4,
+          "end": 57.04
+        },
+        {
+          "text": "paired",
+          "start": 57.44,
+          "end": 57.7
+        },
+        {
+          "text": "with",
+          "start": 57.7,
+          "end": 57.86
+        },
+        {
+          "text": "the",
+          "start": 57.86,
+          "end": 58.0
+        },
+        {
+          "text": "question",
+          "start": 58.0,
+          "end": 58.28
+        },
+        {
+          "text": "it",
+          "start": 58.28,
+          "end": 58.48
+        },
+        {
+          "text": "answers",
+          "start": 58.48,
+          "end": 58.78
+        },
+        {
+          "text": "and",
+          "start": 58.78,
+          "end": 59.24
+        },
+        {
+          "text": "the",
+          "start": 59.24,
+          "end": 59.32
+        },
+        {
+          "text": "metric",
+          "start": 59.32,
+          "end": 59.6
+        },
+        {
+          "text": "that",
+          "start": 59.6,
+          "end": 59.84
+        },
+        {
+          "text": "tests",
+          "start": 59.84,
+          "end": 60.12
+        },
+        {
+          "text": "it.",
+          "start": 60.12,
+          "end": 60.36
+        },
+        {
+          "text": "Infrastructure",
+          "start": 60.98,
+          "end": 61.5
+        },
+        {
+          "text": "determines",
+          "start": 61.5,
+          "end": 62.04
+        },
+        {
+          "text": "capability,",
+          "start": 62.04,
+          "end": 62.56
+        },
+        {
+          "text": "which",
+          "start": 63.06,
+          "end": 63.24
+        },
+        {
+          "text": "answers",
+          "start": 63.24,
+          "end": 63.58
+        },
+        {
+          "text": "what",
+          "start": 63.58,
+          "end": 63.8
+        },
+        {
+          "text": "is",
+          "start": 63.8,
+          "end": 63.9
+        },
+        {
+          "text": "possible,",
+          "start": 63.9,
+          "end": 64.38
+        },
+        {
+          "text": "tested",
+          "start": 64.72,
+          "end": 64.96
+        },
+        {
+          "text": "by",
+          "start": 64.96,
+          "end": 65.22
+        },
+        {
+          "text": "rates,",
+          "start": 65.22,
+          "end": 65.56
+        },
+        {
+          "text": "floating",
+          "start": 66.08,
+          "end": 66.4
+        },
+        {
+          "text": "point",
+          "start": 66.4,
+          "end": 66.7
+        },
+        {
+          "text": "operations",
+          "start": 66.7,
+          "end": 67.24
+        },
+        {
+          "text": "per",
+          "start": 67.24,
+          "end": 67.58
+        },
+        {
+          "text": "second,",
+          "start": 67.58,
+          "end": 67.96
+        },
+        {
+          "text": "memory",
+          "start": 68.32,
+          "end": 68.56
+        },
+        {
+          "text": "capacity",
+          "start": 68.56,
+          "end": 69.18
+        },
+        {
+          "text": "by",
+          "start": 69.18,
+          "end": 69.62
+        },
+        {
+          "text": "section",
+          "start": 69.62,
+          "end": 69.92
+        },
+        {
+          "text": "bandwidth,",
+          "start": 69.92,
+          "end": 70.38
+        },
+        {
+          "text": "rack",
+          "start": 70.68,
+          "end": 70.84
+        },
+        {
+          "text": "power.",
+          "start": 70.84,
+          "end": 71.2
+        },
+        {
+          "text": "Communication",
+          "start": 71.96,
+          "end": 72.36
+        },
+        {
+          "text": "can",
+          "start": 72.36,
+          "end": 72.86
+        },
+        {
+          "text": "dominate,",
+          "start": 72.86,
+          "end": 73.32
+        },
+        {
+          "text": "which",
+          "start": 73.74,
+          "end": 73.88
+        },
+        {
+          "text": "answers",
+          "start": 73.88,
+          "end": 74.3
+        },
+        {
+          "text": "what",
+          "start": 74.3,
+          "end": 74.56
+        },
+        {
+          "text": "is",
+          "start": 74.56,
+          "end": 74.66
+        },
+        {
+          "text": "the",
+          "start": 74.66,
+          "end": 74.8
+        },
+        {
+          "text": "bottleneck,",
+          "start": 74.8,
+          "end": 75.4
+        },
+        {
+          "text": "tested",
+          "start": 75.7,
+          "end": 75.98
+        },
+        {
+          "text": "by",
+          "start": 75.98,
+          "end": 76.24
+        },
+        {
+          "text": "exposed",
+          "start": 76.24,
+          "end": 76.7
+        },
+        {
+          "text": "communication",
+          "start": 76.7,
+          "end": 77.34
+        },
+        {
+          "text": "and",
+          "start": 77.34,
+          "end": 77.8
+        },
+        {
+          "text": "scaling",
+          "start": 77.8,
+          "end": 78.1
+        },
+        {
+          "text": "efficiency.",
+          "start": 78.1,
+          "end": 78.64
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And the other four?",
+      "start": 79.35,
+      "end": 81.3,
+      "words": [
+        {
+          "text": "And",
+          "start": 79.44,
+          "end": 79.86
+        },
+        {
+          "text": "the",
+          "start": 79.86,
+          "end": 80.04
+        },
+        {
+          "text": "other",
+          "start": 80.04,
+          "end": 80.22
+        },
+        {
+          "text": "four.",
+          "start": 80.22,
+          "end": 80.6
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Failure is routine, answering how we recover, tested by mean time between failures divided by device count, checkpoint overhead, rollback time. Serving is bounded by its contract, answering what reaches the user in time, tested by goodput and tail latency within the service level objective. Responsibility constrains design, answering who is affected, tested by privacy budget, subgroup error rates, audit trails. And sustainability is a first-order cost, answering what the service costs the world, tested by kilowatt-hours per training run and energy per query.",
+      "start": 81.3,
+      "end": 107.55,
+      "words": [
+        {
+          "text": "Failure",
+          "start": 81.42,
+          "end": 82.06
+        },
+        {
+          "text": "is",
+          "start": 82.06,
+          "end": 82.2
+        },
+        {
+          "text": "routine,",
+          "start": 82.2,
+          "end": 82.58
+        },
+        {
+          "text": "answering",
+          "start": 83.0,
+          "end": 83.34
+        },
+        {
+          "text": "how",
+          "start": 83.34,
+          "end": 83.66
+        },
+        {
+          "text": "we",
+          "start": 83.66,
+          "end": 83.82
+        },
+        {
+          "text": "recover,",
+          "start": 83.82,
+          "end": 84.2
+        },
+        {
+          "text": "tested",
+          "start": 84.7,
+          "end": 84.94
+        },
+        {
+          "text": "by",
+          "start": 84.94,
+          "end": 85.2
+        },
+        {
+          "text": "mean",
+          "start": 85.2,
+          "end": 85.44
+        },
+        {
+          "text": "time",
+          "start": 85.44,
+          "end": 85.74
+        },
+        {
+          "text": "between",
+          "start": 85.74,
+          "end": 86.04
+        },
+        {
+          "text": "failures",
+          "start": 86.04,
+          "end": 86.54
+        },
+        {
+          "text": "divided",
+          "start": 86.54,
+          "end": 87.0
+        },
+        {
+          "text": "by",
+          "start": 87.0,
+          "end": 87.26
+        },
+        {
+          "text": "device",
+          "start": 87.26,
+          "end": 87.56
+        },
+        {
+          "text": "count,",
+          "start": 87.56,
+          "end": 88.0
+        },
+        {
+          "text": "checkpoint",
+          "start": 88.42,
+          "end": 88.64
+        },
+        {
+          "text": "overhead,",
+          "start": 88.64,
+          "end": 89.16
+        },
+        {
+          "text": "rollback",
+          "start": 89.32,
+          "end": 89.64
+        },
+        {
+          "text": "time.",
+          "start": 89.64,
+          "end": 89.98
+        },
+        {
+          "text": "Serving",
+          "start": 90.76,
+          "end": 91.1
+        },
+        {
+          "text": "is",
+          "start": 91.1,
+          "end": 91.28
+        },
+        {
+          "text": "bounded",
+          "start": 91.28,
+          "end": 91.6
+        },
+        {
+          "text": "by",
+          "start": 91.6,
+          "end": 91.86
+        },
+        {
+          "text": "its",
+          "start": 91.86,
+          "end": 91.98
+        },
+        {
+          "text": "contract,",
+          "start": 91.98,
+          "end": 92.44
+        },
+        {
+          "text": "answering",
+          "start": 92.94,
+          "end": 93.28
+        },
+        {
+          "text": "what",
+          "start": 93.28,
+          "end": 93.52
+        },
+        {
+          "text": "reaches",
+          "start": 93.52,
+          "end": 93.82
+        },
+        {
+          "text": "the",
+          "start": 93.82,
+          "end": 94.04
+        },
+        {
+          "text": "user",
+          "start": 94.04,
+          "end": 94.22
+        },
+        {
+          "text": "in",
+          "start": 94.22,
+          "end": 94.44
+        },
+        {
+          "text": "time,",
+          "start": 94.44,
+          "end": 94.7
+        },
+        {
+          "text": "tested",
+          "start": 95.18,
+          "end": 95.44
+        },
+        {
+          "text": "by",
+          "start": 95.44,
+          "end": 95.66
+        },
+        {
+          "text": "good",
+          "start": 95.66,
+          "end": 95.88
+        },
+        {
+          "text": "put",
+          "start": 95.88,
+          "end": 96.08
+        },
+        {
+          "text": "and",
+          "start": 96.08,
+          "end": 96.3
+        },
+        {
+          "text": "tail",
+          "start": 96.3,
+          "end": 96.56
+        },
+        {
+          "text": "latency",
+          "start": 96.56,
+          "end": 96.98
+        },
+        {
+          "text": "within",
+          "start": 96.98,
+          "end": 97.3
+        },
+        {
+          "text": "the",
+          "start": 97.3,
+          "end": 97.46
+        },
+        {
+          "text": "service",
+          "start": 97.46,
+          "end": 97.74
+        },
+        {
+          "text": "level",
+          "start": 97.74,
+          "end": 98.08
+        },
+        {
+          "text": "objective.",
+          "start": 98.08,
+          "end": 98.62
+        },
+        {
+          "text": "Responsibility",
+          "start": 99.62,
+          "end": 100.26
+        },
+        {
+          "text": "constrains",
+          "start": 100.26,
+          "end": 100.9
+        },
+        {
+          "text": "design,",
+          "start": 100.9,
+          "end": 101.36
+        },
+        {
+          "text": "answering",
+          "start": 101.74,
+          "end": 102.14
+        },
+        {
+          "text": "who",
+          "start": 102.14,
+          "end": 102.42
+        },
+        {
+          "text": "is",
+          "start": 102.42,
+          "end": 102.56
+        },
+        {
+          "text": "affected,",
+          "start": 102.56,
+          "end": 102.96
+        },
+        {
+          "text": "tested",
+          "start": 103.44,
+          "end": 103.74
+        },
+        {
+          "text": "by",
+          "start": 103.74,
+          "end": 103.96
+        },
+        {
+          "text": "privacy",
+          "start": 103.96,
+          "end": 104.34
+        },
+        {
+          "text": "budget,",
+          "start": 104.34,
+          "end": 104.68
+        },
+        {
+          "text": "subgroup",
+          "start": 105.12,
+          "end": 105.46
+        },
+        {
+          "text": "error",
+          "start": 105.46,
+          "end": 105.74
+        },
+        {
+          "text": "rates,",
+          "start": 105.74,
+          "end": 106.12
+        },
+        {
+          "text": "audit",
+          "start": 106.38,
+          "end": 106.54
+        },
+        {
+          "text": "trails.",
+          "start": 106.54,
+          "end": 106.94
+        },
+        {
+          "text": "The",
+          "start": 106.94,
+          "end": 108.0
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The point being that these are not best practices.",
+      "start": 107.55,
+      "end": 111.2,
+      "words": [
+        {
+          "text": "point",
+          "start": 108.0,
+          "end": 108.2
+        },
+        {
+          "text": "being",
+          "start": 108.2,
+          "end": 108.58
+        },
+        {
+          "text": "that",
+          "start": 108.58,
+          "end": 108.82
+        },
+        {
+          "text": "these",
+          "start": 108.82,
+          "end": 109.1
+        },
+        {
+          "text": "are",
+          "start": 109.1,
+          "end": 109.36
+        },
+        {
+          "text": "not",
+          "start": 109.36,
+          "end": 109.54
+        },
+        {
+          "text": "best",
+          "start": 109.54,
+          "end": 109.84
+        },
+        {
+          "text": "practices.",
+          "start": 109.84,
+          "end": 110.38
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Right. Practices respond to these truths; they do not create them. Checkpointing is not prudent, it is necessary, because component count makes interruption certain. Tail budgeting is not fastidious, it is necessary, because fan-out probability makes slow leaves common. The principles explain why the practice chapters of the volume exist at all.",
+      "start": 111.2,
+      "end": 132.85,
+      "words": [
+        {
+          "text": "Right.",
+          "start": 111.46,
+          "end": 111.72
+        },
+        {
+          "text": "Practices",
+          "start": 112.14,
+          "end": 112.64
+        },
+        {
+          "text": "respond",
+          "start": 112.64,
+          "end": 113.18
+        },
+        {
+          "text": "to",
+          "start": 113.18,
+          "end": 113.42
+        },
+        {
+          "text": "these",
+          "start": 113.42,
+          "end": 113.58
+        },
+        {
+          "text": "truths.",
+          "start": 113.58,
+          "end": 113.9
+        },
+        {
+          "text": "They",
+          "start": 114.36,
+          "end": 114.44
+        },
+        {
+          "text": "do",
+          "start": 114.44,
+          "end": 114.62
+        },
+        {
+          "text": "not",
+          "start": 114.62,
+          "end": 114.8
+        },
+        {
+          "text": "create",
+          "start": 114.8,
+          "end": 115.08
+        },
+        {
+          "text": "them.",
+          "start": 115.08,
+          "end": 115.36
+        },
+        {
+          "text": "Checkpointing",
+          "start": 116.02,
+          "end": 116.6
+        },
+        {
+          "text": "is",
+          "start": 116.6,
+          "end": 116.74
+        },
+        {
+          "text": "not",
+          "start": 116.74,
+          "end": 116.94
+        },
+        {
+          "text": "prudent.",
+          "start": 116.94,
+          "end": 117.3
+        },
+        {
+          "text": "It",
+          "start": 117.7,
+          "end": 117.74
+        },
+        {
+          "text": "is",
+          "start": 117.74,
+          "end": 117.88
+        },
+        {
+          "text": "necessary",
+          "start": 117.88,
+          "end": 118.44
+        },
+        {
+          "text": "because",
+          "start": 118.44,
+          "end": 119.02
+        },
+        {
+          "text": "component",
+          "start": 119.02,
+          "end": 119.48
+        },
+        {
+          "text": "count",
+          "start": 119.48,
+          "end": 119.84
+        },
+        {
+          "text": "makes",
+          "start": 119.84,
+          "end": 120.18
+        },
+        {
+          "text": "interruption",
+          "start": 120.18,
+          "end": 120.68
+        },
+        {
+          "text": "certain.",
+          "start": 120.68,
+          "end": 121.06
+        },
+        {
+          "text": "Tail",
+          "start": 121.76,
+          "end": 121.92
+        },
+        {
+          "text": "budgeting",
+          "start": 121.92,
+          "end": 122.24
+        },
+        {
+          "text": "is",
+          "start": 122.24,
+          "end": 122.56
+        },
+        {
+          "text": "not",
+          "start": 122.56,
+          "end": 122.76
+        },
+        {
+          "text": "fastidious.",
+          "start": 122.76,
+          "end": 123.42
+        },
+        {
+          "text": "It",
+          "start": 123.76,
+          "end": 123.84
+        },
+        {
+          "text": "is",
+          "start": 123.84,
+          "end": 123.96
+        },
+        {
+          "text": "necessary",
+          "start": 123.96,
+          "end": 124.54
+        },
+        {
+          "text": "because",
+          "start": 124.54,
+          "end": 125.14
+        },
+        {
+          "text": "fan",
+          "start": 125.14,
+          "end": 125.48
+        },
+        {
+          "text": "out",
+          "start": 125.48,
+          "end": 125.64
+        },
+        {
+          "text": "probability",
+          "start": 125.64,
+          "end": 126.02
+        },
+        {
+          "text": "makes",
+          "start": 126.02,
+          "end": 126.54
+        },
+        {
+          "text": "slow",
+          "start": 126.54,
+          "end": 126.98
+        },
+        {
+          "text": "leaves",
+          "start": 126.98,
+          "end": 127.28
+        },
+        {
+          "text": "common.",
+          "start": 127.28,
+          "end": 127.64
+        },
+        {
+          "text": "The",
+          "start": 128.38,
+          "end": 128.5
+        },
+        {
+          "text": "principles",
+          "start": 128.5,
+          "end": 128.82
+        },
+        {
+          "text": "explain",
+          "start": 128.82,
+          "end": 129.44
+        },
+        {
+          "text": "why",
+          "start": 129.44,
+          "end": 129.72
+        },
+        {
+          "text": "the",
+          "start": 129.72,
+          "end": 129.84
+        },
+        {
+          "text": "practice",
+          "start": 129.84,
+          "end": 130.16
+        },
+        {
+          "text": "chapters",
+          "start": 130.16,
+          "end": 130.62
+        },
+        {
+          "text": "of",
+          "start": 130.62,
+          "end": 130.84
+        },
+        {
+          "text": "the",
+          "start": 130.84,
+          "end": 130.92
+        },
+        {
+          "text": "volume",
+          "start": 130.92,
+          "end": 131.3
+        },
+        {
+          "text": "exist",
+          "start": 131.3,
+          "end": 131.76
+        },
+        {
+          "text": "at",
+          "start": 131.76,
+          "end": 132.06
+        },
+        {
+          "text": "all.",
+          "start": 132.06,
+          "end": 132.26
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Let's go through the arithmetic that anchors the chapter. The Fleet Law first.",
+      "start": 132.85,
+      "end": 138.35,
+      "words": [
+        {
+          "text": "Let's",
+          "start": 132.26,
+          "end": 133.5
+        },
+        {
+          "text": "go",
+          "start": 133.5,
+          "end": 133.66
+        },
+        {
+          "text": "through",
+          "start": 133.66,
+          "end": 133.9
+        },
+        {
+          "text": "the",
+          "start": 133.9,
+          "end": 134.08
+        },
+        {
+          "text": "arithmetic",
+          "start": 134.08,
+          "end": 134.5
+        },
+        {
+          "text": "that",
+          "start": 134.5,
+          "end": 134.96
+        },
+        {
+          "text": "anchors",
+          "start": 134.96,
+          "end": 135.44
+        },
+        {
+          "text": "the",
+          "start": 135.44,
+          "end": 135.58
+        },
+        {
+          "text": "chapter.",
+          "start": 135.58,
+          "end": 136.0
+        },
+        {
+          "text": "The",
+          "start": 136.54,
+          "end": 136.68
+        },
+        {
+          "text": "fleet",
+          "start": 136.68,
+          "end": 136.92
+        },
+        {
+          "text": "law",
+          "start": 136.92,
+          "end": 137.24
+        },
+        {
+          "text": "first.",
+          "start": 137.24,
+          "end": 137.74
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Step time decomposes into ideal compute divided by device count, plus exposed communication, plus synchronization waiting, plus interruption exposure. The first term shrinks by construction when you add devices. Nothing in the other three terms carries that guarantee.",
+      "start": 138.35,
+      "end": 156.35,
+      "eq": {
+        "id": "fleet-law",
+        "title": "The Fleet Law",
+        "latex": "T_{\\mathrm{step}}=\\frac{T_{\\mathrm{compute}}}{N}+T_{\\mathrm{comm}}(N)+T_{\\mathrm{sync}}(N)+T_{\\mathrm{interruption}}(N)"
+      },
+      "words": [
+        {
+          "text": "Step",
+          "start": 138.8,
+          "end": 138.8
+        },
+        {
+          "text": "time",
+          "start": 138.8,
+          "end": 139.16
+        },
+        {
+          "text": "decomposes",
+          "start": 139.16,
+          "end": 139.92
+        },
+        {
+          "text": "into",
+          "start": 139.92,
+          "end": 140.24
+        },
+        {
+          "text": "ideal",
+          "start": 140.24,
+          "end": 140.72
+        },
+        {
+          "text": "compute",
+          "start": 140.72,
+          "end": 141.18
+        },
+        {
+          "text": "divided",
+          "start": 141.18,
+          "end": 141.68
+        },
+        {
+          "text": "by",
+          "start": 141.68,
+          "end": 141.96
+        },
+        {
+          "text": "device",
+          "start": 141.96,
+          "end": 142.3
+        },
+        {
+          "text": "count,",
+          "start": 142.3,
+          "end": 142.72
+        },
+        {
+          "text": "plus",
+          "start": 143.06,
+          "end": 143.4
+        },
+        {
+          "text": "exposed",
+          "start": 143.4,
+          "end": 143.88
+        },
+        {
+          "text": "communication,",
+          "start": 143.88,
+          "end": 144.6
+        },
+        {
+          "text": "plus",
+          "start": 145.1,
+          "end": 145.4
+        },
+        {
+          "text": "synchronization,",
+          "start": 145.4,
+          "end": 146.08
+        },
+        {
+          "text": "waiting,",
+          "start": 146.28,
+          "end": 146.56
+        },
+        {
+          "text": "plus",
+          "start": 147.0,
+          "end": 147.28
+        },
+        {
+          "text": "interruption",
+          "start": 147.28,
+          "end": 147.86
+        },
+        {
+          "text": "exposure.",
+          "start": 147.86,
+          "end": 148.28
+        },
+        {
+          "text": "The",
+          "start": 149.16,
+          "end": 149.28
+        },
+        {
+          "text": "first",
+          "start": 149.28,
+          "end": 149.54
+        },
+        {
+          "text": "term",
+          "start": 149.54,
+          "end": 149.84
+        },
+        {
+          "text": "shrinks",
+          "start": 149.84,
+          "end": 150.22
+        },
+        {
+          "text": "by",
+          "start": 150.22,
+          "end": 150.46
+        },
+        {
+          "text": "construction",
+          "start": 150.46,
+          "end": 150.96
+        },
+        {
+          "text": "when",
+          "start": 150.96,
+          "end": 151.38
+        },
+        {
+          "text": "you",
+          "start": 151.38,
+          "end": 151.5
+        },
+        {
+          "text": "add",
+          "start": 151.5,
+          "end": 151.78
+        },
+        {
+          "text": "devices.",
+          "start": 151.78,
+          "end": 152.2
+        },
+        {
+          "text": "Nothing",
+          "start": 152.96,
+          "end": 153.24
+        },
+        {
+          "text": "in",
+          "start": 153.24,
+          "end": 153.52
+        },
+        {
+          "text": "the",
+          "start": 153.52,
+          "end": 153.62
+        },
+        {
+          "text": "other",
+          "start": 153.62,
+          "end": 153.82
+        },
+        {
+          "text": "three",
+          "start": 153.82,
+          "end": 154.12
+        },
+        {
+          "text": "terms",
+          "start": 154.12,
+          "end": 154.5
+        },
+        {
+          "text": "carries",
+          "start": 154.5,
+          "end": 154.92
+        },
+        {
+          "text": "that",
+          "start": 154.92,
+          "end": 155.22
+        },
+        {
+          "text": "guarantee.",
+          "start": 155.22,
+          "end": 155.6
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Which is why realized speedup falls short.",
+      "start": 156.35,
+      "end": 159.6,
+      "words": [
+        {
+          "text": "Which",
+          "start": 156.68,
+          "end": 156.88
+        },
+        {
+          "text": "is",
+          "start": 156.88,
+          "end": 157.04
+        },
+        {
+          "text": "why",
+          "start": 157.04,
+          "end": 157.22
+        },
+        {
+          "text": "realized",
+          "start": 157.22,
+          "end": 157.58
+        },
+        {
+          "text": "speedup",
+          "start": 157.58,
+          "end": 158.2
+        },
+        {
+          "text": "falls",
+          "start": 158.2,
+          "end": 158.48
+        },
+        {
+          "text": "short.",
+          "start": 158.48,
+          "end": 158.92
+        },
+        {
+          "text": "Exactly.",
+          "start": 158.92,
+          "end": 160.2
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Exactly. Add workers and each one does less arithmetic per step, while the collective has more participants, the barrier has more stragglers, and the component count has more failure exposure. The scaling curve keeps promising capability, and the Fleet Law prices what extracting it costs.",
+      "start": 159.6,
+      "end": 178.28,
+      "words": [
+        {
+          "text": "Add",
+          "start": 160.94,
+          "end": 161.24
+        },
+        {
+          "text": "workers",
+          "start": 161.24,
+          "end": 161.54
+        },
+        {
+          "text": "and",
+          "start": 161.54,
+          "end": 161.92
+        },
+        {
+          "text": "each",
+          "start": 161.92,
+          "end": 162.14
+        },
+        {
+          "text": "one",
+          "start": 162.14,
+          "end": 162.38
+        },
+        {
+          "text": "does",
+          "start": 162.38,
+          "end": 162.58
+        },
+        {
+          "text": "less",
+          "start": 162.58,
+          "end": 162.84
+        },
+        {
+          "text": "arithmetic",
+          "start": 162.84,
+          "end": 163.38
+        },
+        {
+          "text": "per",
+          "start": 163.38,
+          "end": 163.78
+        },
+        {
+          "text": "step.",
+          "start": 163.78,
+          "end": 164.12
+        },
+        {
+          "text": "While",
+          "start": 164.52,
+          "end": 164.68
+        },
+        {
+          "text": "the",
+          "start": 164.68,
+          "end": 164.82
+        },
+        {
+          "text": "collective",
+          "start": 164.82,
+          "end": 165.12
+        },
+        {
+          "text": "has",
+          "start": 165.12,
+          "end": 165.5
+        },
+        {
+          "text": "more",
+          "start": 165.5,
+          "end": 165.74
+        },
+        {
+          "text": "participants,",
+          "start": 165.74,
+          "end": 166.28
+        },
+        {
+          "text": "the",
+          "start": 166.88,
+          "end": 166.98
+        },
+        {
+          "text": "barrier",
+          "start": 166.98,
+          "end": 167.24
+        },
+        {
+          "text": "has",
+          "start": 167.24,
+          "end": 167.66
+        },
+        {
+          "text": "more",
+          "start": 167.66,
+          "end": 167.86
+        },
+        {
+          "text": "stragglers",
+          "start": 167.86,
+          "end": 168.4
+        },
+        {
+          "text": "and",
+          "start": 168.4,
+          "end": 169.02
+        },
+        {
+          "text": "the",
+          "start": 169.02,
+          "end": 169.12
+        },
+        {
+          "text": "component",
+          "start": 169.12,
+          "end": 169.52
+        },
+        {
+          "text": "count",
+          "start": 169.52,
+          "end": 169.88
+        },
+        {
+          "text": "has",
+          "start": 169.88,
+          "end": 170.24
+        },
+        {
+          "text": "more",
+          "start": 170.24,
+          "end": 170.44
+        },
+        {
+          "text": "failure",
+          "start": 170.44,
+          "end": 170.88
+        },
+        {
+          "text": "exposure.",
+          "start": 170.88,
+          "end": 171.44
+        },
+        {
+          "text": "The",
+          "start": 172.32,
+          "end": 172.46
+        },
+        {
+          "text": "scaling",
+          "start": 172.46,
+          "end": 172.76
+        },
+        {
+          "text": "curve",
+          "start": 172.76,
+          "end": 173.14
+        },
+        {
+          "text": "keeps",
+          "start": 173.14,
+          "end": 173.54
+        },
+        {
+          "text": "promising",
+          "start": 173.54,
+          "end": 173.96
+        },
+        {
+          "text": "capability",
+          "start": 173.96,
+          "end": 174.46
+        },
+        {
+          "text": "and",
+          "start": 174.46,
+          "end": 175.22
+        },
+        {
+          "text": "the",
+          "start": 175.22,
+          "end": 175.34
+        },
+        {
+          "text": "fleet",
+          "start": 175.34,
+          "end": 175.56
+        },
+        {
+          "text": "law",
+          "start": 175.56,
+          "end": 175.82
+        },
+        {
+          "text": "prices",
+          "start": 175.82,
+          "end": 176.26
+        },
+        {
+          "text": "what",
+          "start": 176.26,
+          "end": 176.52
+        },
+        {
+          "text": "extracting",
+          "start": 176.52,
+          "end": 177.04
+        },
+        {
+          "text": "it",
+          "start": 177.04,
+          "end": 177.24
+        },
+        {
+          "text": "costs.",
+          "start": 177.24,
+          "end": 177.54
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The chapter has a beautiful worked example. Doubling a reference cluster from one thousand twenty-four to two thousand forty-eight GPUs.",
+      "start": 178.28,
+      "end": 188.08,
+      "words": [
+        {
+          "text": "The",
+          "start": 178.48,
+          "end": 178.74
+        },
+        {
+          "text": "chapter",
+          "start": 178.74,
+          "end": 179.04
+        },
+        {
+          "text": "has",
+          "start": 179.04,
+          "end": 179.4
+        },
+        {
+          "text": "a",
+          "start": 179.4,
+          "end": 179.54
+        },
+        {
+          "text": "beautiful",
+          "start": 179.54,
+          "end": 179.94
+        },
+        {
+          "text": "worked",
+          "start": 179.94,
+          "end": 180.4
+        },
+        {
+          "text": "example.",
+          "start": 180.4,
+          "end": 180.92
+        },
+        {
+          "text": "Doubling",
+          "start": 181.58,
+          "end": 182.0
+        },
+        {
+          "text": "a",
+          "start": 182.0,
+          "end": 182.26
+        },
+        {
+          "text": "reference",
+          "start": 182.26,
+          "end": 182.54
+        },
+        {
+          "text": "cluster",
+          "start": 182.54,
+          "end": 183.1
+        },
+        {
+          "text": "from",
+          "start": 183.1,
+          "end": 183.38
+        },
+        {
+          "text": "1024",
+          "start": 183.38,
+          "end": 184.64
+        },
+        {
+          "text": "to",
+          "start": 184.64,
+          "end": 185.22
+        },
+        {
+          "text": "2048",
+          "start": 185.22,
+          "end": 186.46
+        },
+        {
+          "text": "GPUs.",
+          "start": 186.46,
+          "end": 187.52
+        },
+        {
+          "text": "Start",
+          "start": 187.52,
+          "end": 188.5
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Start with the scaling side: ideal step time halves. Now price it. Job mean time between failures is component reliability divided by device count, so doubling the fleet halves it, forty-eight point eight hours down to twenty-four point four.",
+      "start": 188.08,
+      "end": 203.58,
+      "eq": {
+        "id": "expansion-mtbf",
+        "title": "Job MTBF under expansion",
+        "latex": "\\mathrm{MTBF}_{\\mathrm{job}}=\\frac{\\mathrm{MTTF}_{\\mathrm{gpu}}}{N}\\quad\\Rightarrow\\quad 48.8\\,\\mathrm{h}\\xrightarrow{N\\times 2}24.4\\,\\mathrm{h}"
+      },
+      "words": [
+        {
+          "text": "with",
+          "start": 188.5,
+          "end": 188.7
+        },
+        {
+          "text": "the",
+          "start": 188.7,
+          "end": 188.84
+        },
+        {
+          "text": "scaling",
+          "start": 188.84,
+          "end": 189.12
+        },
+        {
+          "text": "side.",
+          "start": 189.12,
+          "end": 189.52
+        },
+        {
+          "text": "Ideal",
+          "start": 189.98,
+          "end": 190.38
+        },
+        {
+          "text": "step",
+          "start": 190.38,
+          "end": 190.58
+        },
+        {
+          "text": "time",
+          "start": 190.58,
+          "end": 190.86
+        },
+        {
+          "text": "halves.",
+          "start": 190.86,
+          "end": 191.14
+        },
+        {
+          "text": "Now",
+          "start": 191.82,
+          "end": 191.98
+        },
+        {
+          "text": "price",
+          "start": 191.98,
+          "end": 192.24
+        },
+        {
+          "text": "it.",
+          "start": 192.24,
+          "end": 192.54
+        },
+        {
+          "text": "Job",
+          "start": 193.16,
+          "end": 193.34
+        },
+        {
+          "text": "mean",
+          "start": 193.34,
+          "end": 193.6
+        },
+        {
+          "text": "time",
+          "start": 193.6,
+          "end": 193.9
+        },
+        {
+          "text": "between",
+          "start": 193.9,
+          "end": 194.2
+        },
+        {
+          "text": "failures",
+          "start": 194.2,
+          "end": 194.7
+        },
+        {
+          "text": "is",
+          "start": 194.7,
+          "end": 195.02
+        },
+        {
+          "text": "component",
+          "start": 195.02,
+          "end": 195.46
+        },
+        {
+          "text": "reliability",
+          "start": 195.46,
+          "end": 196.08
+        },
+        {
+          "text": "divided",
+          "start": 196.08,
+          "end": 196.64
+        },
+        {
+          "text": "by",
+          "start": 196.64,
+          "end": 197.0
+        },
+        {
+          "text": "device",
+          "start": 197.0,
+          "end": 197.34
+        },
+        {
+          "text": "count.",
+          "start": 197.34,
+          "end": 197.8
+        },
+        {
+          "text": "So",
+          "start": 198.12,
+          "end": 198.36
+        },
+        {
+          "text": "doubling",
+          "start": 198.36,
+          "end": 198.7
+        },
+        {
+          "text": "the",
+          "start": 198.7,
+          "end": 198.88
+        },
+        {
+          "text": "fleet",
+          "start": 198.88,
+          "end": 199.08
+        },
+        {
+          "text": "halves",
+          "start": 199.08,
+          "end": 199.4
+        },
+        {
+          "text": "it",
+          "start": 199.4,
+          "end": 199.6
+        },
+        {
+          "text": "48",
+          "start": 199.6,
+          "end": 200.28
+        },
+        {
+          "text": ".8",
+          "start": 200.28,
+          "end": 200.98
+        },
+        {
+          "text": "hours",
+          "start": 200.98,
+          "end": 201.32
+        },
+        {
+          "text": "down",
+          "start": 201.32,
+          "end": 201.68
+        },
+        {
+          "text": "to",
+          "start": 201.68,
+          "end": 201.88
+        },
+        {
+          "text": "24",
+          "start": 201.88,
+          "end": 202.34
+        },
+        {
+          "text": ".4.",
+          "start": 202.34,
+          "end": 202.96
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And the checkpoint overhead follows.",
+      "start": 203.58,
+      "end": 206.48,
+      "words": [
+        {
+          "text": "And",
+          "start": 203.88,
+          "end": 204.04
+        },
+        {
+          "text": "the",
+          "start": 204.04,
+          "end": 204.18
+        },
+        {
+          "text": "checkpoint",
+          "start": 204.18,
+          "end": 204.5
+        },
+        {
+          "text": "overhead",
+          "start": 204.5,
+          "end": 205.08
+        },
+        {
+          "text": "follows.",
+          "start": 205.08,
+          "end": 205.72
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Young-Daly: checkpointing overhead grows with the square root of the checkpoint cost over the failure interval. Halve the interval and overhead grows by root two, one point seven percent up to two point four. Small numbers, but here is the punchline: multiply it out and total accelerator-hours increase slightly even at the ideal two-times step speedup.",
+      "start": 206.48,
+      "end": 228.25,
+      "eq": {
+        "id": "young-daly-overhead",
+        "title": "Checkpoint overhead growth",
+        "latex": "\\mathrm{overhead}\\approx\\sqrt{\\frac{2\\,T_{\\mathrm{write}}}{\\mathrm{MTBF}_{\\mathrm{job}}}}\\quad\\Rightarrow\\quad 1.7\\%\\xrightarrow{N\\times 2}2.4\\%"
+      },
+      "words": [
+        {
+          "text": "Young",
+          "start": 206.74,
+          "end": 207.02
+        },
+        {
+          "text": "Dolly.",
+          "start": 207.02,
+          "end": 207.36
+        },
+        {
+          "text": "Checkpointing",
+          "start": 207.88,
+          "end": 208.32
+        },
+        {
+          "text": "overhead",
+          "start": 208.32,
+          "end": 208.6
+        },
+        {
+          "text": "grows",
+          "start": 208.6,
+          "end": 209.08
+        },
+        {
+          "text": "with",
+          "start": 209.08,
+          "end": 209.32
+        },
+        {
+          "text": "the",
+          "start": 209.32,
+          "end": 209.46
+        },
+        {
+          "text": "square",
+          "start": 209.46,
+          "end": 209.66
+        },
+        {
+          "text": "root",
+          "start": 209.66,
+          "end": 210.0
+        },
+        {
+          "text": "of",
+          "start": 210.0,
+          "end": 210.1
+        },
+        {
+          "text": "the",
+          "start": 210.1,
+          "end": 210.22
+        },
+        {
+          "text": "checkpoint",
+          "start": 210.22,
+          "end": 210.54
+        },
+        {
+          "text": "cost",
+          "start": 210.54,
+          "end": 211.0
+        },
+        {
+          "text": "over",
+          "start": 211.0,
+          "end": 211.3
+        },
+        {
+          "text": "the",
+          "start": 211.3,
+          "end": 211.44
+        },
+        {
+          "text": "failure",
+          "start": 211.44,
+          "end": 211.7
+        },
+        {
+          "text": "interval.",
+          "start": 211.7,
+          "end": 212.16
+        },
+        {
+          "text": "Have",
+          "start": 212.16,
+          "end": 212.98
+        },
+        {
+          "text": "the",
+          "start": 212.98,
+          "end": 213.16
+        },
+        {
+          "text": "interval",
+          "start": 213.16,
+          "end": 213.56
+        },
+        {
+          "text": "and",
+          "start": 213.56,
+          "end": 213.8
+        },
+        {
+          "text": "overhead",
+          "start": 213.8,
+          "end": 214.1
+        },
+        {
+          "text": "grows",
+          "start": 214.1,
+          "end": 214.52
+        },
+        {
+          "text": "by",
+          "start": 214.52,
+          "end": 214.78
+        },
+        {
+          "text": "root",
+          "start": 214.78,
+          "end": 214.98
+        },
+        {
+          "text": "two",
+          "start": 214.98,
+          "end": 215.36
+        },
+        {
+          "text": "1",
+          "start": 215.36,
+          "end": 215.96
+        },
+        {
+          "text": ".7",
+          "start": 215.96,
+          "end": 216.5
+        },
+        {
+          "text": "%",
+          "start": 216.5,
+          "end": 216.86
+        },
+        {
+          "text": "up",
+          "start": 216.86,
+          "end": 217.16
+        },
+        {
+          "text": "to",
+          "start": 217.16,
+          "end": 217.3
+        },
+        {
+          "text": "2",
+          "start": 217.3,
+          "end": 217.52
+        },
+        {
+          "text": ".4.",
+          "start": 217.52,
+          "end": 218.06
+        },
+        {
+          "text": "Small",
+          "start": 218.7,
+          "end": 218.98
+        },
+        {
+          "text": "numbers,",
+          "start": 218.98,
+          "end": 219.4
+        },
+        {
+          "text": "but",
+          "start": 219.78,
+          "end": 219.96
+        },
+        {
+          "text": "here",
+          "start": 219.96,
+          "end": 220.22
+        },
+        {
+          "text": "is",
+          "start": 220.22,
+          "end": 220.44
+        },
+        {
+          "text": "the",
+          "start": 220.44,
+          "end": 220.56
+        },
+        {
+          "text": "punchline.",
+          "start": 220.56,
+          "end": 221.02
+        },
+        {
+          "text": "Multiply",
+          "start": 221.56,
+          "end": 222.1
+        },
+        {
+          "text": "it",
+          "start": 222.1,
+          "end": 222.28
+        },
+        {
+          "text": "out",
+          "start": 222.28,
+          "end": 222.54
+        },
+        {
+          "text": "and",
+          "start": 222.54,
+          "end": 222.74
+        },
+        {
+          "text": "total",
+          "start": 222.74,
+          "end": 223.02
+        },
+        {
+          "text": "accelerator",
+          "start": 223.02,
+          "end": 223.56
+        },
+        {
+          "text": "hours",
+          "start": 223.56,
+          "end": 224.06
+        },
+        {
+          "text": "increase",
+          "start": 224.06,
+          "end": 224.62
+        },
+        {
+          "text": "slightly",
+          "start": 224.62,
+          "end": 225.16
+        },
+        {
+          "text": "even",
+          "start": 225.16,
+          "end": 225.56
+        },
+        {
+          "text": "at",
+          "start": 225.56,
+          "end": 225.9
+        },
+        {
+          "text": "the",
+          "start": 225.9,
+          "end": 226.0
+        },
+        {
+          "text": "ideal",
+          "start": 226.0,
+          "end": 226.36
+        },
+        {
+          "text": "two",
+          "start": 226.36,
+          "end": 226.62
+        },
+        {
+          "text": "time",
+          "start": 226.62,
+          "end": 226.92
+        },
+        {
+          "text": "step",
+          "start": 226.92,
+          "end": 227.24
+        },
+        {
+          "text": "speed",
+          "start": 227.24,
+          "end": 227.5
+        },
+        {
+          "text": "up.",
+          "start": 227.5,
+          "end": 227.76
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "So you finish sooner and spend more.",
+      "start": 228.25,
+      "end": 231.03,
+      "words": [
+        {
+          "text": "So",
+          "start": 228.4,
+          "end": 228.74
+        },
+        {
+          "text": "you",
+          "start": 228.74,
+          "end": 228.88
+        },
+        {
+          "text": "finish",
+          "start": 228.88,
+          "end": 229.1
+        },
+        {
+          "text": "sooner",
+          "start": 229.1,
+          "end": 229.52
+        },
+        {
+          "text": "and",
+          "start": 229.52,
+          "end": 229.72
+        },
+        {
+          "text": "spend",
+          "start": 229.72,
+          "end": 229.92
+        },
+        {
+          "text": "more.",
+          "start": 229.92,
+          "end": 230.34
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Both. The fleet grows in capability while shrinking in efficiency. The break-even step speedup is only about one point zero one times, trivially met, and yet the total resource consumption still rises. Whether that trade is worth it is a decision the arithmetic informs but cannot make.",
+      "start": 231.03,
+      "end": 250.03,
+      "visual": {
+        "src": "/study/vol2/17-conclusion/diagrams/expansion-arithmetic.svg",
+        "title": "The doubling arithmetic",
+        "alt": "Doubling the cluster halves ideal step time and halves job MTBF in the same motion. Checkpoint overhead climbs; accelerator-hours rise even at perfect speedup. Capability and efficiency move in opposite directions."
+      },
+      "words": [
+        {
+          "text": "Both.",
+          "start": 231.22,
+          "end": 231.56
+        },
+        {
+          "text": "The",
+          "start": 232.02,
+          "end": 232.1
+        },
+        {
+          "text": "fleet",
+          "start": 232.1,
+          "end": 232.32
+        },
+        {
+          "text": "grows",
+          "start": 232.32,
+          "end": 232.64
+        },
+        {
+          "text": "in",
+          "start": 232.64,
+          "end": 232.88
+        },
+        {
+          "text": "capability",
+          "start": 232.88,
+          "end": 233.38
+        },
+        {
+          "text": "while",
+          "start": 233.38,
+          "end": 233.76
+        },
+        {
+          "text": "shrinking",
+          "start": 233.76,
+          "end": 234.2
+        },
+        {
+          "text": "in",
+          "start": 234.2,
+          "end": 234.46
+        },
+        {
+          "text": "efficiency.",
+          "start": 234.46,
+          "end": 234.74
+        },
+        {
+          "text": "The",
+          "start": 234.74,
+          "end": 235.8
+        },
+        {
+          "text": "break",
+          "start": 235.8,
+          "end": 235.98
+        },
+        {
+          "text": "even",
+          "start": 235.98,
+          "end": 236.26
+        },
+        {
+          "text": "step",
+          "start": 236.26,
+          "end": 236.56
+        },
+        {
+          "text": "speed",
+          "start": 236.56,
+          "end": 236.78
+        },
+        {
+          "text": "up",
+          "start": 236.78,
+          "end": 237.02
+        },
+        {
+          "text": "is",
+          "start": 237.02,
+          "end": 237.22
+        },
+        {
+          "text": "only",
+          "start": 237.22,
+          "end": 237.5
+        },
+        {
+          "text": "about",
+          "start": 237.5,
+          "end": 237.76
+        },
+        {
+          "text": "1",
+          "start": 237.76,
+          "end": 238.16
+        },
+        {
+          "text": ".0",
+          "start": 238.16,
+          "end": 238.8
+        },
+        {
+          "text": "one",
+          "start": 238.8,
+          "end": 239.14
+        },
+        {
+          "text": "times",
+          "start": 239.14,
+          "end": 239.64
+        },
+        {
+          "text": "trivially",
+          "start": 239.64,
+          "end": 240.38
+        },
+        {
+          "text": "met",
+          "start": 240.38,
+          "end": 240.7
+        },
+        {
+          "text": "and",
+          "start": 240.7,
+          "end": 241.3
+        },
+        {
+          "text": "yet",
+          "start": 241.3,
+          "end": 241.46
+        },
+        {
+          "text": "the",
+          "start": 241.46,
+          "end": 241.6
+        },
+        {
+          "text": "total",
+          "start": 241.6,
+          "end": 241.9
+        },
+        {
+          "text": "resource",
+          "start": 241.9,
+          "end": 242.28
+        },
+        {
+          "text": "consumption",
+          "start": 242.28,
+          "end": 242.96
+        },
+        {
+          "text": "still",
+          "start": 242.96,
+          "end": 243.36
+        },
+        {
+          "text": "rises.",
+          "start": 243.36,
+          "end": 243.82
+        },
+        {
+          "text": "Whether",
+          "start": 244.62,
+          "end": 244.8
+        },
+        {
+          "text": "that",
+          "start": 244.8,
+          "end": 245.04
+        },
+        {
+          "text": "trade",
+          "start": 245.04,
+          "end": 245.32
+        },
+        {
+          "text": "is",
+          "start": 245.32,
+          "end": 245.48
+        },
+        {
+          "text": "worth",
+          "start": 245.48,
+          "end": 245.76
+        },
+        {
+          "text": "it",
+          "start": 245.76,
+          "end": 246.18
+        },
+        {
+          "text": "is",
+          "start": 246.18,
+          "end": 246.32
+        },
+        {
+          "text": "a",
+          "start": 246.32,
+          "end": 246.42
+        },
+        {
+          "text": "decision",
+          "start": 246.42,
+          "end": 246.82
+        },
+        {
+          "text": "the",
+          "start": 246.82,
+          "end": 247.1
+        },
+        {
+          "text": "arithmetic",
+          "start": 247.1,
+          "end": 247.48
+        },
+        {
+          "text": "informs",
+          "start": 247.48,
+          "end": 248.22
+        },
+        {
+          "text": "but",
+          "start": 248.22,
+          "end": 248.86
+        },
+        {
+          "text": "cannot",
+          "start": 248.86,
+          "end": 249.12
+        },
+        {
+          "text": "make.",
+          "start": 249.12,
+          "end": 249.5
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The chapter is careful to say the expansion decision is actually two decisions.",
+      "start": 250.03,
+      "end": 255.75,
+      "words": [
+        {
+          "text": "The",
+          "start": 250.16,
+          "end": 250.48
+        },
+        {
+          "text": "chapter",
+          "start": 250.48,
+          "end": 250.82
+        },
+        {
+          "text": "is",
+          "start": 250.82,
+          "end": 251.1
+        },
+        {
+          "text": "careful",
+          "start": 251.1,
+          "end": 251.44
+        },
+        {
+          "text": "to",
+          "start": 251.44,
+          "end": 251.68
+        },
+        {
+          "text": "say",
+          "start": 251.68,
+          "end": 251.9
+        },
+        {
+          "text": "the",
+          "start": 251.9,
+          "end": 252.06
+        },
+        {
+          "text": "expansion",
+          "start": 252.06,
+          "end": 252.54
+        },
+        {
+          "text": "decision",
+          "start": 252.54,
+          "end": 253.12
+        },
+        {
+          "text": "is",
+          "start": 253.12,
+          "end": 253.72
+        },
+        {
+          "text": "actually",
+          "start": 253.72,
+          "end": 254.18
+        },
+        {
+          "text": "two",
+          "start": 254.18,
+          "end": 254.48
+        },
+        {
+          "text": "decisions.",
+          "start": 254.48,
+          "end": 254.98
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Yes. Whether to accept the larger training job, and whether to release the model it produces. Those have different evidence. The first is a fleet economics question: accelerator-hours, energy, schedule. The second is a governance question: capability, misuse potential, evaluation. Conflating them is how a team ends up releasing a model because the cluster time was already paid for.",
+      "start": 255.75,
+      "end": 280.5,
+      "words": [
+        {
+          "text": "Yes,",
+          "start": 255.78,
+          "end": 256.34
+        },
+        {
+          "text": "whether",
+          "start": 256.62,
+          "end": 256.88
+        },
+        {
+          "text": "to",
+          "start": 256.88,
+          "end": 257.12
+        },
+        {
+          "text": "accept",
+          "start": 257.12,
+          "end": 257.5
+        },
+        {
+          "text": "the",
+          "start": 257.5,
+          "end": 257.66
+        },
+        {
+          "text": "larger",
+          "start": 257.66,
+          "end": 257.88
+        },
+        {
+          "text": "training",
+          "start": 257.88,
+          "end": 258.24
+        },
+        {
+          "text": "job",
+          "start": 258.24,
+          "end": 258.66
+        },
+        {
+          "text": "and",
+          "start": 258.66,
+          "end": 259.06
+        },
+        {
+          "text": "whether",
+          "start": 259.06,
+          "end": 259.28
+        },
+        {
+          "text": "to",
+          "start": 259.28,
+          "end": 259.5
+        },
+        {
+          "text": "release",
+          "start": 259.5,
+          "end": 259.8
+        },
+        {
+          "text": "the",
+          "start": 259.8,
+          "end": 259.98
+        },
+        {
+          "text": "model",
+          "start": 259.98,
+          "end": 260.22
+        },
+        {
+          "text": "it",
+          "start": 260.22,
+          "end": 260.4
+        },
+        {
+          "text": "produces.",
+          "start": 260.4,
+          "end": 260.82
+        },
+        {
+          "text": "Those",
+          "start": 260.82,
+          "end": 261.76
+        },
+        {
+          "text": "have",
+          "start": 261.76,
+          "end": 262.04
+        },
+        {
+          "text": "different",
+          "start": 262.04,
+          "end": 262.38
+        },
+        {
+          "text": "evidence.",
+          "start": 262.38,
+          "end": 262.86
+        },
+        {
+          "text": "The",
+          "start": 263.6,
+          "end": 263.68
+        },
+        {
+          "text": "first",
+          "start": 263.68,
+          "end": 263.92
+        },
+        {
+          "text": "is",
+          "start": 263.92,
+          "end": 264.2
+        },
+        {
+          "text": "a",
+          "start": 264.2,
+          "end": 264.28
+        },
+        {
+          "text": "fleet",
+          "start": 264.28,
+          "end": 264.54
+        },
+        {
+          "text": "economics",
+          "start": 264.54,
+          "end": 264.96
+        },
+        {
+          "text": "question",
+          "start": 264.96,
+          "end": 265.52
+        },
+        {
+          "text": "accelerator",
+          "start": 265.52,
+          "end": 266.32
+        },
+        {
+          "text": "hours",
+          "start": 266.32,
+          "end": 266.96
+        },
+        {
+          "text": "energy",
+          "start": 266.96,
+          "end": 267.52
+        },
+        {
+          "text": "schedule.",
+          "start": 267.52,
+          "end": 268.2
+        },
+        {
+          "text": "The",
+          "start": 268.96,
+          "end": 269.0
+        },
+        {
+          "text": "second",
+          "start": 269.0,
+          "end": 269.32
+        },
+        {
+          "text": "is",
+          "start": 269.32,
+          "end": 269.62
+        },
+        {
+          "text": "a",
+          "start": 269.62,
+          "end": 269.72
+        },
+        {
+          "text": "governance",
+          "start": 269.72,
+          "end": 270.0
+        },
+        {
+          "text": "question",
+          "start": 270.0,
+          "end": 270.58
+        },
+        {
+          "text": "capability",
+          "start": 270.58,
+          "end": 271.4
+        },
+        {
+          "text": "misuse",
+          "start": 271.4,
+          "end": 272.28
+        },
+        {
+          "text": "potential",
+          "start": 272.28,
+          "end": 272.84
+        },
+        {
+          "text": "evaluation.",
+          "start": 272.84,
+          "end": 273.54
+        },
+        {
+          "text": "Conflating",
+          "start": 274.26,
+          "end": 274.88
+        },
+        {
+          "text": "them",
+          "start": 274.88,
+          "end": 275.14
+        },
+        {
+          "text": "is",
+          "start": 275.14,
+          "end": 275.42
+        },
+        {
+          "text": "how",
+          "start": 275.42,
+          "end": 275.6
+        },
+        {
+          "text": "a",
+          "start": 275.6,
+          "end": 275.72
+        },
+        {
+          "text": "team",
+          "start": 275.72,
+          "end": 275.96
+        },
+        {
+          "text": "ends",
+          "start": 275.96,
+          "end": 276.38
+        },
+        {
+          "text": "up",
+          "start": 276.38,
+          "end": 276.54
+        },
+        {
+          "text": "releasing",
+          "start": 276.54,
+          "end": 276.96
+        },
+        {
+          "text": "a",
+          "start": 276.96,
+          "end": 277.16
+        },
+        {
+          "text": "model",
+          "start": 277.16,
+          "end": 277.46
+        },
+        {
+          "text": "because",
+          "start": 277.46,
+          "end": 277.84
+        },
+        {
+          "text": "the",
+          "start": 277.84,
+          "end": 278.04
+        },
+        {
+          "text": "cluster",
+          "start": 278.04,
+          "end": 278.28
+        },
+        {
+          "text": "time",
+          "start": 278.28,
+          "end": 278.72
+        },
+        {
+          "text": "was",
+          "start": 278.72,
+          "end": 279.0
+        },
+        {
+          "text": "already",
+          "start": 279.0,
+          "end": 279.38
+        },
+        {
+          "text": "paid",
+          "start": 279.38,
+          "end": 279.66
+        },
+        {
+          "text": "for.",
+          "start": 279.66,
+          "end": 279.92
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Now the two probability facts. The straggler one first.",
+      "start": 280.5,
+      "end": 285.02,
+      "words": [
+        {
+          "text": "Now",
+          "start": 281.04,
+          "end": 281.08
+        },
+        {
+          "text": "the",
+          "start": 281.08,
+          "end": 281.28
+        },
+        {
+          "text": "two",
+          "start": 281.28,
+          "end": 281.54
+        },
+        {
+          "text": "probability",
+          "start": 281.54,
+          "end": 281.94
+        },
+        {
+          "text": "facts",
+          "start": 281.94,
+          "end": 282.58
+        },
+        {
+          "text": "the",
+          "start": 282.58,
+          "end": 283.16
+        },
+        {
+          "text": "straggler",
+          "start": 283.16,
+          "end": 283.68
+        },
+        {
+          "text": "one",
+          "start": 283.68,
+          "end": 283.96
+        },
+        {
+          "text": "first.",
+          "start": 283.96,
+          "end": 284.44
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "In a barrier-synchronized step, the step finishes when the slowest worker finishes. If one straggler runs at eighty percent speed, the whole step costs twenty percent more. You do not average over the straggler. You wait for it.",
+      "start": 285.02,
+      "end": 299.07,
+      "eq": {
+        "id": "straggler-step",
+        "title": "Barrier step time",
+        "latex": "T_{\\mathrm{step}}=\\max_{i\\in 1..N}\\,T_{\\mathrm{worker}}^{(i)}"
+      },
+      "words": [
+        {
+          "text": "In",
+          "start": 284.88,
+          "end": 285.44
+        },
+        {
+          "text": "a",
+          "start": 285.44,
+          "end": 285.56
+        },
+        {
+          "text": "barrier",
+          "start": 285.56,
+          "end": 285.78
+        },
+        {
+          "text": "synchronized",
+          "start": 285.78,
+          "end": 286.46
+        },
+        {
+          "text": "step",
+          "start": 286.46,
+          "end": 286.78
+        },
+        {
+          "text": "the",
+          "start": 286.78,
+          "end": 287.22
+        },
+        {
+          "text": "step",
+          "start": 287.22,
+          "end": 287.46
+        },
+        {
+          "text": "finishes",
+          "start": 287.46,
+          "end": 287.82
+        },
+        {
+          "text": "when",
+          "start": 287.82,
+          "end": 288.18
+        },
+        {
+          "text": "the",
+          "start": 288.18,
+          "end": 288.3
+        },
+        {
+          "text": "slowest",
+          "start": 288.3,
+          "end": 288.86
+        },
+        {
+          "text": "worker",
+          "start": 288.86,
+          "end": 289.08
+        },
+        {
+          "text": "finishes.",
+          "start": 289.08,
+          "end": 289.58
+        },
+        {
+          "text": "If",
+          "start": 289.58,
+          "end": 290.5
+        },
+        {
+          "text": "one",
+          "start": 290.5,
+          "end": 290.78
+        },
+        {
+          "text": "straggler",
+          "start": 290.78,
+          "end": 291.26
+        },
+        {
+          "text": "runs",
+          "start": 291.26,
+          "end": 291.66
+        },
+        {
+          "text": "at",
+          "start": 291.66,
+          "end": 291.86
+        },
+        {
+          "text": "80",
+          "start": 291.86,
+          "end": 292.16
+        },
+        {
+          "text": "%",
+          "start": 292.16,
+          "end": 292.44
+        },
+        {
+          "text": "speed",
+          "start": 292.44,
+          "end": 292.88
+        },
+        {
+          "text": "the",
+          "start": 292.88,
+          "end": 293.4
+        },
+        {
+          "text": "whole",
+          "start": 293.4,
+          "end": 293.6
+        },
+        {
+          "text": "step",
+          "start": 293.6,
+          "end": 293.84
+        },
+        {
+          "text": "costs",
+          "start": 293.84,
+          "end": 294.26
+        },
+        {
+          "text": "20",
+          "start": 294.26,
+          "end": 294.66
+        },
+        {
+          "text": "%",
+          "start": 294.66,
+          "end": 294.98
+        },
+        {
+          "text": "more.",
+          "start": 294.98,
+          "end": 295.3
+        },
+        {
+          "text": "You",
+          "start": 295.84,
+          "end": 295.92
+        },
+        {
+          "text": "do",
+          "start": 295.92,
+          "end": 296.02
+        },
+        {
+          "text": "not",
+          "start": 296.02,
+          "end": 296.18
+        },
+        {
+          "text": "average",
+          "start": 296.18,
+          "end": 296.56
+        },
+        {
+          "text": "over",
+          "start": 296.56,
+          "end": 296.82
+        },
+        {
+          "text": "the",
+          "start": 296.82,
+          "end": 296.96
+        },
+        {
+          "text": "straggler",
+          "start": 296.96,
+          "end": 297.42
+        },
+        {
+          "text": "you",
+          "start": 297.42,
+          "end": 297.96
+        },
+        {
+          "text": "wait",
+          "start": 297.96,
+          "end": 298.2
+        },
+        {
+          "text": "for",
+          "start": 298.2,
+          "end": 298.4
+        },
+        {
+          "text": "it.",
+          "start": 298.4,
+          "end": 298.64
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And the serving-side version.",
+      "start": 299.07,
+      "end": 301.5,
+      "words": [
+        {
+          "text": "And",
+          "start": 299.48,
+          "end": 299.56
+        },
+        {
+          "text": "the",
+          "start": 299.56,
+          "end": 299.7
+        },
+        {
+          "text": "serving",
+          "start": 299.7,
+          "end": 300.02
+        },
+        {
+          "text": "side",
+          "start": 300.02,
+          "end": 300.36
+        },
+        {
+          "text": "version.",
+          "start": 300.36,
+          "end": 300.8
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Fan-out. A request that queries one hundred leaf servers, each fast at its own ninety-ninth percentile, hits at least one slow leaf with probability one minus zero point nine nine to the hundredth power. Sixty-three percent. At fifty leaves it is still forty percent.",
+      "start": 301.5,
+      "end": 318.43,
+      "eq": {
+        "id": "fanout-tail",
+        "title": "Fan-out tail exposure",
+        "latex": "\\Pr(\\text{tail hit})=1-(0.99)^{100}\\approx 0.63"
+      },
+      "words": [
+        {
+          "text": "Fan",
+          "start": 301.64,
+          "end": 302.02
+        },
+        {
+          "text": "out",
+          "start": 302.02,
+          "end": 302.22
+        },
+        {
+          "text": "a",
+          "start": 302.22,
+          "end": 302.72
+        },
+        {
+          "text": "request",
+          "start": 302.72,
+          "end": 303.0
+        },
+        {
+          "text": "that",
+          "start": 303.0,
+          "end": 303.3
+        },
+        {
+          "text": "queries",
+          "start": 303.3,
+          "end": 303.62
+        },
+        {
+          "text": "100",
+          "start": 303.62,
+          "end": 304.06
+        },
+        {
+          "text": "leaf",
+          "start": 304.06,
+          "end": 304.5
+        },
+        {
+          "text": "servers",
+          "start": 304.5,
+          "end": 304.94
+        },
+        {
+          "text": "each",
+          "start": 304.94,
+          "end": 305.54
+        },
+        {
+          "text": "fast",
+          "start": 305.54,
+          "end": 305.86
+        },
+        {
+          "text": "at",
+          "start": 305.86,
+          "end": 306.08
+        },
+        {
+          "text": "its",
+          "start": 306.08,
+          "end": 306.2
+        },
+        {
+          "text": "own",
+          "start": 306.2,
+          "end": 306.44
+        },
+        {
+          "text": "99th",
+          "start": 306.44,
+          "end": 307.1
+        },
+        {
+          "text": "percentile",
+          "start": 307.1,
+          "end": 307.64
+        },
+        {
+          "text": "hits",
+          "start": 307.64,
+          "end": 308.14
+        },
+        {
+          "text": "at",
+          "start": 308.14,
+          "end": 308.34
+        },
+        {
+          "text": "least",
+          "start": 308.34,
+          "end": 308.52
+        },
+        {
+          "text": "one",
+          "start": 308.52,
+          "end": 308.82
+        },
+        {
+          "text": "slow",
+          "start": 308.82,
+          "end": 309.22
+        },
+        {
+          "text": "leaf",
+          "start": 309.22,
+          "end": 309.52
+        },
+        {
+          "text": "with",
+          "start": 309.52,
+          "end": 309.84
+        },
+        {
+          "text": "probability",
+          "start": 309.84,
+          "end": 310.34
+        },
+        {
+          "text": "1",
+          "start": 310.34,
+          "end": 310.74
+        },
+        {
+          "text": "-0",
+          "start": 310.74,
+          "end": 311.4
+        },
+        {
+          "text": ".99",
+          "start": 311.4,
+          "end": 312.06
+        },
+        {
+          "text": "to",
+          "start": 312.06,
+          "end": 312.54
+        },
+        {
+          "text": "the",
+          "start": 312.54,
+          "end": 312.64
+        },
+        {
+          "text": "hundredth",
+          "start": 312.64,
+          "end": 313.02
+        },
+        {
+          "text": "power.",
+          "start": 313.02,
+          "end": 313.3
+        },
+        {
+          "text": "63",
+          "start": 314.02,
+          "end": 314.44
+        },
+        {
+          "text": "%",
+          "start": 314.44,
+          "end": 314.82
+        },
+        {
+          "text": "at",
+          "start": 314.82,
+          "end": 315.7
+        },
+        {
+          "text": "50",
+          "start": 315.7,
+          "end": 316.02
+        },
+        {
+          "text": "leaves",
+          "start": 316.02,
+          "end": 316.42
+        },
+        {
+          "text": "it",
+          "start": 316.42,
+          "end": 316.62
+        },
+        {
+          "text": "is",
+          "start": 316.62,
+          "end": 316.76
+        },
+        {
+          "text": "still",
+          "start": 316.76,
+          "end": 317.02
+        },
+        {
+          "text": "40%.",
+          "start": 317.02,
+          "end": 318.02
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Neither of these is a defect.",
+      "start": 318.43,
+      "end": 320.95,
+      "words": [
+        {
+          "text": "Neither",
+          "start": 318.02,
+          "end": 319.04
+        },
+        {
+          "text": "of",
+          "start": 319.04,
+          "end": 319.22
+        },
+        {
+          "text": "these",
+          "start": 319.22,
+          "end": 319.48
+        },
+        {
+          "text": "is",
+          "start": 319.48,
+          "end": 319.7
+        },
+        {
+          "text": "a",
+          "start": 319.7,
+          "end": 319.84
+        },
+        {
+          "text": "defect.",
+          "start": 319.84,
+          "end": 320.14
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Neither. They are what the structure costs. No amount of hardware quality removes them, because they are probability facts about component count. That is why headroom, hedged requests, and straggler-tolerant scheduling are line items rather than luxuries.",
+      "start": 320.95,
+      "end": 336.82,
+      "words": [
+        {
+          "text": "Neither",
+          "start": 321.34,
+          "end": 321.46
+        },
+        {
+          "text": "they",
+          "start": 321.46,
+          "end": 322.06
+        },
+        {
+          "text": "are",
+          "start": 322.06,
+          "end": 322.2
+        },
+        {
+          "text": "what",
+          "start": 322.2,
+          "end": 322.32
+        },
+        {
+          "text": "the",
+          "start": 322.32,
+          "end": 322.44
+        },
+        {
+          "text": "structure",
+          "start": 322.44,
+          "end": 322.74
+        },
+        {
+          "text": "costs.",
+          "start": 322.74,
+          "end": 323.32
+        },
+        {
+          "text": "No",
+          "start": 323.96,
+          "end": 324.18
+        },
+        {
+          "text": "amount",
+          "start": 324.18,
+          "end": 324.52
+        },
+        {
+          "text": "of",
+          "start": 324.52,
+          "end": 324.68
+        },
+        {
+          "text": "hardware",
+          "start": 324.68,
+          "end": 324.96
+        },
+        {
+          "text": "quality",
+          "start": 324.96,
+          "end": 325.44
+        },
+        {
+          "text": "removes",
+          "start": 325.44,
+          "end": 325.92
+        },
+        {
+          "text": "them",
+          "start": 325.92,
+          "end": 326.24
+        },
+        {
+          "text": "because",
+          "start": 326.24,
+          "end": 326.74
+        },
+        {
+          "text": "they",
+          "start": 326.74,
+          "end": 326.98
+        },
+        {
+          "text": "are",
+          "start": 326.98,
+          "end": 327.1
+        },
+        {
+          "text": "probability",
+          "start": 327.1,
+          "end": 327.6
+        },
+        {
+          "text": "facts",
+          "start": 327.6,
+          "end": 328.16
+        },
+        {
+          "text": "about",
+          "start": 328.16,
+          "end": 328.5
+        },
+        {
+          "text": "component",
+          "start": 328.5,
+          "end": 328.92
+        },
+        {
+          "text": "count.",
+          "start": 328.92,
+          "end": 329.26
+        },
+        {
+          "text": "That",
+          "start": 329.98,
+          "end": 330.22
+        },
+        {
+          "text": "is",
+          "start": 330.22,
+          "end": 330.4
+        },
+        {
+          "text": "why",
+          "start": 330.4,
+          "end": 330.58
+        },
+        {
+          "text": "headroom,",
+          "start": 330.58,
+          "end": 331.08
+        },
+        {
+          "text": "hedged",
+          "start": 331.46,
+          "end": 331.7
+        },
+        {
+          "text": "requests",
+          "start": 331.7,
+          "end": 332.04
+        },
+        {
+          "text": "and",
+          "start": 332.04,
+          "end": 332.54
+        },
+        {
+          "text": "straggler",
+          "start": 332.54,
+          "end": 333.0
+        },
+        {
+          "text": "tolerant",
+          "start": 333.0,
+          "end": 333.38
+        },
+        {
+          "text": "scheduling",
+          "start": 333.38,
+          "end": 333.78
+        },
+        {
+          "text": "are",
+          "start": 333.78,
+          "end": 334.36
+        },
+        {
+          "text": "line",
+          "start": 334.36,
+          "end": 334.66
+        },
+        {
+          "text": "items",
+          "start": 334.66,
+          "end": 335.12
+        },
+        {
+          "text": "rather",
+          "start": 335.12,
+          "end": 335.46
+        },
+        {
+          "text": "than",
+          "start": 335.46,
+          "end": 335.7
+        },
+        {
+          "text": "luxuries.",
+          "start": 335.7,
+          "end": 336.2
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The three archetypes come back for a final mapping.",
+      "start": 336.82,
+      "end": 340.6,
+      "words": [
+        {
+          "text": "The",
+          "start": 337.14,
+          "end": 337.3
+        },
+        {
+          "text": "three",
+          "start": 337.3,
+          "end": 337.6
+        },
+        {
+          "text": "archetypes",
+          "start": 337.6,
+          "end": 338.3
+        },
+        {
+          "text": "come",
+          "start": 338.3,
+          "end": 338.52
+        },
+        {
+          "text": "back",
+          "start": 338.52,
+          "end": 338.8
+        },
+        {
+          "text": "for",
+          "start": 338.8,
+          "end": 339.02
+        },
+        {
+          "text": "a",
+          "start": 339.02,
+          "end": 339.16
+        },
+        {
+          "text": "final",
+          "start": 339.16,
+          "end": 339.42
+        },
+        {
+          "text": "mapping.",
+          "start": 339.42,
+          "end": 339.86
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Archetype A, the frontier large language model, binds on communication: gradient synchronization and activation transfer dominate its step. Archetype B, the deep learning recommendation model at scale, binds on coordination: multi-terabyte embedding sharding and all-to-all routing. Archetype C, federated mobile, binds on coordination too, but of a different kind: intermittently available devices, stragglers you cannot hedge, participants who drop mid-round.",
+      "start": 340.6,
+      "end": 368.8,
+      "words": [
+        {
+          "text": "Archetype",
+          "start": 340.72,
+          "end": 341.4
+        },
+        {
+          "text": "A,",
+          "start": 341.4,
+          "end": 341.58
+        },
+        {
+          "text": "the",
+          "start": 341.88,
+          "end": 341.92
+        },
+        {
+          "text": "frontier",
+          "start": 341.92,
+          "end": 342.28
+        },
+        {
+          "text": "large",
+          "start": 342.28,
+          "end": 342.62
+        },
+        {
+          "text": "language",
+          "start": 342.62,
+          "end": 342.98
+        },
+        {
+          "text": "model,",
+          "start": 342.98,
+          "end": 343.38
+        },
+        {
+          "text": "binds",
+          "start": 343.64,
+          "end": 343.82
+        },
+        {
+          "text": "on",
+          "start": 343.82,
+          "end": 344.04
+        },
+        {
+          "text": "communication.",
+          "start": 344.04,
+          "end": 344.6
+        },
+        {
+          "text": "Gradient",
+          "start": 344.6,
+          "end": 345.72
+        },
+        {
+          "text": "synchronization",
+          "start": 345.72,
+          "end": 346.42
+        },
+        {
+          "text": "and",
+          "start": 346.42,
+          "end": 346.68
+        },
+        {
+          "text": "activation",
+          "start": 346.68,
+          "end": 347.06
+        },
+        {
+          "text": "transfer",
+          "start": 347.06,
+          "end": 347.68
+        },
+        {
+          "text": "dominate",
+          "start": 347.68,
+          "end": 348.14
+        },
+        {
+          "text": "its",
+          "start": 348.14,
+          "end": 348.46
+        },
+        {
+          "text": "step.",
+          "start": 348.46,
+          "end": 348.74
+        },
+        {
+          "text": "Archetype",
+          "start": 349.36,
+          "end": 349.84
+        },
+        {
+          "text": "B,",
+          "start": 349.84,
+          "end": 350.02
+        },
+        {
+          "text": "the",
+          "start": 350.24,
+          "end": 350.34
+        },
+        {
+          "text": "deep",
+          "start": 350.34,
+          "end": 350.6
+        },
+        {
+          "text": "learning",
+          "start": 350.6,
+          "end": 350.82
+        },
+        {
+          "text": "recommendation",
+          "start": 350.82,
+          "end": 351.38
+        },
+        {
+          "text": "model",
+          "start": 351.38,
+          "end": 351.86
+        },
+        {
+          "text": "at",
+          "start": 351.86,
+          "end": 352.04
+        },
+        {
+          "text": "scale,",
+          "start": 352.04,
+          "end": 352.32
+        },
+        {
+          "text": "binds",
+          "start": 352.74,
+          "end": 352.96
+        },
+        {
+          "text": "on",
+          "start": 352.96,
+          "end": 353.18
+        },
+        {
+          "text": "coordination.",
+          "start": 353.18,
+          "end": 353.58
+        },
+        {
+          "text": "Multi",
+          "start": 354.34,
+          "end": 354.6
+        },
+        {
+          "text": "terabyte",
+          "start": 354.6,
+          "end": 355.06
+        },
+        {
+          "text": "embedding",
+          "start": 355.06,
+          "end": 355.54
+        },
+        {
+          "text": "sharding",
+          "start": 355.54,
+          "end": 356.04
+        },
+        {
+          "text": "and",
+          "start": 356.04,
+          "end": 356.18
+        },
+        {
+          "text": "all",
+          "start": 356.18,
+          "end": 356.38
+        },
+        {
+          "text": "to",
+          "start": 356.38,
+          "end": 356.56
+        },
+        {
+          "text": "all",
+          "start": 356.56,
+          "end": 356.68
+        },
+        {
+          "text": "routing.",
+          "start": 356.68,
+          "end": 356.98
+        },
+        {
+          "text": "Archetype",
+          "start": 357.64,
+          "end": 358.16
+        },
+        {
+          "text": "C,",
+          "start": 358.16,
+          "end": 358.44
+        },
+        {
+          "text": "federated",
+          "start": 358.74,
+          "end": 359.14
+        },
+        {
+          "text": "mobile,",
+          "start": 359.14,
+          "end": 359.5
+        },
+        {
+          "text": "binds",
+          "start": 359.92,
+          "end": 360.12
+        },
+        {
+          "text": "on",
+          "start": 360.12,
+          "end": 360.32
+        },
+        {
+          "text": "coordination",
+          "start": 360.32,
+          "end": 360.76
+        },
+        {
+          "text": "too",
+          "start": 360.76,
+          "end": 361.3
+        },
+        {
+          "text": "but",
+          "start": 361.3,
+          "end": 361.64
+        },
+        {
+          "text": "of",
+          "start": 361.64,
+          "end": 361.76
+        },
+        {
+          "text": "a",
+          "start": 361.76,
+          "end": 361.86
+        },
+        {
+          "text": "different",
+          "start": 361.86,
+          "end": 362.06
+        },
+        {
+          "text": "kind.",
+          "start": 362.06,
+          "end": 362.44
+        },
+        {
+          "text": "Intermittently",
+          "start": 362.94,
+          "end": 363.56
+        },
+        {
+          "text": "available",
+          "start": 363.56,
+          "end": 363.82
+        },
+        {
+          "text": "devices,",
+          "start": 363.82,
+          "end": 364.54
+        },
+        {
+          "text": "stragglers",
+          "start": 365.04,
+          "end": 365.46
+        },
+        {
+          "text": "you",
+          "start": 365.46,
+          "end": 365.74
+        },
+        {
+          "text": "cannot",
+          "start": 365.74,
+          "end": 365.98
+        },
+        {
+          "text": "hedge,",
+          "start": 365.98,
+          "end": 366.34
+        },
+        {
+          "text": "participants",
+          "start": 366.6,
+          "end": 367.04
+        },
+        {
+          "text": "who",
+          "start": 367.04,
+          "end": 367.36
+        },
+        {
+          "text": "drop",
+          "start": 367.36,
+          "end": 367.62
+        },
+        {
+          "text": "mid",
+          "start": 367.62,
+          "end": 367.84
+        },
+        {
+          "text": "-round.",
+          "start": 367.84,
+          "end": 368.1
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "No corner of the taxonomy dominates.",
+      "start": 368.8,
+      "end": 372.05,
+      "words": [
+        {
+          "text": "No",
+          "start": 369.14,
+          "end": 369.38
+        },
+        {
+          "text": "corner",
+          "start": 369.38,
+          "end": 369.74
+        },
+        {
+          "text": "of",
+          "start": 369.74,
+          "end": 370.0
+        },
+        {
+          "text": "the",
+          "start": 370.0,
+          "end": 370.12
+        },
+        {
+          "text": "taxonomy",
+          "start": 370.12,
+          "end": 370.7
+        },
+        {
+          "text": "dominates.",
+          "start": 370.7,
+          "end": 371.46
+        },
+        {
+          "text": "That",
+          "start": 371.46,
+          "end": 372.48
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "That is the lesson. Compute, communication, coordination: each archetype was characterized by its binding term, and yet following each one up the fleet stack showed that every band, physical substrate, distribution, serving, governance, still applied. The binding constraint tells you where to look first, not where the story ends.",
+      "start": 372.05,
+      "end": 392.4,
+      "words": [
+        {
+          "text": "is",
+          "start": 372.48,
+          "end": 372.66
+        },
+        {
+          "text": "the",
+          "start": 372.66,
+          "end": 372.78
+        },
+        {
+          "text": "lesson.",
+          "start": 372.78,
+          "end": 373.08
+        },
+        {
+          "text": "Compute,",
+          "start": 373.7,
+          "end": 374.14
+        },
+        {
+          "text": "communication,",
+          "start": 374.32,
+          "end": 374.78
+        },
+        {
+          "text": "coordination.",
+          "start": 375.26,
+          "end": 375.7
+        },
+        {
+          "text": "Each",
+          "start": 376.6,
+          "end": 376.8
+        },
+        {
+          "text": "archetype",
+          "start": 376.8,
+          "end": 377.38
+        },
+        {
+          "text": "was",
+          "start": 377.38,
+          "end": 377.48
+        },
+        {
+          "text": "characterized",
+          "start": 377.48,
+          "end": 377.88
+        },
+        {
+          "text": "by",
+          "start": 377.88,
+          "end": 378.38
+        },
+        {
+          "text": "its",
+          "start": 378.38,
+          "end": 378.52
+        },
+        {
+          "text": "binding",
+          "start": 378.52,
+          "end": 378.82
+        },
+        {
+          "text": "term",
+          "start": 378.82,
+          "end": 379.2
+        },
+        {
+          "text": "and",
+          "start": 379.2,
+          "end": 379.78
+        },
+        {
+          "text": "yet",
+          "start": 379.78,
+          "end": 379.94
+        },
+        {
+          "text": "following",
+          "start": 379.94,
+          "end": 380.3
+        },
+        {
+          "text": "each",
+          "start": 380.3,
+          "end": 380.64
+        },
+        {
+          "text": "one",
+          "start": 380.64,
+          "end": 380.92
+        },
+        {
+          "text": "up",
+          "start": 380.92,
+          "end": 381.06
+        },
+        {
+          "text": "the",
+          "start": 381.06,
+          "end": 381.18
+        },
+        {
+          "text": "fleet",
+          "start": 381.18,
+          "end": 381.38
+        },
+        {
+          "text": "stack",
+          "start": 381.38,
+          "end": 381.72
+        },
+        {
+          "text": "showed",
+          "start": 381.72,
+          "end": 382.14
+        },
+        {
+          "text": "that",
+          "start": 382.14,
+          "end": 382.36
+        },
+        {
+          "text": "every",
+          "start": 382.36,
+          "end": 382.68
+        },
+        {
+          "text": "band,",
+          "start": 382.68,
+          "end": 383.14
+        },
+        {
+          "text": "physical",
+          "start": 383.4,
+          "end": 383.64
+        },
+        {
+          "text": "substrate,",
+          "start": 383.64,
+          "end": 384.2
+        },
+        {
+          "text": "distribution,",
+          "start": 384.6,
+          "end": 385.02
+        },
+        {
+          "text": "serving,",
+          "start": 385.58,
+          "end": 385.94
+        },
+        {
+          "text": "governance",
+          "start": 386.26,
+          "end": 386.5
+        },
+        {
+          "text": "still",
+          "start": 386.5,
+          "end": 387.0
+        },
+        {
+          "text": "applied.",
+          "start": 387.0,
+          "end": 387.46
+        },
+        {
+          "text": "The",
+          "start": 388.14,
+          "end": 388.26
+        },
+        {
+          "text": "binding",
+          "start": 388.26,
+          "end": 388.56
+        },
+        {
+          "text": "constraint",
+          "start": 388.56,
+          "end": 389.04
+        },
+        {
+          "text": "tells",
+          "start": 389.04,
+          "end": 389.44
+        },
+        {
+          "text": "you",
+          "start": 389.44,
+          "end": 389.62
+        },
+        {
+          "text": "where",
+          "start": 389.62,
+          "end": 389.74
+        },
+        {
+          "text": "to",
+          "start": 389.74,
+          "end": 389.86
+        },
+        {
+          "text": "look",
+          "start": 389.86,
+          "end": 390.02
+        },
+        {
+          "text": "first,",
+          "start": 390.02,
+          "end": 390.38
+        },
+        {
+          "text": "not",
+          "start": 390.7,
+          "end": 390.92
+        },
+        {
+          "text": "where",
+          "start": 390.92,
+          "end": 391.1
+        },
+        {
+          "text": "the",
+          "start": 391.1,
+          "end": 391.2
+        },
+        {
+          "text": "story",
+          "start": 391.2,
+          "end": 391.44
+        },
+        {
+          "text": "ends.",
+          "start": 391.44,
+          "end": 391.8
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Then there is the dynamic version of this lesson, which I think is the deepest idea in the chapter. The constraint moves.",
+      "start": 392.4,
+      "end": 400.82,
+      "words": [
+        {
+          "text": "Then",
+          "start": 392.54,
+          "end": 393.0
+        },
+        {
+          "text": "there",
+          "start": 393.0,
+          "end": 393.2
+        },
+        {
+          "text": "is",
+          "start": 393.2,
+          "end": 393.38
+        },
+        {
+          "text": "the",
+          "start": 393.38,
+          "end": 393.52
+        },
+        {
+          "text": "dynamic",
+          "start": 393.52,
+          "end": 393.96
+        },
+        {
+          "text": "version",
+          "start": 393.96,
+          "end": 394.46
+        },
+        {
+          "text": "of",
+          "start": 394.46,
+          "end": 394.7
+        },
+        {
+          "text": "this",
+          "start": 394.7,
+          "end": 394.88
+        },
+        {
+          "text": "lesson",
+          "start": 394.88,
+          "end": 395.36
+        },
+        {
+          "text": "which",
+          "start": 395.36,
+          "end": 395.9
+        },
+        {
+          "text": "I",
+          "start": 395.9,
+          "end": 396.06
+        },
+        {
+          "text": "think",
+          "start": 396.06,
+          "end": 396.38
+        },
+        {
+          "text": "is",
+          "start": 396.38,
+          "end": 396.62
+        },
+        {
+          "text": "the",
+          "start": 396.62,
+          "end": 396.78
+        },
+        {
+          "text": "deepest",
+          "start": 396.78,
+          "end": 397.1
+        },
+        {
+          "text": "idea",
+          "start": 397.1,
+          "end": 397.64
+        },
+        {
+          "text": "in",
+          "start": 397.64,
+          "end": 397.9
+        },
+        {
+          "text": "the",
+          "start": 397.9,
+          "end": 397.98
+        },
+        {
+          "text": "chapter.",
+          "start": 397.98,
+          "end": 398.36
+        },
+        {
+          "text": "The",
+          "start": 398.98,
+          "end": 399.14
+        },
+        {
+          "text": "constraint",
+          "start": 399.14,
+          "end": 399.52
+        },
+        {
+          "text": "moves.",
+          "start": 399.52,
+          "end": 400.04
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Optimizing one layer shrinks one term of the Fleet Law and exposes the next. Faster kernels expose the fabric. Faster fabric exposes recovery. Faster recovery exposes the serving tail. And fixing serving exposes governance, because evidence paths and accountability decide whether the service may run at all.",
+      "start": 400.82,
+      "end": 422.05,
+      "visual": {
+        "src": "/study/vol2/17-conclusion/diagrams/constraint-migration.svg",
+        "title": "The constraint migrates",
+        "alt": "Each optimization shrinks one term and exposes the next. Compute gives way to fabric, fabric to recovery, recovery to serving tail, serving tail to governance. The binding constraint never disappears; it moves."
+      },
+      "words": [
+        {
+          "text": "Optimizing",
+          "start": 400.96,
+          "end": 401.7
+        },
+        {
+          "text": "one",
+          "start": 401.7,
+          "end": 401.98
+        },
+        {
+          "text": "layer",
+          "start": 401.98,
+          "end": 402.3
+        },
+        {
+          "text": "shrinks",
+          "start": 402.3,
+          "end": 402.74
+        },
+        {
+          "text": "one",
+          "start": 402.74,
+          "end": 403.04
+        },
+        {
+          "text": "term",
+          "start": 403.04,
+          "end": 403.28
+        },
+        {
+          "text": "of",
+          "start": 403.28,
+          "end": 403.42
+        },
+        {
+          "text": "the",
+          "start": 403.42,
+          "end": 403.52
+        },
+        {
+          "text": "fleet",
+          "start": 403.52,
+          "end": 403.72
+        },
+        {
+          "text": "law",
+          "start": 403.72,
+          "end": 404.0
+        },
+        {
+          "text": "and",
+          "start": 404.0,
+          "end": 404.3
+        },
+        {
+          "text": "exposes",
+          "start": 404.3,
+          "end": 404.8
+        },
+        {
+          "text": "the",
+          "start": 404.8,
+          "end": 405.06
+        },
+        {
+          "text": "next.",
+          "start": 405.06,
+          "end": 405.36
+        },
+        {
+          "text": "Faster",
+          "start": 406.04,
+          "end": 406.26
+        },
+        {
+          "text": "kernels",
+          "start": 406.26,
+          "end": 406.76
+        },
+        {
+          "text": "expose",
+          "start": 406.76,
+          "end": 407.16
+        },
+        {
+          "text": "the",
+          "start": 407.16,
+          "end": 407.52
+        },
+        {
+          "text": "fabric.",
+          "start": 407.52,
+          "end": 407.78
+        },
+        {
+          "text": "Faster",
+          "start": 408.42,
+          "end": 408.8
+        },
+        {
+          "text": "fabric",
+          "start": 408.8,
+          "end": 409.22
+        },
+        {
+          "text": "exposes",
+          "start": 409.22,
+          "end": 409.94
+        },
+        {
+          "text": "recovery.",
+          "start": 409.94,
+          "end": 410.46
+        },
+        {
+          "text": "Faster",
+          "start": 411.22,
+          "end": 411.5
+        },
+        {
+          "text": "recovery",
+          "start": 411.5,
+          "end": 412.06
+        },
+        {
+          "text": "exposes",
+          "start": 412.06,
+          "end": 412.84
+        },
+        {
+          "text": "the",
+          "start": 412.84,
+          "end": 413.1
+        },
+        {
+          "text": "serving",
+          "start": 413.1,
+          "end": 413.42
+        },
+        {
+          "text": "tail.",
+          "start": 413.42,
+          "end": 413.72
+        },
+        {
+          "text": "And",
+          "start": 414.36,
+          "end": 414.48
+        },
+        {
+          "text": "fixing",
+          "start": 414.48,
+          "end": 414.8
+        },
+        {
+          "text": "serving",
+          "start": 414.8,
+          "end": 415.26
+        },
+        {
+          "text": "exposes",
+          "start": 415.26,
+          "end": 416.0
+        },
+        {
+          "text": "governance",
+          "start": 416.0,
+          "end": 416.38
+        },
+        {
+          "text": "because",
+          "start": 416.38,
+          "end": 417.1
+        },
+        {
+          "text": "evidence,",
+          "start": 417.1,
+          "end": 417.52
+        },
+        {
+          "text": "paths",
+          "start": 417.76,
+          "end": 418.06
+        },
+        {
+          "text": "and",
+          "start": 418.06,
+          "end": 418.44
+        },
+        {
+          "text": "accountability",
+          "start": 418.44,
+          "end": 418.98
+        },
+        {
+          "text": "decide",
+          "start": 418.98,
+          "end": 419.72
+        },
+        {
+          "text": "whether",
+          "start": 419.72,
+          "end": 420.12
+        },
+        {
+          "text": "the",
+          "start": 420.12,
+          "end": 420.28
+        },
+        {
+          "text": "service",
+          "start": 420.28,
+          "end": 420.6
+        },
+        {
+          "text": "may",
+          "start": 420.6,
+          "end": 420.88
+        },
+        {
+          "text": "run",
+          "start": 420.88,
+          "end": 421.1
+        },
+        {
+          "text": "at",
+          "start": 421.1,
+          "end": 421.22
+        },
+        {
+          "text": "all.",
+          "start": 421.22,
+          "end": 421.48
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And the loop closes because demand grows back.",
+      "start": 422.05,
+      "end": 425.6,
+      "words": [
+        {
+          "text": "And",
+          "start": 422.48,
+          "end": 422.52
+        },
+        {
+          "text": "the",
+          "start": 422.52,
+          "end": 422.64
+        },
+        {
+          "text": "loop",
+          "start": 422.64,
+          "end": 422.8
+        },
+        {
+          "text": "closes",
+          "start": 422.8,
+          "end": 423.26
+        },
+        {
+          "text": "because",
+          "start": 423.26,
+          "end": 423.68
+        },
+        {
+          "text": "demand",
+          "start": 423.68,
+          "end": 424.1
+        },
+        {
+          "text": "grows",
+          "start": 424.1,
+          "end": 424.54
+        },
+        {
+          "text": "back.",
+          "start": 424.54,
+          "end": 424.92
+        },
+        {
+          "text": "Scaling",
+          "start": 424.92,
+          "end": 426.24
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Scaling laws price each further loss reduction in more compute, so whatever slack the engineering creates gets reinvested in a larger model or a larger fleet, and the migration repeats. You never finish. You just operate at a larger scale with a smaller efficient frontier.",
+      "start": 425.6,
+      "end": 443.03,
+      "words": [
+        {
+          "text": "laws",
+          "start": 426.24,
+          "end": 426.6
+        },
+        {
+          "text": "price",
+          "start": 426.6,
+          "end": 427.02
+        },
+        {
+          "text": "each",
+          "start": 427.02,
+          "end": 427.36
+        },
+        {
+          "text": "further",
+          "start": 427.36,
+          "end": 427.64
+        },
+        {
+          "text": "loss",
+          "start": 427.64,
+          "end": 428.0
+        },
+        {
+          "text": "reduction",
+          "start": 428.0,
+          "end": 428.5
+        },
+        {
+          "text": "in",
+          "start": 428.5,
+          "end": 428.72
+        },
+        {
+          "text": "more",
+          "start": 428.72,
+          "end": 428.92
+        },
+        {
+          "text": "compute",
+          "start": 428.92,
+          "end": 429.4
+        },
+        {
+          "text": "so",
+          "start": 429.4,
+          "end": 430.02
+        },
+        {
+          "text": "whatever",
+          "start": 430.02,
+          "end": 430.34
+        },
+        {
+          "text": "slack",
+          "start": 430.34,
+          "end": 430.72
+        },
+        {
+          "text": "the",
+          "start": 430.72,
+          "end": 431.0
+        },
+        {
+          "text": "engineering",
+          "start": 431.0,
+          "end": 431.38
+        },
+        {
+          "text": "creates",
+          "start": 431.38,
+          "end": 432.02
+        },
+        {
+          "text": "gets",
+          "start": 432.02,
+          "end": 432.26
+        },
+        {
+          "text": "reinvested",
+          "start": 432.26,
+          "end": 433.04
+        },
+        {
+          "text": "in",
+          "start": 433.04,
+          "end": 433.16
+        },
+        {
+          "text": "a",
+          "start": 433.16,
+          "end": 433.26
+        },
+        {
+          "text": "larger",
+          "start": 433.26,
+          "end": 433.52
+        },
+        {
+          "text": "model",
+          "start": 433.52,
+          "end": 433.92
+        },
+        {
+          "text": "or",
+          "start": 433.92,
+          "end": 434.36
+        },
+        {
+          "text": "a",
+          "start": 434.36,
+          "end": 434.48
+        },
+        {
+          "text": "larger",
+          "start": 434.48,
+          "end": 434.76
+        },
+        {
+          "text": "fleet",
+          "start": 434.76,
+          "end": 435.1
+        },
+        {
+          "text": "and",
+          "start": 435.1,
+          "end": 435.68
+        },
+        {
+          "text": "the",
+          "start": 435.68,
+          "end": 435.78
+        },
+        {
+          "text": "migration",
+          "start": 435.78,
+          "end": 436.24
+        },
+        {
+          "text": "repeats.",
+          "start": 436.24,
+          "end": 436.66
+        },
+        {
+          "text": "You",
+          "start": 437.44,
+          "end": 437.62
+        },
+        {
+          "text": "never",
+          "start": 437.62,
+          "end": 437.84
+        },
+        {
+          "text": "finish.",
+          "start": 437.84,
+          "end": 438.16
+        },
+        {
+          "text": "You",
+          "start": 438.8,
+          "end": 439.02
+        },
+        {
+          "text": "just",
+          "start": 439.02,
+          "end": 439.2
+        },
+        {
+          "text": "operate",
+          "start": 439.2,
+          "end": 439.6
+        },
+        {
+          "text": "at",
+          "start": 439.6,
+          "end": 439.84
+        },
+        {
+          "text": "a",
+          "start": 439.84,
+          "end": 439.94
+        },
+        {
+          "text": "larger",
+          "start": 439.94,
+          "end": 440.16
+        },
+        {
+          "text": "scale",
+          "start": 440.16,
+          "end": 440.6
+        },
+        {
+          "text": "with",
+          "start": 440.6,
+          "end": 440.9
+        },
+        {
+          "text": "a",
+          "start": 440.9,
+          "end": 441.0
+        },
+        {
+          "text": "smaller",
+          "start": 441.0,
+          "end": 441.4
+        },
+        {
+          "text": "efficient",
+          "start": 441.4,
+          "end": 441.86
+        },
+        {
+          "text": "frontier.",
+          "start": 441.86,
+          "end": 442.36
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "This is the fallacy the chapter calls optimizing one layer hides the constraint in another.",
+      "start": 443.03,
+      "end": 449.78,
+      "words": [
+        {
+          "text": "This",
+          "start": 443.18,
+          "end": 443.62
+        },
+        {
+          "text": "is",
+          "start": 443.62,
+          "end": 443.78
+        },
+        {
+          "text": "the",
+          "start": 443.78,
+          "end": 443.92
+        },
+        {
+          "text": "fallacy",
+          "start": 443.92,
+          "end": 444.42
+        },
+        {
+          "text": "the",
+          "start": 444.42,
+          "end": 444.72
+        },
+        {
+          "text": "chapter",
+          "start": 444.72,
+          "end": 445.02
+        },
+        {
+          "text": "calls",
+          "start": 445.02,
+          "end": 445.48
+        },
+        {
+          "text": "optimizing",
+          "start": 445.48,
+          "end": 446.12
+        },
+        {
+          "text": "one",
+          "start": 446.12,
+          "end": 446.72
+        },
+        {
+          "text": "layer",
+          "start": 446.72,
+          "end": 447.08
+        },
+        {
+          "text": "hides",
+          "start": 447.08,
+          "end": 447.78
+        },
+        {
+          "text": "the",
+          "start": 447.78,
+          "end": 448.02
+        },
+        {
+          "text": "constraint",
+          "start": 448.02,
+          "end": 448.52
+        },
+        {
+          "text": "in",
+          "start": 448.52,
+          "end": 448.76
+        },
+        {
+          "text": "another.",
+          "start": 448.76,
+          "end": 449.04
+        },
+        {
+          "text": "And",
+          "start": 449.04,
+          "end": 450.16
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "And its operational corollary: a local improvement can be real and still dangerous. Larger batches raise occupancy while worsening tail latency. Compression cuts communication while raising accuracy risk. Carbon-aware scheduling lowers emissions while consuming service slack. The displacement of overhead has to stay visible, or the system inherits a constraint nobody chose.",
+      "start": 449.78,
+      "end": 473.95,
+      "words": [
+        {
+          "text": "it's",
+          "start": 450.16,
+          "end": 450.32
+        },
+        {
+          "text": "operational",
+          "start": 450.32,
+          "end": 450.84
+        },
+        {
+          "text": "corollary.",
+          "start": 450.84,
+          "end": 451.46
+        },
+        {
+          "text": "A",
+          "start": 451.94,
+          "end": 452.04
+        },
+        {
+          "text": "local",
+          "start": 452.04,
+          "end": 452.28
+        },
+        {
+          "text": "improvement",
+          "start": 452.28,
+          "end": 452.84
+        },
+        {
+          "text": "can",
+          "start": 452.84,
+          "end": 453.14
+        },
+        {
+          "text": "be",
+          "start": 453.14,
+          "end": 453.32
+        },
+        {
+          "text": "real",
+          "start": 453.32,
+          "end": 453.76
+        },
+        {
+          "text": "and",
+          "start": 453.76,
+          "end": 454.02
+        },
+        {
+          "text": "still",
+          "start": 454.02,
+          "end": 454.28
+        },
+        {
+          "text": "dangerous.",
+          "start": 454.28,
+          "end": 454.7
+        },
+        {
+          "text": "Larger",
+          "start": 455.52,
+          "end": 455.8
+        },
+        {
+          "text": "batches",
+          "start": 455.8,
+          "end": 456.26
+        },
+        {
+          "text": "raise",
+          "start": 456.26,
+          "end": 456.5
+        },
+        {
+          "text": "occupancy",
+          "start": 456.5,
+          "end": 457.18
+        },
+        {
+          "text": "while",
+          "start": 457.18,
+          "end": 457.66
+        },
+        {
+          "text": "worsening",
+          "start": 457.66,
+          "end": 458.1
+        },
+        {
+          "text": "tail",
+          "start": 458.1,
+          "end": 458.42
+        },
+        {
+          "text": "latency.",
+          "start": 458.42,
+          "end": 458.86
+        },
+        {
+          "text": "Compression",
+          "start": 459.5,
+          "end": 459.88
+        },
+        {
+          "text": "cuts",
+          "start": 459.88,
+          "end": 460.24
+        },
+        {
+          "text": "communication",
+          "start": 460.24,
+          "end": 460.9
+        },
+        {
+          "text": "while",
+          "start": 460.9,
+          "end": 461.44
+        },
+        {
+          "text": "raising",
+          "start": 461.44,
+          "end": 461.82
+        },
+        {
+          "text": "accuracy",
+          "start": 461.82,
+          "end": 462.32
+        },
+        {
+          "text": "risk.",
+          "start": 462.32,
+          "end": 462.78
+        },
+        {
+          "text": "Carbon",
+          "start": 463.4,
+          "end": 463.6
+        },
+        {
+          "text": "aware",
+          "start": 463.6,
+          "end": 463.86
+        },
+        {
+          "text": "scheduling",
+          "start": 463.86,
+          "end": 464.2
+        },
+        {
+          "text": "lowers",
+          "start": 464.2,
+          "end": 464.74
+        },
+        {
+          "text": "emissions",
+          "start": 464.74,
+          "end": 465.24
+        },
+        {
+          "text": "while",
+          "start": 465.24,
+          "end": 465.74
+        },
+        {
+          "text": "consuming",
+          "start": 465.74,
+          "end": 466.2
+        },
+        {
+          "text": "service",
+          "start": 466.2,
+          "end": 466.68
+        },
+        {
+          "text": "slack.",
+          "start": 466.68,
+          "end": 467.08
+        },
+        {
+          "text": "The",
+          "start": 467.76,
+          "end": 467.86
+        },
+        {
+          "text": "displacement",
+          "start": 467.86,
+          "end": 468.28
+        },
+        {
+          "text": "of",
+          "start": 468.28,
+          "end": 468.54
+        },
+        {
+          "text": "overhead",
+          "start": 468.54,
+          "end": 468.94
+        },
+        {
+          "text": "has",
+          "start": 468.94,
+          "end": 469.34
+        },
+        {
+          "text": "to",
+          "start": 469.34,
+          "end": 469.5
+        },
+        {
+          "text": "stay",
+          "start": 469.5,
+          "end": 469.72
+        },
+        {
+          "text": "visible",
+          "start": 469.72,
+          "end": 470.08
+        },
+        {
+          "text": "or",
+          "start": 470.08,
+          "end": 470.7
+        },
+        {
+          "text": "the",
+          "start": 470.7,
+          "end": 470.88
+        },
+        {
+          "text": "system",
+          "start": 470.88,
+          "end": 471.24
+        },
+        {
+          "text": "inherits",
+          "start": 471.24,
+          "end": 471.86
+        },
+        {
+          "text": "a",
+          "start": 471.86,
+          "end": 472.0
+        },
+        {
+          "text": "constraint",
+          "start": 472.0,
+          "end": 472.42
+        },
+        {
+          "text": "nobody",
+          "start": 472.42,
+          "end": 472.9
+        },
+        {
+          "text": "chose.",
+          "start": 472.9,
+          "end": 473.3
+        },
+        {
+          "text": "What",
+          "start": 473.3,
+          "end": 474.46
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "What survives hardware generations? The chapter claims the technology names are examples, but something durable sits underneath.",
+      "start": 473.95,
+      "end": 483.23,
+      "words": [
+        {
+          "text": "survives",
+          "start": 474.46,
+          "end": 474.84
+        },
+        {
+          "text": "hardware",
+          "start": 474.84,
+          "end": 475.64
+        },
+        {
+          "text": "generations.",
+          "start": 475.64,
+          "end": 476.3
+        },
+        {
+          "text": "The",
+          "start": 477.06,
+          "end": 477.2
+        },
+        {
+          "text": "chapter",
+          "start": 477.2,
+          "end": 477.5
+        },
+        {
+          "text": "claims",
+          "start": 477.5,
+          "end": 478.04
+        },
+        {
+          "text": "the",
+          "start": 478.04,
+          "end": 478.22
+        },
+        {
+          "text": "technology",
+          "start": 478.22,
+          "end": 478.72
+        },
+        {
+          "text": "names",
+          "start": 478.72,
+          "end": 479.16
+        },
+        {
+          "text": "are",
+          "start": 479.16,
+          "end": 479.36
+        },
+        {
+          "text": "examples",
+          "start": 479.36,
+          "end": 479.9
+        },
+        {
+          "text": "but",
+          "start": 479.9,
+          "end": 480.62
+        },
+        {
+          "text": "something",
+          "start": 480.62,
+          "end": 481.04
+        },
+        {
+          "text": "durable",
+          "start": 481.04,
+          "end": 481.42
+        },
+        {
+          "text": "sits",
+          "start": 481.42,
+          "end": 481.84
+        },
+        {
+          "text": "underneath.",
+          "start": 481.84,
+          "end": 482.42
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The relationships. Data must reach compute at the required rate. Workers must communicate before synchronization stalls the job. Failures must be expected at large component counts. Serving must meet tail budgets. Governance must be engineered into the operating path. Those sentences will still be true of accelerators and substrates that do not exist yet.",
+      "start": 483.23,
+      "end": 506.25,
+      "words": [
+        {
+          "text": "The",
+          "start": 483.3,
+          "end": 483.6
+        },
+        {
+          "text": "relationships",
+          "start": 483.6,
+          "end": 484.22
+        },
+        {
+          "text": "data",
+          "start": 484.22,
+          "end": 485.1
+        },
+        {
+          "text": "must",
+          "start": 485.1,
+          "end": 485.46
+        },
+        {
+          "text": "reach",
+          "start": 485.46,
+          "end": 485.74
+        },
+        {
+          "text": "compute",
+          "start": 485.74,
+          "end": 486.16
+        },
+        {
+          "text": "at",
+          "start": 486.16,
+          "end": 486.46
+        },
+        {
+          "text": "the",
+          "start": 486.46,
+          "end": 486.54
+        },
+        {
+          "text": "required",
+          "start": 486.54,
+          "end": 486.88
+        },
+        {
+          "text": "rate.",
+          "start": 486.88,
+          "end": 487.28
+        },
+        {
+          "text": "Workers",
+          "start": 487.84,
+          "end": 488.04
+        },
+        {
+          "text": "must",
+          "start": 488.04,
+          "end": 488.38
+        },
+        {
+          "text": "communicate",
+          "start": 488.38,
+          "end": 488.86
+        },
+        {
+          "text": "before",
+          "start": 488.86,
+          "end": 489.26
+        },
+        {
+          "text": "synchronization",
+          "start": 489.26,
+          "end": 490.04
+        },
+        {
+          "text": "stalls",
+          "start": 490.04,
+          "end": 490.52
+        },
+        {
+          "text": "the",
+          "start": 490.52,
+          "end": 490.8
+        },
+        {
+          "text": "job.",
+          "start": 490.8,
+          "end": 491.12
+        },
+        {
+          "text": "Failures",
+          "start": 491.78,
+          "end": 492.1
+        },
+        {
+          "text": "must",
+          "start": 492.1,
+          "end": 492.38
+        },
+        {
+          "text": "be",
+          "start": 492.38,
+          "end": 492.58
+        },
+        {
+          "text": "expected",
+          "start": 492.58,
+          "end": 493.06
+        },
+        {
+          "text": "at",
+          "start": 493.06,
+          "end": 493.4
+        },
+        {
+          "text": "large",
+          "start": 493.4,
+          "end": 493.7
+        },
+        {
+          "text": "component",
+          "start": 493.7,
+          "end": 494.04
+        },
+        {
+          "text": "counts.",
+          "start": 494.04,
+          "end": 494.58
+        },
+        {
+          "text": "Serving",
+          "start": 495.0,
+          "end": 495.48
+        },
+        {
+          "text": "must",
+          "start": 495.48,
+          "end": 495.78
+        },
+        {
+          "text": "meet",
+          "start": 495.78,
+          "end": 496.08
+        },
+        {
+          "text": "tail",
+          "start": 496.08,
+          "end": 496.38
+        },
+        {
+          "text": "budgets.",
+          "start": 496.38,
+          "end": 496.78
+        },
+        {
+          "text": "Governance",
+          "start": 497.5,
+          "end": 497.84
+        },
+        {
+          "text": "must",
+          "start": 497.84,
+          "end": 498.12
+        },
+        {
+          "text": "be",
+          "start": 498.12,
+          "end": 498.36
+        },
+        {
+          "text": "engineered",
+          "start": 498.36,
+          "end": 498.8
+        },
+        {
+          "text": "into",
+          "start": 498.8,
+          "end": 499.16
+        },
+        {
+          "text": "the",
+          "start": 499.16,
+          "end": 499.32
+        },
+        {
+          "text": "operating",
+          "start": 499.32,
+          "end": 499.74
+        },
+        {
+          "text": "path.",
+          "start": 499.74,
+          "end": 500.1
+        },
+        {
+          "text": "Those",
+          "start": 500.1,
+          "end": 500.9
+        },
+        {
+          "text": "sentences",
+          "start": 500.9,
+          "end": 501.32
+        },
+        {
+          "text": "will",
+          "start": 501.32,
+          "end": 501.78
+        },
+        {
+          "text": "still",
+          "start": 501.78,
+          "end": 502.06
+        },
+        {
+          "text": "be",
+          "start": 502.06,
+          "end": 502.26
+        },
+        {
+          "text": "true",
+          "start": 502.26,
+          "end": 502.56
+        },
+        {
+          "text": "of",
+          "start": 502.56,
+          "end": 502.74
+        },
+        {
+          "text": "accelerators",
+          "start": 502.74,
+          "end": 503.4
+        },
+        {
+          "text": "and",
+          "start": 503.4,
+          "end": 503.64
+        },
+        {
+          "text": "substrates",
+          "start": 503.64,
+          "end": 504.2
+        },
+        {
+          "text": "that",
+          "start": 504.2,
+          "end": 504.62
+        },
+        {
+          "text": "do",
+          "start": 504.62,
+          "end": 504.78
+        },
+        {
+          "text": "not",
+          "start": 504.78,
+          "end": 504.98
+        },
+        {
+          "text": "exist",
+          "start": 504.98,
+          "end": 505.36
+        },
+        {
+          "text": "yet.",
+          "start": 505.36,
+          "end": 505.68
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The chapter ends by looking at where the constraint moves next. Test-time compute first.",
+      "start": 506.25,
+      "end": 512.33,
+      "words": [
+        {
+          "text": "The",
+          "start": 506.3,
+          "end": 506.7
+        },
+        {
+          "text": "chapter",
+          "start": 506.7,
+          "end": 507.0
+        },
+        {
+          "text": "ends",
+          "start": 507.0,
+          "end": 507.44
+        },
+        {
+          "text": "by",
+          "start": 507.44,
+          "end": 507.7
+        },
+        {
+          "text": "looking",
+          "start": 507.7,
+          "end": 507.96
+        },
+        {
+          "text": "at",
+          "start": 507.96,
+          "end": 508.22
+        },
+        {
+          "text": "where",
+          "start": 508.22,
+          "end": 508.36
+        },
+        {
+          "text": "the",
+          "start": 508.36,
+          "end": 508.46
+        },
+        {
+          "text": "constraint",
+          "start": 508.46,
+          "end": 508.88
+        },
+        {
+          "text": "moves",
+          "start": 508.88,
+          "end": 509.26
+        },
+        {
+          "text": "next.",
+          "start": 509.26,
+          "end": 509.68
+        },
+        {
+          "text": "Test",
+          "start": 510.24,
+          "end": 510.4
+        },
+        {
+          "text": "time",
+          "start": 510.4,
+          "end": 510.78
+        },
+        {
+          "text": "compute",
+          "start": 510.78,
+          "end": 511.1
+        },
+        {
+          "text": "first.",
+          "start": 511.1,
+          "end": 511.6
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Reasoning models move part of the scaling curve from the training cluster into the serving path. Longer chains of thought mean more compute per query, which means the serving contract now carries the scaling pressure that used to be training's problem. Cost per query stops being a fixed property of the deployed artifact and becomes a knob the system turns per request.",
+      "start": 512.33,
+      "end": 534.68,
+      "visual": {
+        "src": "/study/vol2/17-conclusion/diagrams/fleet-stack.svg",
+        "title": "The fleet stack",
+        "alt": "Physical substrate, distribution band, serving band, governance band. Each layer supplies the rates and obligations the next inherits."
+      },
+      "words": [
+        {
+          "text": "Reasoning",
+          "start": 512.6,
+          "end": 513.06
+        },
+        {
+          "text": "models",
+          "start": 513.06,
+          "end": 513.38
+        },
+        {
+          "text": "move",
+          "start": 513.38,
+          "end": 513.8
+        },
+        {
+          "text": "part",
+          "start": 513.8,
+          "end": 514.06
+        },
+        {
+          "text": "of",
+          "start": 514.06,
+          "end": 514.16
+        },
+        {
+          "text": "the",
+          "start": 514.16,
+          "end": 514.26
+        },
+        {
+          "text": "scaling",
+          "start": 514.26,
+          "end": 514.56
+        },
+        {
+          "text": "curve",
+          "start": 514.56,
+          "end": 514.92
+        },
+        {
+          "text": "from",
+          "start": 514.92,
+          "end": 515.16
+        },
+        {
+          "text": "the",
+          "start": 515.16,
+          "end": 515.28
+        },
+        {
+          "text": "training",
+          "start": 515.28,
+          "end": 515.54
+        },
+        {
+          "text": "cluster",
+          "start": 515.54,
+          "end": 515.98
+        },
+        {
+          "text": "into",
+          "start": 515.98,
+          "end": 516.6
+        },
+        {
+          "text": "the",
+          "start": 516.6,
+          "end": 516.76
+        },
+        {
+          "text": "serving",
+          "start": 516.76,
+          "end": 517.04
+        },
+        {
+          "text": "path.",
+          "start": 517.04,
+          "end": 517.38
+        },
+        {
+          "text": "Longer",
+          "start": 518.1,
+          "end": 518.54
+        },
+        {
+          "text": "chains",
+          "start": 518.54,
+          "end": 518.86
+        },
+        {
+          "text": "of",
+          "start": 518.86,
+          "end": 519.12
+        },
+        {
+          "text": "thought",
+          "start": 519.12,
+          "end": 519.34
+        },
+        {
+          "text": "mean",
+          "start": 519.34,
+          "end": 519.58
+        },
+        {
+          "text": "more",
+          "start": 519.58,
+          "end": 519.84
+        },
+        {
+          "text": "compute",
+          "start": 519.84,
+          "end": 520.22
+        },
+        {
+          "text": "per",
+          "start": 520.22,
+          "end": 520.44
+        },
+        {
+          "text": "query",
+          "start": 520.44,
+          "end": 520.76
+        },
+        {
+          "text": "which",
+          "start": 520.76,
+          "end": 521.44
+        },
+        {
+          "text": "means",
+          "start": 521.44,
+          "end": 521.78
+        },
+        {
+          "text": "the",
+          "start": 521.78,
+          "end": 522.02
+        },
+        {
+          "text": "serving",
+          "start": 522.02,
+          "end": 522.32
+        },
+        {
+          "text": "contract",
+          "start": 522.32,
+          "end": 522.88
+        },
+        {
+          "text": "now",
+          "start": 522.88,
+          "end": 523.44
+        },
+        {
+          "text": "carries",
+          "start": 523.44,
+          "end": 523.86
+        },
+        {
+          "text": "the",
+          "start": 523.86,
+          "end": 524.06
+        },
+        {
+          "text": "scaling",
+          "start": 524.06,
+          "end": 524.38
+        },
+        {
+          "text": "pressure",
+          "start": 524.38,
+          "end": 524.76
+        },
+        {
+          "text": "that",
+          "start": 524.76,
+          "end": 525.36
+        },
+        {
+          "text": "used",
+          "start": 525.36,
+          "end": 525.62
+        },
+        {
+          "text": "to",
+          "start": 525.62,
+          "end": 525.78
+        },
+        {
+          "text": "be",
+          "start": 525.78,
+          "end": 525.86
+        },
+        {
+          "text": "training's",
+          "start": 525.86,
+          "end": 526.34
+        },
+        {
+          "text": "problem.",
+          "start": 526.34,
+          "end": 526.7
+        },
+        {
+          "text": "Cost",
+          "start": 526.7,
+          "end": 527.64
+        },
+        {
+          "text": "per",
+          "start": 527.64,
+          "end": 527.96
+        },
+        {
+          "text": "query",
+          "start": 527.96,
+          "end": 528.2
+        },
+        {
+          "text": "stops",
+          "start": 528.2,
+          "end": 528.52
+        },
+        {
+          "text": "being",
+          "start": 528.52,
+          "end": 528.88
+        },
+        {
+          "text": "a",
+          "start": 528.88,
+          "end": 529.06
+        },
+        {
+          "text": "fixed",
+          "start": 529.06,
+          "end": 529.32
+        },
+        {
+          "text": "property",
+          "start": 529.32,
+          "end": 529.78
+        },
+        {
+          "text": "of",
+          "start": 529.78,
+          "end": 530.0
+        },
+        {
+          "text": "the",
+          "start": 530.0,
+          "end": 530.12
+        },
+        {
+          "text": "deployed",
+          "start": 530.12,
+          "end": 530.44
+        },
+        {
+          "text": "artifact",
+          "start": 530.44,
+          "end": 530.92
+        },
+        {
+          "text": "and",
+          "start": 530.92,
+          "end": 531.56
+        },
+        {
+          "text": "becomes",
+          "start": 531.56,
+          "end": 531.84
+        },
+        {
+          "text": "a",
+          "start": 531.84,
+          "end": 532.12
+        },
+        {
+          "text": "knob",
+          "start": 532.12,
+          "end": 532.38
+        },
+        {
+          "text": "the",
+          "start": 532.38,
+          "end": 532.6
+        },
+        {
+          "text": "system",
+          "start": 532.6,
+          "end": 532.92
+        },
+        {
+          "text": "turns",
+          "start": 532.92,
+          "end": 533.3
+        },
+        {
+          "text": "per",
+          "start": 533.3,
+          "end": 533.56
+        },
+        {
+          "text": "request.",
+          "start": 533.56,
+          "end": 534.08
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And underneath, the physical layer keeps shifting.",
+      "start": 534.68,
+      "end": 538.25,
+      "words": [
+        {
+          "text": "And",
+          "start": 534.48,
+          "end": 535.16
+        },
+        {
+          "text": "underneath",
+          "start": 535.16,
+          "end": 535.54
+        },
+        {
+          "text": "the",
+          "start": 535.54,
+          "end": 536.08
+        },
+        {
+          "text": "physical",
+          "start": 536.08,
+          "end": 536.4
+        },
+        {
+          "text": "layer",
+          "start": 536.4,
+          "end": 536.76
+        },
+        {
+          "text": "keeps",
+          "start": 536.76,
+          "end": 537.12
+        },
+        {
+          "text": "shifting.",
+          "start": 537.12,
+          "end": 537.58
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Optical interconnect replacing copper inside the fabric, mixture-of-experts routing that makes all-to-all dispatch a per-expert-layer cost, new memory hierarchies. Each one changes the rates in the substrate band. None of them exempts the system from the relationships. Optical links still have bisection bandwidth. Expert routing still pays synchronization. The Fleet Law does not care what carries the bytes.",
+      "start": 538.25,
+      "end": 563.38,
+      "words": [
+        {
+          "text": "Optical",
+          "start": 538.52,
+          "end": 538.96
+        },
+        {
+          "text": "interconnect",
+          "start": 538.96,
+          "end": 539.48
+        },
+        {
+          "text": "replacing",
+          "start": 539.48,
+          "end": 539.96
+        },
+        {
+          "text": "copper",
+          "start": 539.96,
+          "end": 540.42
+        },
+        {
+          "text": "inside",
+          "start": 540.42,
+          "end": 540.94
+        },
+        {
+          "text": "the",
+          "start": 540.94,
+          "end": 541.28
+        },
+        {
+          "text": "fabric",
+          "start": 541.28,
+          "end": 541.66
+        },
+        {
+          "text": "mixture",
+          "start": 541.66,
+          "end": 542.2
+        },
+        {
+          "text": "of",
+          "start": 542.2,
+          "end": 542.4
+        },
+        {
+          "text": "experts",
+          "start": 542.4,
+          "end": 542.7
+        },
+        {
+          "text": "routing",
+          "start": 542.7,
+          "end": 543.08
+        },
+        {
+          "text": "that",
+          "start": 543.08,
+          "end": 543.58
+        },
+        {
+          "text": "makes",
+          "start": 543.58,
+          "end": 543.78
+        },
+        {
+          "text": "all",
+          "start": 543.78,
+          "end": 544.04
+        },
+        {
+          "text": "to",
+          "start": 544.04,
+          "end": 544.22
+        },
+        {
+          "text": "all",
+          "start": 544.22,
+          "end": 544.34
+        },
+        {
+          "text": "dispatch",
+          "start": 544.34,
+          "end": 544.64
+        },
+        {
+          "text": "a",
+          "start": 544.64,
+          "end": 544.98
+        },
+        {
+          "text": "per",
+          "start": 544.98,
+          "end": 545.14
+        },
+        {
+          "text": "expert",
+          "start": 545.14,
+          "end": 545.4
+        },
+        {
+          "text": "layer",
+          "start": 545.4,
+          "end": 545.7
+        },
+        {
+          "text": "cost",
+          "start": 545.7,
+          "end": 546.2
+        },
+        {
+          "text": "new",
+          "start": 546.2,
+          "end": 546.74
+        },
+        {
+          "text": "memory",
+          "start": 546.74,
+          "end": 547.06
+        },
+        {
+          "text": "hierarchies.",
+          "start": 547.06,
+          "end": 547.88
+        },
+        {
+          "text": "Each",
+          "start": 548.3,
+          "end": 548.64
+        },
+        {
+          "text": "one",
+          "start": 548.64,
+          "end": 548.86
+        },
+        {
+          "text": "changes",
+          "start": 548.86,
+          "end": 549.2
+        },
+        {
+          "text": "the",
+          "start": 549.2,
+          "end": 549.46
+        },
+        {
+          "text": "rates",
+          "start": 549.46,
+          "end": 549.72
+        },
+        {
+          "text": "in",
+          "start": 549.72,
+          "end": 549.9
+        },
+        {
+          "text": "the",
+          "start": 549.9,
+          "end": 550.0
+        },
+        {
+          "text": "substrate",
+          "start": 550.0,
+          "end": 550.3
+        },
+        {
+          "text": "band.",
+          "start": 550.3,
+          "end": 550.78
+        },
+        {
+          "text": "None",
+          "start": 551.14,
+          "end": 551.56
+        },
+        {
+          "text": "of",
+          "start": 551.56,
+          "end": 551.68
+        },
+        {
+          "text": "them",
+          "start": 551.68,
+          "end": 551.84
+        },
+        {
+          "text": "exempts",
+          "start": 551.84,
+          "end": 552.28
+        },
+        {
+          "text": "the",
+          "start": 552.28,
+          "end": 552.4
+        },
+        {
+          "text": "system",
+          "start": 552.4,
+          "end": 552.76
+        },
+        {
+          "text": "from",
+          "start": 552.76,
+          "end": 552.96
+        },
+        {
+          "text": "the",
+          "start": 552.96,
+          "end": 553.08
+        },
+        {
+          "text": "relationships.",
+          "start": 553.08,
+          "end": 553.64
+        },
+        {
+          "text": "Optical",
+          "start": 553.64,
+          "end": 554.86
+        },
+        {
+          "text": "links",
+          "start": 554.86,
+          "end": 555.16
+        },
+        {
+          "text": "still",
+          "start": 555.16,
+          "end": 555.54
+        },
+        {
+          "text": "have",
+          "start": 555.54,
+          "end": 555.76
+        },
+        {
+          "text": "bisection",
+          "start": 555.76,
+          "end": 556.3
+        },
+        {
+          "text": "bandwidth.",
+          "start": 556.3,
+          "end": 556.8
+        },
+        {
+          "text": "Expert",
+          "start": 557.34,
+          "end": 557.76
+        },
+        {
+          "text": "routing",
+          "start": 557.76,
+          "end": 558.08
+        },
+        {
+          "text": "still",
+          "start": 558.08,
+          "end": 558.52
+        },
+        {
+          "text": "pays",
+          "start": 558.52,
+          "end": 558.92
+        },
+        {
+          "text": "synchronization.",
+          "start": 558.92,
+          "end": 559.66
+        },
+        {
+          "text": "The",
+          "start": 560.4,
+          "end": 560.46
+        },
+        {
+          "text": "fleet",
+          "start": 560.46,
+          "end": 560.7
+        },
+        {
+          "text": "law",
+          "start": 560.7,
+          "end": 561.0
+        },
+        {
+          "text": "does",
+          "start": 561.0,
+          "end": 561.28
+        },
+        {
+          "text": "not",
+          "start": 561.28,
+          "end": 561.48
+        },
+        {
+          "text": "care",
+          "start": 561.48,
+          "end": 561.82
+        },
+        {
+          "text": "what",
+          "start": 561.82,
+          "end": 562.0
+        },
+        {
+          "text": "carries",
+          "start": 562.0,
+          "end": 562.32
+        },
+        {
+          "text": "the",
+          "start": 562.32,
+          "end": 562.52
+        },
+        {
+          "text": "bytes.",
+          "start": 562.52,
+          "end": 562.8
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "Which is a good place to state the fallacies. Faster model is better system.",
+      "start": 563.38,
+      "end": 569.15,
+      "words": [
+        {
+          "text": "Which",
+          "start": 563.4,
+          "end": 563.88
+        },
+        {
+          "text": "is",
+          "start": 563.88,
+          "end": 564.06
+        },
+        {
+          "text": "a",
+          "start": 564.06,
+          "end": 564.18
+        },
+        {
+          "text": "good",
+          "start": 564.18,
+          "end": 564.38
+        },
+        {
+          "text": "place",
+          "start": 564.38,
+          "end": 564.7
+        },
+        {
+          "text": "to",
+          "start": 564.7,
+          "end": 564.9
+        },
+        {
+          "text": "state",
+          "start": 564.9,
+          "end": 565.12
+        },
+        {
+          "text": "the",
+          "start": 565.12,
+          "end": 565.3
+        },
+        {
+          "text": "fallacies.",
+          "start": 565.3,
+          "end": 565.74
+        },
+        {
+          "text": "Faster",
+          "start": 566.48,
+          "end": 566.76
+        },
+        {
+          "text": "model",
+          "start": 566.76,
+          "end": 567.28
+        },
+        {
+          "text": "is",
+          "start": 567.28,
+          "end": 567.66
+        },
+        {
+          "text": "better",
+          "start": 567.66,
+          "end": 567.96
+        },
+        {
+          "text": "system.",
+          "start": 567.96,
+          "end": 568.46
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "A faster model evaluated outside its serving contract, its data pipeline, and its governance obligations tells you nothing about the system. The fallacy is treating the artifact as the system. Chapter after chapter, the system was the unit: the step, the pipeline, the contract, the fleet.",
+      "start": 569.15,
+      "end": 588.45,
+      "words": [
+        {
+          "text": "A",
+          "start": 569.38,
+          "end": 569.54
+        },
+        {
+          "text": "faster",
+          "start": 569.54,
+          "end": 569.92
+        },
+        {
+          "text": "model",
+          "start": 569.92,
+          "end": 570.34
+        },
+        {
+          "text": "evaluated",
+          "start": 570.34,
+          "end": 570.9
+        },
+        {
+          "text": "outside",
+          "start": 570.9,
+          "end": 571.56
+        },
+        {
+          "text": "its",
+          "start": 571.56,
+          "end": 571.92
+        },
+        {
+          "text": "serving",
+          "start": 571.92,
+          "end": 572.24
+        },
+        {
+          "text": "contract,",
+          "start": 572.24,
+          "end": 572.76
+        },
+        {
+          "text": "its",
+          "start": 573.26,
+          "end": 573.42
+        },
+        {
+          "text": "data",
+          "start": 573.42,
+          "end": 573.7
+        },
+        {
+          "text": "pipeline",
+          "start": 573.7,
+          "end": 574.12
+        },
+        {
+          "text": "and",
+          "start": 574.12,
+          "end": 574.76
+        },
+        {
+          "text": "its",
+          "start": 574.76,
+          "end": 574.9
+        },
+        {
+          "text": "governance",
+          "start": 574.9,
+          "end": 575.22
+        },
+        {
+          "text": "obligations",
+          "start": 575.22,
+          "end": 575.88
+        },
+        {
+          "text": "tells",
+          "start": 575.88,
+          "end": 576.4
+        },
+        {
+          "text": "you",
+          "start": 576.4,
+          "end": 576.6
+        },
+        {
+          "text": "nothing",
+          "start": 576.6,
+          "end": 576.9
+        },
+        {
+          "text": "about",
+          "start": 576.9,
+          "end": 577.24
+        },
+        {
+          "text": "the",
+          "start": 577.24,
+          "end": 577.44
+        },
+        {
+          "text": "system.",
+          "start": 577.44,
+          "end": 577.72
+        },
+        {
+          "text": "The",
+          "start": 578.42,
+          "end": 578.56
+        },
+        {
+          "text": "fallacy",
+          "start": 578.56,
+          "end": 578.96
+        },
+        {
+          "text": "is",
+          "start": 578.96,
+          "end": 579.26
+        },
+        {
+          "text": "treating",
+          "start": 579.26,
+          "end": 579.52
+        },
+        {
+          "text": "the",
+          "start": 579.52,
+          "end": 579.76
+        },
+        {
+          "text": "artifact",
+          "start": 579.76,
+          "end": 580.1
+        },
+        {
+          "text": "as",
+          "start": 580.1,
+          "end": 580.52
+        },
+        {
+          "text": "the",
+          "start": 580.52,
+          "end": 580.66
+        },
+        {
+          "text": "system.",
+          "start": 580.66,
+          "end": 580.96
+        },
+        {
+          "text": "Chapter",
+          "start": 580.96,
+          "end": 581.98
+        },
+        {
+          "text": "after",
+          "start": 581.98,
+          "end": 582.4
+        },
+        {
+          "text": "chapter",
+          "start": 582.4,
+          "end": 582.84
+        },
+        {
+          "text": "the",
+          "start": 582.84,
+          "end": 583.24
+        },
+        {
+          "text": "system",
+          "start": 583.24,
+          "end": 583.58
+        },
+        {
+          "text": "was",
+          "start": 583.58,
+          "end": 583.88
+        },
+        {
+          "text": "the",
+          "start": 583.88,
+          "end": 584.04
+        },
+        {
+          "text": "unit.",
+          "start": 584.04,
+          "end": 584.3
+        },
+        {
+          "text": "The",
+          "start": 584.78,
+          "end": 585.08
+        },
+        {
+          "text": "step,",
+          "start": 585.08,
+          "end": 585.4
+        },
+        {
+          "text": "the",
+          "start": 585.82,
+          "end": 585.86
+        },
+        {
+          "text": "pipeline,",
+          "start": 585.86,
+          "end": 586.26
+        },
+        {
+          "text": "the",
+          "start": 586.64,
+          "end": 586.68
+        },
+        {
+          "text": "contract,",
+          "start": 586.68,
+          "end": 587.06
+        },
+        {
+          "text": "the",
+          "start": 587.54,
+          "end": 587.6
+        },
+        {
+          "text": "fleet.",
+          "start": 587.6,
+          "end": 587.84
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "The second one: fleet lessons are tied to today's hardware.",
+      "start": 588.45,
+      "end": 593.03,
+      "words": [
+        {
+          "text": "The",
+          "start": 588.66,
+          "end": 588.94
+        },
+        {
+          "text": "second",
+          "start": 588.94,
+          "end": 589.2
+        },
+        {
+          "text": "one.",
+          "start": 589.2,
+          "end": 589.5
+        },
+        {
+          "text": "Fleet",
+          "start": 590.06,
+          "end": 590.18
+        },
+        {
+          "text": "lessons",
+          "start": 590.18,
+          "end": 590.54
+        },
+        {
+          "text": "are",
+          "start": 590.54,
+          "end": 590.82
+        },
+        {
+          "text": "tied",
+          "start": 590.82,
+          "end": 591.16
+        },
+        {
+          "text": "to",
+          "start": 591.16,
+          "end": 591.38
+        },
+        {
+          "text": "today's",
+          "start": 591.38,
+          "end": 591.84
+        },
+        {
+          "text": "hardware.",
+          "start": 591.84,
+          "end": 592.28
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The half-life concern. It is true that specific tuning parameters expire. But the arithmetic structures, the roofline, the scaling decomposition, the failure statistics, the tail probabilities, are hardware-independent facts about computation, communication, and component count. They will outlive every device currently in a datacenter.",
+      "start": 593.03,
+      "end": 614.45,
+      "words": [
+        {
+          "text": "The",
+          "start": 593.26,
+          "end": 593.42
+        },
+        {
+          "text": "half",
+          "start": 593.42,
+          "end": 593.64
+        },
+        {
+          "text": "life",
+          "start": 593.64,
+          "end": 593.8
+        },
+        {
+          "text": "concern.",
+          "start": 593.8,
+          "end": 594.24
+        },
+        {
+          "text": "It",
+          "start": 594.9,
+          "end": 595.02
+        },
+        {
+          "text": "is",
+          "start": 595.02,
+          "end": 595.14
+        },
+        {
+          "text": "true",
+          "start": 595.14,
+          "end": 595.46
+        },
+        {
+          "text": "that",
+          "start": 595.46,
+          "end": 595.72
+        },
+        {
+          "text": "specific",
+          "start": 595.72,
+          "end": 596.1
+        },
+        {
+          "text": "tuning",
+          "start": 596.1,
+          "end": 596.48
+        },
+        {
+          "text": "parameters",
+          "start": 596.48,
+          "end": 596.96
+        },
+        {
+          "text": "expire.",
+          "start": 596.96,
+          "end": 597.62
+        },
+        {
+          "text": "But",
+          "start": 598.24,
+          "end": 598.48
+        },
+        {
+          "text": "the",
+          "start": 598.48,
+          "end": 598.6
+        },
+        {
+          "text": "arithmetic",
+          "start": 598.6,
+          "end": 598.94
+        },
+        {
+          "text": "structures,",
+          "start": 598.94,
+          "end": 599.48
+        },
+        {
+          "text": "the",
+          "start": 600.06,
+          "end": 600.14
+        },
+        {
+          "text": "roofline,",
+          "start": 600.14,
+          "end": 600.6
+        },
+        {
+          "text": "the",
+          "start": 600.9,
+          "end": 600.96
+        },
+        {
+          "text": "scaling",
+          "start": 600.96,
+          "end": 601.32
+        },
+        {
+          "text": "decomposition,",
+          "start": 601.32,
+          "end": 601.84
+        },
+        {
+          "text": "the",
+          "start": 602.58,
+          "end": 602.7
+        },
+        {
+          "text": "failure",
+          "start": 602.7,
+          "end": 603.06
+        },
+        {
+          "text": "statistics,",
+          "start": 603.06,
+          "end": 603.64
+        },
+        {
+          "text": "the",
+          "start": 604.18,
+          "end": 604.22
+        },
+        {
+          "text": "tail",
+          "start": 604.22,
+          "end": 604.44
+        },
+        {
+          "text": "probabilities",
+          "start": 604.44,
+          "end": 604.96
+        },
+        {
+          "text": "are",
+          "start": 604.96,
+          "end": 605.56
+        },
+        {
+          "text": "hardware",
+          "start": 605.56,
+          "end": 606.04
+        },
+        {
+          "text": "independent",
+          "start": 606.04,
+          "end": 606.38
+        },
+        {
+          "text": "facts",
+          "start": 606.38,
+          "end": 606.98
+        },
+        {
+          "text": "about",
+          "start": 606.98,
+          "end": 607.38
+        },
+        {
+          "text": "computation,",
+          "start": 607.38,
+          "end": 608.06
+        },
+        {
+          "text": "communication",
+          "start": 608.6,
+          "end": 609.04
+        },
+        {
+          "text": "and",
+          "start": 609.04,
+          "end": 609.76
+        },
+        {
+          "text": "component",
+          "start": 609.76,
+          "end": 610.12
+        },
+        {
+          "text": "count.",
+          "start": 610.12,
+          "end": 610.48
+        },
+        {
+          "text": "They",
+          "start": 610.48,
+          "end": 611.32
+        },
+        {
+          "text": "will",
+          "start": 611.32,
+          "end": 611.46
+        },
+        {
+          "text": "outlive",
+          "start": 611.46,
+          "end": 611.74
+        },
+        {
+          "text": "every",
+          "start": 611.74,
+          "end": 612.08
+        },
+        {
+          "text": "device",
+          "start": 612.08,
+          "end": 612.48
+        },
+        {
+          "text": "currently",
+          "start": 612.48,
+          "end": 613.0
+        },
+        {
+          "text": "in",
+          "start": 613.0,
+          "end": 613.18
+        },
+        {
+          "text": "a",
+          "start": 613.18,
+          "end": 613.3
+        },
+        {
+          "text": "data",
+          "start": 613.3,
+          "end": 613.46
+        },
+        {
+          "text": "center.",
+          "start": 613.46,
+          "end": 613.8
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "And governance as external review.",
+      "start": 614.45,
+      "end": 617.6,
+      "words": [
+        {
+          "text": "And",
+          "start": 614.54,
+          "end": 614.98
+        },
+        {
+          "text": "governance",
+          "start": 614.98,
+          "end": 615.38
+        },
+        {
+          "text": "as",
+          "start": 615.38,
+          "end": 615.9
+        },
+        {
+          "text": "external",
+          "start": 615.9,
+          "end": 616.38
+        },
+        {
+          "text": "review.",
+          "start": 616.38,
+          "end": 616.88
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The last fallacy, and in some ways the expensive one. Review bolted on after the fact produces the retrofits the responsible AI chapter priced: evidence reconstructed at audit time, accountability assigned after incidents. The conclusion's position is that governance is a band of the stack, engineered into the operating path, with the same rigor as the fabric or the checkpoint schedule.",
+      "start": 617.6,
+      "end": 642.38,
+      "words": [
+        {
+          "text": "The",
+          "start": 617.68,
+          "end": 617.98
+        },
+        {
+          "text": "last",
+          "start": 617.98,
+          "end": 618.26
+        },
+        {
+          "text": "fallacy",
+          "start": 618.26,
+          "end": 618.7
+        },
+        {
+          "text": "and",
+          "start": 618.7,
+          "end": 619.26
+        },
+        {
+          "text": "in",
+          "start": 619.26,
+          "end": 619.38
+        },
+        {
+          "text": "some",
+          "start": 619.38,
+          "end": 619.6
+        },
+        {
+          "text": "ways",
+          "start": 619.6,
+          "end": 619.9
+        },
+        {
+          "text": "the",
+          "start": 619.9,
+          "end": 620.16
+        },
+        {
+          "text": "expensive",
+          "start": 620.16,
+          "end": 620.64
+        },
+        {
+          "text": "one.",
+          "start": 620.64,
+          "end": 620.98
+        },
+        {
+          "text": "Review",
+          "start": 621.66,
+          "end": 621.94
+        },
+        {
+          "text": "bolted",
+          "start": 621.94,
+          "end": 622.44
+        },
+        {
+          "text": "on",
+          "start": 622.44,
+          "end": 622.6
+        },
+        {
+          "text": "after",
+          "start": 622.6,
+          "end": 622.92
+        },
+        {
+          "text": "the",
+          "start": 622.92,
+          "end": 623.06
+        },
+        {
+          "text": "fact",
+          "start": 623.06,
+          "end": 623.34
+        },
+        {
+          "text": "produces",
+          "start": 623.34,
+          "end": 623.76
+        },
+        {
+          "text": "the",
+          "start": 623.76,
+          "end": 624.06
+        },
+        {
+          "text": "retrofits",
+          "start": 624.06,
+          "end": 624.56
+        },
+        {
+          "text": "the",
+          "start": 624.56,
+          "end": 624.76
+        },
+        {
+          "text": "responsible",
+          "start": 624.76,
+          "end": 625.18
+        },
+        {
+          "text": "AI",
+          "start": 625.18,
+          "end": 625.72
+        },
+        {
+          "text": "chapter",
+          "start": 625.72,
+          "end": 626.18
+        },
+        {
+          "text": "priced.",
+          "start": 626.18,
+          "end": 626.7
+        },
+        {
+          "text": "Evidence",
+          "start": 627.22,
+          "end": 627.64
+        },
+        {
+          "text": "reconstructed",
+          "start": 627.64,
+          "end": 628.6
+        },
+        {
+          "text": "at",
+          "start": 628.6,
+          "end": 628.7
+        },
+        {
+          "text": "audit",
+          "start": 628.7,
+          "end": 628.98
+        },
+        {
+          "text": "time.",
+          "start": 628.98,
+          "end": 629.42
+        },
+        {
+          "text": "Accountability",
+          "start": 629.84,
+          "end": 630.52
+        },
+        {
+          "text": "assigned",
+          "start": 630.52,
+          "end": 631.02
+        },
+        {
+          "text": "after",
+          "start": 631.02,
+          "end": 631.46
+        },
+        {
+          "text": "incidents.",
+          "start": 631.46,
+          "end": 631.84
+        },
+        {
+          "text": "The",
+          "start": 632.66,
+          "end": 632.82
+        },
+        {
+          "text": "conclusions",
+          "start": 632.82,
+          "end": 633.22
+        },
+        {
+          "text": "position",
+          "start": 633.22,
+          "end": 633.78
+        },
+        {
+          "text": "is",
+          "start": 633.78,
+          "end": 634.16
+        },
+        {
+          "text": "that",
+          "start": 634.16,
+          "end": 634.32
+        },
+        {
+          "text": "governance",
+          "start": 634.32,
+          "end": 634.68
+        },
+        {
+          "text": "is",
+          "start": 634.68,
+          "end": 635.06
+        },
+        {
+          "text": "a",
+          "start": 635.06,
+          "end": 635.16
+        },
+        {
+          "text": "band",
+          "start": 635.16,
+          "end": 635.4
+        },
+        {
+          "text": "of",
+          "start": 635.4,
+          "end": 635.56
+        },
+        {
+          "text": "the",
+          "start": 635.56,
+          "end": 635.66
+        },
+        {
+          "text": "stack",
+          "start": 635.66,
+          "end": 636.04
+        },
+        {
+          "text": "engineered",
+          "start": 636.04,
+          "end": 636.8
+        },
+        {
+          "text": "into",
+          "start": 636.8,
+          "end": 637.26
+        },
+        {
+          "text": "the",
+          "start": 637.26,
+          "end": 637.42
+        },
+        {
+          "text": "operating",
+          "start": 637.42,
+          "end": 637.84
+        },
+        {
+          "text": "path",
+          "start": 637.84,
+          "end": 638.32
+        },
+        {
+          "text": "with",
+          "start": 638.32,
+          "end": 638.8
+        },
+        {
+          "text": "the",
+          "start": 638.8,
+          "end": 638.94
+        },
+        {
+          "text": "same",
+          "start": 638.94,
+          "end": 639.24
+        },
+        {
+          "text": "rigor",
+          "start": 639.24,
+          "end": 639.52
+        },
+        {
+          "text": "as",
+          "start": 639.52,
+          "end": 639.84
+        },
+        {
+          "text": "the",
+          "start": 639.84,
+          "end": 639.98
+        },
+        {
+          "text": "fabric,",
+          "start": 639.98,
+          "end": 640.34
+        },
+        {
+          "text": "the",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "fabric,",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "the",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "fabric,",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "the",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "fabric,",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "the",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "fabric,",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "the",
+          "start": 640.46,
+          "end": 640.46
+        },
+        {
+          "text": "material.",
+          "start": 640.46,
+          "end": 640.46
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "So where does the volume leave the reader? The final synthesis.",
+      "start": 642.38,
+      "end": 646.95,
+      "words": [
+        {
+          "text": "The",
+          "start": 646.36,
+          "end": 646.96
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "The scale moment, I think. The recognition that machine learning at fleet scale is a systems discipline in the classical sense: rates, probabilities, contracts, obligations, all interacting. The six principles are the curriculum of that discipline. And the volume's wager is that a reader who internalizes them can walk up to a system they have never seen, built on hardware that did not exist when this was written, and know which questions to ask first.",
+      "start": 646.95,
+      "end": 673.58,
+      "words": [
+        {
+          "text": "scale",
+          "start": 646.96,
+          "end": 647.56
+        },
+        {
+          "text": "moment,",
+          "start": 647.56,
+          "end": 647.88
+        },
+        {
+          "text": "I",
+          "start": 648.08,
+          "end": 648.18
+        },
+        {
+          "text": "think.",
+          "start": 648.18,
+          "end": 648.4
+        },
+        {
+          "text": "The",
+          "start": 649.0,
+          "end": 649.14
+        },
+        {
+          "text": "recognition",
+          "start": 649.14,
+          "end": 649.5
+        },
+        {
+          "text": "that",
+          "start": 649.5,
+          "end": 649.86
+        },
+        {
+          "text": "machine",
+          "start": 649.86,
+          "end": 650.14
+        },
+        {
+          "text": "learning",
+          "start": 650.14,
+          "end": 650.48
+        },
+        {
+          "text": "at",
+          "start": 650.48,
+          "end": 650.68
+        },
+        {
+          "text": "fleet",
+          "start": 650.68,
+          "end": 650.88
+        },
+        {
+          "text": "scale",
+          "start": 650.88,
+          "end": 651.22
+        },
+        {
+          "text": "is",
+          "start": 651.22,
+          "end": 651.58
+        },
+        {
+          "text": "a",
+          "start": 651.58,
+          "end": 651.72
+        },
+        {
+          "text": "systems",
+          "start": 651.72,
+          "end": 651.94
+        },
+        {
+          "text": "discipline",
+          "start": 651.94,
+          "end": 652.46
+        },
+        {
+          "text": "in",
+          "start": 652.46,
+          "end": 652.68
+        },
+        {
+          "text": "the",
+          "start": 652.68,
+          "end": 652.78
+        },
+        {
+          "text": "classical",
+          "start": 652.78,
+          "end": 653.1
+        },
+        {
+          "text": "sense.",
+          "start": 653.1,
+          "end": 653.54
+        },
+        {
+          "text": "Rates,",
+          "start": 654.14,
+          "end": 654.52
+        },
+        {
+          "text": "probabilities,",
+          "start": 654.88,
+          "end": 655.26
+        },
+        {
+          "text": "contracts,",
+          "start": 655.78,
+          "end": 656.14
+        },
+        {
+          "text": "obligations,",
+          "start": 656.6,
+          "end": 657.04
+        },
+        {
+          "text": "all",
+          "start": 657.54,
+          "end": 657.72
+        },
+        {
+          "text": "interacting.",
+          "start": 657.72,
+          "end": 658.2
+        },
+        {
+          "text": "The",
+          "start": 658.96,
+          "end": 659.1
+        },
+        {
+          "text": "six",
+          "start": 659.1,
+          "end": 659.32
+        },
+        {
+          "text": "principles",
+          "start": 659.32,
+          "end": 659.76
+        },
+        {
+          "text": "are",
+          "start": 659.76,
+          "end": 660.08
+        },
+        {
+          "text": "the",
+          "start": 660.08,
+          "end": 660.16
+        },
+        {
+          "text": "curriculum",
+          "start": 660.16,
+          "end": 660.58
+        },
+        {
+          "text": "of",
+          "start": 660.58,
+          "end": 660.82
+        },
+        {
+          "text": "that",
+          "start": 660.82,
+          "end": 661.02
+        },
+        {
+          "text": "discipline.",
+          "start": 661.02,
+          "end": 661.44
+        },
+        {
+          "text": "And",
+          "start": 661.98,
+          "end": 662.22
+        },
+        {
+          "text": "the",
+          "start": 662.22,
+          "end": 662.32
+        },
+        {
+          "text": "volumes",
+          "start": 662.32,
+          "end": 662.64
+        },
+        {
+          "text": "wager",
+          "start": 662.64,
+          "end": 663.04
+        },
+        {
+          "text": "is",
+          "start": 663.04,
+          "end": 663.3
+        },
+        {
+          "text": "that",
+          "start": 663.3,
+          "end": 663.46
+        },
+        {
+          "text": "a",
+          "start": 663.46,
+          "end": 663.58
+        },
+        {
+          "text": "reader",
+          "start": 663.58,
+          "end": 663.76
+        },
+        {
+          "text": "who",
+          "start": 663.76,
+          "end": 664.04
+        },
+        {
+          "text": "internalizes",
+          "start": 664.04,
+          "end": 664.76
+        },
+        {
+          "text": "them",
+          "start": 664.76,
+          "end": 665.06
+        },
+        {
+          "text": "can",
+          "start": 665.06,
+          "end": 665.3
+        },
+        {
+          "text": "walk",
+          "start": 665.3,
+          "end": 665.56
+        },
+        {
+          "text": "up",
+          "start": 665.56,
+          "end": 665.74
+        },
+        {
+          "text": "to",
+          "start": 665.74,
+          "end": 665.82
+        },
+        {
+          "text": "a",
+          "start": 665.82,
+          "end": 665.94
+        },
+        {
+          "text": "system",
+          "start": 665.94,
+          "end": 666.24
+        },
+        {
+          "text": "they",
+          "start": 666.24,
+          "end": 666.56
+        },
+        {
+          "text": "have",
+          "start": 666.56,
+          "end": 666.76
+        },
+        {
+          "text": "never",
+          "start": 666.76,
+          "end": 667.04
+        },
+        {
+          "text": "seen,",
+          "start": 667.04,
+          "end": 667.54
+        },
+        {
+          "text": "built",
+          "start": 667.9,
+          "end": 668.18
+        },
+        {
+          "text": "on",
+          "start": 668.18,
+          "end": 668.4
+        },
+        {
+          "text": "hardware",
+          "start": 668.4,
+          "end": 668.76
+        },
+        {
+          "text": "that",
+          "start": 668.76,
+          "end": 669.06
+        },
+        {
+          "text": "did",
+          "start": 669.06,
+          "end": 669.22
+        },
+        {
+          "text": "not",
+          "start": 669.22,
+          "end": 669.4
+        },
+        {
+          "text": "exist",
+          "start": 669.4,
+          "end": 669.84
+        },
+        {
+          "text": "when",
+          "start": 669.84,
+          "end": 670.08
+        },
+        {
+          "text": "this",
+          "start": 670.08,
+          "end": 670.26
+        },
+        {
+          "text": "was",
+          "start": 670.26,
+          "end": 670.44
+        },
+        {
+          "text": "written.",
+          "start": 670.44,
+          "end": 670.44
+        },
+        {
+          "text": "And",
+          "start": 670.44,
+          "end": 670.92
+        },
+        {
+          "text": "know",
+          "start": 670.92,
+          "end": 671.48
+        },
+        {
+          "text": "which",
+          "start": 671.48,
+          "end": 671.74
+        },
+        {
+          "text": "questions",
+          "start": 671.74,
+          "end": 672.16
+        },
+        {
+          "text": "to",
+          "start": 672.16,
+          "end": 672.42
+        },
+        {
+          "text": "ask",
+          "start": 672.42,
+          "end": 672.64
+        },
+        {
+          "text": "first.",
+          "start": 672.64,
+          "end": 672.88
+        }
+      ]
+    },
+    {
+      "speaker": "A",
+      "text": "What is possible, what is the bottleneck, how do we recover, what reaches the user in time, who is affected, and what does it cost.",
+      "start": 673.58,
+      "end": 682.93,
+      "words": [
+        {
+          "text": "What",
+          "start": 673.66,
+          "end": 674.1
+        },
+        {
+          "text": "is",
+          "start": 674.1,
+          "end": 674.24
+        },
+        {
+          "text": "possible?",
+          "start": 674.24,
+          "end": 674.78
+        },
+        {
+          "text": "What",
+          "start": 675.34,
+          "end": 675.42
+        },
+        {
+          "text": "is",
+          "start": 675.42,
+          "end": 675.58
+        },
+        {
+          "text": "the",
+          "start": 675.58,
+          "end": 675.74
+        },
+        {
+          "text": "bottleneck?",
+          "start": 675.74,
+          "end": 676.44
+        },
+        {
+          "text": "How",
+          "start": 676.66,
+          "end": 676.78
+        },
+        {
+          "text": "do",
+          "start": 676.78,
+          "end": 676.96
+        },
+        {
+          "text": "we",
+          "start": 676.96,
+          "end": 677.18
+        },
+        {
+          "text": "recover?",
+          "start": 677.18,
+          "end": 677.64
+        },
+        {
+          "text": "What",
+          "start": 678.14,
+          "end": 678.32
+        },
+        {
+          "text": "reaches",
+          "start": 678.32,
+          "end": 678.68
+        },
+        {
+          "text": "the",
+          "start": 678.68,
+          "end": 678.94
+        },
+        {
+          "text": "user",
+          "start": 678.94,
+          "end": 679.24
+        },
+        {
+          "text": "in",
+          "start": 679.24,
+          "end": 679.5
+        },
+        {
+          "text": "time",
+          "start": 679.5,
+          "end": 679.86
+        },
+        {
+          "text": "who",
+          "start": 679.86,
+          "end": 680.12
+        },
+        {
+          "text": "is",
+          "start": 680.12,
+          "end": 680.26
+        },
+        {
+          "text": "affected?",
+          "start": 680.26,
+          "end": 680.7
+        },
+        {
+          "text": "And",
+          "start": 681.14,
+          "end": 681.3
+        },
+        {
+          "text": "what",
+          "start": 681.3,
+          "end": 681.46
+        },
+        {
+          "text": "does",
+          "start": 681.46,
+          "end": 681.68
+        },
+        {
+          "text": "it",
+          "start": 681.68,
+          "end": 681.8
+        },
+        {
+          "text": "cost?",
+          "start": 681.8,
+          "end": 682.12
+        }
+      ]
+    },
+    {
+      "speaker": "B",
+      "text": "Six questions. The rest of the volume was the machinery for answering them. That is the conclusion.",
+      "start": 682.93,
+      "end": 689.43,
+      "words": [
+        {
+          "text": "Six",
+          "start": 683.06,
+          "end": 683.42
+        },
+        {
+          "text": "questions.",
+          "start": 683.42,
+          "end": 683.88
+        },
+        {
+          "text": "The",
+          "start": 684.5,
+          "end": 684.62
+        },
+        {
+          "text": "rest",
+          "start": 684.62,
+          "end": 684.86
+        },
+        {
+          "text": "of",
+          "start": 684.86,
+          "end": 685.0
+        },
+        {
+          "text": "the",
+          "start": 685.0,
+          "end": 685.08
+        },
+        {
+          "text": "volume",
+          "start": 685.08,
+          "end": 685.48
+        },
+        {
+          "text": "was",
+          "start": 685.48,
+          "end": 685.74
+        },
+        {
+          "text": "the",
+          "start": 685.74,
+          "end": 685.88
+        },
+        {
+          "text": "machinery",
+          "start": 685.88,
+          "end": 686.3
+        },
+        {
+          "text": "for",
+          "start": 686.3,
+          "end": 686.58
+        },
+        {
+          "text": "answering",
+          "start": 686.58,
+          "end": 687.0
+        },
+        {
+          "text": "them.",
+          "start": 687.0,
+          "end": 687.28
+        },
+        {
+          "text": "That",
+          "start": 687.7,
+          "end": 688.0
+        },
+        {
+          "text": "is",
+          "start": 688.0,
+          "end": 688.22
+        },
+        {
+          "text": "the",
+          "start": 688.22,
+          "end": 688.34
+        },
+        {
+          "text": "conclusion.",
+          "start": 688.34,
+          "end": 688.68
+        }
+      ]
+    }
+  ]
+}

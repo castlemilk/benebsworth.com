@@ -16,7 +16,7 @@ tasks:
       - task: unit
 
   unit:
-    desc: Vitest unit suite (node environment, no build required)
+    desc: Unit suites for the site and diagram coverage checker (no build required)
     summary: |
       `vitest run` over {components,lib,app}/**/*.{test,spec}.{ts,tsx}.
 
@@ -31,6 +31,7 @@ tasks:
 
       The `@/...` alias is mirrored from tsconfig in vitest.config.ts.
     cmds:
+      - node --test scripts/check-diagram-coverage.test.mjs scripts/study-engine/*.test.mjs
       - task: ':build:gen:grounded'
       - '{{.BIN}}/vitest run'
 

@@ -1,0 +1,83 @@
+{
+  "source": "packet.md",
+  "sections": {
+    "Thesis": {
+      "proseOnly": "State the selection question and why the optimistic floor is a prediction to test."
+    },
+    "Anatomy of an Accelerator": {
+      "figure": "::chart[request-ceiling]",
+      "teaches": "Calculate the end-to-end gain when only a serial projection is accelerated.",
+      "source": "Book Anatomy: Amdahl’s law. Times and intervention are illustrative."
+    },
+    "Hardware Specialization": {
+      "figure": "::fig[hardware-contract]",
+      "teaches": "Trace which contract conditions make a specialised path usable.",
+      "source": "Book Hardware Specialization and accelerator anatomy; original decision path."
+    },
+    "Compute Primitives": {
+      "figure": "::fig[primitive-routing]",
+      "teaches": "Match projection, normalization and exponential work to different execution units.",
+      "source": "Book Compute Primitives; schematic operations are illustrative."
+    },
+    "Compute Units": {
+      "figure": "::fig[local-reuse]",
+      "teaches": "Trace one stationary weight through two independent products and accumulations.",
+      "source": "Book Compute Units: systolic arrays and dataflow. Single-cell example is original."
+    },
+    "Memory Systems": {
+      "figure": "::fig[traffic-boundaries]",
+      "teaches": "Identify the interface on which bytes and energy are counted.",
+      "source": "Book Memory Systems; the transaction counts are illustrative."
+    },
+    "Performance Bounds: Which Machine Wins?": {
+      "figure": "::fig[device-rooflines]",
+      "teaches": "Distinguish each device ridge from their 100 FLOP/byte crossover, then predict which ceiling is higher.",
+      "source": "Book Performance Bounds; the two devices, projection and ideal ceilings are illustrative."
+    },
+    "Hardware Mapping": {
+      "figure": "::fig[tile-budget]",
+      "teaches": "Add the live FP16 operand tiles and FP32 accumulation tile against SRAM capacity.",
+      "source": "Book Hardware Mapping tile-capacity model; all dimensions and capacity are illustrative."
+    },
+    "Compilers and Runtimes": {
+      "figure": "::fig[compile-path]",
+      "teaches": "Follow a graph through kernel selection and check what actually executes.",
+      "source": "Book Compilers and Runtimes; the fallback trace is illustrative."
+    },
+    "Beyond One Accelerator": {
+      "figure": "::fig[partition-boundary]",
+      "teaches": "Decide whether exposed transfer erases the compute saved by a second accelerator.",
+      "source": "Book Beyond One Accelerator; timings are illustrative serial critical-path numbers."
+    },
+    "Heterogeneous SoC Design": {
+      "figure": "::fig[soc-budget]",
+      "teaches": "Explain why shared physical memory does not eliminate contention or conversion.",
+      "source": "Book Heterogeneous SoC Design; scenario and resource limits are illustrative."
+    },
+    "Choosing an Accelerator": {
+      "figure": "::chart[energy-per-result]",
+      "teaches": "Compare system energy per completed result at sustained throughput.",
+      "source": "Book Choosing an Accelerator; system power and rates are illustrative."
+    },
+    "Fallacies and Pitfalls": {
+      "figure": "::fig[diagnostic-order]",
+      "teaches": "Choose the next experiment after locating the time and resource constraint.",
+      "source": "Book Fallacies and Pitfalls; diagnostic order adapted to the example."
+    },
+    "Summary": {
+      "proseOnly": "Return to the opening comparison and state the condition that changes the answer."
+    },
+    "The physics": {
+      "proseOnly": "Collect assumptions, units and the numerical bounds for quick reference."
+    },
+    "Glossary": {
+      "proseOnly": "Offer searchable definitions for terms introduced alongside the figures."
+    },
+    "→ Ben's world": {
+      "proseOnly": "Transfer the measurement boundary to projects in Ben’s stack."
+    },
+    "Open questions": {
+      "proseOnly": "Carry unresolved target-specific measurements into review."
+    }
+  }
+}

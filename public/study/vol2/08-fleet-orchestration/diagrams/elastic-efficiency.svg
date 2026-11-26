@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="elastic-efficiency" class="study-fig-fit" viewBox="0 0 380 300" role="img" aria-labelledby="ee-title ee-desc">
+  <title id="ee-title">Scaling efficiency regimes</title>
+  <desc id="ee-desc">Scaling efficiency against worker count for the 175B reference job in 64-GPU replica steps. The curve hugs ideal through the near-linear regime, bends away in the sublinear regime, and flattens in saturation, while throughput still rises at every step. The pipeline bubble is the growing loss term at the top.</desc>
+  <style>
+    .dark #elastic-efficiency { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 }
+    @media (prefers-color-scheme: dark) { svg:root#elastic-efficiency { --fig-paper:#252a27; --fig-ink:#efece1; --fig-mark:#ffab7c; --fig-outline:#acd4d6; --fig-rule:#93a094 } }
+  </style>
+  <rect width="380" height="300" rx="8" fill="var(--fig-paper, #f7f3e9)"/>
+  <g font-family="system-ui, sans-serif" fill="var(--fig-ink, #252923)">
+    <text x="20" y="28" font-size="19" font-weight="650">Efficiency is a curve, not a constant</text>
+    <text x="20" y="45" font-size="11" fill="var(--fig-rule, #6e6a5b)">175B reference · 64-GPU replicas · fixed batch · schematic</text>
+
+    <!-- axes: plot x 56..352, y 62..238 ; x positions for 64,128,256,512,1024,2048 = log2 spacing -->
+    <!-- log2(64)=6 .. log2(2048)=11 ; x = 56 + (log2n - 6) * 59.2 -->
+    <!-- regime bands -->
+    <rect x="56" y="62" width="114" height="176" fill="var(--fig-outline, #364c50)" opacity="0.08"/>
+    <rect x="170" y="62" width="96" height="176" fill="var(--fig-outline, #364c50)" opacity="0.16"/>
+    <rect x="266" y="62" width="86" height="176" fill="var(--fig-mark, #b4571f)" opacity="0.10"/>
+    <text x="113" y="76" font-size="8.5" text-anchor="middle" font-weight="650" fill="var(--fig-outline, #364c50)">near-linear</text>
+    <text x="218" y="76" font-size="8.5" text-anchor="middle" font-weight="650" fill="var(--fig-outline, #364c50)">sublinear</text>
+    <text x="309" y="76" font-size="8.5" text-anchor="middle" font-weight="650" fill="var(--fig-mark, #b4571f)">saturated</text>
+
+    <!-- ideal 100% dashed line -->
+    <line x1="56" x2="352" y1="88" y2="88" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.9" stroke-dasharray="4 3"/>
+    <text x="58" y="85" font-size="7.5" fill="var(--fig-rule, #6e6a5b)">ideal 100%</text>
+
+    <!-- axes -->
+    <line x1="56" x2="352" y1="238" y2="238" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.9"/>
+    <line x1="56" x2="56" y1="62" y2="238" stroke="var(--fig-rule, #6e6a5b)" stroke-width="0.9"/>
+    <text x="46" y="92" font-size="7.5" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">100%</text>
+    <text x="46" y="163" font-size="7.5" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">efficiency</text>
+    <text x="46" y="234" font-size="7.5" text-anchor="end" fill="var(--fig-rule, #6e6a5b)">0%</text>
+
+    <!-- efficiency curve: points at x=86(64), 145(128), 204(256), 263(512), 322(1024), 352(2048 edge) -->
+    <!-- y: 88 -> 95 -> 110 -> 140 -> 185 -> 215 (falling efficiency) -->
+    <path d="M 86 90 C 110 91, 128 93, 145 96 C 168 100, 188 106, 204 112 C 226 121, 246 132, 263 143 C 284 158, 306 178, 322 192 C 332 201, 342 209, 352 214" fill="none" stroke="var(--fig-outline, #364c50)" stroke-width="2.2"/>
+    <!-- data points -->
+    <circle cx="86" cy="90" r="3.2" fill="var(--fig-outline, #364c50)"/>
+    <circle cx="145" cy="96" r="3.2" fill="var(--fig-outline, #364c50)"/>
+    <circle cx="204" cy="112" r="3.2" fill="var(--fig-outline, #364c50)"/>
+    <circle cx="263" cy="143" r="3.2" fill="var(--fig-outline, #364c50)"/>
+    <circle cx="322" cy="192" r="3.2" fill="var(--fig-mark, #b4571f)"/>
+    <!-- x tick labels -->
+    <text x="86" y="252" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">64</text>
+    <text x="145" y="252" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">128</text>
+    <text x="204" y="252" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">256</text>
+    <text x="263" y="252" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">512</text>
+    <text x="322" y="252" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">1,024</text>
+    <text x="200" y="266" font-size="8" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">workers (one replica = 64 GPUs)</text>
+
+    <!-- annotations: what drives the fall -->
+    <text x="196" y="132" font-size="8" fill="var(--fig-rule, #6e6a5b)">microbatches per replica shrink,</text>
+    <text x="196" y="143" font-size="8" fill="var(--fig-rule, #6e6a5b)">pipeline stages do not</text>
+    <text x="268" y="182" font-size="8" text-anchor="end" fill="var(--fig-mark, #b4571f)" font-weight="650">bubble share grows fastest</text>
+
+    <!-- throughput annotation -->
+    <text x="70" y="120" font-size="8.5" fill="var(--fig-outline, #364c50)" font-weight="650">throughput still rises</text>
+    <text x="70" y="131" font-size="8" fill="var(--fig-rule, #6e6a5b)">at every step — a lower</text>
+    <text x="70" y="142" font-size="8" fill="var(--fig-rule, #6e6a5b)">efficiency is a declining</text>
+    <text x="70" y="153" font-size="8" fill="var(--fig-rule, #6e6a5b)">marginal return, not a slowdown</text>
+
+    <!-- bottom rule -->
+    <text x="190" y="290" font-size="8.5" text-anchor="middle" fill="var(--fig-rule, #6e6a5b)">resize when the gain over the allocation's life repays the transition — ~9 h break-even here</text>
+  </g>
+</svg>

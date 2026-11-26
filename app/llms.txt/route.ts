@@ -57,7 +57,7 @@ export function GET() {
     { name: 'Projects', url: '/projects/', desc: 'Open-source and side projects.' },
     { name: 'Blog', url: '/blog/', desc: 'Long-form writing with interactive figures.' },
     { name: 'Lab', url: '/lab/', desc: '30+ interactive canvas simulations, parameterised.' },
-    { name: 'Hiking', url: '/hiking/', desc: 'Long-distance hiking journal — completed and planned multi-day routes with bespoke journey maps.' },
+    { name: 'Hiking', url: '/hiking/', desc: 'Long-distance hiking journal, completed and planned multi-day routes with bespoke journey maps.' },
     { name: 'LLM Benchmark', url: '/lab/llm-benchmark/', desc: 'A hands-on coding benchmark comparing frontier LLMs across real generative tasks.' },
   ]) {
     lines.push(`- [${u.name}](${base}${u.url}): ${u.desc}`)

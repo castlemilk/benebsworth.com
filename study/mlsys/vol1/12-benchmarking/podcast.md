@@ -13,7 +13,7 @@ B: Run rules are where honest benchmarks spend their effort. Warm-up policy, clo
 A: Before any of that, the chapter opens with the scale of the gap. An H100 delivers nine hundred and eighty-nine teraflops of dense sixteen-bit arithmetic at peak. ResNet-50 training at about five thousand images per second per accelerator; the rate a sixty-four-accelerator system logged in MLPerf Training; sustains about a hundred and twenty-three.
 ::eq[mfu]
 
-B: That's a model FLOPs utilization of about twelve percent. The peak is a ceiling under favorable state. MFU reports what the run actually achieved; and the gap between them is where memory-bound layers, the input pipeline, and launch overhead live.
+B: That's a model FLOPs occupancy of about twelve percent. The peak is a ceiling under favorable state. MFU reports what the run actually achieved; and the gap between them is where memory-bound layers, the input pipeline, and launch overhead live.
 
 A: Prediction and measurement complement each other here. The roofline puts ResNet-50's ceiling near forty thousand images per second against the ridge. The benchmark reports five thousand. The floor tells you where to look; the measurement tells you what the machine did.
 

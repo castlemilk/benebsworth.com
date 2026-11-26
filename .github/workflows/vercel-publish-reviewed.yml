@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '24'
+          node-version: '26.13.1'
           package-manager-cache: false
       - name: Prove pinned CLI installs without lifecycle scripts or deployment credentials
         env:
@@ -98,7 +98,7 @@ jobs:
           python3 verify_extract.py "$RUNNER_TEMP/publisher-input/artifact.zip" "$RUNNER_TEMP/publisher-payload" approval.json run.json artifact.json run.json
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '24'
+          node-version: '26.13.1'
           package-manager-cache: false
       - name: Install pinned upload tool outside the artifact, with no credentials or lifecycle scripts
         shell: bash

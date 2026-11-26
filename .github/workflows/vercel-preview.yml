@@ -53,8 +53,7 @@ jobs:
       - name: Match the existing Vercel project Node version
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
-          # Vercel currently uses 24.x; .nvmrc is an older local-dev default.
-          node-version: '24'
+          node-version: '26.13.1'
           package-manager-cache: false
 
       - name: Test deployment guardrails

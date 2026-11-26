@@ -24,7 +24,7 @@ vars:
   BIN: '{{.ROOT_DIR}}/node_modules/.bin'
   # Static export target. Produced by `task build`, consumed by e2e + every deploy.
   OUT_DIR: out
-  NODE_MIN_MAJOR: 20
+  NODE_MIN_MAJOR: 26
 
 includes:
   remote: ./taskfiles/remote.yml
@@ -48,9 +48,8 @@ tasks:
     summary: |
       One-time setup for a fresh clone.
 
-        1. Verifies Node >= {{.NODE_MIN_MAJOR}} (.nvmrc pins 20). The main site needs
-           modern Node; ONLY the dormant legacy Gatsby archive needs Node 16,
-           and it builds in its own script.
+        1. Verifies Node >= {{.NODE_MIN_MAJOR}}. Use the version in .nvmrc for local
+           development. The dormant Gatsby archive builds separately with Node 16.
         2. npm ci (lockfile-exact install).
         3. Installs the git hooks via core.hooksPath (see `task git:hooks:install`).
 

@@ -69,7 +69,7 @@ jobs:
         run: git merge-base --is-ancestor "$PROSE_BASE" "$EXPECTED_SHA"
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version-file: .nvmrc
           cache: npm
       - uses: go-task/setup-task@v1
         with:

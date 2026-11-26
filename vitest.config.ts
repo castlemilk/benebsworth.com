@@ -15,6 +15,10 @@ export default defineConfig({
   // per-file with `// @vitest-environment jsdom`.
   test: {
     environment: 'node',
+    // Let jsdom install its own per-window storage when Node also exposes localStorage.
+    execArgv: process.allowedNodeEnvironmentFlags.has('--no-experimental-webstorage')
+      ? ['--no-experimental-webstorage']
+      : [],
     // Bound file-level contention: integrity suites each scan thousands of assets.
     maxWorkers: 1,
     globals: true,

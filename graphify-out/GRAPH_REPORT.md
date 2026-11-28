@@ -1,28 +1,28 @@
-# Graph Report - benebsworth.com  (2026-11-17)
+# Graph Report - benebsworth.com  (2026-11-28)
 
 ## Corpus Check
-- 1587 files · ~8,018,132 words
+- 2542 files · ~17,365,005 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 11319 nodes · 20379 edges · 805 communities (722 shown, 83 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 236 edges (avg confidence: 0.64)
+- 17754 nodes · 30797 edges · 1200 communities (1021 shown, 179 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 358 edges (avg confidence: 0.61)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f2f994b2`
+- Built from commit: `3e31b9e9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - run-benchmark.mjs
 - circuit-canvas.tsx
-- pipeline.mjs
+- server.mjs
 - plugin-scaffold.mjs
 - layout.ts
 - mdx-components.tsx
 - originals/page.tsx
-- llm-benchmark/models/[model]/page.tsx
+- [category]/[task]/page.tsx
 - icons.tsx
 - memory-chip-ecosystem.tsx
 - executable.ts
@@ -35,11 +35,11 @@
 - provider.ts
 - cn
 - devices.ts
-- Circuit
+- circuit-sim/types.ts
 - render-diagram.py
 - catalog.ts
 - validator.ts
-- rlc-resonance.ts
+- lab/types.ts
 - circuit-studio.tsx
 - storage-engine-sim.tsx
 - cost-dashboard/page.tsx
@@ -47,7 +47,7 @@
 - inline-dependencies.ts
 - admin/storage.ts
 - hiking.ts
-- circuit-sim/types.ts
+- use-circuit-editor.ts
 - generated-demo.tsx
 - mandelbrot-julia.ts
 - universe-scale-studio.tsx
@@ -55,29 +55,29 @@
 - compilerOptions
 - metaball-bloom.ts
 - softmax-lab.tsx
-- blog/[slug]/page.tsx
+- lib/content.ts
 - hike-gallery.tsx
 - scripts
 - useInViewport
 - hash-table-demo.tsx
 - hr-diagram.ts
 - universe-scale/gl/scene.ts
-- cli.ts
+- BenchmarkTask
 - components.json
 - folio-pages.test.tsx
 - failure-corpus.ts
 - devDependencies
 - denoising-planner.tsx
 - nested-universes.tsx
-- review.tsx
+- raptor-engine/build.mjs
 - scope-canvas.tsx
-- BENCHMARK_TASKS
+- sandbox.ts
 - plugins/registry.ts
-- model.ts
+- generative-svg/registry.ts
 - surface-code-lattice.tsx
 - gen-harness-eval.mjs
 - Work items
-- runlog.ts
+- publish.mjs
 - ac.ts
 - Trailkit Component Reference
 - fine-tuning.ts
@@ -88,7 +88,7 @@
 - zoo-mini-map.tsx
 - Circuit Simulator — Rich Build Implementation Plan
 - phase-portrait.ts
-- provider.test.ts
+- prompt-bundle.ts
 - pathfinding.ts
 - dct-block.tsx
 - gateway-tasks/checks.ts
@@ -96,7 +96,7 @@
 - gen-md-siblings.mjs
 - delta-memory.tsx
 - holographic-reduction.tsx
-- rescore-artifact.mjs
+- runlog.ts
 - line.tsx
 - layout.tsx
 - cmb-sky.ts
@@ -107,44 +107,44 @@
 - conformal-grid.ts
 - mcp.ts
 - neural-boundary.ts
-- reaction-diffusion.ts
+- arcade-cabinet/build.mjs
 - editorial-artwork/registry.ts
 - deepspec-architecture.tsx
-- interactive-study.tsx
+- game-of-life.tsx
 - breadcrumbLd
 - images.ts
 - dependencies
 - time-series-chart-shell.tsx
-- sitemap.ts
-- bar-chart.tsx
-- gallery.tsx
+- [right]/page.tsx
+- line-chart.tsx
+- render.ts
 - Site UI and Animated Lab Uplift — Design Specification
 - site-search.tsx
 - chart-context.tsx
 - gen/content.ts
 - folio-consumer-ledger.mjs
 - double-pendulum.ts
-- FastPath
-- lab/types.ts
+- test-rig/geometry.ts
+- EffectModule
 - virus-capsid.ts
 - LLM Benchmark
 - deepspec-eli5-flow.tsx
 - Personal Site Rebuild Implementation Plan
 - kv-cache-compressor.tsx
 - kv-context-histogram.tsx
-- bar.tsx
+- audit.mjs
 - feedback.ts
-- series-markers.tsx
+- useChartStable
 - package.json
 - backfill-failure-reasons.mjs
 - am-modulation.ts
 - compute-graph.tsx
-- route-geography.ts
+- photo-trail.ts
 - close-packing.ts
-- projection-utils.ts
+- loading-sweep.tsx
 - Blog editorial implementation context
 - inverse-kinematics.ts
-- ising-model.ts
+- ControlSpec
 - random-walk.ts
 - load.ts
 - model-table.tsx
@@ -153,7 +153,7 @@
 - run-trace.tsx
 - manifest.ts
 - Trailkit — a branded MDX system for trail guides
-- prompt-probe.mjs
+- ripple-tank/build.mjs
 - vsepr.ts
 - bode-plotter.ts
 - constellation-plot.ts
@@ -162,11 +162,11 @@
 - lab-canvas.tsx
 - bench-ref.ts
 - embedding-space.tsx
-- equation.tsx
+- ActionMenu
 - lab/registry.ts
 - 0001 — The sweep hang
 - merge-benchmark-results.mjs
-- gray-matter
+- turning-dial/build.mjs
 - methodology.ts
 - PushApprovalTests
 - brandbrain-flow.ts
@@ -176,7 +176,7 @@
 - layering.test.ts
 - capture-lab-poster.mjs
 - gen-hero.mjs
-- render.ts
+- spot-plate/rig.ts
 - content-expansion.spec.ts
 - next.config.mjs
 - capture-benchmark-screenshots.mjs
@@ -185,7 +185,7 @@
 - DeploymentTests
 - renderOgCard
 - prose-content.spec.ts
-- samples.ts
+- iso-kit.ts
 - Cloudflare Migration Implementation Plan
 - zip.ts
 - pre-commit
@@ -209,7 +209,7 @@
 - neural-network-zoo-explained/index.mdx
 - gamma.ts
 - Chunk 1: Deterministic linter and source manifest
-- sweep-profiles.ts
+- grounded-artwork/registry.ts
 - sweep-clean.mjs
 - rlc-resonance.mdx
 - Authoring a benchmark plugin
@@ -229,7 +229,7 @@
 - deploy.sh
 - deploy-pages.sh
 - halftone_build.py
-- collection.test.ts
+- settled.ts
 - playwright.config.ts
 - category-nav.tsx
 - Blog & Lab Overhaul — Design Spec
@@ -256,7 +256,7 @@
 - remembering-a-qubit-that-forgets/index.mdx
 - Light/Dark Theming Implementation Plan
 - Cosmology & Astrophysics Section — Design Spec
-- bar-squares.tsx
+- test-rig/rig.ts
 - a-neural-net-learns-a-shape/index.md
 - attention-from-the-inside-out/index.md
 - benchmarking-agy-frontier/index.md
@@ -269,7 +269,7 @@
 - TODO.md
 - Diagram accuracy — verifying interactive components
 - mode-collapse-strip.tsx
-- verify-results.mjs
+- build.ts
 - cs-algorithms/manifest.json
 - a-neural-net-learns-a-shape/index.mdx
 - attention-from-the-inside-out/index.mdx
@@ -378,7 +378,7 @@
 - why-time-only-runs-forwards/index.md
 - why-your-shower-temperature-oscillates/index.md
 - P2 — Plugin system (implemented 2026-08-16, future work)
-- progress.ts
+- kolibri/page.tsx
 - bench
 - benebsworth.com
 - band-gaps-are-bragg-reflection/index.mdx
@@ -406,7 +406,8 @@
 - delta-rule-linear-attention/index.md
 - using-helm/index.md
 - using-kapitan/index.md
-- spatial/types.ts
+- iso-kit.mjs
+- loaders.ts
 - gateway-tasks/manifest.json
 - P3 — Architecture guards (graph-analysis additions)
 - Authoring workflow — research, discover, build
@@ -500,28 +501,28 @@
 - n-body-field.post.mdx
 - physics-pendulum-wave.post.mdx
 - distributed-systems/manifest.json
-- packet-annotations.tsx
+- study-chart.tsx
 - trailkit/README.md
 - physics-quantum/manifest.json
-- annotation-geometry.ts
+- editorial-system/page.tsx
 - rf-electronics/manifest.json
-- [category]/[task]/page.tsx
-- study.ts
+- llm-benchmark/registry.ts
+- lathe.mjs
 - lagrange-points.ts
-- game-of-life.tsx
+- llm-benchmark/types.ts
 - Guided notes
 - visual-games/checks.ts
 - ffn-step.tsx
-- shell-coiling.ts
+- spatial/types.ts
 - dna-grooves.ts
 - carbon-embed.tsx
 - site-release.mjs
-- maths.ts
+- stress.mjs
 - check-blog-assets.mjs
 - .agents/skills/blog/SKILL.md
 - haptics.ts
-- reward.ts
-- engineering.ts
+- turn-build.mjs
+- pattern-parquet-levy.test.ts
 - memory-chip-knowledge-graph.ts
 - 0005 — The prebuild that wiped harness-eval history
 - Do design skills change what a model builds?
@@ -544,7 +545,7 @@
 - a-wave-packet-has-two-speeds/index.mdx
 - dna-strands-are-not-opposite/index.mdx
 - two-crystals-hide-in-one-stack-of-oranges/index.mdx
-- comfy.ts
+- arcade-cabinet/live.js
 - visual-games/manifest.json
 - a-gyroscope-falls-sideways/index.md
 - a-lone-pair-takes-more-room-than-an-atom/index.md
@@ -572,7 +573,7 @@
 - stable-lagrange-points-sit-on-hilltops/index.mdx
 - the-nautilus-is-not-a-golden-spiral/index.mdx
 - three-phases-make-a-rotating-field/index.mdx
-- runlog-format.ts
+- raptor-engine/live.js
 - a-loop-on-a-sphere-turns-an-arrow/index.md
 - singular-values-are-stretches/index.md
 - steering-a-beam-without-moving-an-antenna/index.md
@@ -589,7 +590,7 @@
 - P1 — Security and integrity
 - Vercel previews built in GitHub Actions
 - memory-chip-ecosystem.ts
-- EffectModule
+- voronoi-bloom.ts
 - benchmarking-astra-devin/index.mdx
 - benchmarking-astra-devin/index.md
 - Science & Engineering Vector Pack — set 1
@@ -618,16 +619,16 @@
 - voxel-lighthouse.post.mdx
 - polarisation.mdx
 - science-workbench-plan.md
-- archs.ts
+- model.ts
 - validate
-- black-hole-sim/gl/scene.ts
+- ripple-tank/live.js
 - react
 - Editorial alignment critique — 28 October 2026
-- band-geometry.ts
+- band.tsx
 - authorize
 - sound.ts
 - publish-checked-site.sh
-- color-legend.tsx
+- source-view-v2.ts
 - Blog development checkpoint
 - Blog development
 - token-sampler.tsx
@@ -635,13 +636,13 @@
 - Shared interactive study frame
 - About, Hiking and Projects folio extension
 - Editorial production reconciliation — 11 November 2026
-- ingest-failures.mjs
+- print-sheet.mjs
 - Guided notes
 - Generative SVG gallery
 - Editorial UI critique, 2 November 2026
-- JsonlRunLog
-- use-animated-series-path.ts
-- black-hole.ts
+- batch-03/manifest.json
+- BSM-20261117 — subject motif gap map
+- spot-plate/live.tsx
 - Reference-led visual review
 - Backpressure article editorial review
 - Labs field notebook — 1 November 2026
@@ -654,53 +655,54 @@
 - Folio uplift — actionable backlog
 - Gamma editorial rollout
 - Reliable local visual review (FOLIO-028)
-- content-address.ts
-- editorial-system/page.tsx
-- annotation-colour.test.ts
+- Marks, ornaments and annotation vocabulary
+- marks-ornaments-v1/manifest.json
+- export-knowledge-integration.mts
 - Editorial previews built and published in CI
 - Folio consumer ledger
 - Personal folio raster provenance
 - Reuse and extend editorial artwork
 - Gamma component provenance
-- black-hole-sim-embed.tsx
+- turn-audit.mjs
 - Personal folio extension, 4 November 2026
 - Effect-authored inspection
 - og-fonts/README.md
 - editorial-palette.test.ts
 - FONT-PROVENANCE.md
-- band.tsx
+- subject-motifs-20261117/manifest.json
 - gradients.tsx
-- packer.ts
-- callout.tsx
-- verify-results.test.ts
+- turn-fixed.mjs
+- Guided notes
+- Hardware Acceleration: Study Packet
 - shadcn
 - MLSys book study loop
-- grid-lines.tsx
+- grid.tsx
 - graph.ts
 - render-diagram.test.mjs
 - Patterns the blocks leave to you
-- course-index.tsx
+- turn.mjs
+- 3. Parts vocabulary, with recipes
 - theme-store.ts
-- chart-parent-size.tsx
-- status-chip.tsx
+- Grounded Forms 05: Invertebrate structures
+- drops.ts
 - Test it
-- [suite]/page.tsx
+- batch-01/manifest.json
 - photo-filmstrip.test.tsx
-- gravitational-lensing.ts
+- study-engine/pipeline.mjs
 - MemoryKnowledgeGraph
-- moe-block.tsx
+- desk-computer/build.mjs
 - page-wheel.tsx
 - Build an interface from ui-sdk components
-- ActionMenu
-- photo-opener-identity.test.tsx
-- compute-scaling.tsx
+- push-button/build.mjs
+- WebGL inside the drawing
+- compile.mjs
 - using-my-dot-with-codex/index.mdx
 - Required interaction-state review
-- build-photo-preview.mjs
+- svg-art-packet.ts
 - Style it
 - gw-chirp.ts
 - kinetic-gas.ts
-- verdict-strip.tsx
+- dial-indicator/build.mjs
 - build-preview.mjs
 - Steps
 - Build a component from @ui-sdk/core
@@ -708,21 +710,21 @@
 - PolylineRecorder
 - eye-diagram.ts
 - fourier-series.ts
-- theme-script.ts
-- theme-toggle.tsx
+- source-state-v2.ts
+- knowledge-source/repository.ts
 - Hiking photo discovery, local candidate
 - B-trees and LSM-trees editorial review
 - Self-test: Vol I, Ch 1: Introduction
-- coupled-oscillators.ts
+- Data Engineering: Study Packet
 - useMeasuredGraphGroupBounds
 - Overland Track geometry audit — 2026-11-05
 - Hiking cover family, 5 November 2026
 - Hiking duplicate-photo review, 7 November 2026
-- parse_script
+- study-podcast.py
 - MLSys study curriculum
 - Build with ui-sdk
 - y-axis-ticks.ts
-- theme-store.test.ts
+- Study packet: Vol I, Ch 1: Introduction
 - 0002 — The timeout-config miswire
 - 0003 — The bearer-blip misclassification
 - 0004 — The mid-sweep results.json race
@@ -735,17 +737,18 @@
 - 0011 — Hike photos vanished when production moved to a CI build
 - Postmortems
 - Type system
-- verify-benchmark-renders.mjs
+- ML Frameworks: Study Packet
 - System Paradigms: Self-Test
 - Make it agent-ready
 - photo-controls-styles.test.ts
 - GraphForceEdge
-- positional-encoder.tsx
+- draw.tsx
+- turning-dial/live.js
 - MLSys study progress
-- Agent notes — benebsworth.com
+- .agents/skills/mlsys-study/SKILL.md
 - bollinger.ts
 - use-delayed-tooltip-data.ts
-- useScrollActivity
+- integration/repository.ts
 - GraphEdgeRow
 - post-hydration-latency.spec.ts
 - chosen-item.ts
@@ -753,65 +756,443 @@
 - 01-introduction/podcast.md
 - 02-system-paradigms/podcast.md
 - Self-test: ML Lifecycle
-- @carbon/icons-react
-- d3-array
+- Grounded forms · Set 06: scientific basis
+- Grounded forms · Set 07
+- Grounded Forms · Set 08
 - d3-force
-- exifr
-- jsdom
+- Grounded Forms · Set 09
+- chapter-write.mjs
 - @next/third-parties
 - @number-flow/react
-- ogl
+- study-source.ts
 - rehype-autolink-headings
 - remark-gfm
-- remark-math
-- remark-parse
-- shiki
-- @tanstack/match-sorter-utils
+- host-seam.ts
+- Guided notes
+- Model Training: Study Packet
+- Guided notes
 - @tanstack/react-table
 - @ui-sdk/react
 - check-overland-source.py
 - 03-ml-lifecycle/podcast.md
+- put
+- pattern-ripples.test.ts
+- import-grounded-artwork.mjs
+- Neural Network Architectures: Study Packet
+- Data Selection: Study Packet
+- Fleet Orchestration: Study Packet
+- Guided notes
+- turn-check.mjs
+- bridge.ts
+- extract-mdx.ts
+- ML Operations: Study Packet
+- Network Fabrics: Study Packet
+- sha256
+- Guided notes
+- batch-05/manifest.json
+- editorial-illustration-language/manifest.json
+- System Paradigms: Study Packet
+- Guided notes
+- Data Storage: Study Packet
+- Fleet Efficiency: Study Packet
+- check-diagram-coverage.mjs
+- pattern-constructions.test.ts
+- Neural Computation: Study Packet
+- Model Serving: Study Packet
+- Compute Infrastructure: Study Packet
+- Serving at Scale: Study Packet
+- Edge Intelligence: Study Packet
+- 14-robust-ai/index.md
+- 15-sustainable-ai/index.md
+- comparison.md
+- at
+- model.mjs
+- t3EmitRound
+- mdx-options.ts
+- Model Compression: Study Packet
+- Responsible Engineering: Study Packet
+- Collective Communication: Study Packet
+- Distributed Training: Study Packet
+- Guided notes
+- Guided notes
+- Kit API
+- batch-02/verify.py
+- Fault Tolerance: Study Packet
+- Responsible AI: Study Packet
+- prepare-grounded-artwork.mjs
+- Guided notes
+- Fleet Orchestration: Study Packet
+- Guided notes
+- Introduction: Study Packet
+- Guided notes
+- anatomy/README.md
+- batch-01/review-assets.py
+- pattern-silk-warp.test.ts
+- Guided notes
+- Guided notes
+- Guided notes
+- Guided notes
+- Network Fabrics: Study Packet
+- Data Storage: Study Packet
+- Guided notes
+- 14-robust-ai/packet.md
+- 15-sustainable-ai/packet.md
+- t3EmitRound
+- 3D: parts that turn in the drawing
+- Motion and interaction
+- projection-utils.ts
+- Grounded Forms fixed-artwork asset provenance
+- Conclusion: Study Packet
+- Conclusion: Study Packet
+- Guided notes
+- Guided notes
+- Guided notes
+- Guided notes
+- Guided notes
+- Changelog
+- art04-recovered-originals/manifest.json
+- make_review_pdf.py
+- pattern-textile-stars.test.ts
+- loops.ts
+- gen-thumbs-batch.mjs
+- agents.mjs
+- Guided notes
+- Guided notes
+- Guided notes
+- Guided notes
+- Compute Infrastructure: Study Packet
+- Collective Communication: Study Packet
+- Distributed Training: Study Packet
+- src/pipeline.mjs
+- t3EmitBall
+- t3Mount
+- Batch 03 Computing systems
+- chapter-cli.mjs
+- Fault Tolerance: Study Packet
+- Responsible AI: Study Packet
+- markupBox
+- t3Mount
+- t3EmitBall
+- hike-journey.tsx
+- batch-02/manifest.json
+- Exact generation prompts and settings
+- ornamental-studies.test.ts
+- import-grounded-set07.mjs
+- Guided notes
+- Guided notes
+- Introduction: Study Packet
+- classify-one.mjs
+- Contributor Covenant Code of Conduct
+- canvas-painter.mjs
+- knowledge-console-motion-regression.test.tsx
+- KG 01: explicit source/discovery integration proposal
+- pattern-atlas.ts
+- chapter-plan.mjs
+- Hardware Acceleration: Self-test
+- t3Emit
+- React and Next.js
+- segmented-control-pointer-regression.test.tsx
+- Exact image generation requests
+- review
+- BLOG KG 01 — Source model and navigation contract
+- import-grounded-set05.mjs
+- Guided notes
+- Conclusion: Study Packet
+- Verify
+- Hardware Acceleration: Study Packet
+- folio-review/page.tsx
+- batch-05/inspect_assets.py
+- make_specimens.py
+- Grounded Forms Set06 review
+- Grounded discovery checkpoint — 14 November 2026
+- brandbrain.ts
+- Files and public interface
+- ml-systems-fail-silently/index.md
+- prepare-grounded-artwork.test.mjs
+- rescore-cli-pair.mjs
+- chapter-write.test.mjs
+- geomatch-dry.mjs
+- Walkthrough: the test rig (Fig 6)
+- ml-systems-fail-silently/index.mdx
+- build_review.py
+- Batch 05 source context and publication boundary
+- A visual grammar for editorial illustrations
+- Raster specimen review
+- make_companions.py
+- render_assets.mjs
+- Grounded Forms Set08 integration checkpoint
+- deployment-is-a-physics-result/index.md
+- gen-study-md.mjs
+- harnessRoute
+- gl.mjs
+- gl-shared.mjs
+- t3EmitTube
+- t3Emit
+- t3EmitTube
+- lines.mjs
+- Anatomy
+- deployment-is-a-physics-result/index.mdx
+- Verification
+- review-batch.test.mjs
+- geocode.mjs
+- Contributing to Anatomy
+- t3Poses
+- t3Poses
+- quiz-copy.mjs
+- artifact-tiles.tsx
+- inspect
+- batch-04/review-assets.py
+- Batch 05 Physical worlds and invention
+- editorial-illustration-language/README.md
+- Blog design and artwork learnings
+- Critique — /study/vol1/04-data-engineering/ (study chapter page, Read mode)
+- the-most-expensive-sentence-in-ml-engineering/index.md
+- makeParts
+- Printable sheets (A4)
+- audit-order-convergence.test.mjs
+- Interactive study diagrams
+- library-list.tsx
+- kolibri-systems-tradeoffs/index.mdx
+- the-most-expensive-sentence-in-ml-engineering/index.mdx
+- Batch 01 independent image review
+- Batch 01 source context
+- Batch 01 artwork usage
+- verify_inputs
+- Generation provenance
+- Batch 05 final visual inspection
+- Editorial illustration PDF review
+- Provenance and rights record
+- review_companions.py
+- Original pattern expansion
+- Learning library and Chapter 9
+- audit-profile.test.mjs
+- react-dots-opacity.test.mjs
+- react-readout-first-write.test.mjs
+- react-solid-seamless.test.mjs
+- SegmentedPicker.tsx
+- knowledge-console-filter-regression.test.tsx
+- band-structure.ts
+- bloch-sphere.ts
+- pole-zero.ts
+- constraint-cascade-demo.tsx
+- locality-bound-demo.tsx
+- Recovered category artwork originals
+- Add science and living systems category artwork studies
+- Blog category art batch 01
+- Batch 01 validation evidence
+- Source and review handoff
+- Independent static artwork review
+- Blog category art batch 02
+- Batch 02 source and ownership audit
+- Light and dark usage
+- Draft PR description for the coordinating publisher
+- batch-04/verify.py
+- publication
+- unexposed_settings
+- Reusable editorial illustration brief
+- Ownership and integration boundary
+- Verification and publication boundary
+- Grounded Forms Set07 review
+- Critique — /study/vol1/05-nn-computation/ (Read mode)
+- micropod-ci-on-apple-silicon/index.md
+- ML Frameworks -- self-test
+- Model Training -- self-test
+- Self-test -- ch9 · Data Selection
+- d3-force-3d.d.ts
+- bezelPt
+- onBody
+- PULL_REQUEST_TEMPLATE.md
+- 4. The authoring API
+- capture-selector.test.mjs
+- react-readout-target.test.mjs
+- react-visibility-target.test.mjs
+- Security
+- ArgumentError
+- cue_sheet.py
+- tech-colors.ts
+- micropod-ci-on-apple-silicon/index.mdx
+- Visual findings
+- Source and provenance
+- Editorial illustration language
+- review_raster.py
+- Editable editorial counterparts
+- Grounded Forms Set09 integration checkpoint
+- 0006 — The karaoke follower interpolated; it was never accurate
+- local-llm/types.ts
+- package-manager-contract.test.ts
+- preview.mjs
+- preview.browser.mjs
+- Self-test: Neural Computation
+- Neural Network Architectures -- self-test
+- pdf-button.mjs
+- Publishing a figure to the community gallery
+- audit-projection.test.mjs
+- audit-slide-clearance.test.mjs
+- capture-current-geometry.test.mjs
+- drive-actions.test.mjs
+- fidelity-cut.test.mjs
+- lines-arcs.test.mjs
+- lines-round.test.mjs
+- lines.test.mjs
+- hardware-reel.md
+- grounded/manifest.json
+- Artistic vector factory
+- batch-02/inspect_assets.py
+- Category artwork source delivery
+- Current-master source bridge integration
+- learning-packet.spec.ts
+- execution-contract.test.ts
+- execution.test.ts
+- brandbrain-dl.mjs
+- study-align.py
+- 09-data-selection/podcast.md
+- report.mjs
+- jsdom.d.ts
+- cpPoint
+- coneShare
+- FTP
+- raptor-engine/sheet.mjs
+- capture.test.mjs
+- drive-async-until.test.mjs
+- drive-page-load.test.mjs
+- drive.test.mjs
+- drive-turn-controller.test.mjs
+- enter-key.test.mjs
+- fidelity-tube-coverage.test.mjs
+- navigation.test.mjs
+- orbit-sampling.test.mjs
+- review-quiz.mjs
+- art04-recovered-originals/verify.py
+- owned_paths
+- verify-delivery.py
+- verification-logs/manifest.json
+- make_assets.py
+- Kolibri sources
+- chapter-cli.test.mjs
+- Model Compression self-test
+- Model Compression self-test
+- Self-test: Data Engineering
+- Model Compression: self-test
+- Self-test: Model Serving
+- Self-test: ML Operations
+- Self-test: Responsible Engineering
+- Self-test: Conclusion
+- Vol II · Ch1: Introduction: self-test
+- Vol II · Ch2: Compute Infrastructure: self-test
+- Network Fabrics
+- Data Storage
+- Collective Communication
+- Distributed Training: check your mental model
+- Fault Tolerance
+- Fleet Orchestration: self-test
+- Fleet Efficiency — self-test
+- Serving at Scale — self-test
+- Edge Intelligence — self-test
+- Operations at Scale — self-test
+- Security and Privacy — self-test
+- Conclusion — self-test
+- bell
+- throat
+- chrome-startup.test.mjs
+- curve-density.test.mjs
+- lines-bezier.test.mjs
+- lines-rounded-rect.test.mjs
+- animejs
+- content/blog/micropod-ci-on-apple-silicon/benchmark-summary.md
+- d3-force-3d
+- design/AGENTS.md
+- art-consolidation-20261117/README.md
+- batch-01/PROVENANCE.md
+- INTEGRATION.md
+- blog-category-art-batch-01-source-pack/README.md
+- README-FIRST.md
+- APPLY.md
+- next-mdx-remote
+- brief.md
+- katex
+- rehype-katex
+- roughjs
+- tailwind-merge
+- three
+- unified
+- @usefluid/motion
+- public/blog/micropod-ci-on-apple-silicon/benchmark-summary.md
+- 04-data-engineering/podcast.md
+- 05-nn-computation/podcast.md
+- 06-nn-architectures/podcast.md
+- 07-frameworks/podcast.md
+- 08-training/podcast.md
+- 10-model-compression/podcast.md
+- 12-benchmarking/podcast.md
+- 12-benchmarking/quiz.md
+- 13-model-serving/podcast.md
+- 14-ml-ops/podcast.md
+- 15-responsible-engr/podcast.md
+- 16-conclusion/podcast.md
+- vol2/01-introduction/podcast.md
+- 02-compute-infrastructure/podcast.md
+- 03-network-fabrics/podcast.md
+- 04-data-storage/podcast.md
+- 05-collective-communication/podcast.md
+- 06-distributed-training/podcast.md
+- 07-fault-tolerance/podcast.md
+- 08-fleet-orchestration/podcast.md
+- 09-performance-engineering/podcast.md
+- 10-inference/podcast.md
+- 11-edge-intelligence/podcast.md
+- 12-ops-scale/podcast.md
+- 13-security-privacy/podcast.md
+- 14-robust-ai/podcast.md
+- 14-robust-ai/quiz.md
+- 15-sustainable-ai/podcast.md
+- 15-sustainable-ai/quiz.md
+- 16-responsible-ai/podcast.md
+- 16-responsible-ai/quiz.md
+- 17-conclusion/podcast.md
+- kolibri/podcast.md
+- kolibri/progress.md
+- [RA, RB]
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 125 edges
-2. `breadcrumbLd()` - 65 edges
-3. `EffectModule` - 65 edges
+2. `breadcrumbLd()` - 69 edges
+3. `EffectModule` - 66 edges
 4. `Params` - 61 edges
 5. `ControlSpec` - 60 edges
-6. `SiteNav()` - 49 edges
-7. `SiteFooter()` - 48 edges
-8. `BenchmarkTask` - 48 edges
-9. `Breadcrumb()` - 47 edges
-10. `useChartStable()` - 45 edges
+6. `SiteNav()` - 53 edges
+7. `SiteFooter()` - 52 edges
+8. `Breadcrumb()` - 51 edges
+9. `.next` - 49 edges
+10. `BenchmarkTask` - 48 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `soundFor()` --indirect_call--> `screen()`  [INFERRED]
+  lib/sound.ts → .agents/skills/anatomy/examples/desk-computer/build.mjs
+- `tick()` --indirect_call--> `clock()`  [INFERRED]
+  .agents/skills/anatomy/examples/turning-dial/live.js → components/ui/device.tsx
 - `generateStaticParams()` --calls--> `getPublishedPosts()`  [EXTRACTED]
   app/blog/[slug]/opengraph-image.tsx → lib/content.ts
-- `BenchmarkTaskPage()` --indirect_call--> `stripOutput()`  [INFERRED]
-  app/lab/llm-benchmark/[category]/[task]/page.tsx → lib/lab/llm-benchmark/results.ts
-- `LlmBenchmarkPage()` --indirect_call--> `stripOutput()`  [INFERRED]
-  app/lab/llm-benchmark/page.tsx → lib/lab/llm-benchmark/results.ts
-- `generateStaticParams()` --calls--> `getAllProjects()`  [EXTRACTED]
-  app/projects/[slug]/opengraph-image.tsx → lib/content.ts
-- `BarXAxisLabel()` --calls--> `cn()`  [EXTRACTED]
-  components/charts/bar-x-axis.tsx → lib/utils.ts
+- `AlertRow()` --calls--> `harnessModelPath()`  [EXTRACTED]
+  app/lab/cost-dashboard/page.tsx → lib/lab/harness-eval/nav.ts
+- `KolibriStudyPage()` --calls--> `renderMarkdown()`  [EXTRACTED]
+  app/study/research/kolibri/page.tsx → lib/study/markdown.ts
 
 ## Import Cycles
 - 1-file cycle: `lib/lab/llm-benchmark/probes.ts -> lib/lab/llm-benchmark/probes.ts`
 
-## Communities (805 total, 83 thin omitted)
+## Communities (1200 total, 179 thin omitted)
 
 ### Community 0 - "run-benchmark.mjs"
 Cohesion: 0.03
-Nodes (104): runBenchmark(), runWithConcurrency(), formatQuotaWindow(), parseQuotaResetMs(), QuotaLock, quotaLockedModels(), AcquireLockOptions, acquireRecoveryLock() (+96 more)
+Nodes (137): ModelTableProps, RowData, runBenchmark(), formatQuotaWindow(), QuotaLock, quotaLockedModels(), AcquireLockOptions, acquireRecoveryLock() (+129 more)
 
 ### Community 1 - "circuit-canvas.tsx"
 Cohesion: 0.07
 Nodes (60): CircuitCanvas(), distToSegment(), drawDcOverlay(), drawProbeMarker(), drawValueChip(), formatAmps(), formatVolts(), nodeHint() (+52 more)
 
-### Community 2 - "pipeline.mjs"
-Cohesion: 0.05
-Nodes (67): args, byWp, stamp, t0, pexec, server, ctx, lat (+59 more)
+### Community 2 - "server.mjs"
+Cohesion: 0.13
+Nodes (23): args, byWp, stamp, t0, pexec, server, AGY_BIN, AGY_MODEL (+15 more)
 
 ### Community 3 - "plugin-scaffold.mjs"
 Cohesion: 0.12
@@ -822,16 +1203,16 @@ Cohesion: 0.05
 Nodes (45): ARCH_ASYNC, ARCH_AUTH, ARCH_CONN, ARCH_DOT, BOTTOM_PAD, FLOW_CONN, FLOW_DOT, FLOW_NODE_FILL (+37 more)
 
 ### Community 5 - "mdx-components.tsx"
-Cohesion: 0.05
-Nodes (63): Policy, AiMemorySizer, AttentionHeatmap, ColorLegend, ComputeGraph, ComputeScaling, CostRace, DctBlock (+55 more)
+Cohesion: 0.04
+Nodes (71): DriftMonitorDemo(), gaussian(), Policy, AiMemorySizer, AttentionHeatmap, ColorLegend, ComputeGraph, ComputeScaling (+63 more)
 
 ### Community 6 - "originals/page.tsx"
 Cohesion: 0.06
 Nodes (47): metadata, PIPELINE_FACTS, PIPELINE_STEPS, VectorsPage(), metadata, CardCopyState, CardScale, COPY_STATUS (+39 more)
 
-### Community 7 - "llm-benchmark/models/[model]/page.tsx"
-Cohesion: 0.07
-Nodes (70): BenchmarkCategoryPage(), generateMetadata(), BenchmarkTaskPage(), generateMetadata(), statusClass(), ModelDetailPage(), statusClass(), FREE_COMPANIES (+62 more)
+### Community 7 - "[category]/[task]/page.tsx"
+Cohesion: 0.06
+Nodes (84): BenchmarkCategoryPage(), generateMetadata(), BenchmarkTaskPage(), generateMetadata(), statusClass(), ModelDetailPage(), statusClass(), FREE_COMPANIES (+76 more)
 
 ### Community 8 - "icons.tsx"
 Cohesion: 0.05
@@ -843,11 +1224,11 @@ Nodes (42): AI_PRESETS, CAPEX_EDGE_IDS, EDGE_COLORS, EVIDENCE_STYLES, FINANCIAL_
 
 ### Community 10 - "executable.ts"
 Cohesion: 0.05
-Nodes (54): available, Candidate, CodeFailureKind, CodeLanguage, collectCandidates(), decodeEntities(), dedent(), defaultInterpreter() (+46 more)
+Nodes (48): available, Candidate, CodeFailureKind, CodeLanguage, collectCandidates(), decodeEntities(), dedent(), defaultInterpreter() (+40 more)
 
 ### Community 11 - "black-hole-sim/physics.ts"
-Cohesion: 0.10
-Nodes (35): BlackHoleStudio(), Quality, AU, C, diskPeakTemp(), DISPLAY_TPEAK_K, eddingtonLuminosity(), fmtSci() (+27 more)
+Cohesion: 0.07
+Nodes (46): BlackHoleStudio(), Quality, BlackHoleGL, BlackHoleParams, compile(), createBlackHoleGL(), FOV_TAN, UniformName (+38 more)
 
 ### Community 12 - "circuit-sim-page.tsx"
 Cohesion: 0.10
@@ -859,31 +1240,31 @@ Nodes (45): root, expandPath(), manifest, parseArgs(), printTable(), resolveExpl
 
 ### Community 14 - "chart-tooltip.tsx"
 Cohesion: 0.04
-Nodes (86): ChartConfigContext, ChartConfigProviderProps, ChartConfigValue, DEFAULT_CHART_CONFIG, resolveTooltipBoxMotion(), SpringConfig, useChartConfig(), chartCssVars (+78 more)
+Nodes (86): BarXAxis(), ChartConfigContext, ChartConfigProviderProps, ChartConfigValue, DEFAULT_CHART_CONFIG, resolveTooltipBoxMotion(), SpringConfig, useChartConfig() (+78 more)
 
 ### Community 15 - "neural-graph.tsx"
-Cohesion: 0.22
-Nodes (20): FigureLegend(), NodeTooltip(), SwatchSVG(), NeuralGraph(), SPEED_OPTIONS, Edge, Layer, NeuralGraphArch (+12 more)
+Cohesion: 0.10
+Nodes (34): ENTRIES, LegendEntry, FigureLegend(), NodeTooltip(), SwatchSVG(), NeuralGraph(), SPEED_OPTIONS, ARCHS (+26 more)
 
 ### Community 16 - "grid-nav.tsx"
-Cohesion: 0.14
-Nodes (15): homeEmbedSlug(), ARTIFACTS, CASCADE, COLOR, GridNav(), HREF, Latest, latestLines() (+7 more)
+Cohesion: 0.10
+Nodes (23): homeEmbedSlug(), CASCADE, COLOR, GridNav(), HREF, Latest, latestLines(), parseRGB() (+15 more)
 
 ### Community 17 - "provider.ts"
-Cohesion: 0.03
-Nodes (112): RowData, hasSeededResults(), INFRA_FAILURE_REASONS, isSeeded(), modelReliability, rankModels(), rankModelsByModelQuality(), BenchBoard (+104 more)
+Cohesion: 0.04
+Nodes (89): modelReliability, UsageContribution, buildCacheKey(), CACHE_FILE, CachedResponse, CacheEntry, clearCache(), entries (+81 more)
 
 ### Community 18 - "cn"
 Cohesion: 0.05
-Nodes (53): Circles(), PatternCirclesProps, PatternOrientation, PatternOrientationType, Hexagons(), PatternHexagonsProps, Lines(), pathForOrientation() (+45 more)
+Nodes (51): Circles(), PatternCirclesProps, PatternOrientation, PatternOrientationType, Hexagons(), PatternHexagonsProps, Lines(), pathForOrientation() (+43 more)
 
 ### Community 19 - "devices.ts"
-Cohesion: 0.16
-Nodes (18): DC_STAMPS, pnjlim(), stampCapacitorTransient(), stampConductance(), StampContext, stampCurrent(), stampCurrentSource(), stampDiode() (+10 more)
+Cohesion: 0.10
+Nodes (33): Props, D_GMIN, D_IS, D_N, D_VT, DC_STAMPS, pnjlim(), stampCapacitorTransient() (+25 more)
 
-### Community 20 - "Circuit"
-Cohesion: 0.09
-Nodes (35): Props, D_GMIN, D_IS, D_N, D_VT, SolveEnv, checkKCL(), checkKVL() (+27 more)
+### Community 20 - "circuit-sim/types.ts"
+Cohesion: 0.11
+Nodes (27): SolveEnv, checkKCL(), checkKVL(), checkPowerConservation(), checkRCTransient(), fuzzKCL(), generateRandomCircuit(), resistorPower() (+19 more)
 
 ### Community 21 - "render-diagram.py"
 Cohesion: 0.09
@@ -894,28 +1275,28 @@ Cohesion: 0.12
 Nodes (39): BLACK, blobModel(), circle(), COL, darken(), dotCloud(), drawAnt(), DrawArgs (+31 more)
 
 ### Community 23 - "validator.ts"
-Cohesion: 0.10
-Nodes (25): DT_PRESETS, DURATION_PRESETS, Props, Toolbar(), componentNodes(), AdjacencyOptions, assertDC(), assertTransient() (+17 more)
+Cohesion: 0.08
+Nodes (31): DT_PRESETS, DURATION_PRESETS, Props, Toolbar(), CategorizedSample, CATEGORY_ORDER, SAMPLE_META, SampleCategory (+23 more)
 
-### Community 24 - "rlc-resonance.ts"
-Cohesion: 0.10
-Nodes (13): scroll, controls, defaults, rlcResonance, RlcState, basePalettes, contrast(), css (+5 more)
+### Community 24 - "lab/types.ts"
+Cohesion: 0.05
+Nodes (32): Props, resolveTheme(), scroll, controls, cyclicAutomaton, defaults, NEIGHBORS, controls (+24 more)
 
 ### Community 25 - "circuit-studio.tsx"
 Cohesion: 0.07
 Nodes (31): AnalysisPanel(), DRAG_MIME, CircuitStudio(), clamp(), DT_PRESETS, DURATION_PRESETS, fmtTime(), KEY_TYPES (+23 more)
 
 ### Community 26 - "storage-engine-sim.tsx"
-Cohesion: 0.05
-Nodes (49): equationFixture, metadata, FolioReview(), { setTheme }, technicalProseFixture, article, references, sibling (+41 more)
+Cohesion: 0.10
+Nodes (31): Amp, BInsertResult, BLayout, BNode, btreeAmp(), btreeHeight(), btreeInsert(), btreeKeyCount() (+23 more)
 
 ### Community 27 - "cost-dashboard/page.tsx"
-Cohesion: 0.18
-Nodes (17): CostDashboardPage(), ExpensiveTasksTable(), metadata, PerComplexityTable(), PerModelTable(), PerSuiteTable(), BudgetAlert, buildCostDashboard() (+9 more)
+Cohesion: 0.17
+Nodes (18): AlertRow(), CostDashboardPage(), ExpensiveTasksTable(), metadata, PerComplexityTable(), PerModelTable(), PerSuiteTable(), BudgetAlert (+10 more)
 
 ### Community 28 - "demos/index.ts"
-Cohesion: 0.10
-Nodes (23): CircuitBuilderTeaserDemo(), CryptoHashRaceDemo(), PRESETS, DemoFrame(), DemoFrameProps, BenchmarkDemo(), DEMO_COMPONENTS, EquationSolverDemo() (+15 more)
+Cohesion: 0.09
+Nodes (24): CircuitBuilderTeaserDemo(), CryptoHashRaceDemo(), PRESETS, DemoFrame(), DemoFrameProps, BenchmarkDemo(), DEMO_COMPONENTS, EquationSolverDemo() (+16 more)
 
 ### Community 29 - "inline-dependencies.ts"
 Cohesion: 0.15
@@ -923,19 +1304,19 @@ Nodes (23): ADDON_IMPORT_TO_SCRIPT, buildUrlMap(), DependencyRewriteResult, dete
 
 ### Community 30 - "admin/storage.ts"
 Cohesion: 0.06
-Nodes (63): AdminPage(), metadata, Admin, AdminProvider(), Ctx, TokenClient, TokenClientError, TokenResponse (+55 more)
+Nodes (64): AdminPage(), metadata, Admin, AdminProvider(), Ctx, TokenClient, TokenClientError, TokenResponse (+56 more)
 
 ### Community 31 - "hiking.ts"
-Cohesion: 0.05
-Nodes (48): mocks, alt, contentType, dynamic, Image(), size, alt, contentType (+40 more)
+Cohesion: 0.06
+Nodes (47): mocks, alt, contentType, dynamic, Image(), size, alt, contentType (+39 more)
 
-### Community 32 - "circuit-sim/types.ts"
-Cohesion: 0.14
-Nodes (26): Props, componentCurrent(), componentVoltage(), nodeVoltage(), evalSource(), sourceDCValue(), sourceValue(), sine (+18 more)
+### Community 32 - "use-circuit-editor.ts"
+Cohesion: 0.18
+Nodes (15): componentCurrent(), componentVoltage(), nodeVoltage(), DEFAULT_COMPONENT_VALUES, DEFAULT_SCOPE_SETTINGS, DEFAULT_WAVEFORM, makeProbe(), newCircuit() (+7 more)
 
 ### Community 33 - "generated-demo.tsx"
 Cohesion: 0.10
-Nodes (20): GeneratedDemo(), run(), GeneratedDemoProps, HTML_CATEGORIES, isHtmlRunnable(), LoadState, ArtifactFrame(), ArtifactFrameInner() (+12 more)
+Nodes (21): GeneratedDemo(), run(), GeneratedDemoProps, HTML_CATEGORIES, isHtmlRunnable(), LoadState, OutputPane(), ArtifactFrame() (+13 more)
 
 ### Community 34 - "mandelbrot-julia.ts"
 Cohesion: 0.25
@@ -947,7 +1328,7 @@ Nodes (28): UniverseGL, focusFor(), JUMPS, logToInitial(), MARKERS, UniverseScal
 
 ### Community 36 - "seismic-shadow.ts"
 Cohesion: 0.08
-Nodes (44): actualRadius(), buildModel(), clampUnit(), coreRefraction(), crossing(), degrees(), directTravelTime(), EARTH_RADIUS (+36 more)
+Nodes (45): actualRadius(), buildModel(), clampUnit(), coreRefraction(), crossing(), degrees(), directTravelTime(), EARTH_RADIUS (+37 more)
 
 ### Community 37 - "compilerOptions"
 Cohesion: 0.07
@@ -961,21 +1342,21 @@ Nodes (21): controls, defaults, dotLattice, controls, defaults, flowField, contr
 Cohesion: 0.13
 Nodes (25): attendsTo(), attentionMatrix(), D_K, DEFAULT_SCALE, RAW_SCORES, rawRow(), SCALE_MAX, SCALE_MIN (+17 more)
 
-### Community 40 - "blog/[slug]/page.tsx"
+### Community 40 - "lib/content.ts"
 Cohesion: 0.06
-Nodes (56): generateMetadata(), generateStaticParams(), PostPage(), dynamic, escapeXml(), GET(), Home(), metadata (+48 more)
+Nodes (50): generateMetadata(), generateStaticParams(), PostPage(), dynamic, escapeXml(), GET(), Home(), metadata (+42 more)
 
 ### Community 41 - "hike-gallery.tsx"
 Cohesion: 0.07
-Nodes (50): GalleryResults(), HikeGallery(), rowHeightFor(), useContainerWidth(), JourneyContent(), gallery, TrailButton(), TrailIconButton() (+42 more)
+Nodes (38): GalleryResults(), HikeGallery(), rowHeightFor(), useContainerWidth(), gallery, observers, photos, TrailButton() (+30 more)
 
 ### Community 42 - "scripts"
-Cohesion: 0.08
-Nodes (25): scripts, benchmark:run, build, build:archive, deploy:aws:next, deploy:aws:prod, deploy:next, deploy:pages:next (+17 more)
+Cohesion: 0.06
+Nodes (31): scripts, artwork:check, artwork:prepare, benchmark:run, build, build:archive, deploy:aws:next, deploy:aws:prod (+23 more)
 
 ### Community 43 - "useInViewport"
-Cohesion: 0.05
-Nodes (56): CostRace(), fmt(), idxToN(), LOG_MAX, LOG_MIN, nToIdx(), reducedMotion(), alphaBars() (+48 more)
+Cohesion: 0.04
+Nodes (73): accAt(), clamp(), ComputeScaling(), crossoverC(), reducedMotion(), STRATEGIES, Strategy, StrategyKey (+65 more)
 
 ### Community 44 - "hash-table-demo.tsx"
 Cohesion: 0.21
@@ -989,9 +1370,9 @@ Nodes (17): BgStar, buildPopulation(), buildTrack(), controls, defaults, hrDiagr
 Cohesion: 0.15
 Nodes (21): blobData(), C, createUniverseGL(), buildSpec(), galaxyData(), helixData(), MeshPart, ObjSpec (+13 more)
 
-### Community 47 - "cli.ts"
-Cohesion: 0.06
-Nodes (45): WHY: the CLI child we spawn IS the model, and its output is published, scrubEnv(), ASSIGNMENT_RE, AUTH_HEADER_RE, CLI_FLAG_RE, isPlainObject(), redactArgs(), REDACTED (+37 more)
+### Community 47 - "BenchmarkTask"
+Cohesion: 0.05
+Nodes (61): BenchBoard, WHY: the CLI child we spawn IS the model, and its output is published, scrubEnv(), BenchMcpDeps, generate, model, task, ARTIFACT_INDEX_FILE (+53 more)
 
 ### Community 48 - "components.json"
 Cohesion: 0.08
@@ -999,15 +1380,15 @@ Nodes (23): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent 
 
 ### Community 49 - "folio-pages.test.tsx"
 Cohesion: 0.07
-Nodes (29): AboutPage(), ISSUERS, metadata, TimelineGroups(), metadata, metadata, NowPage(), metadata (+21 more)
+Nodes (28): AboutPage(), metadata, metadata, metadata, metadata, alt, contentType, dynamic (+20 more)
 
 ### Community 50 - "failure-corpus.ts"
-Cohesion: 0.10
-Nodes (25): CaseComparison, CaseOutcome, CaseVerdict, checkRowsOf(), compareCase(), compareEntries(), CORPUS_FAIL_SCORE, failedCheckNames() (+17 more)
+Cohesion: 0.05
+Nodes (49): CaseComparison, CaseOutcome, CaseVerdict, checkRowsOf(), compareCase(), compareEntries(), CORPUS_FAIL_SCORE, failedCheckNames() (+41 more)
 
 ### Community 51 - "devDependencies"
 Cohesion: 0.03
-Nodes (63): autoprefixer, @bufbuild/buf, eslint, @eslint/js, eslint-plugin-react, eslint-plugin-react-hooks, globals, @next/eslint-plugin-next (+55 more)
+Nodes (65): autoprefixer, @bufbuild/buf, eslint, @eslint/js, eslint-plugin-react, eslint-plugin-react-hooks, globals, jsdom (+57 more)
 
 ### Community 52 - "denoising-planner.tsx"
 Cohesion: 0.15
@@ -1017,25 +1398,25 @@ Nodes (19): alphaBars(), buildSamples(), clearanceAt(), DenoisingPlanner(), EXPE
 Cohesion: 0.27
 Nodes (9): formatLength(), formatSci(), Level, LEVELS, NestedUniverses(), schwarzschildRadius(), SUPERSCRIPTS, toSuperscript() (+1 more)
 
-### Community 54 - "review.tsx"
-Cohesion: 0.19
-Nodes (15): css, cssText, Figure(), PullQuote(), Stat(), StatGroup(), css, evidenceLabels (+7 more)
+### Community 54 - "raptor-engine/build.mjs"
+Cohesion: 0.01
+Nodes (135): across, along, ARM, ARM_Y, back, backSvg, balance, beamBolts (+127 more)
 
 ### Community 55 - "scope-canvas.tsx"
-Cohesion: 0.11
-Nodes (30): Props, BodeCanvas(), DECADE_OPTIONS, fmtHz(), Props, ProbeManager(), Props, ChannelLegend() (+22 more)
+Cohesion: 0.09
+Nodes (34): Props, BodeCanvas(), DECADE_OPTIONS, fmtHz(), Props, Props, INSTRUMENT, ProbeManager() (+26 more)
 
-### Community 56 - "BENCHMARK_TASKS"
-Cohesion: 0.04
-Nodes (77): FRAME_PRELUDE, BAD_GATEWAY_ARTIFACT, GOOD_GATEWAY_ARTIFACT, pluginChecks(), pluginScorers(), BENCHMARK_TASKS, BehavioralScoreOptions, behavioralScorer (+69 more)
+### Community 56 - "sandbox.ts"
+Cohesion: 0.06
+Nodes (48): FRAME_PRELUDE, BAD_GATEWAY_ARTIFACT, GATEWAY_FIXTURE_EXPECTATIONS, GOOD_GATEWAY_ARTIFACT, BehavioralScoreOptions, BehavioralScoreResult, scoreBehavioral(), scoreWithBreakdown() (+40 more)
 
 ### Community 57 - "plugins/registry.ts"
-Cohesion: 0.04
-Nodes (81): cellLocator(), clickCell(), MAX_POINTS, readBoard(), tttGridInteracts(), tttWinDetected(), Cell, LINES (+73 more)
+Cohesion: 0.03
+Nodes (82): cellLocator(), clickCell(), MAX_POINTS, readBoard(), tttGridInteracts(), tttWinDetected(), Cell, LINES (+74 more)
 
-### Community 58 - "model.ts"
-Cohesion: 0.14
-Nodes (24): selected(), source(), Geometry, InkRole, Parameter, Point, Study, LISSAJOUS_EXAMPLE (+16 more)
+### Community 58 - "generative-svg/registry.ts"
+Cohesion: 0.13
+Nodes (21): Study, LISSAJOUS_EXAMPLE, at(), confocalLoom(), ellipticPoint(), LOOM_BRANCH_SEGMENTS, LOOM_ELLIPSE_SEGMENTS, LOOM_FOCAL_DISTANCE (+13 more)
 
 ### Community 59 - "surface-code-lattice.tsx"
 Cohesion: 0.16
@@ -1049,9 +1430,9 @@ Nodes (23): assertNoShrink(), computeSummary(), dedupeTasks(), mergeModelSummari
 Cohesion: 0.07
 Nodes (29): FOLIO-001 · P0 · Evidence baseline and coverage ledger, FOLIO-002 · P0 · Accept the statistics and seven-callout first slice, FOLIO-003 · P1 · Notes, quotation and post-family composition, FOLIO-004 · P1 · Technical prose, tables, code and source links, FOLIO-005 · P1 · Equation reading and copy states, FOLIO-006 · P1 · Complete article hierarchy and endings, FOLIO-007 · P1 · Archive, filters and related reading, FOLIO-008 · P1 · TOC and preserved site navigation compatibility (+21 more)
 
-### Community 62 - "runlog.ts"
-Cohesion: 0.12
-Nodes (16): SPILL_PREVIEW_CHARS, spillPreview(), HEADER, getRunLogDir(), readRunLog(), runLogFileName(), SPILL_THRESHOLD_BYTES, spillLargeStrings() (+8 more)
+### Community 62 - "publish.mjs"
+Cohesion: 0.06
+Nodes (57): fingerprintOf(), fingerprintOfSkill(), KIT_FILES(), sha256(), walk(), AGENTS, confirm(), detectKind() (+49 more)
 
 ### Community 63 - "ac.ts"
 Cohesion: 0.18
@@ -1078,8 +1459,8 @@ Cohesion: 0.17
 Nodes (10): FlowDiagram(), FlowDiagramProps, FlowLayer, FlowStep, InlineProse(), parseBlocks(), renderInline(), egressAdvancedSteps (+2 more)
 
 ### Community 69 - "verify-results.ts"
-Cohesion: 0.13
-Nodes (31): isContentAddress(), boardFor(), CHECK_BY_ID, checkBudget(), checkCorpusEntry(), CheckDef, checkFailureReason(), checkFeedback() (+23 more)
+Cohesion: 0.05
+Nodes (48): boardFor(), CHECK_BY_ID, checkBudget(), checkCorpusEntry(), CheckDef, checkFailureReason(), checkFeedback(), checkIndexAlignment() (+40 more)
 
 ### Community 70 - "zoo-mini-map.tsx"
 Cohesion: 0.13
@@ -1093,9 +1474,9 @@ Nodes (37): Circuit Simulator — Rich Build Implementation Plan, File map, Phas
 Cohesion: 0.14
 Nodes (9): controls, defaults, DUF_BOUNDS, DUF_ICS, LV_BOUNDS, LV_ICS, phasePortrait, VDP_BOUNDS (+1 more)
 
-### Community 73 - "provider.test.ts"
-Cohesion: 0.04
-Nodes (62): SandboxContract(), buildCacheKey(), CACHE_FILE, CachedResponse, CacheEntry, clearCache(), entries, flush() (+54 more)
+### Community 73 - "prompt-bundle.ts"
+Cohesion: 0.10
+Nodes (25): SandboxContract(), BUNDLE_HASH_CHARS, BundleComparison, BundleDelta, BundleGroup, compareBundles(), composeBundle(), framePreludeFingerprint() (+17 more)
 
 ### Community 74 - "pathfinding.ts"
 Cohesion: 0.15
@@ -1106,8 +1487,8 @@ Cohesion: 0.26
 Nodes (12): Block, C(), coeffFill(), cosT, DctBlock(), forwardDct(), grayFill(), inverseDct() (+4 more)
 
 ### Community 76 - "gateway-tasks/checks.ts"
-Cohesion: 0.16
-Nodes (23): callsFor(), clickAction(), FABRICATED_SECRET_PATTERNS, fail(), gatewayFailClosed(), gatewayNoFabrication(), gatewayRateBackoff(), gatewayStubIntact() (+15 more)
+Cohesion: 0.18
+Nodes (22): callsFor(), clickAction(), FABRICATED_SECRET_PATTERNS, fail(), gatewayFailClosed(), gatewayNoFabrication(), gatewayRateBackoff(), gatewayStubIntact() (+14 more)
 
 ### Community 77 - "hike-annotate/package.json"
 Cohesion: 0.13
@@ -1125,13 +1506,13 @@ Nodes (11): applyWrite(), basis(), close(), DeltaMemory(), fmt(), Mode, query(),
 Cohesion: 0.27
 Nodes (7): clamp01(), fmtBig(), fmtLengthMeters(), HolographicReduction(), sub(), sup(), SUPER
 
-### Community 81 - "rescore-artifact.mjs"
-Cohesion: 0.10
-Nodes (20): cleanMatches(), compareRescore(), locateScoredArtifact(), NoScoredArtifactError, numbersOf(), RescoreComparison, ScoreBasis, ScoredArtifact (+12 more)
+### Community 81 - "runlog.ts"
+Cohesion: 0.04
+Nodes (77): ADDRESSED_NAME, BARE_ADDRESS, CONTENT_ADDRESS_CHARS, contentAddress(), ContentAddressCheck, contentAddressedName(), isContentAddress(), parseContentAddress() (+69 more)
 
 ### Community 82 - "line.tsx"
-Cohesion: 0.06
-Nodes (62): AreaGradientDefs, AreaGradientDefsProps, BarInner, useChartStable(), useSettledYScale(), useYScale(), DashTailStroke(), DashTailStrokeProps (+54 more)
+Cohesion: 0.08
+Nodes (45): AreaGradientDefs, AreaGradientDefsProps, DashTailStroke(), DashTailStrokeProps, areaVerticalFadeStops(), clampFadeEdgesLength(), colorAt(), dedupeStops() (+37 more)
 
 ### Community 83 - "layout.tsx"
 Cohesion: 0.25
@@ -1146,8 +1527,8 @@ Cohesion: 0.24
 Nodes (7): controls, defaults, discMassFraction(), rotationCurve, vDiscSq(), vHaloSq(), vTotal()
 
 ### Community 86 - "use-article-navigation.ts"
-Cohesion: 0.12
-Nodes (16): getArticleHeadings(), ArticleReadingFlow(), KeyTakeaways(), MobileToc(), TableOfContents(), arriveAtArticleHeading(), articleClearance(), currentArticleHeading() (+8 more)
+Cohesion: 0.15
+Nodes (14): getArticleHeadings(), MobileToc(), TableOfContents(), arriveAtArticleHeading(), articleClearance(), currentArticleHeading(), empty, Heading (+6 more)
 
 ### Community 87 - "schwarzschild-calculator.tsx"
 Cohesion: 0.36
@@ -1162,72 +1543,72 @@ Cohesion: 0.29
 Nodes (8): applyMap(), conformalGrid, controls, defaults, exponentialMap(), inversionMap(), joukowskiMap(), powerMap()
 
 ### Community 90 - "mcp.ts"
-Cohesion: 0.06
-Nodes (55): ./lib/lab/llm-benchmark/mcp-fs.ts, callTool(), CallToolResult, checksUsed(), clampBytes(), fail(), failedChecks(), FailedCheckSummary (+47 more)
+Cohesion: 0.07
+Nodes (49): ./lib/lab/llm-benchmark/mcp-fs.ts, callTool(), CallToolResult, checksUsed(), clampBytes(), fail(), failedChecks(), FailedCheckSummary (+41 more)
 
 ### Community 91 - "neural-boundary.ts"
 Cohesion: 0.22
 Nodes (7): controls, defaults, gauss(), INDIGO, makeData(), NeuralBoundary, ORANGE
 
-### Community 92 - "reaction-diffusion.ts"
-Cohesion: 0.20
-Nodes (5): controls, defaults, Fields, PRESETS, reactionDiffusion
+### Community 92 - "arcade-cabinet/build.mjs"
+Cohesion: 0.02
+Nodes (98): ANODE_F, anodeAt, anodeN, back, BAND, bd, BEZEL_B, BEZEL_OPEN (+90 more)
 
 ### Community 93 - "editorial-artwork/registry.ts"
-Cohesion: 0.17
-Nodes (15): ArtworkCollection(), Artwork, ARTWORK_TAGS, artworkSearchRecords(), artworkSearchText(), artworkUrl(), searchArtwork(), STUDIES (+7 more)
+Cohesion: 0.13
+Nodes (18): ArtworkCollection(), Artwork, ARTWORK_TAGS, artworkSearchRecords(), artworkSearchText(), artworkUrl(), searchArtwork(), STUDIES (+10 more)
 
 ### Community 94 - "deepspec-architecture.tsx"
 Cohesion: 0.27
 Nodes (9): classNames(), DeepSpecArchitecture(), draftTokens, LoadId, loadProfiles, StepId, steps, SurvivalBars() (+1 more)
 
-### Community 95 - "interactive-study.tsx"
-Cohesion: 0.12
-Nodes (16): fields, TargetStudy(), GammaButton(), GammaButtonProps, RangeSlider(), RangeSliderProps, Drawing, Highlight (+8 more)
+### Community 95 - "game-of-life.tsx"
+Cohesion: 0.08
+Nodes (29): FolioDemo(), fields, TargetStudy(), GammaButton(), GammaButtonProps, RangeSlider(), RangeSliderProps, countPop() (+21 more)
 
 ### Community 96 - "breadcrumbLd"
-Cohesion: 0.07
-Nodes (52): BlogPage(), metadata, HikingPage(), HikePage(), KnowledgePage(), metadata, BlackHoleSimPageRoute(), metadata (+44 more)
+Cohesion: 0.06
+Nodes (58): ISSUERS, BlogPage(), metadata, HikingPage(), HikePage(), KnowledgePage(), metadata, BlackHoleSimPageRoute() (+50 more)
 
 ### Community 97 - "images.ts"
 Cohesion: 0.09
-Nodes (34): BrandAsset, BrandBrainOptions, BrandGuess, fetchBrandMark(), findAssetUrl(), findPageUrl(), guessBrand(), isReachable() (+26 more)
+Nodes (31): buildQwenImageWorkflow(), ComfyHistoryImage, ComfyImageOptions, ComfyModelFiles, DEFAULT_COMFY_URL, generateWithComfy(), collectImageFiles(), COMPACT_STEPS (+23 more)
 
 ### Community 98 - "dependencies"
 Cohesion: 0.04
-Nodes (55): animejs, @base-ui/react, class-variance-authority, clsx, d3-scale, d3-shape, lucide-react, @mdx-js/loader (+47 more)
+Nodes (57): @base-ui/react, @carbon/icons-react, class-variance-authority, clsx, d3-array, d3-scale, d3-shape, exifr (+49 more)
 
 ### Community 99 - "time-series-chart-shell.tsx"
-Cohesion: 0.05
-Nodes (68): bandConfigFromProps(), BandConfigProps, bandKeysByAxis(), defaultBandLabel(), extractBandConfigs(), getChildComponentName(), nonEmptyString(), isChartClipPassthrough() (+60 more)
+Cohesion: 0.04
+Nodes (94): bandConfigFromProps(), BandConfigProps, bandKeysByAxis(), defaultBandLabel(), extractBandConfigs(), getChildComponentName(), nonEmptyString(), BarOrientation (+86 more)
 
-### Community 100 - "sitemap.ts"
-Cohesion: 0.05
-Nodes (83): AlertRow(), ComparePage(), dynamicParams, formatDuration(), formatTokens(), generateMetadata(), generateStaticParams(), pairs() (+75 more)
+### Community 100 - "[right]/page.tsx"
+Cohesion: 0.04
+Nodes (83): ComparePage(), dynamicParams, formatDuration(), formatTokens(), generateMetadata(), generateStaticParams(), pairs(), RunCell() (+75 more)
 
-### Community 101 - "bar-chart.tsx"
+### Community 101 - "line-chart.tsx"
 Cohesion: 0.06
-Nodes (65): BarChart(), BarChartProps, BarOrientation, ChartCore, ChartInnerProps, DEFAULT_MARGIN, extractBarConfigs(), isSeriesOverlayComponent() (+57 more)
+Nodes (59): BarChart(), BarChartProps, ChartInnerProps, BarChartLoadingProps, EMPTY_DATA, ChartContextValue, Margin, useStableMargin() (+51 more)
 
-### Community 102 - "gallery.tsx"
-Cohesion: 0.13
-Nodes (16): Drawing(), ExportActions(), GenerativeGallery(), kindLabel(), StudyWorkbench(), download(), selected(), source() (+8 more)
+### Community 102 - "render.ts"
+Cohesion: 0.09
+Nodes (36): Drawing, ExportActions(), GenerativeGallery(), kindLabel(), selected(), source(), StudyWorkbench(), download() (+28 more)
 
 ### Community 103 - "Site UI and Animated Lab Uplift — Design Specification"
 Cohesion: 0.05
 Nodes (36): 1. How Motion Reveals Depth, 1. Navigation data, 2. An Electron Can Have Negative Mass, 2. SiteNav, 3. Rock–Paper–Scissors Paints Spirals, 3. SiteSearch, 4. Breadcrumb and sticky behavior, 5. PageFrame and page rhythm (+28 more)
 
 ### Community 104 - "site-search.tsx"
-Cohesion: 0.14
-Nodes (14): createPagefindLoader(), loadInBrowser, loadPagefind(), Pagefind, Hit, mapSearchHit(), PagefindData, revealSearchSelection() (+6 more)
+Cohesion: 0.11
+Nodes (14): photos, createPagefindLoader(), loadInBrowser, loadPagefind(), Pagefind, Hit, mapSearchHit(), PagefindData (+6 more)
 
 ### Community 105 - "chart-context.tsx"
 Cohesion: 0.06
-Nodes (48): BandConfig, ChartHoverContext, ChartHoverContextValue, ChartHoverStore, ChartHoverStoreContext, ChartHoverStoreProvider(), ChartProvider(), ChartStableContext (+40 more)
+Nodes (47): BandConfig, ChartHoverContext, ChartHoverContextValue, ChartHoverStore, ChartHoverStoreContext, ChartHoverStoreProvider(), ChartProvider(), ChartStableContext (+39 more)
 
 ### Community 106 - "gen/content.ts"
-Cohesion: 0.05
-Nodes (43): HalftoneHero(), MASK_H, OLD_LOCAL_KEYS, ssGet(), KIND_GLYPH, SkillCard(), photos, ArtifactTile() (+35 more)
+Cohesion: 0.07
+Nodes (38): HalftoneHero(), MASK_H, OLD_LOCAL_KEYS, ssGet(), KIND_GLYPH, SkillCard(), Positioned(), profileCardPosition() (+30 more)
 
 ### Community 107 - "folio-consumer-ledger.mjs"
 Cohesion: 0.10
@@ -1237,13 +1618,13 @@ Nodes (19): blogFiles, components, entries, jsxUses(), labFiles, labSlugs, ledge
 Cohesion: 0.25
 Nodes (4): controls, defaults, doublePendulum, shiftHue()
 
-### Community 109 - "FastPath"
-Cohesion: 0.23
-Nodes (3): FastPath, formatCoordinate(), Generator
-
-### Community 110 - "lab/types.ts"
+### Community 109 - "test-rig/geometry.ts"
 Cohesion: 0.04
-Nodes (58): BoidsFlocking, controls, defaults, controls, cyclicAutomaton, defaults, NEIGHBORS, controls (+50 more)
+Nodes (104): ARM, BARS, barScrews(), barTicks(), BASE_ART, BASE_SCREWS, BLOCK, BUSHES (+96 more)
+
+### Community 110 - "EffectModule"
+Cohesion: 0.03
+Nodes (53): BoidsFlocking, controls, defaults, controls, coupledOscillators, defaults, A_BRIGHT, A_DIM (+45 more)
 
 ### Community 111 - "virus-capsid.ts"
 Cohesion: 0.15
@@ -1269,21 +1650,21 @@ Nodes (6): COST_COLOR, CostClass, keptColumns(), KvCacheCompressor(), Mech, MECH
 Cohesion: 0.29
 Nodes (4): bins(), FULL, KvContextHistogram(), SMOKE
 
-### Community 117 - "bar.tsx"
+### Community 117 - "audit.mjs"
 Cohesion: 0.06
-Nodes (42): StudyChartFigure, AnimatedBarProps, Bar(), BarAnimationType, barDepthPerspectiveRise(), BarGeometry, BarInnerProps, BarLineCap (+34 more)
+Nodes (99): audit(), auditOrExit(), baseSdf(), belongs(), body(), bodyDepth(), boundsOf(), box() (+91 more)
 
 ### Community 118 - "feedback.ts"
-Cohesion: 0.07
-Nodes (47): CuratorNotes(), ModelOutputComparison(), ModelOutputComparisonProps, OutputPane(), OutputPaneProps, OutputState, aggregateFeedback(), canonicalFeedbackRef() (+39 more)
-
-### Community 119 - "series-markers.tsx"
 Cohesion: 0.06
-Nodes (39): clipRevealTransition(), DEFAULT_ANIMATION_DURATION_MS, DEFAULT_ANIMATION_EASING, DEFAULT_CHART_ENTER_TRANSITION, GRID_ANGLE_LABEL_FADE_S, GRID_ANGLE_LABEL_STAGGER_S, GRID_RING_SPRING, GRID_RING_STAGGER_S (+31 more)
+Nodes (56): CuratorNoteRow(), CuratorNotes(), CuratorNotesPanel(), CuratorTally(), ModelOutputComparison(), ModelOutputComparisonProps, OutputPaneProps, OutputState (+48 more)
+
+### Community 119 - "useChartStable"
+Cohesion: 0.03
+Nodes (97): clipRevealTransition(), DEFAULT_ANIMATION_DURATION_MS, DEFAULT_ANIMATION_EASING, DEFAULT_CHART_ENTER_TRANSITION, GRID_ANGLE_LABEL_FADE_S, GRID_ANGLE_LABEL_STAGGER_S, GRID_RING_SPRING, GRID_RING_STAGGER_S (+89 more)
 
 ### Community 120 - "package.json"
-Cohesion: 0.25
-Nodes (7): browserslist, name, packageManager, private, type, version, defaults and fully supports es6-module-dynamic-import
+Cohesion: 0.29
+Nodes (6): browserslist, name, private, type, version, defaults and fully supports es6-module-dynamic-import
 
 ### Community 121 - "backfill-failure-reasons.mjs"
 Cohesion: 0.21
@@ -1297,17 +1678,17 @@ Nodes (5): amModulation, controls, defaults, drawSpectrum(), drawSpike()
 Cohesion: 0.40
 Nodes (5): ComputeGraph(), EdgeKey, fmt(), Mode, NODE
 
-### Community 124 - "route-geography.ts"
-Cohesion: 0.11
-Nodes (37): PhotoMarkerControls(), measure(), areas, group, viewport, PhotoTrailMap(), OVERLAND_LANDMARKS, groupOf() (+29 more)
+### Community 124 - "photo-trail.ts"
+Cohesion: 0.08
+Nodes (49): PhotoMarkerControls(), measure(), areas, group, viewport, PhotoTrailMap(), OVERLAND_LANDMARKS, groupOf() (+41 more)
 
 ### Community 125 - "close-packing.ts"
 Cohesion: 0.11
 Nodes (32): bodyCentredFraction(), CLASS_COLOUR, closePackedFraction(), CONTACT_RADIUS, contactCount(), contactNeighbours(), distance(), explodeFactor() (+24 more)
 
-### Community 126 - "projection-utils.ts"
-Cohesion: 0.06
-Nodes (51): ChartLoadingLabel(), ChartLoadingLabelProps, fastShapePath(), LINE_LOADING_LOOP_PAUSE_MS, LINE_LOADING_PULSE_CYCLE_S, LINE_LOADING_PULSE_EASE, LOADING_LABEL_EXIT_S, LOADING_LABEL_EXIT_Y_PX (+43 more)
+### Community 126 - "loading-sweep.tsx"
+Cohesion: 0.09
+Nodes (31): ChartLoadingLabel(), ChartLoadingLabelProps, LINE_LOADING_LOOP_PAUSE_MS, LINE_LOADING_PULSE_CYCLE_S, LINE_LOADING_PULSE_EASE, LOADING_LABEL_EXIT_S, LOADING_LABEL_EXIT_Y_PX, AreaClosedConfig (+23 more)
 
 ### Community 127 - "Blog editorial implementation context"
 Cohesion: 0.09
@@ -1317,21 +1698,21 @@ Nodes (22): Archive continuation, Blog editorial implementation context, Column-
 Cohesion: 0.29
 Nodes (4): controls, createRenderer(), defaults, inverseKinematics
 
-### Community 129 - "ising-model.ts"
-Cohesion: 0.29
-Nodes (6): controls, defaults, DOWN, IsingModel, LN1P_SQRT2, UP
+### Community 129 - "ControlSpec"
+Cohesion: 0.06
+Nodes (24): specs, blackHole, controls, defaults, Star, controls, defaults, DOWN (+16 more)
 
 ### Community 130 - "random-walk.ts"
 Cohesion: 0.29
 Nodes (4): controls, defaults, makePRNG(), randomWalk
 
 ### Community 131 - "load.ts"
-Cohesion: 0.08
-Nodes (37): ConceptsPage(), StudyPage(), dynamic, esc(), generateStaticParams(), GET(), generateMetadata(), generateStaticParams() (+29 more)
+Cohesion: 0.04
+Nodes (82): metadata, LearningPage(), ConceptsPage(), StudyPage(), dynamic, esc(), generateStaticParams(), GET() (+74 more)
 
 ### Community 132 - "model-table.tsx"
-Cohesion: 0.09
-Nodes (24): COMPANY_MAP, getModelLogo(), LogoDef, LogoKey, LOGOS, ModelLogo(), ModelLogoBadge(), PROVIDER_MAP (+16 more)
+Cohesion: 0.12
+Nodes (19): COMPANY_MAP, getModelLogo(), LogoDef, LogoKey, LOGOS, ModelLogo(), ModelLogoBadge(), PROVIDER_MAP (+11 more)
 
 ### Community 133 - "attn-res-depth.tsx"
 Cohesion: 0.43
@@ -1343,15 +1724,15 @@ Nodes (32): BELOW_REFERENCE_DEGREES, BULGE_SCALE, chartPoint(), describeHighWate
 
 ### Community 135 - "run-trace.tsx"
 Cohesion: 0.04
-Nodes (74): AggregateLine(), Artifact(), EventLine(), ExportState, groupByIteration(), isAggregate(), isSandboxPolicy(), Label() (+66 more)
+Nodes (80): AggregateLine(), Artifact(), EventLine(), ExportState, groupByIteration(), isAggregate(), isSandboxPolicy(), Label() (+72 more)
 
 ### Community 137 - "Trailkit — a branded MDX system for trail guides"
 Cohesion: 0.07
 Nodes (28): 10. Testing & verification, 11. Risks & mitigations, 12. Open questions for the plan stage, 1. Problem & goal, 2. Architecture overview, 3.1 Icon set, 3.2 Contour motif, 3.3 Palette & tokens (+20 more)
 
-### Community 138 - "prompt-probe.mjs"
-Cohesion: 0.15
-Nodes (11): probePrompt(), broken, models, modelWidth, pickDefaultModel(), probes, probeTask(), probeWidth (+3 more)
+### Community 138 - "ripple-tank/build.mjs"
+Cohesion: 0.03
+Nodes (91): ARM_LENGTH, ARM_N, ARM_U, armRing(), at(), at16, at28, back (+83 more)
 
 ### Community 139 - "vsepr.ts"
 Cohesion: 0.15
@@ -1374,24 +1755,24 @@ Cohesion: 0.33
 Nodes (4): controls, createRenderer(), defaults, pidTuner
 
 ### Community 144 - "lab-canvas.tsx"
-Cohesion: 0.07
-Nodes (32): generateMetadata(), Controls(), Props, specs, EffectCanvas(), loop(), paintStatic(), size() (+24 more)
+Cohesion: 0.10
+Nodes (27): generateMetadata(), Controls(), Props, EffectCanvas(), loop(), paintStatic(), size(), start() (+19 more)
 
 ### Community 145 - "bench-ref.ts"
-Cohesion: 0.09
-Nodes (33): generateMetadata(), CuratorNoteRow(), CuratorNotesPanel(), CuratorTally(), RelatedRunRow(), RelatedRunsPanel(), EventText(), bad() (+25 more)
+Cohesion: 0.11
+Nodes (26): generateMetadata(), RelatedRunRow(), RelatedRunsPanel(), EventText(), BENCH_REF_SCHEME, BenchRef, BenchRefMissCode, BenchRefParseCode (+18 more)
 
 ### Community 146 - "embedding-space.tsx"
 Cohesion: 0.47
 Nodes (5): dist(), EmbeddingSpace(), idx(), Word, WORDS
 
-### Community 147 - "equation.tsx"
-Cohesion: 0.13
-Nodes (8): ActionMenuGroup, ActionMenuItem, ActionMenuProps, Equation(), EquationSymbolRow, execCommand, setup(), writeText
+### Community 147 - "ActionMenu"
+Cohesion: 0.11
+Nodes (17): ActionMenu(), close(), closeMenu(), onKeyDown(), onMenuKeyDown(), onPointerDown(), openMenu(), requestOpen() (+9 more)
 
 ### Community 148 - "lab/registry.ts"
-Cohesion: 0.11
-Nodes (25): dynamic, normaliseTopic(), RelatedLabs(), CATEGORY_ACCENT, catMeta(), LabCardLink(), LabContent(), MATRIX_EFFECTS (+17 more)
+Cohesion: 0.07
+Nodes (36): alt, contentType, dynamic, Image(), size, dynamic, GET(), normaliseTopic() (+28 more)
 
 ### Community 149 - "0001 — The sweep hang"
 Cohesion: 0.40
@@ -1400,6 +1781,10 @@ Nodes (4): 0001 — The sweep hang, Guardrails, Root cause, Timeline
 ### Community 150 - "merge-benchmark-results.mjs"
 Cohesion: 0.33
 Nodes (5): base, merged, modelIds, modelSet, resultsPath
+
+### Community 151 - "turning-dial/build.mjs"
+Cohesion: 0.03
+Nodes (79): argv, at(), BACK, backPosts(), backSvg, BALL, BASE, BODY (+71 more)
 
 ### Community 152 - "methodology.ts"
 Cohesion: 0.14
@@ -1415,7 +1800,7 @@ Nodes (4): cost(), models, results, seed
 
 ### Community 157 - "x-axis.tsx"
 Cohesion: 0.11
-Nodes (31): BarXAxis(), BarXAxisInner, BarXAxisLabel(), BarXAxisLabelProps, BarXAxisProps, selectTooltipData(), ChartLabelCount, resolveResponsiveChartLabelCount() (+23 more)
+Nodes (30): BarXAxisInner, BarXAxisLabel(), BarXAxisLabelProps, BarXAxisProps, selectTooltipData(), ChartLabelCount, resolveResponsiveChartLabelCount(), ResponsiveChartLabelCount (+22 more)
 
 ### Community 159 - "layering.test.ts"
 Cohesion: 0.11
@@ -1429,29 +1814,29 @@ Nodes (3): captureUniverse(), clickMarker(), HIDE_CHROME()
 Cohesion: 0.50
 Nodes (3): env, key, [slug, scene]
 
-### Community 162 - "render.ts"
-Cohesion: 0.26
-Nodes (15): StyleLab(), coordinates(), parse(), activePreset(), Appearance, APPEARANCE_PRESETS, appearanceFor(), contrastRatio() (+7 more)
+### Community 162 - "spot-plate/rig.ts"
+Cohesion: 0.04
+Nodes (82): rings(), along(), BLADE, bladeAt(), BladePose, fanOf(), LEAD, place() (+74 more)
 
 ### Community 167 - "spacetime-curvature.ts"
 Cohesion: 0.29
 Nodes (4): controls, defaults, spacetimeCurvature, Theme
 
 ### Community 168 - "probes.ts"
-Cohesion: 0.13
-Nodes (19): ASSERT_KEYS, ASSERT_KINDS, AssertKind, evaluateProbe(), excerpt(), failureDetail(), parseAssert(), parseProbes() (+11 more)
+Cohesion: 0.08
+Nodes (29): ASSERT_KEYS, ASSERT_KINDS, AssertKind, evaluateProbe(), excerpt(), failureDetail(), parseAssert(), parseProbes() (+21 more)
 
 ### Community 169 - "DeploymentTests"
 Cohesion: 0.20
 Nodes (5): DeploymentTests, hostname(), inspect(), NoRedirect, validate()
 
 ### Community 170 - "renderOgCard"
-Cohesion: 0.04
-Nodes (63): alt, contentType, dynamic, Image(), size, alt, contentType, dynamic (+55 more)
+Cohesion: 0.05
+Nodes (51): alt, contentType, dynamic, Image(), size, alt, contentType, dynamic (+43 more)
 
-### Community 173 - "samples.ts"
-Cohesion: 0.33
-Nodes (6): CategorizedSample, CATEGORY_ORDER, SAMPLE_META, SampleCategory, SampleCircuit, SAMPLES
+### Community 173 - "iso-kit.ts"
+Cohesion: 0.04
+Nodes (75): cyl(), ring(), fit(), cylinder(), ring(), fit(), Camera, ExtrudeOptions (+67 more)
 
 ### Community 174 - "Cloudflare Migration Implementation Plan"
 Cohesion: 0.09
@@ -1482,8 +1867,8 @@ Cohesion: 0.25
 Nodes (7): Caveats a reader must apply to the delta column, crypto-hash-race — 28 records, equation-solver — 28 records, ALL codeFallback, Executable scoring: measured impact on the stored records, Headline finding, If the maintainer decides to re-score, Reproduce
 
 ### Community 184 - "run-benchmark-loops.ts"
-Cohesion: 0.08
-Nodes (26): compactImage(), buildLoopPrompt(), defectCredit, externalResources(), judgementProgress(), LoopJudgement, LoopMeasurement, LoopPlan (+18 more)
+Cohesion: 0.11
+Nodes (25): compactImage(), calibrateFamilies(), denseReward(), failedRewardMass(), progressTerm(), quantile(), recalibrate(), RewardCalibration (+17 more)
 
 ### Community 185 - "Kimi K3 Blog Trilogy Implementation Plan"
 Cohesion: 0.11
@@ -1495,11 +1880,11 @@ Nodes (18): Architecture, Controls — `components/lab/controls.tsx` + `lib/lab/
 
 ### Community 187 - "benchmarking-openrouter-free-tier/index.md"
 Cohesion: 0.11
-Nodes (18): Comparing the pools, not just the models, Gemma 4 26B — the clean 100s, Hanging endpoints, Key takeaways, Laguna XS 2.1 — the consistent one, Ling 3.0 Tiny — the surprise, Nemotron 3 Nano 30B — the best price-for-quality ratio, North Mini Code — the n-body mystery (+10 more)
+Nodes (18): Comparing the pools, not just the models, Gemma 4 26B, the clean 100s, Hanging endpoints, Key takeaways, Laguna XS 2.1, the consistent one, Ling 3.0 Tiny, the surprise, Nemotron 3 Nano 30B, the best price-for-quality ratio, North Mini Code, the n-body mystery (+10 more)
 
 ### Community 188 - "benchmarking-openrouter-free-tier/index.mdx"
 Cohesion: 0.11
-Nodes (17): Comparing the pools, not just the models, Gemma 4 26B — the clean 100s, Hanging endpoints, Laguna XS 2.1 — the consistent one, Ling 3.0 Tiny — the surprise, Nemotron 3 Nano 30B — the best price-for-quality ratio, North Mini Code — the n-body mystery, Partial vs full completion (+9 more)
+Nodes (17): Comparing the pools, not just the models, Gemma 4 26B, the clean 100s, Hanging endpoints, Laguna XS 2.1, the consistent one, Ling 3.0 Tiny, the surprise, Nemotron 3 Nano 30B, the best price-for-quality ratio, North Mini Code, the n-body mystery, Partial vs full completion (+9 more)
 
 ### Community 189 - "Trailkit Implementation Plan"
 Cohesion: 0.11
@@ -1537,9 +1922,9 @@ Nodes (24): backgroundCssFromPalette(), call(), fetchGammaAssets(), listWithFall
 Cohesion: 0.12
 Nodes (16): Chunk 1: Deterministic linter and source manifest, Chunk 2: Update the writing skill and baseline the source, Chunk 3: Apply the editorial pass, Chunk 4: Regenerate and verify the site, Prose anti-AI validation and editorial pass Implementation Plan, Task 10: Add prose-focused end-to-end checks, Task 11: Run the full verification gates, Task 1: Define the prose source manifest (+8 more)
 
-### Community 198 - "sweep-profiles.ts"
-Cohesion: 0.08
-Nodes (35): getPlugins(), assertKnownPlugins(), assertPositiveBudget(), BOOLEAN_KEYS, ConfigSource, DEFAULT_MODELS, DurationEstimate, envList() (+27 more)
+### Community 198 - "grounded-artwork/registry.ts"
+Cohesion: 0.07
+Nodes (54): GroundedPage(), generateMetadata(), GroundedArtworkPage(), GroundedCollection(), serverSnapshot(), snapshot(), subscribe(), GroundedDetail() (+46 more)
 
 ### Community 199 - "sweep-clean.mjs"
 Cohesion: 0.14
@@ -1594,16 +1979,16 @@ Cohesion: 0.14
 Nodes (13): 1. create kubernetes cluster, 2. deploy demo application, 3. allow ingress to application, 4. troubleshooting, 5. hot-reloading, 6. Remote staging deployment, Configuration Management, Developer Experience (+5 more)
 
 ### Community 212 - "knowledge-console.tsx"
-Cohesion: 0.09
-Nodes (23): isHub(), KIND_COLOR, KINDS, KnowledgeConsole(), LANES, laneX(), LayoutMode, Palette (+15 more)
+Cohesion: 0.07
+Nodes (30): Props, SpringButton(), Props, SpringSwitch(), isHub(), KIND_COLOR, KINDS, KnowledgeConsole() (+22 more)
 
 ### Community 213 - "Local Deployment"
 Cohesion: 0.15
 Nodes (12): 1. create kubernetes cluster, 2. deploy demo application, 3. allow ingress to application, 4. troubleshooting, 5. hot-reloading, 6. Remote staging deployment, Configuration Management, Developer Experience (+4 more)
 
-### Community 229 - "collection.test.ts"
-Cohesion: 0.24
-Nodes (6): gotoSettled(), waitForSettled(), LAB_POSTERS, SPATIAL_CATALOG, SPATIAL_ENTRIES, DESK_LABEL
+### Community 229 - "settled.ts"
+Cohesion: 0.25
+Nodes (4): collectionEvidence(), screenshotEvidence(), gotoSettled(), waitForSettled()
 
 ### Community 239 - "category-nav.tsx"
 Cohesion: 0.15
@@ -1705,9 +2090,9 @@ Nodes (10): File Structure, Light/Dark Theming Implementation Plan, Self-Review 
 Cohesion: 0.18
 Nodes (10): 1. Taxonomy, 2. Universe-Scale simulator (centrepiece, circuit-sim-class), 3. Lab effects (EffectModule) — 9 new, all category `cosmology`, 4. Flagship bespoke MDX widgets (`components/mdx/`) — register + describe, 5. Posts (14), 6. Wire-up & verify (main agent, after artifacts land), 7. Build order, Cosmology / astrophysics (10) — desk `cosmology` (indigo) (+2 more)
 
-### Community 264 - "bar-squares.tsx"
-Cohesion: 0.11
-Nodes (27): AnimatedBar(), BarColumnTrack(), BarColumnTrackInner, BarColumnTrackProps, BarSquares(), BarSquaresInner, BarSquaresInnerProps, BarSquaresProps (+19 more)
+### Community 264 - "test-rig/rig.ts"
+Cohesion: 0.04
+Nodes (70): StretchArt(), TestRigFigure(), apply(), clamp(), ease(), Hand, Nodes, Props (+62 more)
 
 ### Community 265 - "a-neural-net-learns-a-shape/index.md"
 Cohesion: 0.18
@@ -1757,9 +2142,9 @@ Nodes (10): Diagram accuracy — verifying interactive components, Pattern: colo
 Cohesion: 0.40
 Nodes (9): Draw, gaussian(), makeDraws(), mixturePdf(), ModeCollapseStrip(), mulberry32(), normalPdf(), peakDensity() (+1 more)
 
-### Community 277 - "verify-results.mjs"
-Cohesion: 0.11
-Nodes (11): artifactFiles, CHECK_TITLES, corpusProvenance, feedback, options, resultsPath, root, runLogs (+3 more)
+### Community 277 - "build.ts"
+Cohesion: 0.08
+Nodes (59): BuildCache, buildKnowledgeSnapshot(), BuildResult, CacheState, cacheStates, checkAliases(), evidence(), fail() (+51 more)
 
 ### Community 278 - "cs-algorithms/manifest.json"
 Cohesion: 0.20
@@ -2046,7 +2431,7 @@ Cohesion: 0.25
 Nodes (7): Annotating hike photos, Discipline, How it works (6 stages), Prerequisites, Run it (CLI), Run it (MCP), When to use
 
 ### Community 349 - "Deploying benebsworth.com"
-Cohesion: 0.29
+Cohesion: 0.20
 Nodes (7): Content deploy (the 99% case), Deploying benebsworth.com, Infra reality (read before touching `infra/`), Security headers + CSP (prod), Terraform: prod is adopted now (fixed 2026-06-19), Verify after any deploy / infra change, www → apex redirect
 
 ### Community 350 - "am-fm-qam-the-modulation-zoo/index.mdx"
@@ -2193,9 +2578,9 @@ Nodes (7): Key takeaways, Reading further, Recap, The delay is the villain, The 
 Cohesion: 0.25
 Nodes (8): P2 — Plugin system (implemented 2026-08-16, future work), [x] 33. Plugin system core (SHIPPED), [x] 34. Plugin authoring guide + template generator (SHIPPED), [x] 35. Plugin-provided runners (new providers as plugins), [x] 36. Plugin prompt overrides (per-task sandbox contract), [x] 37. Plugin bundle selection in sweep profiles, [x] 38. Community plugin hosting + validation, [x] 39. Benchmark data as an MCP server
 
-### Community 386 - "progress.ts"
-Cohesion: 0.11
-Nodes (23): ChapterActions(), markReviewedNow(), ChapterProgress, EMPTY, ensureStorageListener(), listeners, markReviewed(), markVisited() (+15 more)
+### Community 386 - "kolibri/page.tsx"
+Cohesion: 0.08
+Nodes (29): KolibriStudyPage(), metadata, ChapterActions(), markReviewedNow(), MicroScroller(), ChapterProgress, EMPTY, ensureStorageListener() (+21 more)
 
 ### Community 388 - "benebsworth.com"
 Cohesion: 0.22
@@ -2301,9 +2686,13 @@ Nodes (6): Helm or Kustomize?, Key takeaways, Releases and revisions, Repositori
 Cohesion: 0.29
 Nodes (6): Compiled output, Input types: many ways to render the same data, Key takeaways, The inventory: a single source of truth, The model: one source, many outputs, When Kapitan fits versus Helm or Kustomize
 
-### Community 415 - "spatial/types.ts"
-Cohesion: 0.16
-Nodes (17): CameraView, project(), SpatialFallback(), Renderable, SceneApi, SpatialScene(), SPATIAL_DESK_LABEL, SpatialLab() (+9 more)
+### Community 414 - "iso-kit.mjs"
+Cohesion: 0.06
+Nodes (57): slab(), attrs(), axesAt(), axisVector(), AZIMUTH, circleRing(), convexHull(), cylinder() (+49 more)
+
+### Community 415 - "loaders.ts"
+Cohesion: 0.10
+Nodes (29): CameraView, project(), SpatialFallback(), Renderable, SceneApi, SpatialScene(), SPATIAL_DESK_LABEL, SpatialWorkbench() (+21 more)
 
 ### Community 416 - "gateway-tasks/manifest.json"
 Cohesion: 0.20
@@ -2318,8 +2707,8 @@ Cohesion: 0.33
 Nodes (6): Authoring workflow — research, discover, build, Phase 1: Discover — what's worth writing?, Phase 2: Research — what's the canonical source?, Phase 3: Build — write the post, Phase 4: Verify — does it actually work?, What makes a post engaging (insight, not just content)
 
 ### Community 419 - "markdown.ts"
-Cohesion: 0.13
-Nodes (23): EquationList(), EquationSymbol, StudyEquation, collectGloss(), eqRefOf(), figRefOf(), hasClass(), HastNode (+15 more)
+Cohesion: 0.09
+Nodes (28): dynamic, escapeHtml(), GET(), dynamic, GET(), collectGloss(), eqRefOf(), figRefOf() (+20 more)
 
 ### Community 421 - "delta-rule-linear-attention/index.mdx"
 Cohesion: 0.33
@@ -2618,8 +3007,8 @@ Cohesion: 0.15
 Nodes (25): associatedLegendre(), BOHR_PM, densityCage(), effectiveNumbers(), energyEv(), factorial(), laguerre(), lesson (+17 more)
 
 ### Community 495 - "seasons.ts"
-Cohesion: 0.16
-Nodes (25): add(), cap(), circle(), clamp(), dailyInsolation(), dayLength(), degrees(), distanceRatio() (+17 more)
+Cohesion: 0.17
+Nodes (23): add(), cap(), circle(), clamp(), dailyInsolation(), dayLength(), degrees(), distanceRatio() (+15 more)
 
 ### Community 498 - "k-means.ts"
 Cohesion: 0.22
@@ -2633,41 +3022,41 @@ Nodes (5): GROUPS, Row, ROWS, Verdict, VERDICT_COLOR
 Cohesion: 0.20
 Nodes (9): brief, canvasUrl, category, completedAt, id, items, label, runId (+1 more)
 
-### Community 509 - "packet-annotations.tsx"
-Cohesion: 0.15
-Nodes (24): addAnnotation(), EMPTY, ensureStorageListener(), listeners, read(), removeAnnotation(), StudyAnnotation, StudyAnnotationMap (+16 more)
+### Community 509 - "study-chart.tsx"
+Cohesion: 0.04
+Nodes (52): StudyChartFigure, Bar(), BarYAxis(), BarYAxisInner, BarYAxisLabel(), BarYAxisLabelProps, BarYAxisProps, ChartTooltip() (+44 more)
 
 ### Community 517 - "physics-quantum/manifest.json"
 Cohesion: 0.20
 Nodes (9): brief, canvasUrl, category, completedAt, id, items, label, runId (+1 more)
 
-### Community 518 - "annotation-geometry.ts"
-Cohesion: 0.15
-Nodes (13): FolioArchiveHeading(), connectorPath(), penCurve(), point(), Rect, sketch, sketchPath(), underlinePaths() (+5 more)
+### Community 518 - "editorial-system/page.tsx"
+Cohesion: 0.06
+Nodes (45): metadata, FolioArchiveHeading(), AnnotatedBlock(), AnnotationTarget(), MarginNote(), NoteProps, TargetProps, connectorPath() (+37 more)
 
 ### Community 519 - "rf-electronics/manifest.json"
 Cohesion: 0.20
 Nodes (9): brief, canvasUrl, category, completedAt, id, items, label, runId (+1 more)
 
-### Community 520 - "[category]/[task]/page.tsx"
-Cohesion: 0.16
-Nodes (13): BenchmarkNav(), CategoryGrid(), MdxContent(), BASE_DIR, loadBenchmarkIntro(), loadCategoryMdx(), loadTaskMdx(), loadTaskPostMdx() (+5 more)
+### Community 520 - "llm-benchmark/registry.ts"
+Cohesion: 0.09
+Nodes (29): absoluteUrl(), dynamic, page(), sitemap(), SitemapEntry, CategoryGrid(), harnessSuitePath(), BENCHMARK_BASE_PATH (+21 more)
 
-### Community 521 - "study.ts"
+### Community 521 - "lathe.mjs"
 Cohesion: 0.11
-Nodes (19): AudioOverview(), AudioOverviewProps, fmt(), SPEEDS, ChartKind, ChartSeries, protobufPackage, QuestionKind (+11 more)
+Nodes (61): cameraOf(), coil(), depthOf(), iso(), pathOf(), sideArc(), sideRing(), angleToward() (+53 more)
 
 ### Community 522 - "lagrange-points.ts"
 Cohesion: 0.16
 Nodes (21): acceleration(), collinearPoints(), contourPolylines(), effectivePotential(), gridAxis(), hillRadius(), integrateTrajectory(), jacobiConstant() (+13 more)
 
-### Community 523 - "game-of-life.tsx"
-Cohesion: 0.27
-Nodes (12): countPop(), GameOfLife(), idx(), Palette, PatternName, PATTERNS, randomGrid(), reducedMotion() (+4 more)
+### Community 523 - "llm-benchmark/types.ts"
+Cohesion: 0.06
+Nodes (39): costFromUsage(), safe(), summarizeUsage(), free, model, ./generate, estimateCost(), RunBenchmarkOptions (+31 more)
 
 ### Community 524 - "Guided notes"
-Cohesion: 0.09
-Nodes (21): → Ben's world, Essay candidates, Figures to look at in the book, Glossary, Guided notes, ML Lifecycle: Study Packet, Open questions, Stage 1: problem definition (+13 more)
+Cohesion: 0.10
+Nodes (20): → Ben's world, Essay candidates, Glossary, Guided notes, ML Lifecycle: Study Packet, Open questions, Stage 1: problem definition, Stage 2: data collection and preparation (+12 more)
 
 ### Community 525 - "visual-games/checks.ts"
 Cohesion: 0.22
@@ -2677,9 +3066,9 @@ Nodes (18): car(), drag(), frame(), hold(), lighthouseOrbit, lighthouseReset, li
 Cohesion: 0.43
 Nodes (4): barFill(), FfnStep(), w1(), w2()
 
-### Community 527 - "shell-coiling.ts"
-Cohesion: 0.19
-Nodes (18): apertureAngle(), apicalAngle(), degrees(), expansionFromAngle(), generatingCurve(), GOLDEN_RATIO, GOLDEN_WHORL_EXPANSION, lesson (+10 more)
+### Community 527 - "spatial/types.ts"
+Cohesion: 0.07
+Nodes (51): arrayFactor(), circle(), coaxFields(), engineeringLessons, gratingDirections(), phasedArray, poynting, rotating (+43 more)
 
 ### Community 528 - "dna-grooves.ts"
 Cohesion: 0.20
@@ -2693,9 +3082,9 @@ Nodes (5): CARBON_ORIGIN, CarbonEmbed(), createCarbonMessageHandler(), isValidCa
 Cohesion: 0.22
 Nodes (25): articleFiles(), assertAnalytics(), assertCommit(), assertForward(), assertPreservesRoutes(), assessDrift(), drift(), inventory() (+17 more)
 
-### Community 531 - "maths.ts"
-Cohesion: 0.19
-Nodes (15): complexRoots, continuedRoot(), cross(), dot(), mathsLessons, mul(), parallelTransport, rootPoint() (+7 more)
+### Community 531 - "stress.mjs"
+Cohesion: 0.05
+Nodes (53): cable(), argv, BACK, backSvg, BENCH, body, digit(), FINGER_Y (+45 more)
 
 ### Community 532 - "check-blog-assets.mjs"
 Cohesion: 0.28
@@ -2707,15 +3096,15 @@ Nodes (3): Blog invocation, Examples, Verified host basis
 
 ### Community 534 - "haptics.ts"
 Cohesion: 0.14
-Nodes (12): DPad(), Segmented(), useSegmentDrag(), Slider(), canVibrate(), crosses(), Haptic, hasSwitch() (+4 more)
+Nodes (10): DPad(), Slider(), canVibrate(), crosses(), Haptic, hasSwitch(), patterns, pressed (+2 more)
 
-### Community 535 - "reward.ts"
-Cohesion: 0.31
-Nodes (11): calibrateFamilies(), denseReward(), failedRewardMass(), progressTerm(), quantile(), recalibrate(), RewardCalibration, rewardOutcome() (+3 more)
+### Community 535 - "turn-build.mjs"
+Cohesion: 0.07
+Nodes (49): attrs(), build(), closest(), convexOrThrow(), dotsMarkup(), esc(), fine(), finePath() (+41 more)
 
-### Community 536 - "engineering.ts"
-Cohesion: 0.12
-Nodes (27): arrayFactor(), circle(), coaxFields(), engineeringLessons, gratingDirections(), phasedArray, poynting, rotating (+19 more)
+### Community 536 - "pattern-parquet-levy.test.ts"
+Cohesion: 0.06
+Nodes (33): Point, HEX_VERTICES, integerIn(), levyLacePath(), levyLacePolygon(), PATTERN_PARQUET_LEVY, RhombilleEdge, RhombilleFace (+25 more)
 
 ### Community 537 - "memory-chip-knowledge-graph.ts"
 Cohesion: 0.13
@@ -2797,9 +3186,9 @@ Nodes (8): A ladder has rungs through the middle, Putting it together, Reading f
 Cohesion: 0.22
 Nodes (8): Finding the cube, One layer, two kinds of hollow, Reading further, Start with three layers, The holes are where chemistry happens, The third layer has to choose, Why 74%, and why it took 387 years, Why copper bends and magnesium cracks
 
-### Community 559 - "comfy.ts"
-Cohesion: 0.33
-Nodes (6): buildQwenImageWorkflow(), ComfyHistoryImage, ComfyImageOptions, ComfyModelFiles, DEFAULT_COMFY_URL, generateWithComfy()
+### Community 559 - "arcade-cabinet/live.js"
+Cohesion: 0.07
+Nodes (50): at(), chuteZ(), CLIP_DOOR, CLIP_MECH, coinPose(), drawCoins(), drawPile(), drawPulses() (+42 more)
 
 ### Community 560 - "visual-games/manifest.json"
 Cohesion: 0.22
@@ -2909,9 +3298,9 @@ Nodes (7): Measuring a real one, Reading further, The empty cube, The overlap bo
 Cohesion: 0.25
 Nodes (7): A field still needs something to push, Break an assumption before adding complexity, Electrical angle is not always mechanical angle, Put the spatial angle into the equation, Reading further, Reversing the order reverses the motion, Watch the sum, then inspect the parts
 
-### Community 587 - "runlog-format.ts"
-Cohesion: 0.19
-Nodes (17): RunLogConfigSnapshot, RunLogEvent, RunLogHeader, Spillable, TraceExport, AggregateFields, excerpt(), formatBytes() (+9 more)
+### Community 587 - "raptor-engine/live.js"
+Cohesion: 0.06
+Nodes (43): announce(), burn, canvas, clamp(), describe(), engine, fireButton, fireLabel (+35 more)
 
 ### Community 588 - "a-loop-on-a-sphere-turns-an-arrow/index.md"
 Cohesion: 0.25
@@ -2959,11 +3348,11 @@ Nodes (4): buildMlxArgs(), generateWithMlx(), MlxOptions, NOTE: with --auto-seed
 
 ### Community 599 - "vercel-artifact.mjs"
 Cohesion: 0.14
-Nodes (16): ARTIFACT_LABEL, buildEnvironment(), checkCheckout(), CLI_VERSION, inventory(), PROFILE, PROJECT, runArtifactBuild() (+8 more)
+Nodes (17): ARTIFACT_LABEL, buildEnvironment(), checkCheckout(), CLI_VERSION, inventory(), walk(), PROFILE, PROJECT (+9 more)
 
 ### Community 600 - "Guided notes"
-Cohesion: 0.10
-Nodes (19): AI engineering as a discipline, Ben's world, Book organization + fallacies, Defining ML systems, Essay candidates (for the POST phase), Figures to look at (in the book), From code-defined to data-defined behaviour, Glossary (+11 more)
+Cohesion: 0.11
+Nodes (18): AI engineering as a discipline, Ben's world, Book organization + fallacies, Defining ML systems, Essay candidates (for the POST phase), From code-defined to data-defined behaviour, Glossary, Guided notes (+10 more)
 
 ### Community 601 - "P1 — Security and integrity"
 Cohesion: 0.67
@@ -2977,9 +3366,9 @@ Nodes (7): Current source configuration, Editorial preview lane, Failure and rol
 Cohesion: 0.13
 Nodes (16): AiMemorySizer(), DramRefreshCell(), MemoryMarketBars(), MemoryPackagingTradeoff(), AiMemoryFootprint, AiMemoryInput, BandwidthInput, BandwidthResult (+8 more)
 
-### Community 604 - "EffectModule"
-Cohesion: 0.05
-Nodes (24): bandStructure, controls, defaults, blochSphere, controls, defaults, A_BRIGHT, A_DIM (+16 more)
+### Community 604 - "voronoi-bloom.ts"
+Cohesion: 0.25
+Nodes (5): controls, defaults, pool, Seed, voronoiBloom
 
 ### Community 606 - "benchmarking-astra-devin/index.mdx"
 Cohesion: 0.40
@@ -3061,41 +3450,41 @@ Nodes (3): A transverse pattern sets a propagation threshold, Cross cutoff slowl
 Cohesion: 0.50
 Nodes (3): Astra extra high and Devin SWE-2, New tasks and checks, Reproduce
 
-### Community 634 - "archs.ts"
-Cohesion: 0.27
-Nodes (11): ARCHS, ArchSpec, EMPTY_AUX, makeFcSpec(), makeFfnn(), makeGan(), makeLstm(), makeRnn() (+3 more)
+### Community 634 - "model.ts"
+Cohesion: 0.11
+Nodes (33): ARTISTIC_NATURE, branch(), etch(), fill(), moth(), registry, ARTISTIC_PAPER_INK, fill() (+25 more)
 
 ### Community 635 - "validate"
-Cohesion: 0.18
-Nodes (8): ArgumentError, main(), parse(), classify_disconnect(), validate(), GateTests, OutcomeTests, ValueError
+Cohesion: 0.26
+Nodes (4): classify_disconnect(), validate(), GateTests, OutcomeTests
 
-### Community 636 - "black-hole-sim/gl/scene.ts"
-Cohesion: 0.24
-Nodes (9): BlackHoleGL, BlackHoleParams, compile(), createBlackHoleGL(), FOV_TAN, UniformName, UNIFORMS, BH_FRAG (+1 more)
+### Community 636 - "ripple-tank/live.js"
+Cohesion: 0.06
+Nodes (45): aimOf(), angleOf(), announce(), bar, bytes, clampTo(), crestPath, drawFallback() (+37 more)
 
 ### Community 638 - "Editorial alignment critique — 28 October 2026"
 Cohesion: 0.18
 Nodes (10): Additional evidence, not yet fixed, Bounded correction and confirmation, Confirmed implementation defects, Editorial alignment critique — 28 October 2026, Next composition batch, Preserve, Prioritised findings, Review outcomes (+2 more)
 
-### Community 639 - "band-geometry.ts"
-Cohesion: 0.23
-Nodes (16): bandDataSignature(), BandFadeSides, BandFadeStop, BandPoint, BandSegment, computeBandSegments(), edgePoints(), finiteNumber() (+8 more)
+### Community 639 - "band.tsx"
+Cohesion: 0.07
+Nodes (47): Band(), BandFillType, BandProps, BandStrokeProps, bandAreaPath(), bandDataSignature(), bandEdgePath(), BandEdgePolylines (+39 more)
 
 ### Community 640 - "authorize"
 Cohesion: 0.29
 Nodes (3): authorize(), Trusted publisher authorization. These controls must never come from artifact…, AuthorizationTests
 
 ### Community 641 - "sound.ts"
-Cohesion: 0.18
-Nodes (14): audio(), burst(), context(), installSound(), keyVoice(), listeners, play(), soundFor() (+6 more)
+Cohesion: 0.11
+Nodes (17): audio(), burst(), context(), enabled, installSound(), keyVoice(), listeners, play() (+9 more)
 
-### Community 645 - "color-legend.tsx"
-Cohesion: 0.20
-Nodes (3): ENTRIES, LegendEntry, NODE_COLOURS
+### Community 645 - "source-view-v2.ts"
+Cohesion: 0.10
+Nodes (36): SOURCE_PROVIDER, DescriptorAction, hostGuard, HostIdentity, HostResolution, KnowledgeNode, choiceError(), context() (+28 more)
 
 ### Community 646 - "Blog development checkpoint"
-Cohesion: 0.18
-Nodes (11): 1 November 13:23 continuation, Art direction decision, Blog development checkpoint, Current continuation: Hiking opener identity, Current implementation, Current publication preparation, Current scope and decisions, Five manual review lenses (+3 more)
+Cohesion: 0.15
+Nodes (13): 1 November 13:23 continuation, Art direction decision, Blog development checkpoint, Current continuation: Grounded Forms Set07, Current implementation, Current publication preparation, Current scope and decisions, Five manual review lenses (+5 more)
 
 ### Community 647 - "Blog development"
 Cohesion: 0.22
@@ -3121,29 +3510,33 @@ Nodes (9): About, Hiking and Projects folio extension, Asset provenance, Composi
 Cohesion: 0.22
 Nodes (9): Editorial production reconciliation — 11 November 2026, First remote browser gate and follow-up, Production route and security, Remaining evidence, Scope and authorization, Semantic resolutions, Source and integration boundary, Validation recorded so far (+1 more)
 
-### Community 653 - "ingest-failures.mjs"
+### Community 653 - "print-sheet.mjs"
 Cohesion: 0.12
-Nodes (14): argv, bytesByArtifact, casesDir, corpusDir, incoming, ingestedAt, merged, options (+6 more)
+Nodes (41): capture(), captureScript(), chromePath(), DRIVE, HERE, main(), printPdf(), BASE_CSS() (+33 more)
 
 ### Community 654 - "Guided notes"
 Cohesion: 0.12
-Nodes (16): → Ben's world, Fallacies worth quoting, Figures to look at in the book, Four regimes, nine orders of magnitude, Glossary, Guided notes, Hybrid: partition the pipeline, Open questions (+8 more)
+Nodes (15): → Ben's world, Fallacies worth quoting, Four regimes, nine orders of magnitude, Glossary, Guided notes, Hybrid: partition the pipeline, Open questions, Screen, then cost (+7 more)
 
 ### Community 655 - "Generative SVG gallery"
-Cohesion: 0.25
-Nodes (7): Acceptance, Current direction, Drawing language, Extending and finding studies, Framework boundary, Generative SVG gallery, Implemented studies
+Cohesion: 0.22
+Nodes (8): Acceptance, Current direction, Drawing language, Engraved mathematical ornaments, Extending and finding studies, Framework boundary, Generative SVG gallery, Implemented studies
 
 ### Community 656 - "Editorial UI critique, 2 November 2026"
 Cohesion: 0.25
 Nodes (7): Approved search direction follow-through, Bounded first improvement, Curated next queue, Editorial UI critique, 2 November 2026, Five distinct critiques, Narrow-width follow-through, Tools and limits
 
-### Community 658 - "use-animated-series-path.ts"
-Cohesion: 0.28
-Nodes (14): BandEdgePolylines, computeSeriesPathPoints(), flattenSeriesPath(), interpolateSeriesPathPoints(), morphSeriesPolylines(), samplePolylineY(), seriesDataSignature(), seriesPathFromPoints() (+6 more)
+### Community 657 - "batch-03/manifest.json"
+Cohesion: 0.05
+Nodes (42): assets, base_revision, batch, branch, browser_acceptance, complete, completed_count, errors (+34 more)
 
-### Community 659 - "black-hole.ts"
-Cohesion: 0.29
-Nodes (4): blackHole, controls, defaults, Star
+### Community 658 - "BSM-20261117 — subject motif gap map"
+Cohesion: 0.05
+Nodes (37): Alternatives rejected for repetition, BSM-20261117 — subject motif gap map, Evidence and scope, Exact source associations, Existing category coverage, Ownership, preservation and review limits, Semantic boundaries, The four selected subject gaps (+29 more)
+
+### Community 659 - "spot-plate/live.tsx"
+Cohesion: 0.08
+Nodes (37): LiquidArt(), GlassShape, RowShape, FanPose, SpotPlateFigure(), apply(), BladeNodes, emptyBlade() (+29 more)
 
 ### Community 660 - "Reference-led visual review"
 Cohesion: 0.29
@@ -3154,11 +3547,11 @@ Cohesion: 0.29
 Nodes (6): Backpressure article editorial review, Editorial findings and changes, Integration boundary, Preservation and verification, Scope and source, Technical sources checked
 
 ### Community 662 - "Labs field notebook — 1 November 2026"
-Cohesion: 0.20
+Cohesion: 0.29
 Nodes (7): Detail-page continuation (1 November, 13:23 UTC), Dual-theme instrument controls (1 November22:21 UTC, in progress), Follow-up: annotation target (2026-11-01), Imagegen-directed readout standard (23:21 UTC), Labs field notebook — 1 November 2026, Owner rejection and composition rework (22:32 UTC), Tooltip/readout slice (22:57 UTC)
 
 ### Community 663 - "Hiking photo return-focus review"
-Cohesion: 0.18
+Cohesion: 0.22
 Nodes (9): Actual captures, Backlog reconciliation, Build status, separate from behavior, Evidence identity and next step, Five distinct manual critique lenses, Functional verification, Hiking photo return-focus review, Reproduction and correction (+1 more)
 
 ### Community 664 - "Recovery and build compatibility"
@@ -3166,8 +3559,8 @@ Cohesion: 0.25
 Nodes (5): Durable cycle checkpoint, Dependency installation, Recovery and build compatibility, Restricted build helpers, Working source exists on a branch
 
 ### Community 665 - "theme-provider.test.tsx"
-Cohesion: 0.19
-Nodes (9): Reader(), ThemeProvider(), getServerThemeSnapshot(), subscribeTheme(), ThemePreference, ThemeSnapshot, ThemeSync(), THEMES (+1 more)
+Cohesion: 0.17
+Nodes (6): Reader(), ThemeProvider(), THEME_SCRIPT, DARK_QUERY, THEME_STORAGE_KEY, ThemeSync()
 
 ### Community 666 - "install.ts"
 Cohesion: 0.22
@@ -3189,17 +3582,17 @@ Nodes (5): Artistic correction after review, Authoring examples, First source sl
 Cohesion: 0.33
 Nodes (5): Evidence boundaries, Offline OG font contract, Reliable local visual review (FOLIO-028), Reproduce the actual exported site, Verified first slice on 28 October
 
-### Community 672 - "content-address.ts"
-Cohesion: 0.23
-Nodes (12): ADDRESSED_NAME, BARE_ADDRESS, CONTENT_ADDRESS_CHARS, contentAddress(), ContentAddressCheck, contentAddressedName(), parseContentAddress(), sha256Hex() (+4 more)
+### Community 672 - "Marks, ornaments and annotation vocabulary"
+Cohesion: 0.05
+Nodes (36): Blog marks, ornaments and annotation vocabulary, Drawing and optical construction, Files, Inventory, Owned scope and coordination, Provenance and semantic boundaries, Reproduce, Review the work (+28 more)
 
-### Community 673 - "editorial-system/page.tsx"
-Cohesion: 0.24
-Nodes (9): metadata, FolioDemo(), AnnotatedBlock(), AnnotationTarget(), MarginNote(), NoteProps, TargetProps, CoilSpecimen() (+1 more)
+### Community 673 - "marks-ornaments-v1/manifest.json"
+Cohesion: 0.05
+Nodes (39): artworks, baseline, batch_id, branch, concept_count, created_date, accent, ink (+31 more)
 
-### Community 674 - "annotation-colour.test.ts"
-Cohesion: 0.50
-Nodes (3): contrast(), css, luminance()
+### Community 674 - "export-knowledge-integration.mts"
+Cohesion: 0.13
+Nodes (14): contrast(), css, luminance(), value(), args, cases, destination, files (+6 more)
 
 ### Community 676 - "Editorial previews built and published in CI"
 Cohesion: 0.40
@@ -3217,81 +3610,89 @@ Nodes (3): Original generation prompt and usage notes, Personal folio raster pro
 Cohesion: 0.50
 Nodes (3): Add a generated asset, Reuse, Reuse and extend editorial artwork
 
+### Community 681 - "turn-audit.mjs"
+Cohesion: 0.11
+Nodes (35): frameOf(), apply(), areaOfPath(), back(), clipArea(), continuity(), convexHull(), EYE (+27 more)
+
 ### Community 682 - "Personal folio extension, 4 November 2026"
 Cohesion: 0.40
 Nodes (5): About composition and hiking imagery refinement, Deduplicated technical profile, Hiking direction, 5 November 2026, Personal folio extension, 4 November 2026, Superseding About distinction
 
-### Community 688 - "band.tsx"
-Cohesion: 0.21
-Nodes (13): Band(), BandFillType, BandProps, BandStrokeProps, bandAreaPath(), bandEdgePath(), BandFadeEdges, bandFadeStops() (+5 more)
+### Community 688 - "subject-motifs-20261117/manifest.json"
+Cohesion: 0.05
+Nodes (38): assets, audit_before_selection, batch, branch, candidate_status, canonical_receipt, count, created_date_local (+30 more)
 
 ### Community 689 - "gradients.tsx"
 Cohesion: 0.13
 Nodes (3): LinearGradientOwnProps, LinearGradientProps, RadialGradientProps
 
-### Community 690 - "packer.ts"
-Cohesion: 0.21
-Nodes (9): Cell, key(), pack(), put(), Placement, WORDS, Word, mulberry32() (+1 more)
+### Community 690 - "turn-fixed.mjs"
+Cohesion: 0.08
+Nodes (35): T3_EB, T3_EYE, T3_LB, T3_MAT_KEYS, T3_MAT_TUBE, T3_MATERIALS, T3_ROOT, T3_SHINE (+27 more)
 
-### Community 691 - "callout.tsx"
-Cohesion: 0.27
-Nodes (9): Callout(), CalloutProps, CalloutStyleConfig, calloutStyles, CalloutInkIcon(), CalloutType, drawings, ink (+1 more)
+### Community 691 - "Guided notes"
+Cohesion: 0.05
+Nodes (34): Attention and long context, → Ben's world, Figure guide, Follow one token through the model, From raw data to Kolibri Base, Glossary, Guided notes, How the pieces ship together (+26 more)
 
-### Community 692 - "verify-results.test.ts"
-Cohesion: 0.14
-Nodes (7): FoundRunLog, RESULT_CHECKS, AGGREGATE_ONLY, dirs, fakeLog(), logWithArtifact(), Verdict
+### Community 692 - "Hardware Acceleration: Study Packet"
+Cohesion: 0.05
+Nodes (36): 10. A serial request takes 250 µs. A projection consumes 150 µs of that baseline and is made 3 times faster. All other work stays fixed. Calculate the new request time, end-to-end speedup and maximum speedup if that projection became instantaneous., 11. An FP16 weight tile is 128 × 128, its FP16 input tile is 128 × 32, and its FP32 accumulator is 128 × 32. How many KiB are live with one set of tiles? Can a second weight and input tile coexist with a further 1 KiB of workspace in a 96 KiB local store?, 1. A layer-normalization kernel has intensity 4 FLOP/byte on a device with 1.5 TB/s memory bandwidth and a compatible 312 TFLOP/s compute peak. What is its simple roofline rate ceiling?, 2. A batch-one decoder fits entirely in device memory but still spends most of its token time streaming weights. Which distinction best explains this?, 3. For $Y_{ij}=\sum_k W_{ik}X_{kj}$, which loop can reuse a locally held weight $W_{ik}$ without changing it?, 4. A model has 50% zeros scattered across a weight tensor. When can an advertised 2:4 sparse matrix path exploit it?, 5. A projection uses a matrix unit, but a normalization operation does not. What should you check before calling that normalization a CPU fallback?, 6. A phone CPU, GPU and NPU share physical memory. Which cost can still remain when moving a model between them? (+28 more)
 
 ### Community 694 - "MLSys book study loop"
-Cohesion: 0.14
-Nodes (12): Generated artifacts, Invocation, Layout, MLSys book study loop, Packet verification checklist, Phase 1 — PACKET, Phase 2 — REVIEW, Phase 3 — TEST (+4 more)
+Cohesion: 0.13
+Nodes (15): Author a full chapter, Drafting individual worked sections on a token budget, Generated artifacts, Invocation, Layout, MLSys book study loop, Packet verification checklist, Phase 1 — PACKET (+7 more)
 
-### Community 695 - "grid-lines.tsx"
-Cohesion: 0.27
-Nodes (12): GridColumns(), GridColumnsProps, gridLine(), gridLinePositions(), GridLinesBaseProps, GridLineSvgProps, GridRows(), GridRowsProps (+4 more)
+### Community 695 - "grid.tsx"
+Cohesion: 0.18
+Nodes (19): Grid(), GridProps, hideEdgeTicks(), GridColumns(), GridColumnsProps, gridLine(), gridLinePositions(), GridLinesBaseProps (+11 more)
 
 ### Community 696 - "graph.ts"
 Cohesion: 0.21
-Nodes (11): EdgeKind, KGEdge, KGNode, KnowledgeGraph, NodeKind, norm(), byId, graph (+3 more)
+Nodes (13): buildKnowledgeGraph(), EdgeKind, KGEdge, KGNode, NodeKind, norm(), byId, graph (+5 more)
 
 ### Community 701 - "Patterns the blocks leave to you"
 Cohesion: 0.15
 Nodes (12): A `createFocusRecovery` fallback, A search box over options with `createListbox`, `createRovingFocus`: `remember: false`, Focus into a field from a grid, Grid arrows with `createRovingFocus` and `move`, Patterns the blocks leave to you, Reasons the vocabulary lacks, Selection in internal state (+4 more)
 
-### Community 703 - "course-index.tsx"
-Cohesion: 0.26
-Nodes (9): ChapterPage(), ChapterRow(), CourseIndex(), ROMAN_NUMERAL, StudyChapter, StudyCourse, ProgressRow, chapterHref() (+1 more)
+### Community 703 - "turn.mjs"
+Cohesion: 0.08
+Nodes (32): T3_EB, T3_EYE, T3_LB, T3_MAT_KEYS, T3_MAT_TUBE, T3_MATERIALS, T3_ROOT, T3_SHINE (+24 more)
+
+### Community 704 - "3. Parts vocabulary, with recipes"
+Cohesion: 0.06
+Nodes (34): 10. Screens and things on faces, 11. Shaders, 1. What "crafted" means, 2. Anti-patterns, 3. Parts vocabulary, with recipes, 4. Tones, 5. Painter's order, 6. Camera and composition (+26 more)
 
 ### Community 705 - "theme-store.ts"
-Cohesion: 0.41
-Nodes (11): applyToDocument(), getThemeSnapshot(), listeners, onStorage(), onSystemChange(), publish(), readPreference(), readSystem() (+3 more)
+Cohesion: 0.14
+Nodes (22): applyToDocument(), getServerThemeSnapshot(), getThemeSnapshot(), listeners, onStorage(), onSystemChange(), publish(), readPreference() (+14 more)
 
-### Community 706 - "chart-parent-size.tsx"
-Cohesion: 0.27
-Nodes (10): ChartParentSizeProps, ElementSize, ElementSizeOptions, leadingDebounce(), ParentSize(), readElementSize(), sameSize(), useElementSize() (+2 more)
+### Community 706 - "Grounded Forms 05: Invertebrate structures"
+Cohesion: 0.06
+Nodes (34): 01 · Stomatal gate, 02 · Root hair zone, 03 · Xylem vessel, 04 · Pollen tube, 05 · Fern sorus, 06 Coral polyp, 07 Sponge canal, 08 Bivalve hinge (+26 more)
 
-### Community 707 - "status-chip.tsx"
-Cohesion: 0.22
-Nodes (9): STATUS_CLASS, STATUS_LABEL, StatusChip(), VOLUME_LABEL, VolumeStateChip(), Badge(), badgeVariants, ChapterStatus (+1 more)
+### Community 707 - "drops.ts"
+Cohesion: 0.10
+Nodes (33): atTop(), cache, concaveRuns(), ease(), Glint, glintsOf(), Grid, Hidden (+25 more)
 
 ### Community 708 - "Test it"
 Cohesion: 0.20
 Nodes (10): A real browser, Break it on purpose, Check a pattern, Contrast, jsdom, Set up tests, Test a primitive, Test it (+2 more)
 
-### Community 709 - "[suite]/page.tsx"
-Cohesion: 0.33
-Nodes (7): formatDuration(), generateMetadata(), SuiteDetailPage(), CONTENT_DIR, loadSuiteContent(), suiteForSlug(), tasksForSuite()
+### Community 709 - "batch-01/manifest.json"
+Cohesion: 0.06
+Nodes (33): all_originals, assets, base_revision, batch, browser_checks, completed_concept_count, date, default_branch (+25 more)
 
-### Community 711 - "gravitational-lensing.ts"
-Cohesion: 0.20
-Nodes (6): controls, defaults, GravitationalLensing, INDIGO, Star, VIOLET
+### Community 711 - "study-engine/pipeline.mjs"
+Cohesion: 0.11
+Nodes (25): assemble(), checkDraft(), context(), draftInstructions, expand(), generatePackets(), metered(), ops (+17 more)
 
 ### Community 712 - "MemoryKnowledgeGraph"
 Cohesion: 0.22
 Nodes (10): buildVisibleGraphProfile(), clampGraphZoom(), formatGraphMetric(), getPrimaryFinancialMetric(), getVisibleProfileNode(), GraphCompanyPanel(), GraphFinancialPanel(), GraphNodeInner() (+2 more)
 
-### Community 713 - "moe-block.tsx"
-Cohesion: 0.27
-Nodes (9): ATTN, fmtB(), GATE, gateOut, gridCellCenter(), MoEBlock(), OUT, outIn (+1 more)
+### Community 713 - "desk-computer/build.mjs"
+Cohesion: 0.14
+Nodes (30): at(), BEZEL, byDepth(), cable(), CASE, COIL, computer(), CRT (+22 more)
 
 ### Community 714 - "page-wheel.tsx"
 Cohesion: 0.29
@@ -3301,13 +3702,17 @@ Nodes (8): Icon(), IconName, icons, keyRef(), nativeDisabled(), PageWheel(), tee
 Cohesion: 0.22
 Nodes (9): 1. Find the components, 2. Put the parts together, 3. State, 4. Forms, 5. Styles, 6. Framework rules, 7. Example, 8. Test it (+1 more)
 
-### Community 716 - "ActionMenu"
-Cohesion: 0.39
-Nodes (9): ActionMenu(), close(), closeMenu(), onKeyDown(), onMenuKeyDown(), onPointerDown(), openMenu(), requestOpen() (+1 more)
+### Community 716 - "push-button/build.mjs"
+Cohesion: 0.14
+Nodes (28): at(), BASE, body, BRIDGE, cap(), CELL, column(), COLUMNS (+20 more)
 
-### Community 718 - "compute-scaling.tsx"
-Cohesion: 0.36
-Nodes (8): accAt(), clamp(), ComputeScaling(), crossoverC(), reducedMotion(), STRATEGIES, Strategy, StrategyKey
+### Community 717 - "WebGL inside the drawing"
+Cohesion: 0.06
+Nodes (30): 10. Performance, 1. When a shader earns its place, 2. The layer stack, 3. The camera contract, 4. Ray-marching in the iso camera, 5. Registering shader content to the SVG, 6. API and a minimal page, 7. Craft rules, each with the bug that taught it (+22 more)
+
+### Community 718 - "compile.mjs"
+Cohesion: 0.21
+Nodes (30): array(), barSvg(), bounded(), compileBlock(), compileCharts(), compileDiagram(), compileEquations(), compileLesson() (+22 more)
 
 ### Community 719 - "using-my-dot-with-codex/index.mdx"
 Cohesion: 0.22
@@ -3317,9 +3722,9 @@ Nodes (8): A look inside the working environment, CI investigations with a small
 Cohesion: 0.22
 Nodes (9): Hiking viewer feedback, 5 November 2026, Hover exit and simplified controls, In-photo expand action, In-photo location action, Keep keyboard commands within the active surface, Keep the current photograph visible in its filmstrip, Location-icon arrival at the selected marker, Portrait scrolling and an always-reachable exit (+1 more)
 
-### Community 721 - "build-photo-preview.mjs"
-Cohesion: 0.22
-Nodes (6): files, inputs, out, [output,fixtures], provenance, root
+### Community 721 - "svg-art-packet.ts"
+Cohesion: 0.15
+Nodes (14): input, args, files, inputs, out, [output,fixtures], provenance, root (+6 more)
 
 ### Community 722 - "Style it"
 Cohesion: 0.25
@@ -3333,9 +3738,9 @@ Nodes (3): controls, defaults, gwChirp
 Cohesion: 0.25
 Nodes (5): COLD, controls, defaults, HOT, KineticGas
 
-### Community 725 - "verdict-strip.tsx"
-Cohesion: 0.32
-Nodes (4): BENCH_ACCENT, ICONS, VerdictStrip(), Verdict
+### Community 725 - "dial-indicator/build.mjs"
+Cohesion: 0.12
+Nodes (27): at(), BLOCKS, body, byDepth(), CARRIAGE, D(), DIAL, fixture() (+19 more)
 
 ### Community 726 - "build-preview.mjs"
 Cohesion: 0.25
@@ -3361,13 +3766,13 @@ Nodes (3): controls, defaults, EyeDiagram
 Cohesion: 0.29
 Nodes (4): controls, defaults, Epicycle, fourierSeries
 
-### Community 734 - "theme-script.ts"
-Cohesion: 0.33
-Nodes (3): THEME_SCRIPT, DARK_QUERY, THEME_STORAGE_KEY
+### Community 734 - "source-state-v2.ts"
+Cohesion: 0.14
+Nodes (25): buildSourceViewHref(), context(), decodedName(), hasControl(), HOST_KEYS, hrefParts(), initialSourceViewState(), malformedParameter() (+17 more)
 
-### Community 735 - "theme-toggle.tsx"
-Cohesion: 0.38
-Nodes (3): state, ThemeToggle(), useReducedMotion()
+### Community 735 - "knowledge-source/repository.ts"
+Cohesion: 0.17
+Nodes (28): assertImportedRegistries(), capture(), Captured, digest(), evidence(), file(), frontmatter(), identity() (+20 more)
 
 ### Community 736 - "Hiking photo discovery, local candidate"
 Cohesion: 0.29
@@ -3381,9 +3786,9 @@ Nodes (6): B-trees and LSM-trees editorial review, Editorial and factual changes
 Cohesion: 0.29
 Nodes (6): Answer key, Score yourself, Section A: from the book's quiz bank, Section B: Feynman prompts (explain in ≤ 5 sentences each, no jargon), Section C: numeric exercise, Self-test: Vol I, Ch 1: Introduction
 
-### Community 739 - "coupled-oscillators.ts"
-Cohesion: 0.33
-Nodes (3): controls, coupledOscillators, defaults
+### Community 739 - "Data Engineering: Study Packet"
+Cohesion: 0.07
+Nodes (28): Accepting the pipeline, Acquisition, Audio overview, → Ben's world, Connections, Data as code, Data Engineering: Study Packet, Dataset release (+20 more)
 
 ### Community 740 - "useMeasuredGraphGroupBounds"
 Cohesion: 0.33
@@ -3401,9 +3806,9 @@ Nodes (5): Hiking cover family, 5 November 2026, Photo trail journal refinement,
 Cohesion: 0.33
 Nodes (5): Bounded correction, Findings, Hiking duplicate-photo review, 7 November 2026, Source and release boundary, Validation
 
-### Community 744 - "parse_script"
-Cohesion: 0.47
-Nodes (5): Path, main(), parse_script(), Generate a chapter's two-host audio overview from podcast.md. Run: uv run…, Return (hosts, segments); each segment is {voice, text, eq}.
+### Community 744 - "study-podcast.py"
+Cohesion: 0.39
+Nodes (7): main(), parse_script(), Path, Generate a chapter's two-host audio overview from podcast.md. Run: uv run…, Separate spoken turns from their optional visual cues., resolve_cues(), sync_cues()
 
 ### Community 745 - "MLSys study curriculum"
 Cohesion: 0.33
@@ -3416,6 +3821,10 @@ Nodes (5): Build with ui-sdk, Pick your path, Read first, Rules for every path, 
 ### Community 747 - "y-axis-ticks.ts"
 Cohesion: 0.40
 Nodes (3): Y_AXIS_DEFAULT_TICK_COUNT, Y_AXIS_MAX_TICK_COUNT, Y_AXIS_MIN_TICK_COUNT
+
+### Community 748 - "Study packet: Vol I, Ch 1: Introduction"
+Cohesion: 0.07
+Nodes (27): AI engineering as a discipline, Answer key, Audio overview, Ben's world, Book organization + fallacies, Defining ML systems, Essay candidates (for the POST phase), From code-defined to data-defined behaviour (+19 more)
 
 ### Community 749 - "0002 — The timeout-config miswire"
 Cohesion: 0.40
@@ -3465,9 +3874,9 @@ Nodes (5): Index, Postmortems, Rules, Template, When to write one
 Cohesion: 0.40
 Nodes (4): Faces, Layout, Scale, Type system
 
-### Community 761 - "verify-benchmark-renders.mjs"
-Cohesion: 0.50
-Nodes (4): collectErrors(), HTML_CATEGORIES, LIVE_MODELS, main()
+### Community 761 - "ML Frameworks: Study Packet"
+Cohesion: 0.07
+Nodes (27): Abstraction: metadata picks the kernel, Anatomy of one training step, Answer key, Audio overview, → Ben's world, Book questions, Choosing is elimination, then ranking, Compilation is a purchase, not a feature (+19 more)
 
 ### Community 762 - "System Paradigms: Self-Test"
 Cohesion: 0.40
@@ -3481,37 +3890,1149 @@ Nodes (4): Connect the bridge, Make it agent-ready, Prove it with a test, The ch
 Cohesion: 0.50
 Nodes (4): getForceEdgeColor(), getForceEdgeWidth(), GraphForceEdge(), hashString()
 
-### Community 766 - "positional-encoder.tsx"
-Cohesion: 0.83
-Nodes (3): cellFill(), peValue(), PositionalEncoder()
+### Community 766 - "draw.tsx"
+Cohesion: 0.11
+Nodes (23): BASE_ART, BOTTLE_ART, DECK_ART, LABEL, TRAY_ART, GlassPaths, KeyMark, LegendKey (+15 more)
+
+### Community 767 - "turning-dial/live.js"
+Cohesion: 0.10
+Nodes (23): backLayer, controller, describe(), draw(), first, hold(), ignite(), paint() (+15 more)
 
 ### Community 768 - "MLSys study progress"
-Cohesion: 0.50
-Nodes (3): Conventions, MLSys study progress, Session log
+Cohesion: 0.11
+Nodes (17): 2026-11-25, vol2/10 Inference: packet + media complete, 2026-11-25, vol2/11 Edge Intelligence: packet + media complete, 2026-11-26 (17), vol2/08 Fleet Orchestration: packet + media complete, 2026-11-26 (18), vol2/09 Fleet Efficiency: packet + media complete, 2026-11-26 (19), vol2/12 Operations at Scale: packet + media complete, 2026-11-26 (20), vol2/13 Security and Privacy: packet + media complete, 2026-11-26 (21), vol2/14 Robust AI: packet + media complete, 2026-11-26 (22), vol2/15 Sustainable AI: packet + media complete (+9 more)
+
+### Community 769 - ".agents/skills/mlsys-study/SKILL.md"
+Cohesion: 0.09
+Nodes (15): Agent notes — benebsworth.com, Interactive study diagrams, Chapter author’s self-critique, Close the review, Reader checklist, Set up the read, Comparing the Model Compression and Hardware Acceleration packets, Study renderer regression notes (+7 more)
+
+### Community 772 - "integration/repository.ts"
+Cohesion: 0.14
+Nodes (21): CURATED_TERMS, LOADED_POLICY_HASH, withCuratedTerms(), sha256(), loadIntegrationSources(), mergeFiles(), POLICIES, supplementalFiles() (+13 more)
 
 ### Community 773 - "GraphEdgeRow"
 Cohesion: 0.67
 Nodes (3): getProfileEdgeColor(), getProfileEvidenceStyle(), GraphEdgeRow()
 
+### Community 780 - "Grounded forms · Set 06: scientific basis"
+Cohesion: 0.07
+Nodes (26): 01 · Budding yeast, 02 · Bacterial flagellum, 03 · Mitotic spindle, 04 · Diatom frustule, 05 · Phage assembly, 06 · Sea urchin test, 07 · Shark tooth, 08 · Bird furcula (+18 more)
+
+### Community 781 - "Grounded forms · Set 07"
+Cohesion: 0.07
+Nodes (26): 01 · Chloroplast grana, 02 · Striated sarcomere, 03 · Chemical synapse, 04 · Motile cilium, 05 · Mitochondrial cristae, 06 · Graphite sheets, 07 · Edge dislocation, 08 · Grain boundary (+18 more)
+
+### Community 788 - "Grounded Forms · Set 08"
+Cohesion: 0.07
+Nodes (26): 01 · Alveolar sac, 02 · Intestinal villus, 03 · Myelinated axon, 04 · Insect trachea, 05 · Renal nephron, 06 · Karst cavern, 07 · Oxbow cutoff, 08 · Alluvial fan (+18 more)
+
+### Community 791 - "Grounded Forms · Set 09"
+Cohesion: 0.07
+Nodes (26): 01 · Anther section, 02 · Legume pod, 03 · Pine cone scale, 04 · Dandelion pappus, 05 · Moss capsule, 06 · Compact bone osteon, 07 · Tendon fascicle, 08 · Epidermal barrier (+18 more)
+
+### Community 792 - "chapter-write.mjs"
+Cohesion: 0.15
+Nodes (25): assemble(), author, bullets(), cell(), chapterTransferIssues(), checkDraft(), editor, findSeedSection() (+17 more)
+
+### Community 795 - "study-source.ts"
+Cohesion: 0.17
+Nodes (23): conceptId(), contentId(), normalizeTag(), synthetic(), captureFile(), captureSlice(), cleanLine(), fail() (+15 more)
+
+### Community 798 - "host-seam.ts"
+Cohesion: 0.18
+Nodes (22): actionNodeDescriptor(), buildHostHref(), hasControl(), historyPlan(), HOST_KINDS, HostContext, HostEvent, HostState (+14 more)
+
+### Community 799 - "Guided notes"
+Cohesion: 0.08
+Nodes (25): Audio overview, → Ben's world, Essay candidates, From the book, Glossary, Guided notes, Key equations, ML Lifecycle: Study Packet (+17 more)
+
+### Community 800 - "Model Training: Study Packet"
+Cohesion: 0.08
+Nodes (25): Answer key, Audio overview, → Ben's world, Book questions, Fallacies worth keeping, Feynman prompts, From the book, Glossary (+17 more)
+
+### Community 801 - "Guided notes"
+Cohesion: 0.08
+Nodes (25): Answer key, Audio overview, Authorized Callers Still Leak, → Ben's world, Defenses Are a Stack, Not a Product, Differential Privacy Is an Account, Not a Label, Fallacies and Pitfalls, Five Ways In at Five Lifecycle Gates (+17 more)
+
+### Community 808 - "put"
+Cohesion: 0.16
+Nodes (25): at(), ballAt(), band(), boss(), boxAt(), cable(), clampAt(), Dots() (+17 more)
+
+### Community 809 - "pattern-ripples.test.ts"
+Cohesion: 0.14
+Nodes (19): compareKeys(), CONTOUR_EXACT_HIT_SHIFT, ContourGrid, ContourResult, contourSampledGrid(), ContourSegment, PATTERN_RIPPLES, RIPPLE_BOUNDS (+11 more)
+
+### Community 810 - "import-grounded-artwork.mjs"
+Cohesion: 0.18
+Nodes (20): CATALOGUE_SHA256, checkCatalogue(), CURATION, importInventory(), INVENTORY_SHA256, json(), metadataFor(), renderWebp() (+12 more)
+
+### Community 811 - "Neural Network Architectures: Study Packet"
+Cohesion: 0.08
+Nodes (24): Architectural principles: inductive bias as contract, Attention: dynamic processing, Audio overview, → Ben's world, Book questions, CNNs: spatial pattern processing, Comparing and choosing architectures, D·A·M reading + fallacies (+16 more)
+
+### Community 812 - "Data Selection: Study Packet"
+Cohesion: 0.08
+Nodes (24): Answer key, Audio overview, → Ben's world, Book questions, Choosing a strategy, Data Selection: Study Packet, Dynamic selection, Fallacies and pitfalls (+16 more)
+
+### Community 813 - "Fleet Orchestration: Study Packet"
+Cohesion: 0.08
+Nodes (24): Answer key, Audio overview, → Ben's world, Elasticity Is a Contract, Fallacies and Pitfalls, Feasibility Before Fairness, Fleet Orchestration: Study Packet, From the book (+16 more)
+
+### Community 814 - "Guided notes"
+Cohesion: 0.08
+Nodes (24): A Release Is a Contract, Not a Deploy, Answer key, Audio overview, → Ben's world, Case Studies: What the Platforms Actually Built, Exposure Is Priced Before Traffic Moves, Fallacies and Pitfalls, Feature Meaning Is a Versioned Contract (+16 more)
+
+### Community 815 - "turn-check.mjs"
+Cohesion: 0.15
+Nodes (18): chromePath(), main(), parse(), problemWith(), usage(), chromePort(), chromePath(), main() (+10 more)
+
+### Community 816 - "bridge.ts"
+Cohesion: 0.18
+Nodes (21): KnowledgeGraph, deepFreeze(), BridgeReport, buildIntegrationBridge(), clone(), Correspondence, fail(), HOST_PROVIDER (+13 more)
+
+### Community 817 - "extract-mdx.ts"
+Cohesion: 0.16
+Nodes (22): Attribute, bibliographyHeadings, codeElements, ExtractedReference, ExtractionDiagnostic, extractMdxReferences(), addLink(), collect() (+14 more)
+
+### Community 818 - "ML Operations: Study Packet"
+Cohesion: 0.08
+Nodes (23): Answer key, Audio overview, → Ben's world, Case Studies, Charts, Development Infrastructure, Fallacies and Pitfalls, From the book (+15 more)
+
+### Community 819 - "Network Fabrics: Study Packet"
+Cohesion: 0.08
+Nodes (23): Answer key, Audio overview, → Ben's world, Charts, Fallacies and Pitfalls, From the book, Glossary, Key equations (+15 more)
+
+### Community 820 - "sha256"
+Cohesion: 0.17
+Nodes (20): sha256(), importSet08(), json(), metadataForSet08(), SET08_BATCH_SHA256, SET08_CATALOGUE_SHA256, SET08_HASHES_SHA256, SUBJECT_BY_GROUP (+12 more)
+
+### Community 821 - "Guided notes"
+Cohesion: 0.08
+Nodes (23): Accepting the pipeline, Acquisition, → Ben's world, Connections, Data as code, Data Engineering: Study Packet, Dataset release, Essay candidates (for the POST phase) (+15 more)
+
+### Community 822 - "batch-05/manifest.json"
+Cohesion: 0.09
+Nodes (22): all_preserved_outputs, application_build_and_ci, base_revision, batch, branch, browser_checks, gallery_image_instances, generation_date (+14 more)
+
+### Community 823 - "editorial-illustration-language/manifest.json"
+Cohesion: 0.09
+Nodes (22): assets, baseline_commit, baseline_role, branch, corrective_calls, distinct_raster_concepts, generation_calls, initial_calls (+14 more)
+
+### Community 824 - "System Paradigms: Study Packet"
+Cohesion: 0.09
+Nodes (22): Audio overview, → Ben's world, Fallacies worth quoting, Four regimes, nine orders of magnitude, From the book, Glossary, Guided notes, Hybrid: partition the pipeline (+14 more)
+
+### Community 825 - "Guided notes"
+Cohesion: 0.09
+Nodes (22): Audio overview, → Ben's world, Benchmark Carpentry, Benchmark Suites and Their Claims, Benchmarking: Study Packet, Best Practices: Is the Difference Real?, Fallacies and Pitfalls, From the book (+14 more)
+
+### Community 826 - "Data Storage: Study Packet"
+Cohesion: 0.09
+Nodes (22): Answer key, Audio overview, → Ben's world, Checkpoint Storage, Data Storage: Study Packet, Fallacies and Pitfalls, From the book, Glossary (+14 more)
+
+### Community 827 - "Fleet Efficiency: Study Packet"
+Cohesion: 0.09
+Nodes (22): Answer key, Audio overview, → Ben's world, Fallacies and Pitfalls, Fleet Efficiency: Study Packet, From the book, Glossary, Guided notes (+14 more)
+
+### Community 828 - "check-diagram-coverage.mjs"
+Cohesion: 0.17
+Nodes (18): checkDiagramPlan(), json(), localImage(), main(), markdown, mdx, nonempty(), plainText() (+10 more)
+
+### Community 829 - "pattern-constructions.test.ts"
+Cohesion: 0.14
+Nodes (11): CENTER, gcd(), hilbertGrid(), HYPOTROCHOID_RATIOS, HYPOTROCHOID_SEGMENTS, hypotrochoidContours(), integerIn(), modularChordEdges() (+3 more)
+
+### Community 830 - "Neural Computation: Study Packet"
+Cohesion: 0.09
+Nodes (21): Audio overview, → Ben's world, Book-check MCQs, Charts, D·A·M reading + fallacies, Feynman prompts, From logic to arithmetic, From the book (+13 more)
+
+### Community 831 - "Model Serving: Study Packet"
+Cohesion: 0.09
+Nodes (21): Answer key, Audio overview, → Ben's world, Economics and the Case Study, Fallacies and Pitfalls, From the book, Glossary, Guided notes (+13 more)
+
+### Community 832 - "Compute Infrastructure: Study Packet"
+Cohesion: 0.09
+Nodes (21): Accelerator Selection, Answer key, Audio overview, → Ben's world, Charts, Compute Infrastructure: Study Packet, Fallacies and Pitfalls, From the book (+13 more)
+
+### Community 833 - "Serving at Scale: Study Packet"
+Cohesion: 0.09
+Nodes (21): Answer key, Audio overview, Batching Trades Waiting for Reuse, → Ben's world, Capacity Control Completes the System, Fallacies and Pitfalls, From the book, Glossary (+13 more)
+
+### Community 834 - "Edge Intelligence: Study Packet"
+Cohesion: 0.09
+Nodes (21): Answer key, Audio overview, Background Learning Needs an Admission Envelope, → Ben's world, Edge Intelligence: Study Packet, Fallacies and Pitfalls, Federated Averaging Is a Population Protocol, Federation Moves the Boundary, Not the Cost (+13 more)
+
+### Community 835 - "14-robust-ai/index.md"
+Cohesion: 0.09
+Nodes (21): A Fired Metric Is Not a Retraining Command, Accuracy Is Not Evidence of Correctness, Attacks Are Priced by Access, Audio overview, Conformal Is a Marginal Promise, Defenses Spend the Same Budget, Fallacies and Pitfalls, From the book (+13 more)
+
+### Community 836 - "15-sustainable-ai/index.md"
+Cohesion: 0.09
+Nodes (21): A Footprint Is Only as Good as Its Boundary, Audio overview, → Ben's world, Carbon Is Energy Times a Grid, Decode Is a Memory Problem, Embodied Carbon Starts Before Boot, Every Mitigation Tier Multiplies, Except One, Fallacies and Pitfalls (+13 more)
+
+### Community 837 - "comparison.md"
+Cohesion: 0.10
+Nodes (15): Author a brief, Generate a chapter, Open a private local preview, Run the two pilots, Study authoring engine, What the pilot measured, Answer key, Hardware Acceleration self-test (+7 more)
+
+### Community 838 - "at"
+Cohesion: 0.15
+Nodes (21): at(), ball(), bead, board(), boltHeads, box(), cable(), chip() (+13 more)
+
+### Community 839 - "model.mjs"
+Cohesion: 0.15
+Nodes (18): amplitudeOf(), BEAT, causticOf(), clippedRunsOf(), focusOf(), GLASS, magnificationOf(), nodalCount() (+10 more)
+
+### Community 840 - "t3EmitRound"
+Cohesion: 0.24
+Nodes (21): t3Arcs(), t3At(), t3BoxOf(), t3Broken(), t3EmitLathe(), t3EmitPrism(), t3EmitRibs(), t3EmitRound() (+13 more)
+
+### Community 841 - "mdx-options.ts"
+Cohesion: 0.14
+Nodes (17): article, references, sibling, source, mdxComponents, imageDimensions(), mdxOptions(), rehypeImageAttrs() (+9 more)
+
+### Community 842 - "Model Compression: Study Packet"
+Cohesion: 0.10
+Nodes (20): Answer key, Audio overview, → Ben's world, Choosing and Combining: Which Candidate Ships?, Fallacies and Pitfalls, Fitting the Deployment Budget, From the book, Glossary (+12 more)
+
+### Community 843 - "Responsible Engineering: Study Packet"
+Cohesion: 0.10
+Nodes (20): Answer key, Audio overview, → Ben's world, Data Governance and Compliance, Environmental and Cost Awareness, Explain and Operate, Fallacies and Pitfalls, From the book (+12 more)
+
+### Community 844 - "Collective Communication: Study Packet"
+Cohesion: 0.10
+Nodes (20): AllToAll and the MoE Exchange, Answer key, Audio overview, → Ben's world, Calibration Before Diagnosis, Collective Communication: Study Packet, Fallacies and Pitfalls, From the book (+12 more)
+
+### Community 845 - "Distributed Training: Study Packet"
+Cohesion: 0.10
+Nodes (20): Answer key, Audio overview, → Ben's world, Choosing a Layout, Data Parallelism and the Sharding Ladder, Distributed Training: Study Packet, Fallacies and Pitfalls, From the book (+12 more)
+
+### Community 846 - "Guided notes"
+Cohesion: 0.10
+Nodes (20): Authorized Callers Still Leak, → Ben's world, Defenses Are a Stack, Not a Product, Differential Privacy Is an Account, Not a Label, Fallacies and Pitfalls, Five Ways In at Five Lifecycle Gates, Glossary, Green Dashboards, Open Doors (+12 more)
+
+### Community 847 - "Guided notes"
+Cohesion: 0.10
+Nodes (20): Attention and long context, → Ben's world, Figure guide, Follow one token through the model, From raw data to Kolibri Base, Glossary, Guided notes, How the pieces ship together (+12 more)
+
+### Community 848 - "Kit API"
+Cohesion: 0.10
+Nodes (20): 10. Round parts on any axis (`kit/lathe.mjs`), 11. Pipes, tubes and cables (`kit/tube.mjs`), 12. The audit (`kit/audit.mjs`), 13. The WebGL layer (`kit/gl.mjs`), 14. Tools, 15. Turning groups (`kit/turn.mjs`, `turn-build.mjs`, `turn-audit.mjs`), 1. Types, 2. Camera (+12 more)
+
+### Community 849 - "batch-02/verify.py"
+Cohesion: 0.27
+Nodes (19): array_value(), hash_value(), index_records(), inspect_png(), integer(), main(), object_value(), ValueError (+11 more)
+
+### Community 850 - "Fault Tolerance: Study Packet"
+Cohesion: 0.10
+Nodes (19): Answer key, Audio overview, → Ben's world, Elastic and Stateless Recovery, Failure Becomes a Rate, Fallacies and Pitfalls, Fault Tolerance: Study Packet, Four Ways to Fail, One Invisible (+11 more)
+
+### Community 851 - "Responsible AI: Study Packet"
+Cohesion: 0.10
+Nodes (19): Accountability Does Not Transfer, Audio overview, Charts, Conservation of Overhead, Fallacies and Pitfalls, From the book, Glossary, Key equations (+11 more)
+
+### Community 852 - "prepare-grounded-artwork.mjs"
+Cohesion: 0.29
+Nodes (19): assetsFor(), decodeArtwork(), digest(), directory(), existingOutputs(), integer(), json(), keys() (+11 more)
+
+### Community 853 - "Guided notes"
+Cohesion: 0.10
+Nodes (19): Abstraction: metadata picks the kernel, Anatomy of one training step, → Ben's world, Choosing is elimination, then ranking, Compilation is a purchase, not a feature, Differentiation: the recorded program, Execution: what the runtime can see, Fallacies, briefly (+11 more)
+
+### Community 854 - "Fleet Orchestration: Study Packet"
+Cohesion: 0.10
+Nodes (19): → Ben's world, Elasticity Is a Contract, Fallacies and Pitfalls, Feasibility Before Fairness, Fleet Orchestration: Study Packet, Glossary, Interruption Economics, Open questions (+11 more)
+
+### Community 855 - "Guided notes"
+Cohesion: 0.10
+Nodes (19): A Release Is a Contract, Not a Deploy, → Ben's world, Case Studies: What the Platforms Actually Built, Exposure Is Priced Before Traffic Moves, Fallacies and Pitfalls, Feature Meaning Is a Versioned Contract, Glossary, Guided notes (+11 more)
+
+### Community 856 - "Introduction: Study Packet"
+Cohesion: 0.11
+Nodes (18): AI Scaling Laws, Answer key, Audio overview, → Ben's world, Constraints of Scale, Fallacies and Pitfalls, From Single Node to Fleet, From the book (+10 more)
+
+### Community 857 - "Guided notes"
+Cohesion: 0.11
+Nodes (18): → Ben's world, Benchmark Carpentry, Benchmark Suites and Their Claims, Benchmarking: Study Packet, Best Practices: Is the Difference Real?, Fallacies and Pitfalls, Glossary, Granularity: Micro, Macro, End-to-End (+10 more)
+
+### Community 858 - "anatomy/README.md"
+Cohesion: 0.12
+Nodes (12): Contributing, Examples, Gallery, How it works, Install, License, Limits, Quick start (+4 more)
+
+### Community 859 - "batch-01/review-assets.py"
+Cohesion: 0.32
+Nodes (17): bbox_record(), border_nonzero(), font(), key_for(), main(), measure(), paste_scaled(), Image (+9 more)
+
+### Community 860 - "pattern-silk-warp.test.ts"
+Cohesion: 0.15
+Nodes (11): LISSAJOUS_SILK_PAIRS, PATTERN_SILK_WARP, sinusoidalWarpPoint(), cross(), edgesOf(), intersection(), pointKey(), silkCases (+3 more)
+
+### Community 861 - "Guided notes"
+Cohesion: 0.11
+Nodes (17): → Ben's world, Choose hardware using completed work at the required service level, Choose which values stay near the arithmetic, Count bytes at the boundary the operator crosses, Decide what has to cross a device boundary, Find the unit that executes each instruction, Fit operands and accumulators on chip, Follow an inspection frame across a heterogeneous chip (+9 more)
+
+### Community 862 - "Guided notes"
+Cohesion: 0.11
+Nodes (17): Architectural principles: inductive bias as contract, Attention: dynamic processing, → Ben's world, CNNs: spatial pattern processing, Comparing and choosing architectures, D·A·M reading + fallacies, Glossary, Guided notes (+9 more)
+
+### Community 863 - "Guided notes"
+Cohesion: 0.11
+Nodes (17): → Ben's world, Fallacies worth keeping, Glossary, Guided notes, MFU: the honest efficiency measure, Model Training: Study Packet, Open questions, Scaling: buy arithmetic with synchronization (+9 more)
+
+### Community 864 - "Guided notes"
+Cohesion: 0.11
+Nodes (17): → Ben's world, Case Studies, Development Infrastructure, Fallacies and Pitfalls, Glossary, Guided notes, Incident Response, Governance, and Maturity, ML Operations: Study Packet (+9 more)
+
+### Community 865 - "Network Fabrics: Study Packet"
+Cohesion: 0.11
+Nodes (17): → Ben's world, Fallacies and Pitfalls, Glossary, Level 1: Wire and Link, Level 2: Transport and the Alpha-Beta Model, Level 3: Switch and Topology, Level 4: Congestion, PFC, and Incast, Level 5: Cluster Design (+9 more)
+
+### Community 866 - "Data Storage: Study Packet"
+Cohesion: 0.11
+Nodes (17): → Ben's world, Checkpoint Storage, Data Storage: Study Packet, Fallacies and Pitfalls, Glossary, GPUDirect Storage, Open questions, Storage Economics (+9 more)
+
+### Community 867 - "Guided notes"
+Cohesion: 0.11
+Nodes (17): → Ben's world, Fallacies and Pitfalls, Fleet Efficiency: Study Packet, Glossary, Guided notes, Measuring Goodput, Open questions, Program Goodput (+9 more)
+
+### Community 868 - "14-robust-ai/packet.md"
+Cohesion: 0.11
+Nodes (17): A Fired Metric Is Not a Retraining Command, Accuracy Is Not Evidence of Correctness, Attacks Are Priced by Access, Conformal Is a Marginal Promise, Defenses Spend the Same Budget, Fallacies and Pitfalls, Generative Models Change the Question, Glossary (+9 more)
+
+### Community 869 - "15-sustainable-ai/packet.md"
+Cohesion: 0.11
+Nodes (17): A Footprint Is Only as Good as Its Boundary, → Ben's world, Carbon Is Energy Times a Grid, Decode Is a Memory Problem, Embodied Carbon Starts Before Boot, Every Mitigation Tier Multiplies, Except One, Fallacies and Pitfalls, Glossary (+9 more)
+
+### Community 870 - "t3EmitRound"
+Cohesion: 0.27
+Nodes (17): t3Arcs(), t3At(), t3BoxOf(), t3Broken(), t3EmitLathe(), t3EmitRibs(), t3EmitRound(), t3Faded() (+9 more)
+
+### Community 871 - "3D: parts that turn in the drawing"
+Cohesion: 0.12
+Nodes (17): 10. Shading and fades, 11. Static layers and a messy workshop around a turntable, 12. Shaders that follow the turn and the groups, 13. The orbit audit, 14. Browser checks, 15. Performance, 16. Known limits, 1. When a figure earns 3D (+9 more)
+
+### Community 872 - "Motion and interaction"
+Cohesion: 0.12
+Nodes (16): Announcing phases, Arming, Critically damped settle, CSS motion, Depth re-sorting of moving parts, Envelopes for one-shot events, Exploded views, Keyboard and accessibility (+8 more)
+
+### Community 873 - "projection-utils.ts"
+Cohesion: 0.22
+Nodes (16): buildAutoFutureValues(), buildProjectionPath(), BuildProjectionPathOptions, buildTargetPath(), computeProjectionAnchorTangentSlope(), intervalFromAdjacentRows(), intervalFromSeriesSpan(), linearRegressionSlope() (+8 more)
+
+### Community 874 - "Grounded Forms fixed-artwork asset provenance"
+Cohesion: 0.12
+Nodes (17): Actual asset budget, Blog integration pilot, Current reviewed expansion: Set07, Explicit source-to-route mapping, Grounded Forms fixed-artwork asset provenance, grounded-forms-six-studies-r01, grounded-forms-twelve-studies-set03-r01, grounded-forms-twelve-studies-set04-r01 (+9 more)
+
+### Community 875 - "Conclusion: Study Packet"
+Cohesion: 0.12
+Nodes (16): Answer key, Audio overview, Conclusion: Study Packet, From the book, Future Directions, Guided notes, Key equations, Lighthouse Models: Constraint Propagation (+8 more)
+
+### Community 876 - "Conclusion: Study Packet"
+Cohesion: 0.12
+Nodes (16): Answer key, Audio overview, Conclusion: Study Packet, Fallacies and Pitfalls, From the book, Glossary, Key equations, No Corner of the Taxonomy Dominates (+8 more)
+
+### Community 877 - "Guided notes"
+Cohesion: 0.12
+Nodes (17): → Ben's world, Choose hardware by useful work delivered, Extend the bottleneck analysis across accelerators, Find which interface carries the bytes, Fit operands and accumulators on chip, Follow an operator to its execution units, Glossary, Guided notes (+9 more)
+
+### Community 878 - "Guided notes"
+Cohesion: 0.12
+Nodes (16): → Ben's world, Choosing a strategy, Data Selection: Study Packet, Dynamic selection, Fallacies and pitfalls, Glossary, Guided notes, Measuring data value (+8 more)
+
+### Community 879 - "Guided notes"
+Cohesion: 0.12
+Nodes (16): → Ben's world, Economics and the Case Study, Fallacies and Pitfalls, Glossary, Guided notes, Inference Runtime and Cold Start, Inside the Server, LLM Serving (+8 more)
+
+### Community 880 - "Guided notes"
+Cohesion: 0.12
+Nodes (16): Batching Trades Waiting for Reuse, → Ben's world, Capacity Control Completes the System, Fallacies and Pitfalls, Glossary, Guided notes, KV Cache Is the Real Batch Limit, Open questions (+8 more)
+
+### Community 881 - "Guided notes"
+Cohesion: 0.12
+Nodes (16): Background Learning Needs an Admission Envelope, → Ben's world, Edge Intelligence: Study Packet, Fallacies and Pitfalls, Federated Averaging Is a Population Protocol, Federation Moves the Boundary, Not the Cost, Glossary, Guided notes (+8 more)
+
+### Community 882 - "Changelog"
+Cohesion: 0.12
+Nodes (15): [1.0.0] - 2026-10-10, [1.1.0] - 2026-10-12, 2026-10-08, Added, Added, Added, Added, Changed (+7 more)
+
+### Community 883 - "art04-recovered-originals/manifest.json"
+Cohesion: 0.12
+Nodes (15): assets, generation_prompts, missing, recovered_on, rights, schema_version, source_baseline, source_conversation (+7 more)
+
+### Community 884 - "make_review_pdf.py"
+Cohesion: 0.48
+Nodes (15): brief(), contain(), cover(), hairline(), label(), load_fonts(), main(), page() (+7 more)
+
+### Community 885 - "pattern-textile-stars.test.ts"
+Cohesion: 0.20
+Nodes (12): at(), CENTER, COPRIME_STAR_PAIRS, coprimeStarCycle(), coprimeStarPolygon(), hexagonalBrocadeSegment(), PATTERN_TEXTILE_STARS, allParameters (+4 more)
+
+### Community 886 - "loops.ts"
+Cohesion: 0.18
+Nodes (12): buildLoopPrompt(), defectCredit, externalResources(), judgementProgress(), LoopJudgement, LoopMeasurement, LoopPlan, loopProgress() (+4 more)
+
+### Community 887 - "gen-thumbs-batch.mjs"
+Cohesion: 0.17
+Nodes (10): call(), DRY, ENV, ITEMS, ONLY, pending, SHARD, startMcp() (+2 more)
+
+### Community 888 - "agents.mjs"
+Cohesion: 0.23
+Nodes (13): claim(), createDispatcher(), invokeCodex(), ownerIsDead(), pause(), readCached(), release(), target() (+5 more)
+
+### Community 889 - "Guided notes"
+Cohesion: 0.12
+Nodes (16): → Ben's world, Choose a precision the device can use, Count the entire resident footprint, Glossary, Guided notes, Make the runtime realize the savings, Manage quantization error, Model Compression: Study Packet (+8 more)
+
+### Community 890 - "Guided notes"
+Cohesion: 0.12
+Nodes (15): Accept the model on a full production-shaped run, → Ben's world, Choose a smaller network and decide when it should run, Count the entire resident footprint, Find what holds up one decision, Follow compressed values through the runtime, Glossary, Guided notes (+7 more)
+
+### Community 891 - "Guided notes"
+Cohesion: 0.12
+Nodes (15): → Ben's world, Choosing and Combining: Which Candidate Ships?, Fallacies and Pitfalls, Fitting the Deployment Budget, Glossary, Guided notes, Hardware Implementation: Changing How the Model Executes, Measuring Compression Gains (+7 more)
+
+### Community 892 - "Guided notes"
+Cohesion: 0.12
+Nodes (15): → Ben's world, Data Governance and Compliance, Environmental and Cost Awareness, Explain and Operate, Fallacies and Pitfalls, Glossary, Guided notes, Measure: Fairness Criteria Are a Choice (+7 more)
+
+### Community 893 - "Compute Infrastructure: Study Packet"
+Cohesion: 0.12
+Nodes (15): Accelerator Selection, → Ben's world, Compute Infrastructure: Study Packet, Fallacies and Pitfalls, Glossary, Open questions, Sustained Compute and Precision, The Accelerator and the Nameplate (+7 more)
+
+### Community 894 - "Collective Communication: Study Packet"
+Cohesion: 0.12
+Nodes (15): AllToAll and the MoE Exchange, → Ben's world, Calibration Before Diagnosis, Collective Communication: Study Packet, Fallacies and Pitfalls, Glossary, Hiding the Exchange, Open questions (+7 more)
+
+### Community 895 - "Distributed Training: Study Packet"
+Cohesion: 0.12
+Nodes (15): → Ben's world, Choosing a Layout, Data Parallelism and the Sharding Ladder, Distributed Training: Study Packet, Fallacies and Pitfalls, Glossary, Many Models at Once, Model Parallelism's Menu (+7 more)
+
+### Community 896 - "src/pipeline.mjs"
+Cohesion: 0.27
+Nodes (13): mergeLibraryAssets(), readLibrary(), annotateHike(), downloadThumb(), mapLimit(), orderGallery(), pickHero(), placeAsset() (+5 more)
+
+### Community 897 - "t3EmitBall"
+Cohesion: 0.16
+Nodes (15): t3ArcPoints(), t3ClipConvex(), t3Dome(), t3EmitBall(), t3Enclose(), t3Grown(), t3Hull(), t3HullOut() (+7 more)
+
+### Community 898 - "t3Mount"
+Cohesion: 0.15
+Nodes (15): t3Anchor(), t3Apart(), t3Camera(), t3Cams(), t3Cover(), t3Disjoint(), t3Enclose(), t3Frame() (+7 more)
+
+### Community 899 - "Batch 03 Computing systems"
+Cohesion: 0.13
+Nodes (13): Batch 03 Computing systems, Inventory, Provenance and exact inputs, Publication state and blocker, Reproduce the checks, Review and usage, Source and ownership, Alpha and margins (+5 more)
+
+### Community 900 - "chapter-cli.mjs"
+Cohesion: 0.37
+Nodes (9): checkSpec(), digest(), runChapter(), main(), summarizeRun(), totals(), budgetedDispatcher(), writeArtifacts() (+1 more)
+
+### Community 901 - "Fault Tolerance: Study Packet"
+Cohesion: 0.13
+Nodes (14): → Ben's world, Elastic and Stateless Recovery, Failure Becomes a Rate, Fallacies and Pitfalls, Fault Tolerance: Study Packet, Four Ways to Fail, One Invisible, Glossary, Open questions (+6 more)
+
+### Community 902 - "Responsible AI: Study Packet"
+Cohesion: 0.13
+Nodes (14): Accountability Does Not Transfer, Conservation of Overhead, Fallacies and Pitfalls, Glossary, Open questions, Privacy Is a Retraining Architecture, Reliability Breeds Over-Reliance, Responsible AI: Study Packet (+6 more)
+
+### Community 903 - "markupBox"
+Cohesion: 0.23
+Nodes (13): areaOf(), attributeOf(), boxOfPoints(), boxOfShape(), cornersOfBox(), coverage(), markupBox(), matrixOf() (+5 more)
+
+### Community 904 - "t3Mount"
+Cohesion: 0.16
+Nodes (14): t3Anchor(), t3Apart(), t3Camera(), t3Cams(), t3Cover(), t3Disjoint(), t3Frame(), t3Gjk() (+6 more)
+
+### Community 905 - "t3EmitBall"
+Cohesion: 0.18
+Nodes (14): t3ArcPoints(), t3ClipConvex(), t3Dome(), t3EmitBall(), t3Grown(), t3Hull(), t3HullOut(), t3LatheMid() (+6 more)
+
+### Community 906 - "hike-journey.tsx"
+Cohesion: 0.16
+Nodes (5): HikeJourney(), gallery, source, OVERLAND_REFERENCE_URL, originalFetch
+
+### Community 907 - "batch-02/manifest.json"
+Cohesion: 0.14
+Nodes (13): base_revision, batch, branch, browser_checks, completed_original_image_count, evidence_boundary, images, media_kind (+5 more)
+
+### Community 908 - "Exact generation prompts and settings"
+Cohesion: 0.14
+Nodes (14): 01 kubernetes initial original, 02 istio initial original, 03 tekton initial original, 04 kustomize initial original, 05 minikube initial original, 06 gcp initial original, 07 react initial original, 08 technology initial original (+6 more)
+
+### Community 909 - "ornamental-studies.test.ts"
+Cohesion: 0.24
+Nodes (9): circle(), contour(), GOLDEN_ANGLE, line(), ORNAMENT_CENTER, ORNAMENTAL_STUDIES, phyllotaxisSeeds(), polar() (+1 more)
+
+### Community 910 - "import-grounded-set07.mjs"
+Cohesion: 0.21
+Nodes (12): SET06_CATALOGUE_SHA256, EXTRA_PROVENANCE, EXTRA_SOURCES, importSet07(), json(), metadataForSet07(), SET07_BATCH_SHA256, SET07_CATALOGUE_SHA256 (+4 more)
+
+### Community 911 - "Guided notes"
+Cohesion: 0.14
+Nodes (13): → Ben's world, D·A·M reading + fallacies, From logic to arithmetic, Glossary, Guided notes, Handwritten digit recognition, Inference pipeline, Learning process (+5 more)
+
+### Community 912 - "Guided notes"
+Cohesion: 0.14
+Nodes (14): Anatomy of an Accelerator, Beyond One Accelerator, Choosing an Accelerator, Compilers and Runtimes, Compute Primitives, Compute Units, Fallacies and Pitfalls, Guided notes (+6 more)
+
+### Community 913 - "Introduction: Study Packet"
+Cohesion: 0.14
+Nodes (13): AI Scaling Laws, → Ben's world, Constraints of Scale, Fallacies and Pitfalls, From Single Node to Fleet, Glossary, Introduction: Study Packet, Open questions (+5 more)
+
+### Community 914 - "classify-one.mjs"
+Cohesion: 0.20
+Nodes (12): ctx, lat, lng, n, t0, buildPrompt(), classifyImage(), extractJson() (+4 more)
+
+### Community 915 - "Contributor Covenant Code of Conduct"
+Cohesion: 0.15
+Nodes (12): 1. Correction, 2. Warning, 3. Temporary Ban, 4. Permanent Ban, Attribution, Contributor Covenant Code of Conduct, Enforcement, Enforcement Guidelines (+4 more)
+
+### Community 916 - "canvas-painter.mjs"
+Cohesion: 0.31
+Nodes (12): CANVAS2D, cpCompilePart(), cpCss(), cpGeometry(), cpMatrixOf(), cpMount(), cpMul(), cpRgba() (+4 more)
+
+### Community 917 - "knowledge-console-motion-regression.test.tsx"
+Cohesion: 0.15
+Nodes (4): box, graph, probe, { push }
+
+### Community 918 - "KG 01: explicit source/discovery integration proposal"
+Cohesion: 0.15
+Nodes (12): Actual source census at the inspected baseline, Coordination and integration order, Edge semantics and loss, Host seam: explicit proposal for the two UI owners, KG 01: explicit source/discovery integration proposal, Nine real tag alias groups, Provenance, reproducibility and tests, Real study packet identity and glossary evidence (+4 more)
+
+### Community 919 - "pattern-atlas.ts"
+Cohesion: 0.27
+Nodes (7): PATTERN_ATLAS_BATCHES, PATTERN_ATLAS_STUDIES, at(), CENTER, octagonalGridSegment(), PATTERN_FIELDS, standingWaveLoop()
+
+### Community 920 - "chapter-plan.mjs"
+Cohesion: 0.32
+Nodes (11): chapterEvidence(), cleanExcerpt(), digest(), nonblank(), planChapter(), record(), draws(), qmd (+3 more)
+
+### Community 921 - "Hardware Acceleration: Self-test"
+Cohesion: 0.15
+Nodes (13): 10. A serial request takes 250 µs. A projection consumes 150 µs of that baseline and is made 3 times faster. All other work stays fixed. Calculate the new request time, end-to-end speedup and maximum speedup if that projection became instantaneous., 11. An FP16 weight tile is 128 × 128, its FP16 input tile is 128 × 32, and its FP32 accumulator is 128 × 32. How many KiB are live with one set of tiles? Can a second weight and input tile coexist with a further 1 KiB of workspace in a 96 KiB local store?, 1. A layer-normalization kernel has intensity 4 FLOP/byte on a device with 1.5 TB/s memory bandwidth and a compatible 312 TFLOP/s compute peak. What is its simple roofline rate ceiling?, 2. A batch-one decoder fits entirely in device memory but still spends most of its token time streaming weights. Which distinction best explains this?, 3. For $Y_{ij}=\sum_k W_{ik}X_{kj}$, which loop can reuse a locally held weight $W_{ik}$ without changing it?, 4. A model has 50% zeros scattered across a weight tensor. When can an advertised 2:4 sparse matrix path exploit it?, 5. A projection uses a matrix unit, but a normalization operation does not. What should you check before calling that normalization a CPU fallback?, 6. A phone CPU, GPU and NPU share physical memory. Which cost can still remain when moving a model between them? (+5 more)
+
+### Community 922 - "t3Emit"
+Cohesion: 0.29
+Nodes (12): t3Box(), t3Emit(), t3EmitDots(), t3EmitFixed(), t3EmitPlanes(), t3EmitPrism(), t3Fix(), t3Grow() (+4 more)
+
+### Community 923 - "React and Next.js"
+Cohesion: 0.17
+Nodes (8): File layout for one figure, Hydration, React and Next.js, Readout, Styles, The large-page key-warning trap, The server/client split, dates
+
+### Community 924 - "segmented-control-pointer-regression.test.tsx"
+Cohesion: 0.21
+Nodes (4): begin(), pointer(), Segmented(), useSegmentDrag()
+
+### Community 925 - "Exact image generation requests"
+Cohesion: 0.17
+Nodes (12): 01 Mathematics r1, 02 Chemistry r1, 03 Life Sciences r1, 04 Earth & Space r1, 05 Geology r1, 06 Oceanography r1, 07 Meteorology r1, 08 Ecology r1 (+4 more)
+
+### Community 926 - "review"
+Cohesion: 0.17
+Nodes (12): review, evidence, findings, minimum_substantial_foreground_margin_percent, no_perceptible_halo_in_reviewed_composites, production_symbol_replacement_accepted, recommended_use, reviewed_canvas_sizes_px (+4 more)
+
+### Community 927 - "BLOG KG 01 — Source model and navigation contract"
+Cohesion: 0.17
+Nodes (11): Actual gaps and integration order, BLOG KG 01 — Source model and navigation contract, Concrete source fixtures, Current source coverage, Identity and collision rules, Publication, freshness and failed reads, Relationship semantics, Scope and evidence (+3 more)
+
+### Community 928 - "import-grounded-set05.mjs"
+Cohesion: 0.26
+Nodes (10): PILOT_CATALOGUE_SHA256, SET05_CATALOGUE_SHA256, THEMES, importSet05(), json(), metadataForSet05(), SET05_BATCH_SHA256, SET05_HASHES_SHA256 (+2 more)
+
+### Community 929 - "Guided notes"
+Cohesion: 0.17
+Nodes (11): Conclusion: Study Packet, Future Directions, Guided notes, Lighthouse Models: Constraint Propagation, Physics table, The Dual Mandate Revisited, The Engineering Responsibility and Pitfalls, The Request, Retraced (+3 more)
+
+### Community 930 - "Conclusion: Study Packet"
+Cohesion: 0.17
+Nodes (11): Conclusion: Study Packet, Fallacies and Pitfalls, Glossary, No Corner of the Taxonomy Dominates, Open questions, Six Principles, Six Questions, Stragglers and Tails Are Structural, The Constraint Moves Next (+3 more)
+
+### Community 931 - "Verify"
+Cohesion: 0.18
+Nodes (11): Audit, Capture, Checklist for 3D figures, Close-ups, Common faults and fixes, Drive, Light-theme shaders, Line ends (+3 more)
+
+### Community 932 - "Hardware Acceleration: Study Packet"
+Cohesion: 0.18
+Nodes (8): After the SWE-2 revision, Hardware Acceleration in the published reader layout, → Ben's world, Glossary, Hardware Acceleration: Study Packet, Open questions, The physics, Thesis
+
+### Community 933 - "folio-review/page.tsx"
+Cohesion: 0.29
+Nodes (5): equationFixture, metadata, FolioReview(), { setTheme }, technicalProseFixture
+
+### Community 934 - "batch-05/inspect_assets.py"
+Cohesion: 0.33
+Nodes (10): bbox_record(), composite(), font(), inspect(), main(), png_chunks(), Image, Path (+2 more)
+
+### Community 935 - "make_specimens.py"
+Cohesion: 0.51
+Nodes (10): catalogue(), drawing(), font(), monochrome(), optical(), paste(), save(), text() (+2 more)
+
+### Community 936 - "Grounded Forms Set06 review"
+Cohesion: 0.20
+Nodes (6): Grounded Forms Set06 review, Integration and performance contract, Release verification, Review layers and required gates, Scientific and reference acceptance, Scope and source
+
+### Community 937 - "Grounded discovery checkpoint — 14 November 2026"
+Cohesion: 0.18
+Nodes (9): Browser evidence and acceptance gates, Grounded discovery checkpoint — 14 November 2026, Local checks and reproduction, Measurements and boundaries, Scope and source, Data and loading, Grounded Forms discovery partitions, Limits (+1 more)
+
+### Community 938 - "brandbrain.ts"
+Cohesion: 0.29
+Nodes (9): BrandAsset, BrandBrainOptions, BrandGuess, fetchBrandMark(), findAssetUrl(), findPageUrl(), guessBrand(), isReachable() (+1 more)
+
+### Community 939 - "Files and public interface"
+Cohesion: 0.18
+Nodes (10): Candidate choice, Data and requested state, Files and public interface, KG 02 source view contract V2, Remaining integration gates, Root, selection, visibility and recovery, Scope and status, Selected inspector actions (+2 more)
+
+### Community 940 - "ml-systems-fail-silently/index.md"
+Cohesion: 0.18
+Nodes (10): Accuracy decays with distance, Key takeaways, Reading further, Recap, So what does monitoring that works look like?, The dual mandate, The proxy problem, or: flu season, The verification gap (+2 more)
+
+### Community 941 - "prepare-grounded-artwork.test.mjs"
+Cohesion: 0.18
+Nodes (6): CATALOGUE_BYTES, CHUNK_BYTES, MAX_CATALOGUE_BYTES, MAX_PART_TEXT_BYTES, catalogue, manifest
+
+### Community 942 - "rescore-cli-pair.mjs"
+Cohesion: 0.22
+Nodes (9): args, dependencyBodies, file, { header, events }, model, option(), runs, sourceDir (+1 more)
+
+### Community 943 - "chapter-write.test.mjs"
+Cohesion: 0.27
+Nodes (10): accept(), checks, draft(), payload(), plan, qmd, reply(), respond() (+2 more)
+
+### Community 944 - "geomatch-dry.mjs"
+Cohesion: 0.29
+Nodes (8): conflicts, counts, placed, chronologyConflicts(), dayIndex(), haversineKm(), nearestWaypoint(), toRad()
+
+### Community 945 - "Walkthrough: the test rig (Fig 6)"
+Cohesion: 0.20
+Nodes (9): 1. Truth, 2. Object, 3. Parts list (53 solids), 4. Camera and layout (`view.ts`), 5. Geometry (`geometry.ts`, `pose.ts`), 6. Painter's order (`live.tsx`), 7. Live behaviour (`live.tsx`), 8. Card (+1 more)
+
+### Community 946 - "ml-systems-fail-silently/index.mdx"
+Cohesion: 0.20
+Nodes (9): Accuracy decays with distance, Reading further, Recap, So what does monitoring that works look like?, The dual mandate, The proxy problem, or: flu season, The verification gap, Two ways in, and only one is preventable (+1 more)
+
+### Community 947 - "build_review.py"
+Cohesion: 0.51
+Nodes (9): contact(), contain(), edge_board(), edge_points(), font(), main(), Image, Path (+1 more)
+
+### Community 948 - "Batch 05 source context and publication boundary"
+Cohesion: 0.20
+Nodes (9): Active ownership, Artistic authority and preservation, Batch 05 source context and publication boundary, Current display sizes and the small-symbol gate, Existing taxonomy and proposed study labels, Historical preview outcomes, No-deployment boundary and exact push blocker, Validation scope (+1 more)
+
+### Community 949 - "A visual grammar for editorial illustrations"
+Cohesion: 0.20
+Nodes (10): A visual grammar for editorial illustrations, Captions and access, Composition, Evidence, Material and line, Narrative figure language, Palette and theme, Scale (+2 more)
+
+### Community 950 - "Raster specimen review"
+Cohesion: 0.20
+Nodes (8): Measured result, Raster specimen review, Reproduce, Vector counterpart evidence, Visual review, Observed images, Technical evidence, Vector specimen review
+
+### Community 951 - "make_companions.py"
+Cohesion: 0.44
+Nodes (9): cutaway(), hatch(), interface(), main(), n(), polygon(), sequence(), shape() (+1 more)
+
+### Community 952 - "render_assets.mjs"
+Cohesion: 0.20
+Nodes (7): here, manifest, output, reports, require, root, sharp
+
+### Community 953 - "Grounded Forms Set08 integration checkpoint"
+Cohesion: 0.20
+Nodes (9): Authored-subject correction, Corrected production-build gate, Exact source-bound revision, Final local verification, Grounded Forms Set08 integration checkpoint, Implementation, Review and verification status, Scope and authority (+1 more)
+
+### Community 954 - "deployment-is-a-physics-result/index.md"
+Cohesion: 0.20
+Nodes (9): Key takeaways, Reading further, Recap, The archetype is a regime, not a property, The screen, and check zero, The silicon contract, Wall one: light, Wall three: memory (+1 more)
+
+### Community 955 - "gen-study-md.mjs"
+Cohesion: 0.29
+Nodes (9): AUDIO, chartToMd(), OUT, packetToMd(), processChapter(), readJson(), ROOT, SRC (+1 more)
+
+### Community 956 - "harnessRoute"
+Cohesion: 0.28
+Nodes (9): CLAMPS, harnessRoute(), JACKET_BOSS, laneR(), laneS(), lugBall(), plug(), polar() (+1 more)
+
+### Community 957 - "gl.mjs"
+Cohesion: 0.25
+Nodes (5): burst(), glCamera(), GLSL_ISO, GLSL_TURN, smooth()
+
+### Community 958 - "gl-shared.mjs"
+Cohesion: 0.25
+Nodes (4): burst(), GLSL_ISO, GLSL_TURN, smooth()
+
+### Community 959 - "t3EmitTube"
+Cohesion: 0.31
+Nodes (9): t3Basis(), t3Cloud(), t3EmitTube(), t3PrepareBall(), t3Pts(), t3Sides(), t3StripeEnd(), t3TubeCap() (+1 more)
+
+### Community 960 - "t3Emit"
+Cohesion: 0.36
+Nodes (9): t3Emit(), t3EmitDots(), t3EmitFixed(), t3EmitPlanes(), t3Fix(), t3Grow(), t3Matrix(), t3Num() (+1 more)
+
+### Community 961 - "t3EmitTube"
+Cohesion: 0.31
+Nodes (9): t3Basis(), t3Cloud(), t3EmitTube(), t3PrepareBall(), t3Pts(), t3Sides(), t3StripeEnd(), t3TubeCap() (+1 more)
+
+### Community 962 - "lines.mjs"
+Cohesion: 0.22
+Nodes (7): actions, argv, child, out, select, tolerance, wait
+
+### Community 963 - "Anatomy"
+Cohesion: 0.22
+Nodes (9): 3D: figures that turn (beta), Anatomy, Craft rules (short form), Printable sheets (A4), References, Setup, The one idea that matters, WebGL inside the drawing (+1 more)
+
+### Community 964 - "deployment-is-a-physics-result/index.mdx"
+Cohesion: 0.22
+Nodes (8): Reading further, Recap, The archetype is a regime, not a property, The screen, and check zero, The silicon contract, Wall one: light, Wall three: memory, Wall two: power
+
+### Community 965 - "Verification"
+Cohesion: 0.22
+Nodes (8): Benchmark links and table presentation, Browser verification after route fix, Continued verification, Expanded architecture study and figure reader, Interactive diagrams, Performance figures, Research study integration, Verification
+
+### Community 966 - "review-batch.test.mjs"
+Cohesion: 0.31
+Nodes (7): buildBatchPrompt(), items, pass, profile, revise, unpackBatchReply(), validateOutcome()
+
+### Community 967 - "geocode.mjs"
+Cohesion: 0.33
+Nodes (8): CACHE_DIR, CACHE_FILE, geocodePlace(), geocodeWaypoints(), loadCache(), saveCache(), SEED, sleep()
+
+### Community 968 - "Contributing to Anatomy"
+Cohesion: 0.25
+Nodes (8): Building the examples, Changing the skill's text, Contributing to Anatomy, House rules, Pull requests, Reporting a bug or asking for a figure, Setup, The checks
+
+### Community 969 - "t3Poses"
+Cohesion: 0.29
+Nodes (8): t3Apply(), t3Compose(), t3FreeRot(), t3Mul(), t3Poses(), t3PosesMap(), t3Quat(), t3Rot()
+
+### Community 970 - "t3Poses"
+Cohesion: 0.29
+Nodes (8): t3Apply(), t3Compose(), t3FreeRot(), t3Mul(), t3Poses(), t3PosesMap(), t3Quat(), t3Rot()
+
+### Community 971 - "quiz-copy.mjs"
+Cohesion: 0.39
+Nodes (6): compare(), numberedItems(), [quizFile, flag, copyFile, ...extra], indent(), letter(), quizMarkdown()
+
+### Community 972 - "artifact-tiles.tsx"
+Cohesion: 0.32
+Nodes (6): ArtifactTile(), fitLine(), Props, ARTIFACTS, Artifact, ArtifactKind
+
+### Community 973 - "inspect"
+Cohesion: 0.39
+Nodes (7): bounds(), inspect(), main(), png_structure(), Image, Path, Validate every chunk CRC, critical chunk order and clean termination.
+
+### Community 974 - "batch-04/review-assets.py"
+Cohesion: 0.61
+Nodes (7): contact(), font(), main(), place_contained(), save(), size_board(), wrapped()
+
+### Community 975 - "Batch 05 Physical worlds and invention"
+Cohesion: 0.25
+Nodes (7): Alpha and edge qualification, Batch 05 Physical worlds and invention, Provenance and reproducibility, Review the collection, Source and publication boundary, Usage, Verify the packet
+
+### Community 976 - "editorial-illustration-language/README.md"
+Cohesion: 0.25
+Nodes (4): Independent art review, Independent file and scope checks, Resolved review notes, Verdict
+
+### Community 977 - "Blog design and artwork learnings"
+Cohesion: 0.25
+Nodes (7): Blog design and artwork learnings, Canonical records, Established boundaries, Lessons from the private asset library critique, Next review decisions, Runtime and acceptance boundaries, Source recovery and publication
+
+### Community 978 - "Critique — /study/vol1/04-data-engineering/ (study chapter page, Read mode)"
+Cohesion: 0.25
+Nodes (7): Critique — /study/vol1/04-data-engineering/ (study chapter page, Read mode), Design Health Score — 27/40, Design specificity verdict, Detector, Open questions recorded, Persona red flags (worst), Priority issues found (all fixed this pass)
+
+### Community 979 - "the-most-expensive-sentence-in-ml-engineering/index.md"
+Cohesion: 0.25
+Nodes (7): Even survival doesn't save you, Key takeaways, Ownership lives at boundaries, The interactive version, The one-line version, What the loop is for, Why deferring feels free
+
+### Community 980 - "makeParts"
+Cohesion: 0.38
+Nodes (5): makeParts(), stickLower(), stickUpper(), switchesClosed(), UP()
+
+### Community 981 - "Printable sheets (A4)"
+Cohesion: 0.29
+Nodes (6): A PDF link on the figure, Check it, Longer detailed sheets, Printable sheets (A4), The spec, The three formats
+
+### Community 982 - "audit-order-convergence.test.mjs"
+Cohesion: 0.33
+Nodes (4): at(), cam, chain(), P
+
+### Community 983 - "Interactive study diagrams"
+Cohesion: 0.29
+Nodes (7): Author and integrate, Check the evidence, Choose the diagram, Draw among suitable styles, Interactive study diagrams, Plan the whole reading path, Review the coverage
+
+### Community 984 - "library-list.tsx"
+Cohesion: 0.38
+Nodes (5): filterLabels, filters, LearningEntry, LibraryList(), entries
+
+### Community 985 - "kolibri-systems-tradeoffs/index.mdx"
+Cohesion: 0.29
+Nodes (6): First, let the token read, How far can the model read?, Read both axes of the throughput chart, Teach the base model, then teach the assistant, Then send it through seven experts, Where the released model performs well
+
+### Community 986 - "the-most-expensive-sentence-in-ml-engineering/index.mdx"
+Cohesion: 0.29
+Nodes (6): Even survival doesn't save you, Ownership lives at boundaries, The interactive version, The one-line version, What the loop is for, Why deferring feels free
+
+### Community 987 - "Batch 01 independent image review"
+Cohesion: 0.29
+Nodes (7): Batch 01 independent image review, Exact selected image identities, Family and visual findings, Neuroscience correction, Per-concept use and limits, Reproduction and remaining acceptance, Transparency and measured margins
+
+### Community 988 - "Batch 01 source context"
+Cohesion: 0.29
+Nodes (7): Batch 01 source context, Other active owners at inspection, Preserved ART04 family, Publication boundary and blocker, Source guidance read, Taxonomy mapping, Verified repository baseline
+
+### Community 989 - "Batch 01 artwork usage"
+Cohesion: 0.29
+Nodes (7): Accessible treatment, Batch 01 artwork usage, Meaning and labels, Original files and provenance, Review and integration status, Size, crop and clear space, Transparency and light and dark surfaces
+
+### Community 990 - "verify_inputs"
+Cohesion: 0.67
+Nodes (6): build(), check(), digest(), Path, read(), verify_inputs()
+
+### Community 991 - "Generation provenance"
+Cohesion: 0.29
+Nodes (6): Attempt history, Generation method, Generation provenance, Meaning and rights record, Source authority, Verified limitations
+
+### Community 992 - "Batch 05 final visual inspection"
+Cohesion: 0.29
+Nodes (6): Alpha and native margins, Batch 05 final visual inspection, Scale and integration guidance, Scope and outcome, Subject and theme findings, Validation and remaining gates
+
+### Community 993 - "Editorial illustration PDF review"
+Cohesion: 0.29
+Nodes (6): Actual checks, Deliverables, Editorial illustration PDF review, Limits preserved in the packet, Page review, Reproduction
+
+### Community 994 - "Provenance and rights record"
+Cohesion: 0.29
+Nodes (6): Authorship and inputs, Context actually inspected, Fidelity and rights, Original and derivative distinction, Provenance and rights record, Recorded limitation
+
+### Community 995 - "review_companions.py"
+Cohesion: 0.48
+Nodes (6): geometry(), hashes(), keep_review_evidence(), main(), Retain every transparent export plus compact, relevant matte evidence., sheets()
+
+### Community 996 - "Original pattern expansion"
+Cohesion: 0.29
+Nodes (6): Common contracts, Delivery sequence, First-batch details, Original pattern expansion, Second-batch details, Third-batch details
+
+### Community 997 - "Learning library and Chapter 9"
+Cohesion: 0.29
+Nodes (6): Assessment evidence, Findings in reading order, Learning library and Chapter 9, Recheck, The same figure on a 390 px phone, What teaches well
+
+### Community 999 - "react-dots-opacity.test.mjs"
+Cohesion: 0.33
+Nodes (5): directory, React, { renderToStaticMarkup }, require, ts
+
+### Community 1000 - "react-readout-first-write.test.mjs"
+Cohesion: 0.33
+Nodes (5): alias, { build }, directory, nodePaths, require
+
+### Community 1001 - "react-solid-seamless.test.mjs"
+Cohesion: 0.33
+Nodes (5): directory, React, { renderToStaticMarkup }, require, ts
+
+### Community 1002 - "SegmentedPicker.tsx"
+Cohesion: 0.33
+Nodes (5): LEAD, Option, Props, SegmentedPicker(), TRAIL
+
+### Community 1004 - "band-structure.ts"
+Cohesion: 0.33
+Nodes (3): bandStructure, controls, defaults
+
+### Community 1005 - "bloch-sphere.ts"
+Cohesion: 0.33
+Nodes (3): blochSphere, controls, defaults
+
+### Community 1006 - "pole-zero.ts"
+Cohesion: 0.33
+Nodes (3): controls, defaults, PoleZero
+
+### Community 1007 - "constraint-cascade-demo.tsx"
+Cohesion: 0.47
+Nodes (5): ConstraintCascadeDemo(), exposedDays(), fmtWk(), Stage, STAGES
+
+### Community 1008 - "locality-bound-demo.tsx"
+Cohesion: 0.47
+Nodes (5): LocalityBoundDemo(), Preset, PRESETS, propagationMs(), transmissionMs()
+
+### Community 1009 - "Recovered category artwork originals"
+Cohesion: 0.33
+Nodes (5): Independent review, Provenance and completeness, Recovered category artwork originals, Scope, Validation
+
+### Community 1010 - "Add science and living systems category artwork studies"
+Cohesion: 0.33
+Nodes (5): Add science and living systems category artwork studies, Changes, Publication hold, Validation, Why
+
+### Community 1011 - "Blog category art batch 01"
+Cohesion: 0.33
+Nodes (6): Blog category art batch 01, Observed quality and limits, Reproduce asset checks, Review the work, Selected files, Source and publication status
+
+### Community 1012 - "Batch 01 validation evidence"
+Cohesion: 0.33
+Nodes (5): Batch 01 validation evidence, Checks not performed, Executed checks, Executed image review, Publication read blocker
+
+### Community 1013 - "Source and review handoff"
+Cohesion: 0.33
+Nodes (5): Applying the packet for review, Completed verification, Exact remote publication blocker, Inventory, Source and review handoff
+
+### Community 1014 - "Independent static artwork review"
+Cohesion: 0.33
+Nodes (5): Evidence inspected, Exact refinement identities, Independent static artwork review, Outcome, Remaining consumer checks
+
+### Community 1015 - "Blog category art batch 02"
+Cohesion: 0.33
+Nodes (6): Actual completion state, Blog category art batch 02, Completed asset study, Exact scope, Inventory and recommended selection, Review and provenance
+
+### Community 1016 - "Batch 02 source and ownership audit"
+Cohesion: 0.33
+Nodes (6): ART04 family context and limits, Batch 02 source and ownership audit, Concurrent owners, Exact existing-topic mapping, Instructions and identity, Remote publication boundary
+
+### Community 1017 - "Light and dark usage"
+Cohesion: 0.33
+Nodes (5): Labels and text alternatives, Light and dark usage, Outstanding consumer checks, Placement, Supported static review surfaces
+
+### Community 1018 - "Draft PR description for the coordinating publisher"
+Cohesion: 0.33
+Nodes (5): Changes, Draft PR description for the coordinating publisher, Publication prerequisite, Validation and limits, Why
+
+### Community 1019 - "batch-04/verify.py"
+Cohesion: 0.60
+Nodes (5): bbox_record(), inspect_chunks(), inspect_pixels(), main(), Path
+
+### Community 1020 - "publication"
+Cohesion: 0.33
+Nodes (6): publication, blocker, deployed, draft_pr_created, merged, pushed
+
+### Community 1021 - "unexposed_settings"
+Cohesion: 0.33
+Nodes (6): unexposed_settings, exact generation timestamps, explicit size control, model identifier/version, quality, seed
+
+### Community 1022 - "Reusable editorial illustration brief"
+Cohesion: 0.33
+Nodes (6): Acceptance, Commission, Construction, Generation or authorship, Prompt skeleton, Reusable editorial illustration brief
+
+### Community 1023 - "Ownership and integration boundary"
+Cohesion: 0.33
+Nodes (5): Handoff, Interfaces, Owned scope, Ownership and integration boundary, Protected source
+
+### Community 1024 - "Verification and publication boundary"
+Cohesion: 0.33
+Nodes (5): Artifact evidence, Exact publication blocker, Preserved scope, Repository commands actually attempted, Verification and publication boundary
+
+### Community 1025 - "Grounded Forms Set07 review"
+Cohesion: 0.33
+Nodes (6): Grounded Forms Set07 review, Integration and performance contract, Release acceptance, Review layers and gates, Scientific and source review, Scope and source
+
+### Community 1026 - "Critique — /study/vol1/05-nn-computation/ (Read mode)"
+Cohesion: 0.33
+Nodes (5): Carried forward (not fixed), Critique — /study/vol1/05-nn-computation/ (Read mode), Findings → fixes (all verified in rebuilt out/ + real browser), Scores, Skill updates folded in (`.agents/skills/mlsys-study/SKILL.md`)
+
+### Community 1027 - "micropod-ci-on-apple-silicon/index.md"
+Cohesion: 0.33
+Nodes (5): Keeping a Mac checkout warm in Linux, Key takeaways, The Docker workflows that passed, Time the last HTTP response, Where scheduling and snapshots paid off
+
+### Community 1028 - "ML Frameworks -- self-test"
+Cohesion: 0.33
+Nodes (5): Answer key, Book questions, Feynman prompts, ML Frameworks -- self-test, Numeric problems
+
+### Community 1029 - "Model Training -- self-test"
+Cohesion: 0.33
+Nodes (5): Answer key, Book questions, Feynman prompts, Model Training -- self-test, Numeric problems
+
+### Community 1030 - "Self-test -- ch9 · Data Selection"
+Cohesion: 0.33
+Nodes (5): Answer key, Book questions, Feynman prompts, Numeric problems, Self-test -- ch9 · Data Selection
+
+### Community 1031 - "d3-force-3d.d.ts"
+Cohesion: 0.33
+Nodes (4): d3-force-3d, ForceZ, Simulation3D, SimulationNodeDatum3D
+
+### Community 1032 - "bezelPt"
+Cohesion: 0.40
+Nodes (5): bezelMatrix(), bezelPt(), faceClip, openClip, planeMatrix()
+
+### Community 1033 - "onBody"
+Cohesion: 0.50
+Nodes (5): DOME_BOSS, domeAt(), onBody(), radiusOn(), slopeOn()
+
+### Community 1034 - "PULL_REQUEST_TEMPLATE.md"
+Cohesion: 0.40
+Nodes (4): Checks, Screenshots, What this changes, Why
+
+### Community 1035 - "4. The authoring API"
+Cohesion: 0.40
+Nodes (5): 4. The authoring API, Constructors, Details (in the part's frame: `s` along the axis, `x` and `y` in `u` and `v`), Runtime (`kit/turn.mjs`, inlined with `turnScript()`), Scene
+
+### Community 1036 - "capture-selector.test.mjs"
+Cohesion: 0.60
+Nodes (3): capture(), driveTarget(), execute
+
+### Community 1037 - "react-readout-target.test.mjs"
+Cohesion: 0.40
+Nodes (4): alias, { build }, nodePaths, require
+
+### Community 1038 - "react-visibility-target.test.mjs"
+Cohesion: 0.40
+Nodes (4): alias, { build }, nodePaths, require
+
+### Community 1039 - "Security"
+Cohesion: 0.40
+Nodes (4): Reporting a vulnerability, Security, Supported versions, What is in scope
+
+### Community 1040 - "ArgumentError"
+Cohesion: 0.70
+Nodes (4): ArgumentError, main(), parse(), ValueError
+
+### Community 1041 - "cue_sheet.py"
+Cohesion: 0.60
+Nodes (4): clock(), cue(), main(), Read a generated study transcript as a cue sheet, leaving its timing files…
+
+### Community 1042 - "tech-colors.ts"
+Cohesion: 0.40
+Nodes (4): TimelineGroups(), MAP, PALETTE, techColor()
+
+### Community 1043 - "micropod-ci-on-apple-silicon/index.mdx"
+Cohesion: 0.40
+Nodes (4): Keeping a Mac checkout warm in Linux, The Docker workflows that passed, Time the last HTTP response, Where scheduling and snapshots paid off
+
+### Community 1045 - "Visual findings"
+Cohesion: 0.40
+Nodes (5): Alpha and halo observations, Framing, Small-size behaviour, Subject distinction and family, Visual findings
+
+### Community 1046 - "Source and provenance"
+Cohesion: 0.40
+Nodes (4): Byte preservation and derivatives, Generation record, Source and provenance, Sources and rights record
+
+### Community 1047 - "Editorial illustration language"
+Cohesion: 0.40
+Nodes (5): Editorial illustration language, Read and review, Source and ownership, Specimens, Verify the packet
+
+### Community 1049 - "Editable editorial counterparts"
+Cohesion: 0.40
+Nodes (4): Editable editorial counterparts, Files and palette, Provenance, Reproduce and review
+
+### Community 1050 - "Grounded Forms Set09 integration checkpoint"
+Cohesion: 0.40
+Nodes (4): Final local verification, Grounded Forms Set09 integration checkpoint, Scope and identity, Verification checkpoint
+
+### Community 1051 - "0006 — The karaoke follower interpolated; it was never accurate"
+Cohesion: 0.40
+Nodes (4): 0006 — The karaoke follower interpolated; it was never accurate, Guardrails, Root cause, Timeline
+
+### Community 1052 - "local-llm/types.ts"
+Cohesion: 0.40
+Nodes (4): LocalAggregate, LocalDataset, LocalEntry, LocalHardware
+
+### Community 1053 - "package-manager-contract.test.ts"
+Cohesion: 0.40
+Nodes (3): lock, manifest, root
+
+### Community 1054 - "preview.mjs"
+Cohesion: 0.50
+Nodes (4): canonicalRoot, makePreview(), prepareRun(), roman
+
+### Community 1056 - "Self-test: Neural Computation"
+Cohesion: 0.40
+Nodes (4): Book-check MCQs, Feynman prompts, Numerics, Self-test: Neural Computation
+
+### Community 1057 - "Neural Network Architectures -- self-test"
+Cohesion: 0.40
+Nodes (4): Book questions, Feynman prompts, Neural Network Architectures -- self-test, Numeric problems
+
+### Community 1059 - "pdf-button.mjs"
+Cohesion: 0.67
+Nodes (3): escape(), PDF_BUTTON_CSS, pdfButton()
+
+### Community 1060 - "Publishing a figure to the community gallery"
+Cohesion: 0.50
+Nodes (3): Publishing a figure to the community gallery, Steps, What the gallery rejects
+
+### Community 1063 - "capture-current-geometry.test.mjs"
+Cohesion: 0.83
+Nodes (3): capture(), execute, pngOf()
+
+### Community 1064 - "drive-actions.test.mjs"
+Cohesion: 0.67
+Nodes (3): drive, execute, run()
+
+### Community 1066 - "lines-arcs.test.mjs"
+Cohesion: 0.67
+Nodes (3): check(), execute, lines
+
+### Community 1067 - "lines-round.test.mjs"
+Cohesion: 0.67
+Nodes (3): check(), execute, lines
+
+### Community 1068 - "lines.test.mjs"
+Cohesion: 0.67
+Nodes (3): check(), execute, lines
+
+### Community 1070 - "grounded/manifest.json"
+Cohesion: 0.50
+Nodes (3): artworks, catalogueSha256, format
+
+### Community 1071 - "Artistic vector factory"
+Cohesion: 0.50
+Nodes (3): Artistic vector factory, Author → register → export → review, Reproducible local packets
+
+### Community 1072 - "batch-02/inspect_assets.py"
+Cohesion: 0.83
+Nodes (3): digest(), inspect(), main()
+
+### Community 1073 - "Category artwork source delivery"
+Cohesion: 0.50
+Nodes (3): Category artwork source delivery, Publication boundary, Scope and provenance
+
+### Community 1074 - "Current-master source bridge integration"
+Cohesion: 0.50
+Nodes (3): Current-master source bridge integration, Reproduce provenance, Validation and release boundary
+
+### Community 1075 - "learning-packet.spec.ts"
+Cohesion: 0.50
+Nodes (3): Plan, Question, Section
+
+### Community 1079 - "study-align.py"
+Cohesion: 0.67
+Nodes (3): align(), main(), Align transcript.json words to the joined .m4a via whisper word timestamps.…
+
+### Community 1080 - "09-data-selection/podcast.md"
+Cohesion: 0.50
+Nodes (3): and it charges its own compute tax., Chapter 9 -- Data Selection. Thesis: the only lever that shrinks the work itself,, hosts: Marcus | Iris
+
+### Community 1081 - "report.mjs"
+Cohesion: 1.00
+Nodes (3): card(), esc(), writeReport()
+
+### Community 1083 - "cpPoint"
+Cohesion: 0.67
+Nodes (3): cpPoint(), cpTop(), overlay
+
+### Community 1084 - "coneShare"
+Cohesion: 0.67
+Nodes (3): cone(), coneShare(), coneSlope()
+
+### Community 1085 - "FTP"
+Cohesion: 0.67
+Nodes (3): FTP, FTP_HOUSING, FTP_LOW
+
+### Community 1102 - "owned_paths"
+Cohesion: 0.67
+Nodes (3): owned_paths, docs/design/category-expansion/batch-05/, public/artwork/category-expansion-v1/batch-05/
+
 ## Knowledge Gaps
-- **4996 isolated node(s):** `npx`, `dynamic`, `size`, `contentType`, `alt` (+4991 more)
+- **8334 isolated node(s):** `HERE`, `PLATE`, `P`, `V`, `KS` (+8329 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **83 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **179 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `cn` to `progress.ts`, `model-table.tsx`, `originals/page.tsx`, `llm-benchmark/models/[model]/page.tsx`, `bar-squares.tsx`, `[category]/[task]/page.tsx`, `run-trace.tsx`, `black-hole-sim/physics.ts`, `icons.tsx`, `chart-tooltip.tsx`, `x-axis.tsx`, `generated-demo.tsx`, `universe-scale-studio.tsx`, `blog/[slug]/page.tsx`, `callout.tsx`, `review.tsx`, `course-index.tsx`, `status-chip.tsx`, `use-article-navigation.ts`, `breadcrumbLd`, `bar-chart.tsx`, `feedback.ts`, `projection-utils.ts`?**
-  _High betweenness centrality (0.088) - this node is a cross-community bridge._
-- **Why does `BENCHMARK_MODELS` connect `llm-benchmark/models/[model]/page.tsx` to `breadcrumbLd`, `generated-demo.tsx`, `run-benchmark.mjs`, `sitemap.ts`, `model-table.tsx`, `verify-results.ts`, `[category]/[task]/page.tsx`, `prompt-probe.mjs`, `cli.ts`, `provider.ts`, `bench-ref.ts`, `lab/registry.ts`, `verify-benchmark-renders.mjs`, `feedback.ts`, `run-benchmark-loops.ts`, `backfill-failure-reasons.mjs`, `mcp.ts`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **Why does `BENCHMARK_TASKS` connect `BENCHMARK_TASKS` to `breadcrumbLd`, `run-benchmark.mjs`, `sitemap.ts`, `verify-results.ts`, `llm-benchmark/models/[model]/page.tsx`, `[category]/[task]/page.tsx`, `executable.ts`, `cli.ts`, `provider.ts`, `bench-ref.ts`, `rescore-artifact.mjs`, `lab/registry.ts`, `verify-benchmark-renders.mjs`, `feedback.ts`, `run-benchmark-loops.ts`, `plugins/registry.ts`, `mcp.ts`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
-- **What connects `npx`, `dynamic`, `size` to the rest of the system?**
-  _4996 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `radius()` connect `knowledge-console.tsx` to `raptor-engine/build.mjs`?**
+  _High betweenness centrality (0.057) - this node is a cross-community bridge._
+- **Why does `cn()` connect `cn` to `kolibri/page.tsx`, `load.ts`, `model-table.tsx`, `editorial-system/page.tsx`, `[category]/[task]/page.tsx`, `run-trace.tsx`, `icons.tsx`, `originals/page.tsx`, `black-hole-sim/physics.ts`, `chart-tooltip.tsx`, `x-axis.tsx`, `generated-demo.tsx`, `universe-scale-studio.tsx`, `lib/content.ts`, `use-article-navigation.ts`, `breadcrumbLd`, `time-series-chart-shell.tsx`, `line-chart.tsx`, `feedback.ts`, `study-chart.tsx`, `loading-sweep.tsx`?**
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+- **Why does `BENCHMARK_MODELS` connect `[category]/[task]/page.tsx` to `run-benchmark.mjs`, `generated-demo.tsx`, `model-table.tsx`, `verify-results.ts`, `run-trace.tsx`, `llm-benchmark/registry.ts`, `probes.ts`, `rescore-cli-pair.mjs`, `BenchmarkTask`, `bench-ref.ts`, `lab/registry.ts`, `feedback.ts`, `run-benchmark-loops.ts`, `backfill-failure-reasons.mjs`, `mcp.ts`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+- **What connects `HERE`, `PLATE`, `P` to the rest of the system?**
+  _8334 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `run-benchmark.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.03326984126984127 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.02617924528301887 - nodes in this community are weakly interconnected._
 - **Should `circuit-canvas.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.07418788410886742 - nodes in this community are weakly interconnected._
-- **Should `pipeline.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.05292702485966319 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0733099209833187 - nodes in this community are weakly interconnected._
+- **Should `server.mjs` be split into smaller, more focused modules?**
+  _Cohesion score 0.13257575757575757 - nodes in this community are weakly interconnected._

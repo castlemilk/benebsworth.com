@@ -189,7 +189,7 @@ The decision framework is the memory-first ordering: DDP where it fits, ZeRO sta
 - **ZeRO / FSDP**: progressive sharding of optimizer (Z1), gradients (Z2), parameters (Z3); each trades memory for a different collective schedule.
 - **Scaling efficiency (η)**: useful compute fraction after exposed communication, synchronization, and stragglers.
 - **Critical batch size (B*)**: the statistical crossover where added samples buy diminishing step-count reductions.
-- **MFU vs fleet MFU**: per-device utilization before vs after the scaling factor; never multiply η twice.
+- **MFU vs fleet MFU**: per-device occupancy before vs after the scaling factor; never multiply η twice.
 - **Staleness (BSP/SSP/ASP)**: how fresh the parameters each worker reads are; relaxing the barrier buys speed at revalidation cost.
 
 ## → Ben's world

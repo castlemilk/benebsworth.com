@@ -71,6 +71,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...GROUNDED_ARTWORK.map(art => page(groundedArtworkUrl(art), { changeFrequency: 'yearly', priority: 0.4 })),
     page('/vectors/originals/', { changeFrequency: 'yearly', priority: 0.3 }),
     page('/lab/', { changeFrequency: 'weekly', priority: 0.9 }),
+    page('/study/', { changeFrequency: 'weekly', priority: 0.7 }),
     page('/learning/', { changeFrequency: 'weekly', priority: 0.7 }),
     page('/learning/ml-systems/', { changeFrequency: 'weekly', priority: 0.6 }),
     page('/knowledge/', { changeFrequency: 'weekly', priority: 0.6 }),
